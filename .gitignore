@@ -5,6 +5,8 @@ build/
 out/
 classes/
 
+private.gradle
+
 # idea
 
 .idea/
@@ -19,6 +21,10 @@ classes/
 bin/
 .classpath
 .project
+
+# naughty filesystems
+
+.directory
 
 # fabric
 

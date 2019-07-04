@@ -1,16 +1,6 @@
-# Fabric Example Mod
+# LibGui
 
-## Setup
-
-1. Edit build.gradle and mod.json to suit your needs.
-    * The "mixins" object can be removed from mod.json if you do not need to use mixins.
-    * Please replace all occurences of "modid" with your own mod ID - sometimes, a different string may also suffice.
-2. Run the following command:
-
-```
-./gradlew idea
-```
-
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+Minecraft GUIs without spending forever painstakingly aligning things to the background image.
+Instead, LibGui takes a logical description of your GUI, and draws it on-the-fly like any modern
+GUI system. Controls can be hung on an itemslot grid or offset from it. Panel styles, colors,
+and opacity can be customized, and everything can be extended.
