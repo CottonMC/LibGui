@@ -1,6 +1,7 @@
 plugins {
 	id 'fabric-loom' version '0.2.3-SNAPSHOT'
 	id 'maven-publish'
+	id "com.jfrog.artifactory" version "4.9.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -85,5 +86,31 @@ publishing {
 	repositories {
 		// uncomment to publish to the local maven
 		// mavenLocal()
+	}
+}
+
+artifactory {
+	if (project.hasProperty("artifactoryUsername")) {
+		contextUrl = "http://server.bbkr.space:8081/artifactory/"
+		publish {
+			repository {
+				if (version.contains("SNAPSHOT")) {
+					repoKey = "libs-snapshot"
+				} else {
+					repoKey = "libs-release"
+				}
+
+				username = artifactoryUsername
+				password = artifactoryPassword
+			}
+			defaults {
+				publications("maven")
+
+				publishArtifacts = true
+				publishPom = true
+			}
+		}
+	} else {
+		println "Cannot configure artifactory; please define ext.artifactoryUsername and ext.artifactoryPassword before running artifactoryPublish"
 	}
 }
