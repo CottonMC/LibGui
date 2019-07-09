@@ -1,3 +1,9 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+}
+
 plugins {
 	id 'fabric-loom' version '0.2.3-SNAPSHOT'
 	id 'maven-publish'
@@ -67,15 +73,21 @@ jar {
 // configure the maven publication
 publishing {
 	publications {
-		mavenJava(MavenPublication) {
+		maven(MavenPublication) {
 			// add all the jars that should be included when publishing to maven
+			//artifact(jar) {
+			//	builtBy remapJar
+			//}
 			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}.jar") { //release jar - file location not provided anywhere in loom
 				classifier null
 				builtBy remapJar
 			}
-			artifact(jar) {
+
+			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-dev.jar") { //release jar - file location not provided anywhere in loom
+				classifier "dev"
 				builtBy remapJar
 			}
+
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
 			}
