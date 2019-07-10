@@ -83,6 +83,10 @@ public class WItemSlot extends WWidget {
 	public int getHeight() {
 		return slotsHigh * 18;
 	}
+
+	public boolean isBigSlot() {
+		return big;
+	}
 	
 	@Override
 	public void createPeers(CottonScreenController c) {

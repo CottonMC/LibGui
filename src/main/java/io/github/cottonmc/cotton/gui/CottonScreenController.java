@@ -5,11 +5,7 @@ import java.util.ArrayList;
 import javax.annotation.Nullable;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.widget.WGridPanel;
-import io.github.cottonmc.cotton.gui.widget.WItemSlot;
-import io.github.cottonmc.cotton.gui.widget.WPanel;
-import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
-import io.github.cottonmc.cotton.gui.widget.WWidget;
+import io.github.cottonmc.cotton.gui.widget.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -304,11 +300,8 @@ public abstract class CottonScreenController extends CraftingContainer<Inventory
 		return propertyDelegate;
 	}
 	
-	public WPanel createPlayerInventoryPanel() {
-		WPlainPanel inv = new WPlainPanel();
-		inv.add(WItemSlot.ofPlayerStorage(playerInventory), 0, 0);
-		inv.add(WItemSlot.of(playerInventory, 0, 9, 1), 0, 16*4 - 6);
-		return inv;
+	public WPlayerInvPanel createPlayerInventoryPanel() {
+		return new WPlayerInvPanel(this.playerInventory);
 	}
 	
 	public static Inventory getBlockInventory(BlockContext ctx) {

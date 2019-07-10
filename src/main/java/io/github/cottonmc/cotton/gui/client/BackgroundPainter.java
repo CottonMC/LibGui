@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
 public interface BackgroundPainter {
@@ -14,11 +15,30 @@ public interface BackgroundPainter {
 	
 	
 	public static BackgroundPainter VANILLA = (left, top, panel) -> {
-		ScreenDrawing.drawGuiPanel(left-8, top-8, panel.getWidth()+16, panel.getHeight()+16);
-		
+		ScreenDrawing.drawGuiPanel(left-8, top-8, panel.getWidth()+14, panel.getHeight()+14);
 	};
-	
-	
+
+	public static BackgroundPainter SLOT = (left, top, panel) -> {
+		if (!(panel instanceof WItemSlot)) {
+			ScreenDrawing.drawBeveledPanel(left-1, top-1, panel.getWidth(), panel.getHeight(), 0xFF373737, 0xFF8B8B8B, 0xFFFFFFFF);
+		} else {
+			WItemSlot slot = (WItemSlot)panel;
+			for(int x = 0; x < slot.getWidth()/18; ++x) {
+				for(int y = 0; y < slot.getHeight()/18; ++y) {
+					int lo = 0xFF373737;
+					int bg = 0xFF8B8B8B;
+					int hi = 0xFFFFFFFF;
+					if (slot.isBigSlot()) {
+						ScreenDrawing.drawBeveledPanel((x * 18) + left - 4, (y * 18) + top - 4, 24, 24,
+								lo, bg, hi);
+					} else {
+						ScreenDrawing.drawBeveledPanel((x * 18) + left - 1, (y * 18) + top - 1, 18, 18,
+								lo, bg, hi);
+					}
+				}
+			}
+		}
+	};
 	
 	public static BackgroundPainter createColorful(int panelColor) {
 		return (left, top, panel) -> {
