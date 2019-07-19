@@ -16,6 +16,11 @@
   "icon": "assets/libgui/icon.png",
 
   "environment": "*",
+  "entrypoints": {
+    "client": [
+      "io.github.cottonmc.libgui.client.LibGuiClient"
+    ]
+  },
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*"

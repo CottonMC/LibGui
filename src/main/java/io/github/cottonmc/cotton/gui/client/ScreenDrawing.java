@@ -131,7 +131,8 @@ public class ScreenDrawing {
 	 * Draws a beveled, round rectangle that is substantially similar to default Minecraft UI panels.
 	 */
 	public static void drawGuiPanel(int x, int y, int width, int height) {
-		drawGuiPanel(x, y, width, height, 0xFF555555, 0xFFC6C6C6, 0xFFFFFFFF, 0xFF000000);
+		if (LibGuiClient.config.darkMode) drawGuiPanel(x, y, width, height, 0xFF0B0B0B, 0xFF2F2F2F, 0xFF414141, 0xFF000000);
+		else drawGuiPanel(x, y, width, height, 0xFF555555, 0xFFC6C6C6, 0xFFFFFFFF, 0xFF000000);
 	}
 	
 	public static void drawGuiPanel(int x, int y, int width, int height, int panelColor) {
