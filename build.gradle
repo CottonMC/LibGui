@@ -40,6 +40,7 @@ dependencies {
 	include "io.github.cottonmc:Jankson:${project.jankson_version}"
 
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
+	modCompile "io.github.prospector:modmenu:1.6.3+build.101"
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
 }
