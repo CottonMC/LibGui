@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 
 public class LibGuiClient implements ClientModInitializer {
 	public static final Logger logger = LogManager.getLogger();
-
+	public static final String MODID = "libgui";
 	public static LibGuiConfig config;
 
 	public static final Jankson jankson = JanksonFactory.createJankson();

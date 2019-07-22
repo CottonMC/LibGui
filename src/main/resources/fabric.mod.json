@@ -17,9 +17,8 @@
 
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "io.github.cottonmc.cotton.gui.client.LibGuiClient"
-    ]
+    "client": [ "io.github.cottonmc.cotton.gui.client.LibGuiClient" ],
+	"modmenu": [ "io.github.cottonmc.cotton.gui.client.modmenu.ModMenuSupport" ]
   },
   "depends": {
     "fabricloader": ">=0.4.0",
