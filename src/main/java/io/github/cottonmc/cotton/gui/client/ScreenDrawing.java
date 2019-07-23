@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
@@ -198,6 +199,11 @@ public class ScreenDrawing {
 	
 	public static void drawString(String s, int x, int y, int color) {
 		MinecraftClient.getInstance().getFontManager().getTextRenderer(MinecraftClient.DEFAULT_TEXT_RENDERER_ID).draw(s, x, y, color);
+	}
+	
+	public static void drawCenteredWithShadow(String s, int x, int y, int color) {
+		TextRenderer render = MinecraftClient.getInstance().getFontManager().getTextRenderer(MinecraftClient.DEFAULT_TEXT_RENDERER_ID);
+		render.drawWithShadow(s, (float)(x - render.getStringWidth(s) / 2), (float)y, color);
 	}
 
 	public static void drawTooltip(String s, int x, int y) {

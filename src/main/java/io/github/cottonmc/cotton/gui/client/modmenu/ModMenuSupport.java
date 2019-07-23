@@ -17,7 +17,7 @@ public class ModMenuSupport implements ModMenuApi {
 	
 	@Override
 	public Function<Screen, ? extends Screen> getConfigScreenFactory() {
-		return screen -> new ClientCottonScreen(new TranslatableText("options.libgui.libgui_settings"), new ConfigGui()) {
+		return screen -> new ClientCottonScreen(new TranslatableText("options.libgui.libgui_settings"), new ConfigGui(screen)) {
 			public void onClose() {
 				this.minecraft.openScreen(screen);
 			}

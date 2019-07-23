@@ -1,4 +1,5 @@
 {
 	"options.libgui.libgui_settings": "LibGui Settings",
-	"option.libgui.darkmode": "Dark Mode"
+	"option.libgui.darkmode": "Dark Mode",
+	"option.libgui.done": "Done"
 } 

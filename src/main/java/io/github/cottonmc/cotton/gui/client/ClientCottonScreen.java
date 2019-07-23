@@ -60,10 +60,17 @@ public class ClientCottonScreen extends Screen {
 	}
 	
 	@Override
-	public void render(int int_1, int int_2, float float_1) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		renderBackground();
 		
-		super.render(int_1, int_2, float_1);
+		super.render(mouseX, mouseY, partialTicks);
+		
+		if (description!=null) {
+			WPanel root = description.getRootPanel();
+			if (root!=null) {
+				root.paintForeground(left, top, mouseX, mouseY);
+			}
+		}
 	}
 	
 	@Override
