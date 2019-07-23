@@ -11,11 +11,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 
 public class LibGuiClient implements ClientModInitializer {
 	public static final Logger logger = LogManager.getLogger();
 	public static final String MODID = "libgui";
-	public static LibGuiConfig config;
+	public static volatile LibGuiConfig config;
 
 	public static final Jankson jankson = JanksonFactory.createJankson();
 
@@ -24,38 +25,40 @@ public class LibGuiClient implements ClientModInitializer {
 		config = loadConfig();
 	}
 
-	public LibGuiConfig loadConfig() {
+	public static LibGuiConfig loadConfig() {
 		try {
-			File file = FabricLoader.getInstance().getConfigDirectory().toPath().resolve("libgui.json5").toFile();
+			File file = new File(FabricLoader.getInstance().getConfigDirectory(),"libgui.json5");
+			
 			if (!file.exists()) saveConfig(new LibGuiConfig());
+			
 			JsonObject json = jankson.load(file);
-			LibGuiConfig result =  jankson.fromJson(json, LibGuiConfig.class);
+			config =  jankson.fromJson(json, LibGuiConfig.class);
+			
+			/*
 			JsonElement jsonElementNew = jankson.toJson(new LibGuiConfig());
-			if(jsonElementNew instanceof JsonObject){
+			if(jsonElementNew instanceof JsonObject) {
 				JsonObject jsonNew = (JsonObject) jsonElementNew;
-				if(json.getDelta(jsonNew).size()>= 0){
-					saveConfig(result);
+				if(json.getDelta(jsonNew).size()>= 0) { //TODO: Insert new keys as defaults into `json` IR object instead of writing the config out, so comments are preserved
+					saveConfig(config);
 				}
-			}
+			}*/
 		} catch (Exception e) {
 			logger.error("[LibGui] Error loading config: {}", e.getMessage());
 		}
-		return new LibGuiConfig();
+		return config;
 	}
 
-	public void saveConfig(LibGuiConfig config) {
+	public static void saveConfig(LibGuiConfig config) {
 		try {
-			File file = FabricLoader.getInstance().getConfigDirectory().toPath().resolve("libgui.json5").toFile();
+			File file = new File(FabricLoader.getInstance().getConfigDirectory(),"libgui.json5");
+			
 			JsonElement json = jankson.toJson(config);
 			String result = json.toJson(true, true);
-			if (!file.exists()) file.createNewFile();
-			FileOutputStream out = new FileOutputStream(file,false);
-			out.write(result.getBytes());
-			out.flush();
-			out.close();
+			try (FileOutputStream out = new FileOutputStream(file, false)) {
+				out.write(result.getBytes(StandardCharsets.UTF_8));
+			}
 		} catch (Exception e) {
 			logger.error("[LibGui] Error saving config: {}", e.getMessage());
 		}
 	}
-
 }

@@ -6,6 +6,7 @@ import io.github.cottonmc.cotton.gui.client.ClientCottonScreen;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.TranslatableText;
 
 public class ModMenuSupport implements ModMenuApi {
 	
@@ -16,6 +17,15 @@ public class ModMenuSupport implements ModMenuApi {
 	
 	@Override
 	public Function<Screen, ? extends Screen> getConfigScreenFactory() {
-		return screen -> new ClientCottonScreen(new ConfigGui());
+		return screen -> new ClientCottonScreen(new TranslatableText("options.libgui.libgui_settings"), new ConfigGui()) {
+			public void onClose() {
+				this.minecraft.openScreen(screen);
+			}
+			
+			protected void init() {
+				super.init();
+				this.description.getRootPanel().validate(null);
+			};
+		};
 	}
 }

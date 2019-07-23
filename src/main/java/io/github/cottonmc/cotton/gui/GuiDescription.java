@@ -19,9 +19,6 @@ public interface GuiDescription {
 	@Environment(EnvType.CLIENT)
 	public void addPainters();
 	
-
-	
-	
 	@Nullable
 	public PropertyDelegate getPropertyDelegate();
 	

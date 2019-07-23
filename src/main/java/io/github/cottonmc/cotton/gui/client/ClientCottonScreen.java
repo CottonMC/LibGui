@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.client;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
+import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
@@ -13,6 +14,8 @@ public class ClientCottonScreen extends Screen {
 	protected int top = 0;
 	protected int containerWidth = 0;
 	protected int containerHeight = 0;
+	
+	protected WWidget lastResponder = null;
 	
 	public ClientCottonScreen(GuiDescription description) {
 		super(new LiteralText(""));
@@ -73,11 +76,54 @@ public class ClientCottonScreen extends Screen {
 				root.paintBackground(left, top);
 			}
 		}
+		
+		if (getTitle() != null) {
+			font.draw(getTitle().asFormattedString(), left, top, description.getTitleColor());
+		}
 	}
 	
 	
 	@Override
 	public void tick() {
 		super.tick();
+	}
+	
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		if (description.getRootPanel()==null) return super.mouseClicked(mouseX, mouseY, mouseButton);
+		
+		boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
+		int containerX = (int)mouseX-left;
+		int containerY = (int)mouseY-top;
+		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
+		lastResponder = description.getRootPanel().onMouseDown(containerX, containerY, mouseButton);
+		return result;
+	}
+	
+	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
+		if (description.getRootPanel()==null) return super.mouseReleased(mouseX, mouseY, mouseButton);
+		
+		boolean result = super.mouseReleased(mouseX, mouseY, mouseButton);
+		int containerX = (int)mouseX-left;
+		int containerY = (int)mouseY-top;
+		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
+		
+		WWidget responder = description.getRootPanel().onMouseUp(containerX, containerY, mouseButton);
+		if (responder!=null && responder==lastResponder) description.getRootPanel().onClick(containerX, containerY, mouseButton);
+		lastResponder = null;
+		return result;
+	}
+	
+	@Override
+	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double unknown_1, double unknown_2) {
+		if (description.getRootPanel()==null) return super.mouseDragged(mouseX, mouseY, mouseButton, unknown_1, unknown_2);
+		
+		boolean result = super.mouseDragged(mouseX, mouseY, mouseButton, unknown_1, unknown_2);
+		int containerX = (int)mouseX-left;
+		int containerY = (int)mouseY-top;
+		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
+		description.getRootPanel().onMouseDrag(containerX, containerY, mouseButton);
+		return result;
 	}
 }

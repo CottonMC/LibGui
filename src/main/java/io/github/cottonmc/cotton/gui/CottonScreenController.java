@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.annotation.Nullable;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.widget.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,7 +29,7 @@ import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.world.World;
 
-public abstract class CottonScreenController extends CraftingContainer<Inventory> {
+public abstract class CottonScreenController extends CraftingContainer<Inventory> implements GuiDescription {
 	
 	protected Inventory blockInventory;
 	protected PlayerInventory playerInventory;
@@ -37,7 +38,8 @@ public abstract class CottonScreenController extends CraftingContainer<Inventory
 	protected PropertyDelegate propertyDelegate;
 	
 	protected WPanel rootPanel = new WGridPanel();
-	protected int titleColor = 0xFF404040;
+	protected int titleColor = WLabel.DEFAULT_TEXT_COLOR;
+	protected int darkTitleColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 	
 	public CottonScreenController(RecipeType<?> recipeType, int syncId, PlayerInventory playerInventory) {
 		super(null, syncId);
@@ -63,7 +65,7 @@ public abstract class CottonScreenController extends CraftingContainer<Inventory
 	}
 	
 	public int getTitleColor() {
-		return titleColor;
+		return LibGuiClient.config.darkMode ? darkTitleColor : titleColor;
 	}
 	
 	public CottonScreenController setRootPanel(WPanel panel) {
