@@ -21,9 +21,11 @@ public class ConfigGui extends LightweightGuiDescription {
 			}
 		};
 		darkmodeButton.setToggle(LibGuiClient.config.darkMode);
-		root.add(darkmodeButton, 0, 2, 8, 1); //Why isn't it toggling wider?
+		root.add(darkmodeButton, 0, 2, 6, 1);
+		
+		root.add(new WKirbSprite(), 4, 4);
 		
 		root.setBackgroundPainter(BackgroundPainter.VANILLA);
-		root.setSize(9*18, 6*18);
+		root.setSize(7*18, 6*18);
 	}
 }
