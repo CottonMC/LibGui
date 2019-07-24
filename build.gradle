@@ -5,7 +5,7 @@ buildscript {
 }
 
 plugins {
-	id 'fabric-loom' version '0.2.3-SNAPSHOT'
+	id 'fabric-loom' version '0.2.4-SNAPSHOT'
 	id 'maven-publish'
 	id "com.jfrog.artifactory" version "4.9.0"
 }
@@ -29,20 +29,18 @@ repositories {
 }
 
 dependencies {
-	//to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modCompile "io.github.cottonmc:Jankson:${project.jankson_version}"
+	modApi "net.fabricmc:fabric-loader:${project.loader_version}"
+	modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modApi "io.github.cottonmc:Jankson:${project.jankson_version}"
 	include "io.github.cottonmc:Jankson:${project.jankson_version}"
 
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
-	modCompile "io.github.prospector:modmenu:1.6.3+build.101"
-	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-	// You may need to force-disable transitiveness on them.
+
+
+	modImplementation "io.github.prospector:modmenu:1.6.3+build.101"
+	//modApi "io.github.prospector:modmenu:1.6.3+build.101"
 }
 
 processResources {
@@ -86,16 +84,19 @@ publishing {
 			//	builtBy remapJar
 			//}
 			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}.jar") { //release jar - file location not provided anywhere in loom
+				artifactId = "LibGui"
 				classifier null
 				builtBy remapJar
 			}
 
 			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-dev.jar") { //release jar - file location not provided anywhere in loom
+				artifactId = "LibGui"
 				classifier "dev"
 				builtBy remapJar
 			}
 
 			artifact(sourcesJar) {
+				artifactId = "LibGui"
 				builtBy remapSourcesJar
 			}
 		}

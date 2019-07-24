@@ -29,7 +29,7 @@ import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.world.World;
 
-public abstract class CottonScreenController extends CraftingContainer<Inventory> implements GuiDescription {
+public class CottonScreenController extends CraftingContainer<Inventory> implements GuiDescription {
 	
 	protected Inventory blockInventory;
 	protected PlayerInventory playerInventory;
@@ -293,13 +293,16 @@ public abstract class CottonScreenController extends CraftingContainer<Inventory
 		if (rootPanel!=null) rootPanel.onClick(x, y, button);
 	}
 	
-	/**
-	 * Gets the PropertyDelegate associated with this Controller.
-	 */
 	@Nullable
+	@Override
 	public PropertyDelegate getPropertyDelegate() {
-		// TODO Auto-generated method stub
 		return propertyDelegate;
+	}
+	
+	@Override
+	public GuiDescription setPropertyDelegate(PropertyDelegate delegate) {
+		this.propertyDelegate = delegate;
+		return this;
 	}
 	
 	public WPlayerInvPanel createPlayerInventoryPanel() {
@@ -364,7 +367,9 @@ public abstract class CottonScreenController extends CraftingContainer<Inventory
 		}
 		
 		@Override
-		public abstract int getCraftingResultSlotIndex();
+		public int getCraftingResultSlotIndex() {
+			return -1;
+		}
 
 		@Override
 		public int getCraftingWidth() {

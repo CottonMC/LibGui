@@ -1,10 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -60,7 +56,7 @@ public class WButton extends WWidget {
 				color = 16777120;
 			}
 			
-			ScreenDrawing.drawCenteredWithShadow(label.asFormattedString(), x+(getWidth()/2), y+4, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawCenteredWithShadow(label.asFormattedString(), x+(getWidth()/2), y + ((20 - 8) / 2), color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 		
 		
