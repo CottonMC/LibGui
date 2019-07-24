@@ -20,14 +20,15 @@ public interface BackgroundPainter {
 
 	public static BackgroundPainter SLOT = (left, top, panel) -> {
 		if (!(panel instanceof WItemSlot)) {
-			ScreenDrawing.drawBeveledPanel(left-1, top-1, panel.getWidth(), panel.getHeight(), 0xFF373737, 0x4C000000, 0xFFFFFFFF);
+			ScreenDrawing.drawBeveledPanel(left-1, top-1, panel.getWidth(), panel.getHeight(), 0xB8000000, 0x4C000000, 0xB8FFFFFF);
 		} else {
 			WItemSlot slot = (WItemSlot)panel;
 			for(int x = 0; x < slot.getWidth()/18; ++x) {
 				for(int y = 0; y < slot.getHeight()/18; ++y) {
-					int lo = 0xFF373737;
+					int lo = 0xB8000000;
 					int bg = 0x4C000000;
-					int hi = 0xFFFFFFFF;
+					//this will cause a slightly discolored bottom border on vanilla backgrounds but it's necessary for color support, it shouldn't be *too* visible unless you're looking for it
+					int hi = 0xB8FFFFFF;
 					if (slot.isBigSlot()) {
 						ScreenDrawing.drawBeveledPanel((x * 18) + left - 4, (y * 18) + top - 4, 24, 24,
 								lo, bg, hi);
