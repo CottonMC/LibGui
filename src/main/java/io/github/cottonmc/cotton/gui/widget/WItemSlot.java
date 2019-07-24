@@ -113,9 +113,9 @@ public class WItemSlot extends WWidget {
 		} else {
 			for(int ix = 0; ix < getWidth()/18; ++ix) {
 				for(int iy = 0; iy < getHeight()/18; ++iy) {
-					int lo = 0xFF373737;
+					int lo = 0xB8000000;
 					int bg = 0x4C000000;
-					int hi = 0xFFFFFFFF;
+					int hi = 0xB8FFFFFF;
 					if (isBigSlot()) {
 						ScreenDrawing.drawBeveledPanel((ix * 18) + x - 4, (iy * 18) + y - 4, 24, 24,
 								lo, bg, hi);
