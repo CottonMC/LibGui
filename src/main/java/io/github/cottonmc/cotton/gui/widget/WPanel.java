@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import io.github.cottonmc.cotton.gui.CottonScreenController;
+import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,12 +15,10 @@ public class WPanel extends WWidget {
 	private BackgroundPainter backgroundPainter = null;
 	
 	@Override
-	public void createPeers(CottonScreenController c) {
-		//System.out.println("Creating peers - before: "+c.slotList.size());
+	public void createPeers(GuiDescription c) {
 		for(WWidget child : children) {
 			child.createPeers(c);
 		}
-		//System.out.println("Peers created - after: "+c.slotList.size());
 	}
 	
 	public void remove(WWidget w) {
@@ -116,7 +114,7 @@ public class WPanel extends WWidget {
 	}
 	
 	@Override
-	public void validate(CottonScreenController c) {
+	public void validate(GuiDescription c) {
 		layout();
 		createPeers(c);
 	}

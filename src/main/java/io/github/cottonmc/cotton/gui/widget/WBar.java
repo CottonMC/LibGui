@@ -2,7 +2,7 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import java.util.List;
 
-import io.github.cottonmc.cotton.gui.CottonScreenController;
+import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -146,7 +146,7 @@ public class WBar extends WWidget {
 	}
 	
 	@Override
-	public void createPeers(CottonScreenController c) {
+	public void createPeers(GuiDescription c) {
 		if (properties==null) properties = c.getPropertyDelegate();
 	}
 	

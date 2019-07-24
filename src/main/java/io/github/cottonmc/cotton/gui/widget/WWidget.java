@@ -3,7 +3,7 @@ package io.github.cottonmc.cotton.gui.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.cottonmc.cotton.gui.CottonScreenController;
+import io.github.cottonmc.cotton.gui.GuiDescription;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -129,7 +129,7 @@ public class WWidget {
 	 * Creates "heavyweight" component peers
 	 * @param c the top-level Container that will hold the peers
 	 */
-	public void createPeers(CottonScreenController c) {
+	public void createPeers(GuiDescription c) {
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -188,7 +188,7 @@ public class WWidget {
 	 * Creates component peers, lays out children, and initializes animation data for this Widget and all its children.
 	 * The host container must clear any heavyweight peers from its records before this method is called.
 	 */
-	public void validate(CottonScreenController host) {
+	public void validate(GuiDescription host) {
 		//valid = true;
 	}
 	
