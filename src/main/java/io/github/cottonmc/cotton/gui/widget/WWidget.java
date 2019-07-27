@@ -63,9 +63,9 @@ public class WWidget {
 		return false;
 	}
 	
-	//public void setParent(WPanel parent) {
-	//	this.parent = parent;
-	//}
+	public void setParent(WPanel parent) {
+		this.parent = parent;
+	}
 
 	//public boolean getRenderTooltip() {
 	//	return renderTooltip;

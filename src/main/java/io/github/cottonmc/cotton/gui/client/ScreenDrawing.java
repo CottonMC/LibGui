@@ -19,7 +19,7 @@ public class ScreenDrawing {
 	}
 	
 	public static void rect(Identifier texture, int left, int top, int width, int height, float u1, float v1, float u2, float v2, int color) {
-		rect(texture, left, top, width, height, u1, v1, u2, v2, 0xFFFFFFFF, 0);
+		rect(texture, left, top, width, height, u1, v1, u2, v2, color, 0);
 	}
 	
 	public static void rect(Identifier texture, int left, int top, int width, int height, float u1, float v1, float u2, float v2, int color, int z) {
