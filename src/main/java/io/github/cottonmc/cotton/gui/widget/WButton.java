@@ -32,13 +32,13 @@ public class WButton extends WWidget {
 	@Override
 	public void paintForeground(int x, int y, int mouseX, int mouseY) {
 		boolean hovered = (mouseX>=x && mouseY>=y && mouseX<x+getWidth() && mouseY<y+getHeight());
-		int int_3 = 1; //1=regular. 2=hovered. 0=disabled.
-		if (!active) int_3 = 0;
-		else if (hovered) int_3 = 2;
+		int state = 1; //1=regular. 2=hovered. 0=disabled.
+		if (!active) state = 0;
+		else if (hovered) state = 2;
 		
 		float px = 1/256f;
 		float buttonLeft = 0 * px;
-		float buttonTop = (46 + (int_3*20)) * px;
+		float buttonTop = (46 + (state*20)) * px;
 		int halfWidth = getWidth()/2;
 		if (halfWidth>198) halfWidth=198;
 		float buttonWidth = halfWidth*px;
