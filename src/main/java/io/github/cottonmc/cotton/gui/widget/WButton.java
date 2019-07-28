@@ -11,7 +11,7 @@ public class WButton extends WWidget {
 	private Text label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
-	private boolean active = true;
+	private boolean enabled = true;
 	
 	private Runnable onClick;
 	
@@ -33,7 +33,7 @@ public class WButton extends WWidget {
 	public void paintForeground(int x, int y, int mouseX, int mouseY) {
 		boolean hovered = (mouseX>=x && mouseY>=y && mouseX<x+getWidth() && mouseY<y+getHeight());
 		int state = 1; //1=regular. 2=hovered. 0=disabled.
-		if (!active) state = 0;
+		if (!enabled) state = 0;
 		else if (hovered) state = 2;
 		
 		float px = 1/256f;
@@ -51,7 +51,7 @@ public class WButton extends WWidget {
 		
 		if (label!=null) {
 			int color = 0xE0E0E0;
-			if (!active) {
+			if (!enabled) {
 				color = 0xA0A0A0;
 			} else if (hovered) {
 				color = 0xFFFFA0;
@@ -69,7 +69,7 @@ public class WButton extends WWidget {
 	public void onClick(int x, int y, int button) {
 		super.onClick(x, y, button);
 		
-		if (active) {
+		if (enabled) {
 			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
 			if (onClick!=null) onClick.run();
@@ -80,11 +80,11 @@ public class WButton extends WWidget {
 		this.onClick = r;
 	}
 
-	public boolean isActive() {
-		return active;
+	public boolean isEnabled() {
+		return enabled;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }
