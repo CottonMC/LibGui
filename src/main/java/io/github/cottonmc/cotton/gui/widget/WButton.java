@@ -11,6 +11,7 @@ public class WButton extends WWidget {
 	private Text label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
+	private boolean enabled = true;
 	
 	private Runnable onClick;
 	
@@ -31,12 +32,13 @@ public class WButton extends WWidget {
 	@Override
 	public void paintForeground(int x, int y, int mouseX, int mouseY) {
 		boolean hovered = (mouseX>=x && mouseY>=y && mouseX<x+getWidth() && mouseY<y+getHeight());
-		int int_3 = 1; //1=regular. 2=hovered. 0=disabled.
-		if (hovered) int_3 = 2;
+		int state = 1; //1=regular. 2=hovered. 0=disabled.
+		if (!enabled) state = 0;
+		else if (hovered) state = 2;
 		
 		float px = 1/256f;
 		float buttonLeft = 0 * px;
-		float buttonTop = (46 + (int_3*20)) * px;
+		float buttonTop = (46 + (state*20)) * px;
 		int halfWidth = getWidth()/2;
 		if (halfWidth>198) halfWidth=198;
 		float buttonWidth = halfWidth*px;
@@ -48,12 +50,11 @@ public class WButton extends WWidget {
 		ScreenDrawing.rect(AbstractButtonWidget.WIDGETS_LOCATION, x+(getWidth()/2), y, getWidth()/2, 20, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
 		
 		if (label!=null) {
-			boolean active = true;
-			int color = 14737632;
-			if (!active) {
-				color = 10526880;
+			int color = 0xE0E0E0;
+			if (!enabled) {
+				color = 0xA0A0A0;
 			} else if (hovered) {
-				color = 16777120;
+				color = 0xFFFFA0;
 			}
 			
 			ScreenDrawing.drawCenteredWithShadow(label.asFormattedString(), x+(getWidth()/2), y + ((20 - 8) / 2), color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
@@ -68,12 +69,22 @@ public class WButton extends WWidget {
 	public void onClick(int x, int y, int button) {
 		super.onClick(x, y, button);
 		
-		MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-		
-		if (onClick!=null) onClick.run();
+		if (enabled) {
+			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
+			if (onClick!=null) onClick.run();
+		}
 	}
 
 	public void setOnClick(Runnable r) {
 		this.onClick = r;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }
