@@ -139,7 +139,7 @@ public class WWidget {
 	@Environment(EnvType.CLIENT)
 	public void paintForeground(int x, int y, int mouseX, int mouseY) {
 		if (mouseX >= x && mouseX < x+getWidth() && mouseY >= y && mouseY < y+getHeight()) {
-			renderTooltip(mouseX-x+getX(),mouseY-y+getY() );
+			renderTooltip(mouseX, mouseY);
 		}
 	}
 
