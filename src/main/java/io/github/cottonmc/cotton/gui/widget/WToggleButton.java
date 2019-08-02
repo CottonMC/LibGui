@@ -76,8 +76,8 @@ public class WToggleButton extends WWidget {
 	protected int width = 18;
 	protected int height = 18;
 
-	boolean isOn = false;
-	Runnable onToggle;
+	protected boolean isOn = false;
+	protected Runnable onToggle;
 
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
