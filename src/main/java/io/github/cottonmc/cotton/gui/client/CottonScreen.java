@@ -33,12 +33,6 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 	 * * coordinates start at 0,0 at the topleft of the screen.
 	 */
 	
-	
-	/*
-	 * These methods are called frequently and empty, meaning they're probably *meant* for subclasses to override to
-	 * provide core GUI functionality.
-	 */
-	
 	@Override
 	public void init(MinecraftClient minecraftClient_1, int screenWidth, int screenHeight) {
 		super.init(minecraftClient_1, screenWidth, screenHeight);
@@ -66,12 +60,6 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 		top =  (height / 2) - (containerHeight / 2);
 	}
 	
-	//Will probably re-activate for animation!
-	//@Override
-	//public void updateScreen() {
-	//	System.out.println("updateScreen");
-	//}
-	
 	@Override
 	public void onClose() {
 		super.onClose();
@@ -82,12 +70,6 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 		//...yeah, we're going to go ahead and override that.
 		return false;
 	}
-	
-	/*
-	 * While these methods are implemented in GuiScreen, chances are we'll be shadowing a lot of the GuiScreen methods
-	 * in order to implement our own button protocol and more advanced features.
-	 */
-	
 	
 	@Override
 	public boolean charTyped(char typedChar, int keyCode) {
@@ -130,39 +112,15 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 		return result;
 	}
 	
+	//Zapping this method may fix some positioning bugs - but may cause some backgroundPainter bugs. Will need to monitor.
 	/*
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		super.actionPerformed(button);
-	}*/
-	
-	/*
-	 * We'll probably wind up calling some of this manually, but they do useful things for us so we may leave
-	 * them unharmed.
-	 */
-	/*
-	@Override
-	public void setWorldAndResolution(Minecraft mc, int width, int height) {
-		super.setWorldAndResolution(mc, width, height);
-		
-		WPanel basePanel = container.getRootPanel();
-		if (basePanel!=null) {
-			xSize = basePanel.getWidth();
-			ySize = basePanel.getHeight();
-		}
-		left = (width  / 2) - (xSize / 2);
-		top =  (height / 2) - (ySize / 2);
-		
-	}
-	*/
-	
 	@Override
 	public void resize(MinecraftClient minecraftClient_1, int int_1, int int_2) {
 		//super.onScaleChanged(minecraftClient_1, int_1, int_2);
 		this.width = int_1;
 		this.height = int_2;
 		reposition();
-	}
+	}*/
 	
 	/*
 	 * SPECIAL FUNCTIONS: Where possible, we want to draw everything based on *actual GUI state and composition* rather
@@ -192,7 +150,6 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 	@Override
 	protected void drawBackground(float partialTicks, int mouseX, int mouseY) {
 		if (this.container==null) {
-			System.out.println("CONTAINER IS NULL.");
 			return;
 		}
 		WPanel root = this.container.getRootPanel();
@@ -211,16 +168,14 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 	
 	@Override
 	protected void drawForeground(int mouseX, int mouseY) {
-		//if (cursorDragSlots != null && this.container.getRootPanel() != null) {
-			if (this.container==null) {
-				System.out.println("CONTAINER IS NULL.");
-				return;
-			}
-			
-			if (this.container.getRootPanel()!=null) {
-				this.container.getRootPanel().paintForeground(0, 0, mouseX, mouseY);
-			}
-		//}
+		if (this.container==null) {
+			System.out.println("CONTAINER IS NULL.");
+			return;
+		}
+		
+		if (this.container.getRootPanel()!=null) {
+			this.container.getRootPanel().paintForeground(0, 0, mouseX, mouseY);
+		}
 	}
 	
 	@Override

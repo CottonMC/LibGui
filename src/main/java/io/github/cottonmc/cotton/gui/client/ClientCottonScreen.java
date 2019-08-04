@@ -41,11 +41,6 @@ public class ClientCottonScreen extends Screen {
 		reposition(screenWidth, screenHeight);
 	}
 	
-	@Override
-	public void resize(MinecraftClient client, int screenWidth, int screenHeight) {
-		reposition(screenWidth, screenHeight);
-	}
-	
 	public void reposition(int screenWidth, int screenHeight) {
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
