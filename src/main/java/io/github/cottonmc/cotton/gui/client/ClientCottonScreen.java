@@ -37,7 +37,7 @@ public class ClientCottonScreen extends Screen {
 		
 		super.init(client, screenWidth, screenHeight);
 		
-		
+		description.addPainters();
 		reposition(screenWidth, screenHeight);
 	}
 	
