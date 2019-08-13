@@ -15,12 +15,12 @@ public interface BackgroundPainter {
 	
 	
 	public static BackgroundPainter VANILLA = (left, top, panel) -> {
-		ScreenDrawing.drawGuiPanel(left-8, top-8, panel.getWidth()+14, panel.getHeight()+14);
+		ScreenDrawing.drawGuiPanel(left-8, top-8, panel.getWidth()+16, panel.getHeight()+16);
 	};
 
 	public static BackgroundPainter SLOT = (left, top, panel) -> {
 		if (!(panel instanceof WItemSlot)) {
-			ScreenDrawing.drawBeveledPanel(left-1, top-1, panel.getWidth(), panel.getHeight(), 0xB8000000, 0x4C000000, 0xB8FFFFFF);
+			ScreenDrawing.drawBeveledPanel(left-1, top-1, panel.getWidth()+2, panel.getHeight()+2, 0xB8000000, 0x4C000000, 0xB8FFFFFF);
 		} else {
 			WItemSlot slot = (WItemSlot)panel;
 			for(int x = 0; x < slot.getWidth()/18; ++x) {
@@ -30,10 +30,10 @@ public interface BackgroundPainter {
 					//this will cause a slightly discolored bottom border on vanilla backgrounds but it's necessary for color support, it shouldn't be *too* visible unless you're looking for it
 					int hi = 0xB8FFFFFF;
 					if (slot.isBigSlot()) {
-						ScreenDrawing.drawBeveledPanel((x * 18) + left - 4, (y * 18) + top - 4, 24, 24,
+						ScreenDrawing.drawBeveledPanel((x * 18) + left - 4, (y * 18) + top - 4, 16+8, 16+8,
 								lo, bg, hi);
 					} else {
-						ScreenDrawing.drawBeveledPanel((x * 18) + left - 1, (y * 18) + top - 1, 18, 18,
+						ScreenDrawing.drawBeveledPanel((x * 18) + left - 1, (y * 18) + top - 1, 16+2, 16+2,
 								lo, bg, hi);
 					}
 				}
