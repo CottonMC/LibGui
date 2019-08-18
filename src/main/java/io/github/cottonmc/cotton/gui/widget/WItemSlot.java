@@ -87,6 +87,7 @@ public class WItemSlot extends WWidget {
 	
 	@Override
 	public void createPeers(GuiDescription c) {
+		super.createPeers(c);
 		peers.clear();
 		int index = startIndex;
 		

@@ -16,6 +16,7 @@ public class WPanel extends WWidget {
 	
 	@Override
 	public void createPeers(GuiDescription c) {
+		super.createPeers(c);
 		for(WWidget child : children) {
 			child.createPeers(c);
 		}
@@ -116,7 +117,7 @@ public class WPanel extends WWidget {
 	@Override
 	public void validate(GuiDescription c) {
 		layout();
-		createPeers(c);
+		if (c!=null) createPeers(c);
 	}
 	
 	@Environment(EnvType.CLIENT)

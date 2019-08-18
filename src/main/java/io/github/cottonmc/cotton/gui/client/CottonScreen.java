@@ -14,6 +14,7 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 	protected CottonScreenController container;
 	public static final int PADDING = 8;
 	protected WWidget lastResponder = null;
+	protected WWidget focus = null;
 	
 	public CottonScreen(T container, PlayerEntity player) {
 		super(container, player.inventory, new LiteralText(""));
@@ -72,10 +73,24 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 	}
 	
 	@Override
-	public boolean charTyped(char typedChar, int keyCode) {
-		if (MinecraftClient.getInstance().options.keyInventory.matchesKey(keyCode, keyCode));
-		
-		return super.charTyped(typedChar, keyCode);
+	public boolean charTyped(char ch, int keyCode) {
+		if (container.getFocus()==null) return false;
+		container.getFocus().onCharTyped(ch);
+		return true;
+	}
+	
+	@Override
+	public boolean keyPressed(int ch, int keyCode, int modifiers) {
+		if (container.getFocus()==null) return false;
+		container.getFocus().onKeyPressed(keyCode, modifiers);
+		return true;
+	}
+	
+	@Override
+	public boolean keyReleased(int ch, int keyCode, int modifiers) {
+		if (container.getFocus()==null) return false;
+		container.getFocus().onKeyReleased(keyCode, modifiers);
+		return true;
 	}
 	
 	@Override

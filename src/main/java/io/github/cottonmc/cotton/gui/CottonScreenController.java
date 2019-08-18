@@ -41,6 +41,8 @@ public class CottonScreenController extends CraftingContainer<Inventory> impleme
 	protected int titleColor = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkTitleColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 	
+	protected WWidget focus;
+	
 	public CottonScreenController(RecipeType<?> recipeType, int syncId, PlayerInventory playerInventory) {
 		super(null, syncId);
 		this.blockInventory = null;
@@ -290,8 +292,35 @@ public class CottonScreenController extends CraftingContainer<Inventory> impleme
 	}
 	
 	public void doClick(int x, int y, int button) {
+		System.out.println("Doing click");
+		if (focus!=null) {
+			int wx = focus.getAbsoluteX();
+			int wy = focus.getAbsoluteY();
+			
+			if (x>=wx && x<wx+focus.getWidth() && y>=wy && y<wy+focus.getHeight()) {
+				//Do nothing, focus will get the click soon
+			} else {
+				//Invalidate the component first
+				WWidget lastFocus = focus;
+				focus = null;
+				lastFocus.onFocusLost();
+			}
+		}
+		
 		if (rootPanel!=null) rootPanel.onClick(x, y, button);
 	}
+	
+	public void doCharType(char ch) {
+		if (focus!=null) focus.onCharTyped(ch);
+	}
+	
+	//public void doKeyPress(int key) {
+	//	if (focus!=null) focus.onKeyPressed(key);
+	//}
+	
+	//public void doKeyRelease(int key) {
+	//	if (focus!=null) focus.onKeyReleased(key);
+	//}
 	
 	@Nullable
 	@Override
@@ -394,4 +423,32 @@ public class CottonScreenController extends CraftingContainer<Inventory> impleme
 			}
 		//}
 	//}
+
+	@Override
+	public boolean isFocused(WWidget widget) {
+		return focus == widget;
+	}
+
+	@Override
+	public WWidget getFocus() {
+		return focus;
+	}
+
+	@Override
+	public void requestFocus(WWidget widget) {
+		//TODO: Are there circumstances where focus can't be stolen?
+		if (focus==widget) return; //Nothing happens if we're already focused
+		if (!widget.canFocus()) return; //This is kind of a gotcha but needs to happen
+		if (focus!=null) focus.onFocusLost();
+		focus = widget;
+		focus.onFocusGained();
+	}
+
+	@Override
+	public void releaseFocus(WWidget widget) {
+		if (focus==widget) {
+			focus = null;
+			widget.onFocusLost();
+		}
+	}
 }

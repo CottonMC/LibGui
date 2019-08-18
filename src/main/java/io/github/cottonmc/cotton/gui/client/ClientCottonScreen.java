@@ -4,6 +4,7 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -92,6 +93,20 @@ public class ClientCottonScreen extends Screen {
 	
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		WWidget focus = description.getFocus();
+		if (focus!=null) {
+			
+			int wx = focus.getAbsoluteX();
+			int wy = focus.getAbsoluteY();
+			
+			if (mouseX>=wx && mouseX<wx+focus.getWidth() && mouseY>=wy && mouseY<wy+focus.getHeight()) {
+				//Do nothing, focus will get the click soon
+			} else {
+				//Invalidate the component first
+				description.releaseFocus(focus);
+			}
+		}
+		
 		if (description.getRootPanel()==null) return super.mouseClicked(mouseX, mouseY, mouseButton);
 		
 		boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -99,6 +114,7 @@ public class ClientCottonScreen extends Screen {
 		int containerY = (int)mouseY-top;
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
 		lastResponder = description.getRootPanel().onMouseDown(containerX, containerY, mouseButton);
+		
 		return result;
 	}
 	
@@ -127,5 +143,31 @@ public class ClientCottonScreen extends Screen {
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
 		description.getRootPanel().onMouseDrag(containerX, containerY, mouseButton);
 		return result;
+	}
+	
+	@Override
+	public boolean charTyped(char ch, int keyCode) {
+		if (description.getFocus()==null) return false;
+		description.getFocus().onCharTyped(ch);
+		return true;
+	}
+	
+	@Override
+	public boolean keyPressed(int ch, int keyCode, int modifiers) {
+		if (description.getFocus()==null) return false;
+		description.getFocus().onKeyPressed(keyCode, modifiers);
+		return true;
+	}
+	
+	@Override
+	public boolean keyReleased(int ch, int keyCode, int modifiers) {
+		if (description.getFocus()==null) return false;
+		description.getFocus().onKeyReleased(keyCode, modifiers);
+		return true;
+	}
+	
+	@Override
+	public Element getFocused() {
+		return this;
 	}
 }

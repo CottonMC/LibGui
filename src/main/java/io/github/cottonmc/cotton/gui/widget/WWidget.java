@@ -11,11 +11,11 @@ import net.minecraft.client.gui.screen.Screen;
 
 public class WWidget {
 	protected WPanel parent;
-	private int x = 0;
-	private int y = 0;
-	private int width = 18;
-	private int height = 18;
-	//private boolean renderTooltip;
+	protected int x = 0;
+	protected int y = 0;
+	protected int width = 18;
+	protected int height = 18;
+	protected GuiDescription host;
 	
 	public void setLocation(int x, int y) {
 		this.x = x;
@@ -66,14 +66,6 @@ public class WWidget {
 	public void setParent(WPanel parent) {
 		this.parent = parent;
 	}
-
-	//public boolean getRenderTooltip() {
-	//	return renderTooltip;
-	//}
-
-	//public void setRenderTooltip(boolean renderTooltip) {
-	//	this.renderTooltip = renderTooltip;
-	//}
 	
 	/**
 	 * Draw this Widget at the specified coordinates. The coordinates provided are the top-level device coordinates of
@@ -126,23 +118,75 @@ public class WWidget {
 	}
 	
 	/**
+	 * Notifies this widget that a character has been typed. This method is subject to key repeat,
+	 * and may be called for characters that do not directly have a corresponding keyboard key.
+	 * @param ch the character typed
+	 */
+	public void onCharTyped(char ch) {
+	}
+	
+	/**
+	 * Notifies this widget that a key has been pressed.
+	 * @param key the GLFW scancode of the key
+	 */
+	public void onKeyPressed(int key, int modifiers) {
+	}
+	
+	/**
+	 * Notifies this widget that a key has been released
+	 * @param key the GLFW scancode of the key
+	 */
+	public void onKeyReleased(int key, int modifiers) {
+	}
+	
+	/** Notifies this widget that it has gained focus */
+	public void onFocusGained() {
+	}
+	
+	/** Notifies this widget that it has lost focus */
+	public void onFocusLost() {
+	}
+	
+	public boolean isFocused() {
+		if (host==null) return false;
+		return host.isFocused(this);
+	}
+	
+	public void requestFocus() {
+		if (host!=null) {
+			host.requestFocus(this);
+		} else {
+			System.out.println("host is null");
+		}
+	}
+	
+	public void releaseFocus() {
+		if (host!=null) host.releaseFocus(this);
+	}
+	
+	public boolean canFocus() {
+		return false;
+	}
+	
+	/**
 	 * Creates "heavyweight" component peers
 	 * @param c the top-level Container that will hold the peers
 	 */
 	public void createPeers(GuiDescription c) {
+		host=c;
 	}
-
+	
 	@Environment(EnvType.CLIENT)
 	public void paintBackground(int x, int y) {
 	}
-
+	
 	@Environment(EnvType.CLIENT)
 	public void paintForeground(int x, int y, int mouseX, int mouseY) {
 		if (mouseX >= x && mouseX < x+getWidth() && mouseY >= y && mouseY < y+getHeight()) {
 			renderTooltip(mouseX, mouseY);
 		}
 	}
-
+	
 	/**
 	 * Internal method to conditionally render tooltip data. This requires an overriden {@link #addInformation(List)
 	 * addInformation} method to insert data into the tooltip - without this, the method returns early, because no work
@@ -160,29 +204,7 @@ public class WWidget {
 		
 		Screen screen = MinecraftClient.getInstance().currentScreen;
 		screen.renderTooltip(info, tX, tY);
-		/*
-		MinecraftClient mc = MinecraftClient.getInstance();
-		int width = mc.window.getScaledWidth();
-		int height = mc.window.getScaledHeight();
-		//TODO: Hook into or copy Screen::drawStackTooltip or Screen::drawTooltip
-		TextRenderer renderer = mc.getFontManager().getTextRenderer(MinecraftClient.DEFAULT_TEXT_RENDERER_ID);
-		//Get width of the panel
-		int maxWidth = 0;
-		for(String s : info) {
-			maxWidth = Math.max(maxWidth, renderer.getStringWidth(s));
-		}
-		//TODO: Draw background panel
-		
-		//Draw strings
-		for(int i=0; i<info.size(); i++) {
-			//renderer.draw(info, tX, tY, renderer.getStringWidth(str))
-			//GuiUtils.drawHoveringText(info, tX, tY, width, height, -1, mc.fontRenderer);
-		}*/
 	}
-	
-	//public boolean isValid() {
-	//	return valid;
-	//}
 	
 	/**
 	 * Creates component peers, lays out children, and initializes animation data for this Widget and all its children.
@@ -192,14 +214,6 @@ public class WWidget {
 		//valid = true;
 	}
 	
-	/**
-	 * Marks this Widget as having dirty state; component peers may need to be recreated, children adapted to a new size,
-	 * and animation data reset.
-	 */
-	//public void invalidate() {
-	//	valid = false;
-	//}
-
 	/**
 	 * Adds information to this widget's tooltip. This requires a call to {@link #setRenderTooltip(boolean)
 	 * setRenderTooltip} (obviously passing in {@code true}), in order to enable the rendering of your tooltip.
