@@ -198,7 +198,8 @@ public class ScreenDrawing {
 	}
 	
 	public static void drawString(String s, int x, int y, int color) {
-		MinecraftClient.getInstance().getFontManager().getTextRenderer(MinecraftClient.DEFAULT_TEXT_RENDERER_ID).draw(s, x, y, color);
+		MinecraftClient.getInstance().textRenderer.draw(s, x, y, color);
+		//MinecraftClient.getInstance().getFontManager().getTextRenderer(MinecraftClient.DEFAULT_TEXT_RENDERER_ID).draw(s, x, y, color);
 	}
 	
 	public static void drawCenteredWithShadow(String s, int x, int y, int color) {

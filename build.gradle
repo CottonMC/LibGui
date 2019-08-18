@@ -39,8 +39,8 @@ dependencies {
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
 
-	modImplementation "io.github.prospector:modmenu:1.6.3+build.101"
-	//modApi "io.github.prospector:modmenu:1.6.3+build.101"
+	modImplementation "io.github.prospector:modmenu:1.7.9+build.118"
+	modApi "io.github.prospector:modmenu:1.7.9+build.118"
 }
 
 processResources {

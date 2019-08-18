@@ -129,14 +129,14 @@ public class WWidget {
 	 * Notifies this widget that a key has been pressed.
 	 * @param key the GLFW scancode of the key
 	 */
-	public void onKeyPressed(int key, int modifiers) {
+	public void onKeyPressed(int ch, int key, int modifiers) {
 	}
 	
 	/**
 	 * Notifies this widget that a key has been released
 	 * @param key the GLFW scancode of the key
 	 */
-	public void onKeyReleased(int key, int modifiers) {
+	public void onKeyReleased(int ch, int key, int modifiers) {
 	}
 	
 	/** Notifies this widget that it has gained focus */

@@ -12,15 +12,16 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 public class WTextField extends WWidget {
+	public static final int OFFSET_X_TEXT = 4;
+	//public static final int OFFSET_Y_TEXT = 6;
 	
 	protected String text = "";
 	protected int maxLength = 16;
-	protected int focusedTicks = 0;
-	protected boolean focused = false;
 	protected boolean editable = true;
 	
 	protected int enabledColor = 0xE0E0E0;
@@ -268,74 +269,76 @@ public class WTextField extends WWidget {
 		}
 	}*/
 
-	/*
-	public void renderButton(int int_1, int int_2, float float_1) {
-		if (this.isVisible()) {
-			if (this.hasBorder()) {
-				fill(this.x - 1, this.y - 1, this.x + this.width + 1, this.y + this.height + 1, -6250336);
-				fill(this.x, this.y, this.x + this.width, this.y + this.height, -16777216);
-			}
+	
+	public void renderButton(int x, int y) {
+		//if (this.focused) { //has border?
+			ScreenDrawing.rect(x-1, y-1, width+2, height+2, 0xFFA0A0A0);
+			ScreenDrawing.rect(x, y, width, height, 0xFF000000);
+		//}
 
-			int int_3 = this.editable ? this.editableColor : this.uneditableColor;
-			int int_4 = this.cursorMax - this.field_2103;
-			int int_5 = this.cursorMin - this.field_2103;
-			String string_1 = this.textRenderer.trimToWidth(this.text.substring(this.field_2103), this.method_1859());
-			boolean boolean_1 = int_4 >= 0 && int_4 <= string_1.length();
-			boolean boolean_2 = this.isFocused() && this.focusedTicks / 6 % 2 == 0 && boolean_1;
-			int int_6 = this.focused ? this.x + 4 : this.x;
-			int int_7 = this.focused ? this.y + (this.height - 8) / 2 : this.y;
-			int int_8 = int_6;
-			if (int_5 > string_1.length()) {
-				int_5 = string_1.length();
-			}
-
-			if (!string_1.isEmpty()) {
-				String string_2 = boolean_1 ? string_1.substring(0, int_4) : string_1;
-				int_8 = this.textRenderer.drawWithShadow((String)this.renderTextProvider.apply(string_2, this.field_2103), (float)int_6, (float)int_7, int_3);
-			}
-
-			boolean boolean_3 = this.cursorMax < this.text.length() || this.text.length() >= this.getMaxLength();
-			int int_9 = int_8;
-			if (!boolean_1) {
-				int_9 = int_4 > 0 ? int_6 + this.width : int_6;
-			} else if (boolean_3) {
-				int_9 = int_8 - 1;
-				--int_8;
-			}
-
-			if (!string_1.isEmpty() && boolean_1 && int_4 < string_1.length()) {
-				this.textRenderer.drawWithShadow((String)this.renderTextProvider.apply(string_1.substring(int_4), this.cursorMax), (float)int_8, (float)int_7, int_3);
-			}
-
-			if (!boolean_3 && this.suggestion != null) {
-				this.textRenderer.drawWithShadow(this.suggestion, (float)(int_9 - 1), (float)int_7, -8355712);
-			}
-
-			int var10002;
-			int var10003;
-			if (boolean_2) {
-				if (boolean_3) {
-					int var10001 = int_7 - 1;
-					var10002 = int_9 + 1;
-					var10003 = int_7 + 1;
-					this.textRenderer.getClass();
-					DrawableHelper.fill(int_9, var10001, var10002, var10003 + 9, -3092272);
-				} else {
-					this.textRenderer.drawWithShadow("_", (float)int_9, (float)int_7, int_3);
-				}
-			}
-
-			if (int_5 != int_4) {
-				int int_10 = int_6 + this.textRenderer.getStringWidth(string_1.substring(0, int_5));
-				var10002 = int_7 - 1;
-				var10003 = int_10 - 1;
-				int var10004 = int_7 + 1;
-				this.textRenderer.getClass();
-				this.method_1886(int_9, var10002, var10003, var10004 + 9);
-			}
-
+		int textColor = this.editable ? this.enabledColor : this.uneditableColor;
+		//int int_4 = this.cursorMax - this.field_2103;
+		int adjustedCursor = this.cursor;// - this.field_2103;
+		String trimText = MinecraftClient.getInstance().textRenderer.trimToWidth(this.text, this.width);
+		//boolean boolean_1 = int_4 >= 0 && int_4 <= string_1.length();
+		boolean focused = this.isFocused(); //this.isFocused() && this.focusedTicks / 6 % 2 == 0 && boolean_1; //Blinks the cursor
+		int textX = x + OFFSET_X_TEXT;
+		int textY = y + (height - 8) / 2;
+		int int_8 = textX;
+		if (adjustedCursor > trimText.length()) {
+			adjustedCursor = trimText.length();
 		}
-	}*/
+
+		if (!trimText.isEmpty()) {
+			String string_2 = trimText.substring(0,adjustedCursor);
+			int_8 = MinecraftClient.getInstance().textRenderer.drawWithShadow(string_2, (float)textX, (float)textY, textColor);
+		}
+
+		boolean boolean_3 = adjustedCursor < trimText.length(); //false; //this.cursorMax < this.text.length() || this.text.length() >= this.getMaxLength();
+		
+		/*if (!boolean_1) {
+			int_9 = int_4 > 0 ? int_6 + this.width : int_6;
+		} else if (boolean_3) {
+			int_9 = int_8 - 1;
+			--int_8;
+		}*/
+
+		//if (!trimText.isEmpty() && boolean_1 && int_4 < trimText.length()) {
+		if (adjustedCursor<trimText.length()) {
+			MinecraftClient.getInstance().textRenderer.drawWithShadow(trimText.substring(adjustedCursor), (float)int_8-1, (float)textY, textColor);
+		}
+			
+
+		if (!boolean_3 && this.suggestion != null) {
+			MinecraftClient.getInstance().textRenderer.drawWithShadow(this.suggestion, (float)(int_8 - 1), textY, -8355712);
+		}
+
+		//int var10002;
+		//int var10003;
+		if (focused) {
+			if (adjustedCursor<trimText.length()) {
+				int caretLoc = WTextField.getCaretOffset(text, cursor);
+				ScreenDrawing.rect(textX+caretLoc-1, textY-2, 1, 12, 0xFFD0D0D0);
+			//if (boolean_3) {
+			//	int var10001 = int_7 - 1;
+			//	var10002 = int_9 + 1;
+			//	var10003 = int_7 + 1;
+			//	
+			//	DrawableHelper.fill(int_9, var10001, var10002, var10003 + 9, -3092272);
+				
+			} else {
+				MinecraftClient.getInstance().textRenderer.drawWithShadow("_", (float)int_8, (float)textY, textColor);
+			}
+		}
+
+		//if (adjustedCursor != int_4) {
+		//	int int_10 = int_6 + MinecraftClient.getInstance().textRenderer.getStringWidth(trimText.substring(0, adjustedCursor));
+		//	var10002 = int_7 - 1;
+		//	var10003 = int_10 - 1;
+		//	int var10004 = int_7 + 1;
+		//	//this.method_1886(int_9, var10002, var10003, var10004 + 9);
+		//}
+	}
 
 	/*
 	private void method_1886(int int_1, int int_2, int int_3, int int_4) {
@@ -470,6 +473,8 @@ public class WTextField extends WWidget {
 	
 	@Override
 	public void paintBackground(int x, int y) {
+		
+		/*
 		if (isFocused()) {
 			ScreenDrawing.rect(x-1, y-1, this.getWidth()+2, this.getHeight()+2, 0xFFFFFFFF);
 		}
@@ -480,25 +485,93 @@ public class WTextField extends WWidget {
 			ScreenDrawing.drawBeveledPanel(x, y, this.getWidth(), this.getHeight());
 		}
 		
-		ScreenDrawing.drawString(this.text, x+2, y+6, 0xFFFFFFFF);
-		int ofs = MinecraftClient.getInstance().textRenderer.getStringWidth(this.text);
-		ScreenDrawing.rect(x+2+ofs, y+4, 1, 12, 0xFFE0E0E0);
+		ScreenDrawing.drawString(this.text, x+OFFSET_X_TEXT, y+OFFSET_Y_TEXT, 0xFFFFFFFF);
+		//int ofs = MinecraftClient.getInstance().textRenderer.getStringWidth(this.text);
+		ScreenDrawing.rect(x+OFFSET_X_TEXT+getCaretOffset(this.text, cursor), y+OFFSET_Y_TEXT-2, 1, OFFSET_Y_TEXT*2, 0xFFE0E0E0);*/
+		
+		renderButton(x, y);
 	}
 	
 	@Override
 	public void onClick(int x, int y, int button) {
 		requestFocus();
+		cursor = getCaretPos(this.text, x-OFFSET_X_TEXT);
 	}
 	
 	@Override
 	public void onCharTyped(char ch) {
-		if (this.text.length()<this.maxLength) this.text += ch;
+		if (this.text.length()<this.maxLength) {
+			//snap cursor into bounds if it went astray
+			if (cursor<0) cursor=0;
+			if (cursor>this.text.length()) cursor = this.text.length();
+			
+			String before = this.text.substring(0, cursor);
+			String after = this.text.substring(cursor, this.text.length());
+			this.text = before+ch+after;
+			cursor++;
+		}
 	}
 	
 	@Override
-	public void onKeyPressed(int key, int modifiers) {
-		if (key==22) {
-			if (text.length()>0) text = text.substring(0, text.length()-1);
+	public void onKeyPressed(int ch, int key, int modifiers) {
+		if (modifiers==0) {
+			if (ch==GLFW.GLFW_KEY_DELETE || ch==GLFW.GLFW_KEY_BACKSPACE) {
+			//if (key==22) {
+				if (text.length()>0 && cursor>0) {
+					String before = this.text.substring(0, cursor);
+					String after = this.text.substring(cursor, this.text.length());
+					
+					before = before.substring(0,before.length()-1);
+					text = before+after;
+					cursor--;
+				}
+			} else if (ch==GLFW.GLFW_KEY_LEFT) {
+				if (cursor>0) cursor--;
+			} else if (ch==GLFW.GLFW_KEY_RIGHT) {
+				if (cursor<text.length()) cursor++;
+			} else {
+				
+				//System.out.println("Ch: "+ch+", Key: "+key+" GLFW: "+GLFW.GLFW_KEY_LEFT);
+				
+			}
 		}
+	}
+	
+	/**
+	 * From an X offset past the left edge of a TextRenderer.draw, finds out what the closest caret
+	 * position (division between letters) is.
+	 * @param s
+	 * @param x
+	 * @return
+	 */
+	@Environment(EnvType.CLIENT)
+	public static int getCaretPos(String s, int x) {
+		if (x<=0) return 0;
+		
+		TextRenderer font = MinecraftClient.getInstance().textRenderer;
+		int lastAdvance = 0;
+		for(int i=0; i<s.length()-1; i++) {
+			int advance = font.getStringWidth(s.substring(0,i+1));
+			int charAdvance = advance-lastAdvance;
+			if (x<advance + (charAdvance/2)) return i+1;
+			
+			lastAdvance = advance;
+		}
+		
+		return s.length();
+	}
+	
+	/**
+	 * From a caret position, finds out what the x-offset to draw the caret is.
+	 * @param s
+	 * @param pos
+	 * @return
+	 */
+	@Environment(EnvType.CLIENT)
+	public static int getCaretOffset(String s, int pos) {
+		if (pos==0) return 0;//-1;
+		
+		TextRenderer font = MinecraftClient.getInstance().textRenderer;
+		return font.getStringWidth(s.substring(0, pos))+1;
 	}
 }

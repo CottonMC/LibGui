@@ -91,7 +91,7 @@ public class WToggleButton extends WWidget {
 		
 		if (label!=null) {
 
-			ScreenDrawing.drawString(label.asFormattedString(), x + 20, y, LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawString(label.asFormattedString(), x + 20, y+1, LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	
