@@ -6,6 +6,9 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -14,7 +17,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -33,6 +38,14 @@ public class WTextField extends WWidget {
 	protected String suggestion = null;
 	
 	protected int cursor = 0;
+	/**
+	 * If not -1, select is the "anchor point" of a selection. That is, if you hit shift+left with
+	 * no existing selection, the selection will be anchored to where you were, but the cursor will
+	 * move left, expanding the selection as you continue to move left. If you move to the right,
+	 * eventually you'll overtake the anchor, drop the anchor at the same place and start expanding
+	 * the selection rightwards instead.
+	 */
+	protected int select = -1;
 	
 	protected Consumer<String> onChanged;
 	
@@ -147,6 +160,22 @@ public class WTextField extends WWidget {
 
 	public int getCursor() {
 		return this.cursor;
+	}
+	
+	@Nullable
+	public String getSelection() {
+		if (select<0) return null;
+		if (select==cursor) return null;
+		
+		//Tidy some things
+		if (select>text.length()) select = text.length();
+		if (cursor<0) cursor = 0;
+		if (cursor>text.length()) cursor = text.length();
+		
+		int start = Math.min(select, cursor);
+		int end = Math.max(select, cursor);
+		
+		return text.substring(start, end);
 	}
 	
 	public boolean isEditable() {
@@ -271,7 +300,7 @@ public class WTextField extends WWidget {
 		}
 	}*/
 
-	
+	@Environment(EnvType.CLIENT)
 	public void renderButton(int x, int y) {
 		//if (this.focused) { //has border?
 			ScreenDrawing.rect(x-1, y-1, width+2, height+2, 0xFFA0A0A0);
@@ -283,6 +312,7 @@ public class WTextField extends WWidget {
 		int adjustedCursor = this.cursor;// - this.field_2103;
 		String trimText = MinecraftClient.getInstance().textRenderer.trimToWidth(this.text, this.width-OFFSET_X_TEXT);
 		//boolean boolean_1 = int_4 >= 0 && int_4 <= string_1.length();
+		boolean selection = (select!=-1);
 		boolean focused = this.isFocused(); //this.isFocused() && this.focusedTicks / 6 % 2 == 0 && boolean_1; //Blinks the cursor
 		int textX = x + OFFSET_X_TEXT;
 		int textY = y + (height - 8) / 2;
@@ -317,7 +347,7 @@ public class WTextField extends WWidget {
 
 		//int var10002;
 		//int var10003;
-		if (focused) {
+		if (focused && !selection) {
 			if (adjustedCursor<trimText.length()) {
 				int caretLoc = WTextField.getCaretOffset(text, cursor);
 				ScreenDrawing.rect(textX+caretLoc-1, textY-2, 1, 12, 0xFFD0D0D0);
@@ -333,53 +363,40 @@ public class WTextField extends WWidget {
 			}
 		}
 
-		//if (adjustedCursor != int_4) {
+		if (selection) {
+			int a = WTextField.getCaretOffset(text, cursor);
+			int b = WTextField.getCaretOffset(text, select);
+			if (b<a) {
+				int tmp = b;
+				b = a;
+				a = tmp;
+			}
+			invertedRect(textX+a-1, textY-1, b-a, 12);
 		//	int int_10 = int_6 + MinecraftClient.getInstance().textRenderer.getStringWidth(trimText.substring(0, adjustedCursor));
 		//	var10002 = int_7 - 1;
 		//	var10003 = int_10 - 1;
 		//	int var10004 = int_7 + 1;
 		//	//this.method_1886(int_9, var10002, var10003, var10004 + 9);
-		//}
+		}
 	}
 
-	/*
-	private void method_1886(int int_1, int int_2, int int_3, int int_4) {
-		int int_6;
-		if (int_1 < int_3) {
-			int_6 = int_1;
-			int_1 = int_3;
-			int_3 = int_6;
-		}
-
-		if (int_2 < int_4) {
-			int_6 = int_2;
-			int_2 = int_4;
-			int_4 = int_6;
-		}
-
-		if (int_3 > this.x + this.width) {
-			int_3 = this.x + this.width;
-		}
-
-		if (int_1 > this.x + this.width) {
-			int_1 = this.x + this.width;
-		}
-
+	@Environment(EnvType.CLIENT)
+	private void invertedRect(int x, int y, int width, int height) {
 		Tessellator tessellator_1 = Tessellator.getInstance();
 		BufferBuilder bufferBuilder_1 = tessellator_1.getBufferBuilder();
 		GlStateManager.color4f(0.0F, 0.0F, 255.0F, 255.0F);
 		GlStateManager.disableTexture();
 		GlStateManager.enableColorLogicOp();
 		GlStateManager.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-		bufferBuilder_1.begin(7, VertexFormats.POSITION);
-		bufferBuilder_1.vertex((double)int_1, (double)int_4, 0.0D).next();
-		bufferBuilder_1.vertex((double)int_3, (double)int_4, 0.0D).next();
-		bufferBuilder_1.vertex((double)int_3, (double)int_2, 0.0D).next();
-		bufferBuilder_1.vertex((double)int_1, (double)int_2, 0.0D).next();
+		bufferBuilder_1.begin(GL11.GL_QUADS, VertexFormats.POSITION);
+		bufferBuilder_1.vertex(x,       y+height, 0.0D).next();
+		bufferBuilder_1.vertex(x+width, y+height, 0.0D).next();
+		bufferBuilder_1.vertex(x+width, y,        0.0D).next();
+		bufferBuilder_1.vertex(x,       y,        0.0D).next();
 		tessellator_1.draw();
 		GlStateManager.disableColorLogicOp();
 		GlStateManager.enableTexture();
-	}*/
+	}
 
 	public WTextField setTextPredicate(Predicate<String> predicate_1) {
 		this.textPredicate = predicate_1;
@@ -519,42 +536,99 @@ public class WTextField extends WWidget {
 		if (!this.editable) return;
 		
 		if (Screen.isCopy(ch)) {
-			//TODO: Implement once selections are a thing
-		} else if (Screen.isPaste(ch)) {
-			String before = this.text.substring(0, cursor);
-			String after = this.text.substring(cursor, this.text.length());
-			
-			String clip = MinecraftClient.getInstance().keyboard.getClipboard();
-			text = before + clip + after;
-			cursor += clip.length();
-			if (text.length()>this.maxLength) {
-				text = text.substring(0, maxLength);
-				if (cursor>text.length()) cursor = text.length();
+			String selection = getSelection();
+			if (selection!=null) {
+				MinecraftClient.getInstance().keyboard.setClipboard(selection);
 			}
+			
+			return;
+		} else if (Screen.isPaste(ch)) {
+			if (select!=-1) {
+				int a = select;
+				int b = cursor;
+				if (b<a) {
+					int tmp = b;
+					b = a;
+					a = tmp;
+				}
+				String before = this.text.substring(0, a);
+				String after = this.text.substring(b);
+				
+				String clip = MinecraftClient.getInstance().keyboard.getClipboard();
+				text = before+clip+after;
+				select = -1;
+				cursor = (before+clip).length();
+			} else {
+				String before = this.text.substring(0, cursor);
+				String after = this.text.substring(cursor, this.text.length());
+				
+				String clip = MinecraftClient.getInstance().keyboard.getClipboard();
+				text = before + clip + after;
+				cursor += clip.length();
+				if (text.length()>this.maxLength) {
+					text = text.substring(0, maxLength);
+					if (cursor>text.length()) cursor = text.length();
+				}
+			}
+			return;
 		}
+		
+		//System.out.println("Ch: "+ch+", Key: "+key+", Mod: "+modifiers);
 		
 		if (modifiers==0) {
 			if (ch==GLFW.GLFW_KEY_DELETE || ch==GLFW.GLFW_KEY_BACKSPACE) {
-			//if (key==22) {
 				if (text.length()>0 && cursor>0) {
-					String before = this.text.substring(0, cursor);
-					String after = this.text.substring(cursor, this.text.length());
-					
-					before = before.substring(0,before.length()-1);
-					text = before+after;
-					cursor--;
+					if (select>=0 && select!=cursor) {
+						int a = select;
+						int b = cursor;
+						if (b<a) {
+							int tmp = b;
+							b = a;
+							a = tmp;
+						}
+						String before = this.text.substring(0, a);
+						String after = this.text.substring(b);
+						text = before+after;
+						if (cursor==b) cursor = a;
+						select = -1;
+					} else {
+						String before = this.text.substring(0, cursor);
+						String after = this.text.substring(cursor, this.text.length());
+						
+						before = before.substring(0,before.length()-1);
+						text = before+after;
+						cursor--;
+					}
 				}
 			} else if (ch==GLFW.GLFW_KEY_LEFT) {
-				if (cursor>0) cursor--;
+				if (select!=-1) {
+					cursor = Math.min(cursor, select);
+					select = -1; //Clear the selection anchor
+				} else {
+					if (cursor>0) cursor--;
+				}
 			} else if (ch==GLFW.GLFW_KEY_RIGHT) {
-				if (cursor<text.length()) cursor++;
+				if (select!=-1) {
+					cursor = Math.max(cursor, select);
+					select = -1; //Clear the selection anchor
+				} else {
+					if (cursor<text.length()) cursor++;
+				}
 			} else {
-				
-				//System.out.println("Ch: "+ch+", Key: "+key+" GLFW: "+GLFW.GLFW_KEY_LEFT);
-				
+				//System.out.println("Ch: "+ch+", Key: "+key);
 			}
 		} else {
-			
+			if (modifiers==GLFW.GLFW_MOD_SHIFT) {
+				if (ch==GLFW.GLFW_KEY_LEFT) {
+					if (select==-1) select = cursor;
+					if (cursor>0) cursor--;
+					if (select==cursor) select = -1;
+				} else if (ch==GLFW.GLFW_KEY_RIGHT) {
+					if (select==-1) select = cursor;
+					if (cursor<text.length()) cursor++;
+					if (select==cursor) select = -1;
+				}
+			}
 		}
 	}
 	
