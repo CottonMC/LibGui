@@ -13,6 +13,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.options.KeyBinding;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -279,7 +281,7 @@ public class WTextField extends WWidget {
 		int textColor = this.editable ? this.enabledColor : this.uneditableColor;
 		//int int_4 = this.cursorMax - this.field_2103;
 		int adjustedCursor = this.cursor;// - this.field_2103;
-		String trimText = MinecraftClient.getInstance().textRenderer.trimToWidth(this.text, this.width);
+		String trimText = MinecraftClient.getInstance().textRenderer.trimToWidth(this.text, this.width-OFFSET_X_TEXT);
 		//boolean boolean_1 = int_4 >= 0 && int_4 <= string_1.length();
 		boolean focused = this.isFocused(); //this.isFocused() && this.focusedTicks / 6 % 2 == 0 && boolean_1; //Blinks the cursor
 		int textX = x + OFFSET_X_TEXT;
@@ -514,6 +516,23 @@ public class WTextField extends WWidget {
 	
 	@Override
 	public void onKeyPressed(int ch, int key, int modifiers) {
+		if (!this.editable) return;
+		
+		if (Screen.isCopy(ch)) {
+			//TODO: Implement once selections are a thing
+		} else if (Screen.isPaste(ch)) {
+			String before = this.text.substring(0, cursor);
+			String after = this.text.substring(cursor, this.text.length());
+			
+			String clip = MinecraftClient.getInstance().keyboard.getClipboard();
+			text = before + clip + after;
+			cursor += clip.length();
+			if (text.length()>this.maxLength) {
+				text = text.substring(0, maxLength);
+				if (cursor>text.length()) cursor = text.length();
+			}
+		}
+		
 		if (modifiers==0) {
 			if (ch==GLFW.GLFW_KEY_DELETE || ch==GLFW.GLFW_KEY_BACKSPACE) {
 			//if (key==22) {
@@ -534,6 +553,8 @@ public class WTextField extends WWidget {
 				//System.out.println("Ch: "+ch+", Key: "+key+" GLFW: "+GLFW.GLFW_KEY_LEFT);
 				
 			}
+		} else {
+			
 		}
 	}
 	
