@@ -10,7 +10,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 
 public class WKirbSprite extends WWidget {
-	private static final Identifier KIRB = new Identifier("libgui:widget/kirb.png");
+	private static final Identifier KIRB = new Identifier("libgui:textures/widget/kirb.png");
 	
 	private static final float PX = 1f/416f;
 	private static final float KIRB_WIDTH = 32*PX;
@@ -98,7 +98,7 @@ public class WKirbSprite extends WWidget {
 		}
 		
 		float offset = KIRB_WIDTH * currentFrame;
-		ScreenDrawing.rect(KIRB, x, y, 32, 32, offset, 0, offset+KIRB_WIDTH, 1, 0xFFFFFFFF);
+		ScreenDrawing.rect(KIRB, x, y+8, 32, 32, offset, 0, offset+KIRB_WIDTH, 1, 0xFFFFFFFF);
 		
 		long elapsed = now - lastFrame;
 		currentFrameTime += elapsed;

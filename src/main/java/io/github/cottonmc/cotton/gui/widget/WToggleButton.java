@@ -66,8 +66,8 @@ public class WToggleButton extends WWidget {
 	Text label = null;
 
 	/** Default On / Off Images */
-	protected final static Identifier DEFAULT_OFF_IMAGE = new Identifier("libgui:widget/toggle_off.png");
-	protected final static Identifier DEFAULT_ON_IMAGE  = new Identifier("libgui:widget/toggle_on.png");
+	protected final static Identifier DEFAULT_OFF_IMAGE = new Identifier("libgui:textures/widget/toggle_off.png");
+	protected final static Identifier DEFAULT_ON_IMAGE  = new Identifier("libgui:textures/widget/toggle_on.png");
 
 	protected Identifier onImage;
 	protected Identifier offImage;
@@ -87,11 +87,11 @@ public class WToggleButton extends WWidget {
 	@Override
 	public void paintBackground(int x, int y) {
 
-		ScreenDrawing.rect(isOn ? DEFAULT_ON_IMAGE : DEFAULT_OFF_IMAGE, x, y, width, height, 0xFFFFFFFF);
+		ScreenDrawing.rect(isOn ? DEFAULT_ON_IMAGE : DEFAULT_OFF_IMAGE, x, y, 18, 18, 0xFFFFFFFF);
 		
 		if (label!=null) {
 
-			ScreenDrawing.drawString(label.asFormattedString(), x + 20, y+1, LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawString(label.asFormattedString(), x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	

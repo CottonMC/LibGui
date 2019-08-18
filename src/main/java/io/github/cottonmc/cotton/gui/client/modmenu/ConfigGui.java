@@ -5,7 +5,6 @@ import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
-import io.github.cottonmc.cotton.gui.widget.WTextField;
 import io.github.cottonmc.cotton.gui.widget.WToggleButton;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -28,8 +27,6 @@ public class ConfigGui extends LightweightGuiDescription {
 		root.add(darkmodeButton, 0, 2, 6, 1);
 		
 		root.add(new WKirbSprite(), 5, 4);
-		
-		root.add(new WTextField(), 0, 3, 5, 1);
 		
 		WButton doneButton = new WButton(new TranslatableText("gui.done"));
 		doneButton.setOnClick(()->{
