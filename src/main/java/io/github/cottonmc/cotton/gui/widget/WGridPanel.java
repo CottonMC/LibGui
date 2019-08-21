@@ -1,27 +1,30 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 public class WGridPanel extends WPanel {
+	protected int grid = 18;
+	
+	public WGridPanel() {}
+	public WGridPanel(int gridSize) { this.grid = gridSize; }
+	
 	public void add(WWidget w, int x, int y) {
 		children.add(w);
 		w.parent = this;
-		w.setLocation(x * 18, y * 18);
+		w.setLocation(x * grid, y * grid);
 		if (w.canResize()) {
-			w.setSize(18, 18);
+			w.setSize(grid, grid);
 		}
 		
 		expandToFit(w);
-		//valid = false;
 	}
 	
 	public void add(WWidget w, int x, int y, int width, int height) {
 		children.add(w);
 		w.parent = this;
-		w.setLocation(x * 18, y * 18);
+		w.setLocation(x * grid, y * grid);
 		if (w.canResize()) {
-			w.setSize(width * 18, height * 18);
+			w.setSize(width * grid, height * grid);
 		}
 		
 		expandToFit(w);
-		//valid = false;
 	}
 }
