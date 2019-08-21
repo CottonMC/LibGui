@@ -81,6 +81,7 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 	
 	@Override
 	public boolean keyPressed(int ch, int keyCode, int modifiers) {
+		if (super.keyPressed(ch, keyCode, modifiers)) return true;
 		if (container.getFocus()==null) return false;
 		container.getFocus().onKeyPressed(ch, keyCode, modifiers);
 		return true;

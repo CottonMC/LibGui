@@ -154,6 +154,7 @@ public class ClientCottonScreen extends Screen {
 	
 	@Override
 	public boolean keyPressed(int ch, int keyCode, int modifiers) {
+		if (super.keyPressed(ch, keyCode, modifiers)) return true;
 		if (description.getFocus()==null) return false;
 		description.getFocus().onKeyPressed(ch, keyCode, modifiers);
 		return true;

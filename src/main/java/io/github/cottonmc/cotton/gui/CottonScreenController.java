@@ -292,7 +292,6 @@ public class CottonScreenController extends CraftingContainer<Inventory> impleme
 	}
 	
 	public void doClick(int x, int y, int button) {
-		System.out.println("Doing click");
 		if (focus!=null) {
 			int wx = focus.getAbsoluteX();
 			int wy = focus.getAbsoluteY();
