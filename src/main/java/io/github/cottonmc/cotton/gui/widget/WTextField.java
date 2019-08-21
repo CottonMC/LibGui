@@ -27,6 +27,9 @@ public class WTextField extends WWidget {
 	public static final int OFFSET_X_TEXT = 4;
 	//public static final int OFFSET_Y_TEXT = 6;
 	
+	@Environment(EnvType.CLIENT)
+	private TextRenderer font;
+	
 	protected String text = "";
 	protected int maxLength = 16;
 	protected boolean editable = true;
@@ -302,55 +305,65 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	public void renderButton(int x, int y) {
-		//if (this.focused) { //has border?
-			ScreenDrawing.rect(x-1, y-1, width+2, height+2, 0xFFA0A0A0);
-			ScreenDrawing.rect(x, y, width, height, 0xFF000000);
-		//}
+		if (this.font==null) this.font = MinecraftClient.getInstance().textRenderer;
+		
+		int borderColor = (this.isFocused()) ? 0xFF_FFFFA0 : 0xFF_A0A0A0;
+		ScreenDrawing.rect(x-1, y-1, width+2, height+2, borderColor);
+		ScreenDrawing.rect(x, y, width, height, 0xFF000000);
+		
 
 		int textColor = this.editable ? this.enabledColor : this.uneditableColor;
-		//int int_4 = this.cursorMax - this.field_2103;
-		int adjustedCursor = this.cursor;// - this.field_2103;
-		String trimText = MinecraftClient.getInstance().textRenderer.trimToWidth(this.text, this.width-OFFSET_X_TEXT);
-		//boolean boolean_1 = int_4 >= 0 && int_4 <= string_1.length();
+		
+		//TODO: Scroll offset
+		String trimText = font.trimToWidth(this.text, this.width-OFFSET_X_TEXT);
+		
 		boolean selection = (select!=-1);
 		boolean focused = this.isFocused(); //this.isFocused() && this.focusedTicks / 6 % 2 == 0 && boolean_1; //Blinks the cursor
+		
+		//int textWidth = font.getStringWidth(trimText);
+		//int textAnchor = (font.isRightToLeft()) ?
+		//		x + OFFSET_X_TEXT + textWidth :
+		//		x + OFFSET_X_TEXT;
+		
 		int textX = x + OFFSET_X_TEXT;
+				//(font.isRightToLeft()) ?
+				//textAnchor - textWidth :
+				//textAnchor;
+		
 		int textY = y + (height - 8) / 2;
-		int int_8 = textX;
+		
+		//TODO: Adjust by scroll offset
+		int adjustedCursor = this.cursor;
 		if (adjustedCursor > trimText.length()) {
 			adjustedCursor = trimText.length();
 		}
-
+		
+		int preCursorAdvance = textX;
 		if (!trimText.isEmpty()) {
 			String string_2 = trimText.substring(0,adjustedCursor);
-			int_8 = MinecraftClient.getInstance().textRenderer.drawWithShadow(string_2, (float)textX, (float)textY, textColor);
+			preCursorAdvance = font.drawWithShadow(string_2, textX, textY, textColor);
 		}
 
-		boolean boolean_3 = adjustedCursor < trimText.length(); //false; //this.cursorMax < this.text.length() || this.text.length() >= this.getMaxLength();
-		
-		/*if (!boolean_1) {
-			int_9 = int_4 > 0 ? int_6 + this.width : int_6;
-		} else if (boolean_3) {
-			int_9 = int_8 - 1;
-			--int_8;
-		}*/
-
-		//if (!trimText.isEmpty() && boolean_1 && int_4 < trimText.length()) {
 		if (adjustedCursor<trimText.length()) {
-			MinecraftClient.getInstance().textRenderer.drawWithShadow(trimText.substring(adjustedCursor), (float)int_8-1, (float)textY, textColor);
+			font.drawWithShadow(trimText.substring(adjustedCursor), preCursorAdvance-1, (float)textY, textColor);
 		}
 			
 
-		if (!boolean_3 && this.suggestion != null) {
-			MinecraftClient.getInstance().textRenderer.drawWithShadow(this.suggestion, (float)(int_8 - 1), textY, -8355712);
+		if (text.length()==0 && this.suggestion != null) {
+			font.drawWithShadow(this.suggestion, textX, textY, -8355712);
 		}
 
 		//int var10002;
 		//int var10003;
 		if (focused && !selection) {
 			if (adjustedCursor<trimText.length()) {
-				int caretLoc = WTextField.getCaretOffset(text, cursor);
-				ScreenDrawing.rect(textX+caretLoc-1, textY-2, 1, 12, 0xFFD0D0D0);
+				//int caretLoc = WTextField.getCaretOffset(text, cursor);
+				//if (caretLoc<0) {
+				//	caretLoc = textX+MinecraftClient.getInstance().textRenderer.getStringWidth(trimText)-caretLoc;
+				//} else {
+				//	caretLoc = textX+caretLoc-1;
+				//}
+				ScreenDrawing.rect(preCursorAdvance-1, textY-2, 1, 12, 0xFFD0D0D0);
 			//if (boolean_3) {
 			//	int var10001 = int_7 - 1;
 			//	var10002 = int_9 + 1;
@@ -359,7 +372,7 @@ public class WTextField extends WWidget {
 			//	DrawableHelper.fill(int_9, var10001, var10002, var10003 + 9, -3092272);
 				
 			} else {
-				MinecraftClient.getInstance().textRenderer.drawWithShadow("_", (float)int_8, (float)textY, textColor);
+				font.drawWithShadow("_", preCursorAdvance, textY, textColor);
 			}
 		}
 
@@ -379,7 +392,7 @@ public class WTextField extends WWidget {
 		//	//this.method_1886(int_9, var10002, var10003, var10004 + 9);
 		}
 	}
-
+	
 	@Environment(EnvType.CLIENT)
 	private void invertedRect(int x, int y, int width, int height) {
 		Tessellator tessellator_1 = Tessellator.getInstance();
@@ -667,6 +680,7 @@ public class WTextField extends WWidget {
 		if (pos==0) return 0;//-1;
 		
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		return font.getStringWidth(s.substring(0, pos))+1;
+		int ofs = font.getStringWidth(s.substring(0, pos))+1;		
+		return ofs; //(font.isRightToLeft()) ? -ofs : ofs;
 	}
 }
