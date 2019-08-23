@@ -66,7 +66,7 @@ public class WTextField extends WWidget {
 	}
 	
 	public void setText(String s) {
-		if (this.textPredicate.test(s)) {
+		if (this.textPredicate==null || this.textPredicate.test(s)) {
 			this.text = (s.length()>maxLength) ? s.substring(0,maxLength) : s;
 			if (onChanged!=null) onChanged.accept(this.text);
 		}
@@ -542,6 +542,10 @@ public class WTextField extends WWidget {
 			this.text = before+ch+after;
 			cursor++;
 		}
+	}
+	
+	public void insertText(int ofs, String s) {
+		//TODO: Implement
 	}
 	
 	@Override
