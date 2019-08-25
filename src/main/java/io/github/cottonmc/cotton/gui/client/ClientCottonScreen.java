@@ -167,8 +167,8 @@ public class ClientCottonScreen extends Screen {
 		return true;
 	}
 	
-	@Override
-	public Element getFocused() {
-		return this;
-	}
+	//@Override
+	//public Element getFocused() {
+		//return this;
+	//}
 }

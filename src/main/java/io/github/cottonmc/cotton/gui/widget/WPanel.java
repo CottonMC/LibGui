@@ -9,7 +9,7 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public class WPanel extends WWidget {
+public abstract class WPanel extends WWidget {
 	protected final List<WWidget> children = Lists.newArrayList();
 	@Environment(EnvType.CLIENT)
 	private BackgroundPainter backgroundPainter = null;
@@ -35,6 +35,11 @@ public class WPanel extends WWidget {
 	public WPanel setBackgroundPainter(BackgroundPainter painter) {
 		this.backgroundPainter = painter;
 		return this;
+	}
+	
+	@Environment(EnvType.CLIENT)
+	public BackgroundPainter getBackgroundPainter() {
+		return this.backgroundPainter;
 	}
 	
 	/**
