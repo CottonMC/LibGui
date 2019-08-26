@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 
 /**
@@ -30,13 +28,14 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 	
 	protected int margin = 4;
 	
-	protected int scrollOffset;
+	protected WScrollBar scrollBar = new WScrollBar(Axis.VERTICAL);
 	
 	public WListPanel(List<D> data, Class<W> listItemClass, Supplier<W> supplier, BiConsumer<D, W> configurator) {
 		this.data = data;
 		this.listItemClass = listItemClass;
 		this.supplier = supplier;
 		this.configurator = configurator;
+		scrollBar.setMaxValue(data.size());
 	}
 	
 	@Override
@@ -55,6 +54,8 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 	@Override
 		public void layout() {
 			super.layout();
+			
+			int scrollOffset = scrollBar.value;
 			
 			System.out.println("Validating");
 			
@@ -83,6 +84,12 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 			System.out.println("Adding children...");
 			
 			this.children.clear();
+			this.children.add(scrollBar);
+			scrollBar.setLocation(this.width-4, 0);
+			scrollBar.setSize(4, this.height);
+			scrollBar.window = cellsHigh;
+			scrollBar.setMaxValue(data.size());
+			
 			if (presentCells>0) {
 				for(int i=0; i<presentCells; i++) {
 					int index = i+scrollOffset;

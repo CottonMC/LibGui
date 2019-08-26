@@ -81,6 +81,11 @@ public class WTextField extends WWidget {
 		return true;
 	}
 	
+	@Override
+	public void setSize(int x, int y) {
+		super.setSize(x, 20);
+	}
+	
 	/*
 	public String getSelectedText() {
 		int start = this.cursorMax < this.cursorMin ? this.cursorMax : this.cursorMin;

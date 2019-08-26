@@ -34,17 +34,12 @@ public class WLabel extends WWidget {
 
 	@Override
 	public boolean canResize() {
-		return false;
+		return true;
 	}
 	
 	@Override
-	public int getWidth() {
-		return 8; //We don't actually clip to our boundaries so return a dummy value.
-	}
-	
-	@Override
-	public int getHeight() {
-		return 8;
+	public void setSize(int x, int y) {
+		super.setSize(x, 20);
 	}
 	
 	public WLabel setDarkmodeColor(int color) {

@@ -8,3 +8,6 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+include ":LibGUI"
+project(":LibGUI").projectDir = file("../")

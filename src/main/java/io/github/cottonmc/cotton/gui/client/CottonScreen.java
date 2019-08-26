@@ -190,7 +190,7 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 		}
 		
 		if (this.container.getRootPanel()!=null) {
-			this.container.getRootPanel().paintForeground(0, 0, mouseX+left, mouseY+top);
+			this.container.getRootPanel().paintForeground(0, 0, mouseX-left, mouseY-top);
 		}
 	}
 	

@@ -13,23 +13,22 @@ import net.minecraft.text.LiteralText;
 public class TestClientGui extends LightweightGuiDescription {
 
 	public TestClientGui() {
-		WGridPanel root = new WGridPanel();
+		WGridPanel root = new WGridPanel(24);
 		this.setRootPanel(root);
+		
+		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR);
+		root.add(title, 0, 0);
 		
 		WTextField text = new WTextField();
 		text.setSuggestion("Test Suggestion");
 		root.add(text, 0, 1, 8, 1);
+		text.setSize(8*18, 20);
 		
 		ArrayList<String> data = new ArrayList<>();
-		data.add("This");
-		data.add("is");
-		data.add("a");
-		data.add("test");
-		data.add("of the");
-		data.add("new");
-		data.add("recycler-style");
-		data.add("list");
-		data.add("widget");
+		for(int i=0; i<100; i++) {
+			data.add(""+i);
+		}
+		
 		BiConsumer<String, WLabel> configurator = (String s, WLabel label) -> {
 			label.setText(new LiteralText(s));
 		};

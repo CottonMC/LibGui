@@ -31,6 +31,8 @@ public class WButton extends WWidget {
 	
 	@Override
 	public void paintForeground(int x, int y, int mouseX, int mouseY) {
+		System.out.println("Mouse: { "+mouseX+", "+mouseY+" }");
+		
 		boolean hovered = (mouseX>=x && mouseY>=y && mouseX<x+getWidth() && mouseY<y+getHeight());
 		int state = 1; //1=regular. 2=hovered. 0=disabled.
 		if (!enabled) state = 0;
@@ -64,6 +66,10 @@ public class WButton extends WWidget {
 		super.paintForeground(x, y, mouseX, mouseY);
 	}
 	
+	@Override
+	public void setSize(int x, int y) {
+		super.setSize(x, 20);
+	}
 	
 	@Override
 	public void onClick(int x, int y, int button) {

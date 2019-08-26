@@ -93,7 +93,7 @@ public class WItemSlot extends WWidget {
 		
 		for (int y = 0; y < slotsHigh; y++) {
 			for (int x = 0; x < slotsWide; x++) {
-				ValidatedSlot slot = new ValidatedSlot(inventory, index, this.getAbsoluteX() + (x * 18) + 1, this.getAbsoluteY() + (y * 18) + 1);
+				ValidatedSlot slot = new ValidatedSlot(inventory, index, this.getAbsoluteX() + (x * 18), this.getAbsoluteY() + (y * 18));
 				peers.add(slot);
 				c.addSlotPeer(slot);
 				index++;
