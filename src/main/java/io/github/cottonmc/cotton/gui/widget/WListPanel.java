@@ -29,6 +29,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 	protected int margin = 4;
 	
 	protected WScrollBar scrollBar = new WScrollBar(Axis.VERTICAL);
+	int lastScroll = -1;
 	
 	public WListPanel(List<D> data, Class<W> listItemClass, Supplier<W> supplier, BiConsumer<D, W> configurator) {
 		this.data = data;
@@ -46,6 +47,11 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 			ScreenDrawing.drawBeveledPanel(x, y, width, height);
 		}
 		
+		if (scrollBar.getValue()!=lastScroll) {
+			layout();
+			lastScroll = scrollBar.getValue();
+		}
+		
 		for(WWidget child : children) {
 			child.paintBackground(x + child.getX(), y + child.getY());
 		}
@@ -53,9 +59,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 	
 	@Override
 		public void layout() {
-			super.layout();
-			
-			int scrollOffset = scrollBar.value;
+			//super.layout();
 			
 			System.out.println("Validating");
 			
@@ -79,16 +83,22 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 			
 			int layoutHeight = this.getHeight()-(margin*2);
 			int cellsHigh = layoutHeight / cellHeight;
-			int presentCells = Math.min(data.size()-scrollOffset, cellsHigh);
+			
 			
 			System.out.println("Adding children...");
 			
 			this.children.clear();
 			this.children.add(scrollBar);
-			scrollBar.setLocation(this.width-4, 0);
-			scrollBar.setSize(4, this.height);
+			scrollBar.setLocation(this.width-scrollBar.getWidth(), 0);
+			scrollBar.setSize(8, this.height);
+			
+			//Fix up the scrollbar handle and track metrics
 			scrollBar.window = cellsHigh;
 			scrollBar.setMaxValue(data.size());
+			int scrollOffset = scrollBar.value;
+			System.out.println(scrollOffset);
+			
+			int presentCells = Math.min(data.size()-scrollOffset, cellsHigh);
 			
 			if (presentCells>0) {
 				for(int i=0; i<presentCells; i++) {
@@ -102,6 +112,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 							w = unconfigured.remove(0);
 						}
 						configurator.accept(d, w);
+						configured.put(d, w);
 					}
 					
 					//At this point, w is nonnull and configured by d

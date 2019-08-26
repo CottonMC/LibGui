@@ -33,7 +33,7 @@ public class TestClientGui extends LightweightGuiDescription {
 			label.setText(new LiteralText(s));
 		};
 		WListPanel<String, WLabel> list = new WListPanel<String, WLabel>(data, WLabel.class, ()->new WLabel(""), configurator);
-		root.add(list, 0, 2, 8, 8);
+		root.add(list, 0, 2, 7, 8);
 		
 		root.validate(this);
 	}
