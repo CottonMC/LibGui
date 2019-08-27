@@ -26,9 +26,9 @@ import java.util.function.IntConsumer;
  * </ul>
  */
 public class WSlider extends WWidget {
-	private static final int TRACK_WIDTH = 6;
-	private static final int THUMB_SIZE = 8;
-	private static final Identifier TEXTURE = new Identifier("libgui", "textures/widget/slider.png");
+	public static final int TRACK_WIDTH = 6;
+	public static final int THUMB_SIZE = 8;
+	public static final Identifier TEXTURE = new Identifier("libgui", "textures/widget/slider.png");
 
 	private final int min, max;
 	private final int valueRange;
