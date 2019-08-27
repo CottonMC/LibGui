@@ -85,7 +85,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 			int cellsHigh = layoutHeight / cellHeight;
 			
 			
-			System.out.println("Adding children...");
+			//System.out.println("Adding children...");
 			
 			this.children.clear();
 			this.children.add(scrollBar);
@@ -96,7 +96,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 			scrollBar.window = cellsHigh;
 			scrollBar.setMaxValue(data.size());
 			int scrollOffset = scrollBar.value;
-			System.out.println(scrollOffset);
+			//System.out.println(scrollOffset);
 			
 			int presentCells = Math.min(data.size()-scrollOffset, cellsHigh);
 			
@@ -117,7 +117,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 					
 					//At this point, w is nonnull and configured by d
 					if (w.canResize()) {
-						w.setSize(this.width-(margin*2), cellHeight);
+						w.setSize(this.width-(margin*2) - scrollBar.getWidth(), cellHeight);
 					}
 					w.x = margin;
 					w.y = margin + (cellHeight * i);
@@ -125,7 +125,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 				}
 			}
 			
-			System.out.println("Children: "+children.size());
+			//System.out.println("Children: "+children.size());
 		}
 	
 	public WListPanel<D, W> setListItemHeight(int height) {

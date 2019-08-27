@@ -100,7 +100,11 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-		lastResponder = container.doMouseDown(containerX, containerY, mouseButton);
+		if (lastResponder==null) {
+			lastResponder = container.doMouseDown(containerX, containerY, mouseButton);
+		} else {
+			//This is a drag instead
+		}
 		return result;
 	}
 	
@@ -109,10 +113,16 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 		boolean result = super.mouseReleased(mouseX, mouseY, mouseButton);
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
 		
-		WWidget responder = container.doMouseUp(containerX, containerY, mouseButton);
-		if (responder!=null && responder==lastResponder) container.doClick(containerX, containerY, mouseButton);
+		if (lastResponder!=null) {
+			lastResponder.onMouseUp(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
+			if (containerX>=0 && containerY>=0 && containerX<width && containerY<height) {
+				lastResponder.onClick(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
+			}
+		} else {
+			container.doMouseUp(containerX, containerY, mouseButton);
+		}
+		
 		lastResponder = null;
 		return result;
 	}
@@ -123,8 +133,14 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 		
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-		container.doMouseDrag(containerX, containerY, mouseButton);
+		
+		if (lastResponder!=null) {
+			lastResponder.onMouseDrag(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
+			return result;
+		} else {
+			if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
+			container.doMouseDrag(containerX, containerY, mouseButton);
+		}
 		return result;
 	}
 	
@@ -171,7 +187,7 @@ public class CottonScreen<T extends CottonScreenController> extends AbstractCont
 		WPanel root = this.container.getRootPanel();
 		if (root==null) return;
 		
-		root.paintBackground(left, top);
+		root.paintBackground(left, top, mouseX-left, mouseY-top);
 		
 		//TODO: Change this to a label that lives in the rootPanel instead?
 		if (container instanceof Nameable) {

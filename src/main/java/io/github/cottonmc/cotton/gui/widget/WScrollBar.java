@@ -1,6 +1,11 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import org.lwjgl.glfw.GLFW;
+
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.Window;
 
 public class WScrollBar extends WWidget {
 	protected Axis axis = Axis.HORIZONTAL;
@@ -10,6 +15,7 @@ public class WScrollBar extends WWidget {
 	
 	protected int anchor = -1;
 	protected int anchorValue = -1;
+	protected boolean sliding = false;
 	
 	public WScrollBar() {
 	}
@@ -36,8 +42,8 @@ public class WScrollBar extends WWidget {
 		super.paintForeground(x, y, mouseX, mouseY);
 		
 		//Sneakily update bar position
-		if (anchor!=-1) {
-			onMouseDown(mouseX+x, mouseY+y, 0);
+		if (sliding) {
+			adjustSlider(mouseX+x, mouseY+y);
 		}
 	}
 	
@@ -54,12 +60,12 @@ public class WScrollBar extends WWidget {
 	 * Gets the number of pixels the scrollbar handle is able to move along its track from one end to the other.
 	 */
 	public int getMovableDistance() {
-		int logicalDistance = maxValue-window;
-		if (logicalDistance<0) logicalDistance = 0;
-		float percentage = logicalDistance / (float)maxValue;
-		
-		//System.out.println("MovableDistance! maxValue: "+maxValue+", window: "+window+", logicalDistance: "+logicalDistance+", percentage: "+percentage);
-		return (int) ( (axis==Axis.HORIZONTAL) ? (width-2)*percentage : (height-2)*percentage);
+		//int logicalDistance = maxValue-window;
+		//if (logicalDistance<0) logicalDistance = 0;
+		//float percentage = logicalDistance / (float)maxValue;
+		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
+		return bar-getHandleSize();
+		//return (int)(percentage*bar);
 	}
 	
 	public int getHandlePosition() {
@@ -75,20 +81,42 @@ public class WScrollBar extends WWidget {
 		return maxValue - window;
 	}
 	
+	protected void adjustSlider(int x, int y) {
+		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
+			System.out.println("LEFT BUTTON PRESS");
+		}
+		
+		int delta = 0;
+		if (axis==Axis.HORIZONTAL) {
+			delta = x-anchor;
+		} else {
+			delta = y-anchor;
+		}
+		
+		float percentMoved = (delta / (float)getMovableDistance());
+		int valueDelta = (int)(percentMoved * maxValue);
+		int valueNew = anchorValue + valueDelta;
+		if (valueNew>getMaxScrollValue()) valueNew = getMaxScrollValue();
+		if (valueNew<0) valueNew = 0;
+		this.value = valueNew;
+	}
+	
 	@Override
 	public WWidget onMouseDown(int x, int y, int button) {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
 		
 		if (axis==Axis.HORIZONTAL) {
-			anchor = x;
+			anchor = x-this.x;
 			anchorValue = value;
 		} else {
-			anchor = y;
+			anchor = y-this.y;
 			anchorValue = value;
 		}
+		sliding = true;
+		System.out.println("Start sliding");
 		return this;
 	}
-	
+	/*
 	@Override
 	public void onMouseDrag(int x, int y, int button) {
 		int delta = 0;
@@ -108,14 +136,15 @@ public class WScrollBar extends WWidget {
 		//System.out.println("Anchor: "+anchor+", Delta: "+delta+", PercentMoved: "+percentMoved+", ValueDelta: "+valueDelta);
 		
 		super.onMouseDrag(x, y, button);
-	}
+	}*/
 	
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
 		anchor = -1;
 		anchorValue = -1;
-		
+		sliding = false;
+		System.out.println("Stop sliding");
 		return this;
 	}
 	

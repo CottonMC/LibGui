@@ -103,7 +103,7 @@ public abstract class WPanel extends WWidget {
 		}
 		super.onMouseDrag(x, y, button);
 	}
-	
+	/*
 	@Override
 	public void onClick(int x, int y, int button) {
 		if (children.isEmpty()) return;
@@ -117,7 +117,7 @@ public abstract class WPanel extends WWidget {
 				return; //Only send the message to the first valid recipient
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	public void validate(GuiDescription c) {
@@ -127,11 +127,11 @@ public abstract class WPanel extends WWidget {
 	
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y) {
+	public void paintBackground(int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter!=null) backgroundPainter.paintBackground(x, y, this);
 		
 		for(WWidget child : children) {
-			child.paintBackground(x + child.getX(), y + child.getY());
+			child.paintBackground(x + child.getX(), y + child.getY(), mouseX-child.getX(), mouseY-child.getY());
 		}
 	}
 
