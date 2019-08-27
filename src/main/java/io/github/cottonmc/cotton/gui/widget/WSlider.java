@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nullable;
 import java.util.function.IntConsumer;
@@ -20,9 +21,15 @@ public class WSlider extends WWidget {
 	private float valueToCoordRatio, coordToValueRatio;
 	@Nullable private IntConsumer valueChangeListener = null;
 	@Nullable private Runnable mouseReleaseListener = null;
+
+	// Used for detecting dragging after the user starts dragging
+	// on top of the slider, but then moves the mouse out but still within the widget's boundary.
 	private boolean dragging = false;
 
 	public WSlider(int min, int max, Axis axis) {
+		if (max >= min)
+			throw new IllegalArgumentException("Minimum value must be smaller than the maximum!");
+
 		this.min = min;
 		this.max = max;
 		this.valueRange = max - min + 1;
@@ -37,8 +44,7 @@ public class WSlider extends WWidget {
 	@Override
 	public void setSize(int x, int y) {
 		super.setSize(x, y);
-		// FIXME: that - and + stuff fixes the rendering but causes range issues (too large for X and too small for Y)
-		int trackHeight = (axis == Axis.HORIZONTAL ? (x - THUMB_SIZE) : (y + THUMB_SIZE));
+		int trackHeight = (axis == Axis.HORIZONTAL ? x : y) - THUMB_SIZE + 1;
 		valueToCoordRatio = (float) valueRange / trackHeight;
 		coordToValueRatio = 1 / valueToCoordRatio;
 	}
@@ -58,8 +64,9 @@ public class WSlider extends WWidget {
 		int aoCenter = (axis == Axis.HORIZONTAL ? height : width) / 2;
 		if (dragging || ao >= aoCenter - TRACK_WIDTH / 2 && ao <= aoCenter + TRACK_WIDTH / 2) {
 			dragging = true;
-			int pos = axis == Axis.VERTICAL ? (axisWidth - a + THUMB_SIZE / 2) : (a - THUMB_SIZE / 2);
-			value = min + (int) (valueToCoordRatio * pos);
+			int pos = (axis == Axis.VERTICAL ? (axisWidth - a) : a) - THUMB_SIZE / 2;
+			int futureValue = min + (int) (valueToCoordRatio * pos);
+			value = MathHelper.clamp(futureValue, min, max);
 			if (valueChangeListener != null) valueChangeListener.accept(value);
 		}
 	}
@@ -83,7 +90,7 @@ public class WSlider extends WWidget {
 		float px = 1 / 16f;
 		if (axis == Axis.VERTICAL) {
 			int trackX = x + width / 2 - TRACK_WIDTH / 2;
-			int thumbY = y + height - (int) (coordToValueRatio * (value - min));
+			int thumbY = y + height - THUMB_SIZE + 1 - (int) (coordToValueRatio * (value - min));
 
 			ScreenDrawing.rect(TEXTURE, trackX, y + 1,      TRACK_WIDTH, 1,          0*px, 8*px,  6*px, 9*px,  0xFFFFFFFF);
 			ScreenDrawing.rect(TEXTURE, trackX, y + 2,      TRACK_WIDTH, height - 2, 0*px, 9*px,  6*px, 10*px, 0xFFFFFFFF);
@@ -94,11 +101,11 @@ public class WSlider extends WWidget {
 			int trackY = y + height / 2 - TRACK_WIDTH / 2;
 			int thumbX = x + (int) (coordToValueRatio * (value - min));
 
-			ScreenDrawing.rect(x, trackY, 1, TRACK_WIDTH, 0xFFFF0000);
-			ScreenDrawing.rect(x + 1, trackY, width - 2, TRACK_WIDTH, 0xFFFF0000);
-			ScreenDrawing.rect(x + width - 1, trackY, 1, TRACK_WIDTH, 0xFFFF0000);
+			ScreenDrawing.rect(TEXTURE, x, trackY, 1, TRACK_WIDTH, 8*px, 0*px, 9*px, 6*px, 0xFFFFFFFF);
+			ScreenDrawing.rect(TEXTURE, x + 1, trackY, width - 2, TRACK_WIDTH, 9*px, 0*px, 10*px, 6*px, 0xFFFFFFFF);
+			ScreenDrawing.rect(TEXTURE, x + width - 1, trackY, 1, TRACK_WIDTH, 10*px, 0*px, 11*px, 6*px, 0xFFFFFFFF);
 
-			ScreenDrawing.rect(thumbX, y + height / 2 - THUMB_SIZE / 2, THUMB_SIZE, THUMB_SIZE, 0xFF00FFFF);
+			ScreenDrawing.rect(TEXTURE, thumbX, y + height / 2 - THUMB_SIZE / 2, THUMB_SIZE, THUMB_SIZE, 8*px, 8*px, 16*px, 16*px, 0xFFFFFFFF);
 		}
 	}
 

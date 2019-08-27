@@ -3,10 +3,7 @@ package io.github.cottonmc.cotton.gui.client.modmenu;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
-import io.github.cottonmc.cotton.gui.widget.WButton;
-import io.github.cottonmc.cotton.gui.widget.WGridPanel;
-import io.github.cottonmc.cotton.gui.widget.WTextField;
-import io.github.cottonmc.cotton.gui.widget.WToggleButton;
+import io.github.cottonmc.cotton.gui.widget.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.TranslatableText;
@@ -30,7 +27,9 @@ public class ConfigGui extends LightweightGuiDescription {
 		WTextField testField = new WTextField();
 		testField.setSuggestion("test");
 		root.add(testField, 0, 3, 4, 1);
-		
+		root.add(new WSlider(100, 0, Axis.VERTICAL).setValueChangeListener(System.out::println), 0, 4, 1, 4);
+		root.add(new WSlider(0, 123, Axis.HORIZONTAL).setValueChangeListener(System.out::println), 1, 4, 4, 1);
+
 		root.add(new WKirbSprite(), 5, 4);
 		
 		WButton doneButton = new WButton(new TranslatableText("gui.done"));
