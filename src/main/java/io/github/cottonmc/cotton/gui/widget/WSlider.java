@@ -1,6 +1,9 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -16,13 +19,12 @@ import java.util.function.IntConsumer;
  * <ul>
  *     <li>A value change listener that gets all value changes (except direct setValue calls)</li>
  *     <li>
- *         A mouse release listener that gets called when the player stops dragging the slider.
+ *         A focus release listener that gets called when the player stops dragging the slider.
  *         For example, this can be used for sending sync packets to the server
  *         when the player has selected a value.
  *     </li>
  * </ul>
  */
-// TODO: Fix the blocked pixel at the top of vertical sliders
 public class WSlider extends WWidget {
 	private static final int TRACK_WIDTH = 6;
 	private static final int THUMB_SIZE = 8;
@@ -35,11 +37,15 @@ public class WSlider extends WWidget {
 	private int value;
 	private float valueToCoordRatio, coordToValueRatio;
 	@Nullable private IntConsumer valueChangeListener = null;
-	@Nullable private Runnable mouseReleaseListener = null;
+	@Nullable private Runnable focusReleaseListener = null;
+
+	@Environment(EnvType.CLIENT)
+	@Nullable
+	private BackgroundPainter backgroundPainter = null;
 
 	// Used for visuals and detecting dragging after the user starts dragging
 	// on top of the slider, but then moves the mouse out but still within the widget's boundary.
-	private boolean dragging = false;
+//	private boolean dragging = false;
 
 	public WSlider(int min, int max, Axis axis) {
 		if (max <= min)
@@ -70,15 +76,28 @@ public class WSlider extends WWidget {
 	}
 
 	@Override
-	public void onMouseDrag(int x, int y, int button) {
-		// a = mouse coordinate on slider axis
+	public boolean canFocus() {
+		return true;
+	}
+
+	@Override
+	public WWidget onMouseDown(int x, int y, int button) {
 		// ao = axis-opposite mouse coordinate, aoCenter = center of ao's axis
-		int a = axis == Axis.HORIZONTAL ? x : y;
 		int ao = axis == Axis.HORIZONTAL ? y : x;
 		int aoCenter = (axis == Axis.HORIZONTAL ? height : width) / 2;
-		if (dragging || ao >= aoCenter - TRACK_WIDTH / 2 - 2 && ao <= aoCenter + TRACK_WIDTH / 2 + 2) {
-			dragging = true;
-			int pos = (axis == Axis.VERTICAL ? (height - a) : a) - THUMB_SIZE / 2;
+
+		// Check if cursor is inside or <=2px away from track
+		if (ao >= aoCenter - TRACK_WIDTH / 2 - 2 && ao <= aoCenter + TRACK_WIDTH / 2 + 2) {
+			requestFocus();
+		}
+		return super.onMouseDown(x, y, button);
+	}
+
+	@Override
+	public void onMouseDrag(int x, int y, int button) {
+		if (isFocused()) {
+			//dragging = true;
+			int pos = (axis == Axis.VERTICAL ? (height - y) : x) - THUMB_SIZE / 2;
 			int futureValue = min + (int) (valueToCoordRatio * pos);
 			value = MathHelper.clamp(futureValue, min, max);
 			if (valueChangeListener != null) valueChangeListener.accept(value);
@@ -93,31 +112,40 @@ public class WSlider extends WWidget {
 
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
-		dragging = false;
-		if (mouseReleaseListener != null) mouseReleaseListener.run();
-
+		releaseFocus();
 		return super.onMouseUp(x, y, button);
 	}
 
 	@Override
+	public void onFocusLost() {
+		if (focusReleaseListener != null) focusReleaseListener.run();
+	}
+
+	@Environment(EnvType.CLIENT)
+	@Override
 	public void paintBackground(int x, int y) {
-		float px = 1 / 32f;
-
-		if (axis == Axis.VERTICAL) {
-			int trackX = x + width / 2 - TRACK_WIDTH / 2;
-
-			ScreenDrawing.rect(TEXTURE, trackX, y + 1,      TRACK_WIDTH, 1,          16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
-			ScreenDrawing.rect(TEXTURE, trackX, y + 2,      TRACK_WIDTH, height - 2, 16*px, 1*px, 22*px, 2*px, 0xFFFFFFFF);
-			ScreenDrawing.rect(TEXTURE, trackX, y + height, TRACK_WIDTH, 1,          16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
+		if (backgroundPainter != null) {
+			backgroundPainter.paintBackground(x, y, this);
 		} else {
-			int trackY = y + height / 2 - TRACK_WIDTH / 2;
+			float px = 1 / 32f;
 
-			ScreenDrawing.rect(TEXTURE, x, trackY, 1, TRACK_WIDTH, 16*px, 3*px, 17*px, 9*px, 0xFFFFFFFF);
-			ScreenDrawing.rect(TEXTURE, x + 1, trackY, width - 2, TRACK_WIDTH, 17*px, 3*px, 18*px, 9*px, 0xFFFFFFFF);
-			ScreenDrawing.rect(TEXTURE, x + width - 1, trackY, 1, TRACK_WIDTH, 18*px, 3*px, 19*px, 9*px, 0xFFFFFFFF);
+			if (axis == Axis.VERTICAL) {
+				int trackX = x + width / 2 - TRACK_WIDTH / 2;
+
+				ScreenDrawing.rect(TEXTURE, trackX, y + 1, TRACK_WIDTH, 1, 16 * px, 0 * px, 22 * px, 1 * px, 0xFFFFFFFF);
+				ScreenDrawing.rect(TEXTURE, trackX, y + 2, TRACK_WIDTH, height - 2, 16 * px, 1 * px, 22 * px, 2 * px, 0xFFFFFFFF);
+				ScreenDrawing.rect(TEXTURE, trackX, y + height, TRACK_WIDTH, 1, 16 * px, 2 * px, 22 * px, 3 * px, 0xFFFFFFFF);
+			} else {
+				int trackY = y + height / 2 - TRACK_WIDTH / 2;
+
+				ScreenDrawing.rect(TEXTURE, x, trackY, 1, TRACK_WIDTH, 16 * px, 3 * px, 17 * px, 9 * px, 0xFFFFFFFF);
+				ScreenDrawing.rect(TEXTURE, x + 1, trackY, width - 2, TRACK_WIDTH, 17 * px, 3 * px, 18 * px, 9 * px, 0xFFFFFFFF);
+				ScreenDrawing.rect(TEXTURE, x + width - 1, trackY, 1, TRACK_WIDTH, 18 * px, 3 * px, 19 * px, 9 * px, 0xFFFFFFFF);
+			}
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void paintForeground(int x, int y, int mouseX, int mouseY) {
 		float px = 1 / 32f;
@@ -133,7 +161,8 @@ public class WSlider extends WWidget {
 			thumbXOffset = 8;
 		}
 
-		// FIXME: Ugly, I really should remove this
+		boolean dragging = isFocused();
+		// TODO: Replace with proper mouse events
 		if (dragging) {
 			if (GLFW.glfwGetMouseButton(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_MOUSE_BUTTON_1) == GLFW.GLFW_PRESS) {
 				onMouseDrag(mouseX - x, mouseY - y, 0);
@@ -163,8 +192,13 @@ public class WSlider extends WWidget {
 		return this;
 	}
 
-	public WSlider setMouseReleaseListener(@Nullable Runnable mouseReleaseListener) {
-		this.mouseReleaseListener = mouseReleaseListener;
+	public WSlider setFocusReleaseListener(@Nullable Runnable focusReleaseListener) {
+		this.focusReleaseListener = focusReleaseListener;
 		return this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void setBackgroundPainter(BackgroundPainter backgroundPainter) {
+		this.backgroundPainter = backgroundPainter;
 	}
 }
