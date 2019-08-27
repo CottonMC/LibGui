@@ -43,10 +43,6 @@ public class WSlider extends WWidget {
 	@Nullable
 	private BackgroundPainter backgroundPainter = null;
 
-	// Used for visuals and detecting dragging after the user starts dragging
-	// on top of the slider, but then moves the mouse out but still within the widget's boundary.
-//	private boolean dragging = false;
-
 	public WSlider(int min, int max, Axis axis) {
 		if (max <= min)
 			throw new IllegalArgumentException("Minimum value must be smaller than the maximum!");
@@ -96,10 +92,9 @@ public class WSlider extends WWidget {
 	@Override
 	public void onMouseDrag(int x, int y, int button) {
 		if (isFocused()) {
-			//dragging = true;
 			int pos = (axis == Axis.VERTICAL ? (height - y) : x) - THUMB_SIZE / 2;
-			int futureValue = min + (int) (valueToCoordRatio * pos);
-			value = MathHelper.clamp(futureValue, min, max);
+			int rawValue = min + (int) (valueToCoordRatio * pos);
+			value = MathHelper.clamp(rawValue, min, max);
 			if (valueChangeListener != null) valueChangeListener.accept(value);
 		}
 	}
