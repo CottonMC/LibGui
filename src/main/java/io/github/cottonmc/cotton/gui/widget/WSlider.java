@@ -22,10 +22,10 @@ import java.util.function.IntConsumer;
  *     </li>
  * </ul>
  */
+// TODO: Fix the blocked pixel at the top of vertical sliders
 public class WSlider extends WWidget {
 	private static final int TRACK_WIDTH = 6;
 	private static final int THUMB_SIZE = 8;
-	// TODO: Horizontal textures
 	private static final Identifier TEXTURE = new Identifier("libgui", "textures/widget/slider.png");
 
 	private final int min, max;
