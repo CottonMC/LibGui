@@ -132,15 +132,15 @@ public class WSlider extends WWidget {
 			if (axis == Axis.VERTICAL) {
 				int trackX = x + width / 2 - TRACK_WIDTH / 2;
 
-				ScreenDrawing.rect(TEXTURE, trackX, y + 1, TRACK_WIDTH, 1, 16 * px, 0 * px, 22 * px, 1 * px, 0xFFFFFFFF);
-				ScreenDrawing.rect(TEXTURE, trackX, y + 2, TRACK_WIDTH, height - 2, 16 * px, 1 * px, 22 * px, 2 * px, 0xFFFFFFFF);
-				ScreenDrawing.rect(TEXTURE, trackX, y + height, TRACK_WIDTH, 1, 16 * px, 2 * px, 22 * px, 3 * px, 0xFFFFFFFF);
+				ScreenDrawing.rect(TEXTURE, trackX, y + 1, TRACK_WIDTH, 1, 16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
+				ScreenDrawing.rect(TEXTURE, trackX, y + 2, TRACK_WIDTH, height - 2, 16*px, 1*px, 22*px, 2*px, 0xFFFFFFFF);
+				ScreenDrawing.rect(TEXTURE, trackX, y + height, TRACK_WIDTH, 1, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
 
-				ScreenDrawing.rect(TEXTURE, x, trackY, 1, TRACK_WIDTH, 16 * px, 3 * px, 17 * px, 9 * px, 0xFFFFFFFF);
-				ScreenDrawing.rect(TEXTURE, x + 1, trackY, width - 2, TRACK_WIDTH, 17 * px, 3 * px, 18 * px, 9 * px, 0xFFFFFFFF);
-				ScreenDrawing.rect(TEXTURE, x + width - 1, trackY, 1, TRACK_WIDTH, 18 * px, 3 * px, 19 * px, 9 * px, 0xFFFFFFFF);
+				ScreenDrawing.rect(TEXTURE, x, trackY, 1, TRACK_WIDTH, 16*px, 3*px, 17*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.rect(TEXTURE, x + 1, trackY, width - 2, TRACK_WIDTH, 17*px, 3*px, 18*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.rect(TEXTURE, x + width - 1, trackY, 1, TRACK_WIDTH, 18*px, 3*px, 19*px, 9*px, 0xFFFFFFFF);
 			}
 		}
 	}
