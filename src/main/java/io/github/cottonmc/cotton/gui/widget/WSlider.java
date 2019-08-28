@@ -5,11 +5,8 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
-import java.util.function.IntConsumer;
 
 /**
  * A slider widget that can be used to select int values.
@@ -26,47 +23,17 @@ import java.util.function.IntConsumer;
  *     </li>
  * </ul>
  */
-public class WSlider extends WWidget {
+public class WSlider extends WAbstractSlider {
 	public static final int TRACK_WIDTH = 6;
 	public static final int THUMB_SIZE = 8;
 	public static final Identifier TEXTURE = new Identifier("libgui", "textures/widget/slider.png");
-
-	private final int min, max;
-	private final Axis axis;
-
-	private int value;
-
-	/**
-	 * True if the user is currently dragging the thumb.
-	 * Used for visuals.
-	 */
-	private boolean dragging = false;
-
-	/**
-	 * A value:coordinate ratio. Used for converting user input into values.
-	 */
-	private float valueToCoordRatio;
-
-	/**
-	 * A coordinate:value ratio. Used for rendering the thumb.
-	 */
-	private float coordToValueRatio;
-
-	@Nullable private IntConsumer valueChangeListener = null;
-	@Nullable private Runnable focusReleaseListener = null;
 
 	@Environment(EnvType.CLIENT)
 	@Nullable
 	private BackgroundPainter backgroundPainter = null;
 
 	public WSlider(int min, int max, Axis axis) {
-		if (max <= min)
-			throw new IllegalArgumentException("Minimum value must be smaller than the maximum!");
-
-		this.min = min;
-		this.max = max;
-		this.axis = axis;
-		this.value = min;
+		super(min, max, axis);
 	}
 
 	public WSlider(int max, Axis axis) {
@@ -74,66 +41,18 @@ public class WSlider extends WWidget {
 	}
 
 	@Override
-	public void setSize(int x, int y) {
-		super.setSize(x, y);
-		int trackHeight = (axis == Axis.HORIZONTAL ? x : y) - THUMB_SIZE + 1;
-		valueToCoordRatio = (float) (max - min) / trackHeight;
-		coordToValueRatio = 1 / valueToCoordRatio;
+	protected int getThumbWidth() {
+		return THUMB_SIZE;
 	}
 
 	@Override
-	public boolean canResize() {
-		return true;
-	}
-
-	@Override
-	public boolean canFocus() {
-		return true;
-	}
-
-	@Override
-	public WWidget onMouseDown(int x, int y, int button) {
+	protected boolean isMouseInsideBounds(int x, int y) {
 		// ao = axis-opposite mouse coordinate, aoCenter = center of ao's axis
 		int ao = axis == Axis.HORIZONTAL ? y : x;
 		int aoCenter = (axis == Axis.HORIZONTAL ? height : width) / 2;
 
 		// Check if cursor is inside or <=2px away from track
-		if (ao >= aoCenter - TRACK_WIDTH / 2 - 2 && ao <= aoCenter + TRACK_WIDTH / 2 + 2) {
-			requestFocus();
-		}
-		return super.onMouseDown(x, y, button);
-	}
-
-	@Override
-	public void onMouseDrag(int x, int y, int button) {
-		if (isFocused()) {
-			dragging = true;
-			moveSlider(x, y);
-		}
-	}
-
-	@Override
-	public void onClick(int x, int y, int button) {
-		moveSlider(x, y);
-	}
-
-	private void moveSlider(int x, int y) {
-		int pos = (axis == Axis.VERTICAL ? (height - y) : x) - THUMB_SIZE / 2;
-		int rawValue = min + Math.round(valueToCoordRatio * pos);
-		int previousValue = value;
-		value = MathHelper.clamp(rawValue, min, max);
-		if (value != previousValue && valueChangeListener != null) valueChangeListener.accept(value);
-	}
-
-	@Override
-	public WWidget onMouseUp(int x, int y, int button) {
-		dragging = false;
-		return super.onMouseUp(x, y, button);
-	}
-
-	@Override
-	public void onFocusLost() {
-		if (focusReleaseListener != null) focusReleaseListener.run();
+		return ao >= aoCenter - TRACK_WIDTH / 2 - 2 && ao <= aoCenter + TRACK_WIDTH / 2 + 2;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -179,62 +98,8 @@ public class WSlider extends WWidget {
 		}
 	}
 
-	public int getValue() {
-		return value;
-	}
-
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-	public WSlider setValueChangeListener(@Nullable IntConsumer valueChangeListener) {
-		this.valueChangeListener = valueChangeListener;
-		return this;
-	}
-
-	public WSlider setFocusReleaseListener(@Nullable Runnable focusReleaseListener) {
-		this.focusReleaseListener = focusReleaseListener;
-		return this;
-	}
-
-	public int getMinValue() {
-		return min;
-	}
-
-	public int getMaxValue() {
-		return max;
-	}
-
-	public Axis getAxis() {
-		return axis;
-	}
-
 	@Environment(EnvType.CLIENT)
 	public void setBackgroundPainter(BackgroundPainter backgroundPainter) {
 		this.backgroundPainter = backgroundPainter;
-	}
-
-	@Override
-	public void onKeyPressed(int ch, int key, int modifiers) {
-		boolean valueChanged = false;
-		if (modifiers == 0) {
-			if ((ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN) && value > min) {
-				value--;
-				valueChanged = true;
-			} else if ((ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP) && value < max) {
-				value++;
-				valueChanged = true;
-			}
-		} else if (modifiers == GLFW.GLFW_MOD_CONTROL) {
-			if ((ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN) && value != min) {
-				value = min;
-				valueChanged = true;
-			} else if ((ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP) && value != max) {
-				value = max;
-				valueChanged = true;
-			}
-		}
-
-		if (valueChanged && valueChangeListener != null) valueChangeListener.accept(value);
 	}
 }
