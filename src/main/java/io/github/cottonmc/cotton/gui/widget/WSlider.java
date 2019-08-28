@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 import java.util.function.IntConsumer;
@@ -15,7 +16,9 @@ import java.util.function.IntConsumer;
  *
  * <p>You can set two listeners on a slider:
  * <ul>
- *     <li>A value change listener that gets all value changes (except direct setValue calls)</li>
+ *     <li>
+ *         A value change listener that gets all value changes (except direct setValue calls).
+ *     </li>
  *     <li>
  *         A focus release listener that gets called when the player stops dragging the slider.
  *         For example, this can be used for sending sync packets to the server
@@ -29,10 +32,15 @@ public class WSlider extends WWidget {
 	public static final Identifier TEXTURE = new Identifier("libgui", "textures/widget/slider.png");
 
 	private final int min, max;
-	private final int valueRange;
 	private final Axis axis;
 
 	private int value;
+
+	/**
+	 * True if the user is currently dragging the thumb.
+	 * Used for visuals.
+	 */
+	private boolean dragging = false;
 
 	/**
 	 * A value:coordinate ratio. Used for converting user input into values.
@@ -57,7 +65,6 @@ public class WSlider extends WWidget {
 
 		this.min = min;
 		this.max = max;
-		this.valueRange = max - min;
 		this.axis = axis;
 		this.value = min;
 	}
@@ -70,7 +77,7 @@ public class WSlider extends WWidget {
 	public void setSize(int x, int y) {
 		super.setSize(x, y);
 		int trackHeight = (axis == Axis.HORIZONTAL ? x : y) - THUMB_SIZE + 1;
-		valueToCoordRatio = (float) valueRange / trackHeight;
+		valueToCoordRatio = (float) (max - min) / trackHeight;
 		coordToValueRatio = 1 / valueToCoordRatio;
 	}
 
@@ -100,23 +107,27 @@ public class WSlider extends WWidget {
 	@Override
 	public void onMouseDrag(int x, int y, int button) {
 		if (isFocused()) {
-			int pos = (axis == Axis.VERTICAL ? (height - y) : x) - THUMB_SIZE / 2;
-			int rawValue = min + (int) (valueToCoordRatio * pos);
-			int previousValue = value;
-			value = MathHelper.clamp(rawValue, min, max);
-			if (value != previousValue && valueChangeListener != null) valueChangeListener.accept(value);
+			dragging = true;
+			moveSlider(x, y);
 		}
 	}
 
 	@Override
 	public void onClick(int x, int y, int button) {
-		onMouseDrag(x, y, button);
-		onMouseUp(x, y, button);
+		moveSlider(x, y);
+	}
+
+	private void moveSlider(int x, int y) {
+		int pos = (axis == Axis.VERTICAL ? (height - y) : x) - THUMB_SIZE / 2;
+		int rawValue = min + Math.round(valueToCoordRatio * pos);
+		int previousValue = value;
+		value = MathHelper.clamp(rawValue, min, max);
+		if (value != previousValue && valueChangeListener != null) valueChangeListener.accept(value);
 	}
 
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
-		releaseFocus();
+		dragging = false;
 		return super.onMouseUp(x, y, button);
 	}
 
@@ -132,12 +143,15 @@ public class WSlider extends WWidget {
 			backgroundPainter.paintBackground(x, y, this);
 		} else {
 			float px = 1 / 32f;
-			int thumbX, thumbY, thumbXOffset;
+			// thumbX/Y: thumb position in widget-space
+			int thumbX, thumbY;
+			// thumbXOffset: thumb texture x offset in pixels
+			int thumbXOffset;
 
 			if (axis == Axis.VERTICAL) {
 				int trackX = x + width / 2 - TRACK_WIDTH / 2;
-				thumbX = x + width / 2 - THUMB_SIZE / 2;
-				thumbY = y + height - THUMB_SIZE + 1 - (int) (coordToValueRatio * (value - min));
+				thumbX = width / 2 - THUMB_SIZE / 2;
+				thumbY = height - THUMB_SIZE + 1 - (int) (coordToValueRatio * (value - min));
 				thumbXOffset = 0;
 
 				ScreenDrawing.rect(TEXTURE, trackX, y + 1, TRACK_WIDTH, 1, 16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
@@ -145,8 +159,8 @@ public class WSlider extends WWidget {
 				ScreenDrawing.rect(TEXTURE, trackX, y + height, TRACK_WIDTH, 1, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
-				thumbX = x + (int) (coordToValueRatio * (value - min));
-				thumbY = y + height / 2 - THUMB_SIZE / 2;
+				thumbX = (int) (coordToValueRatio * (value - min));
+				thumbY = height / 2 - THUMB_SIZE / 2;
 				thumbXOffset = 8;
 
 				ScreenDrawing.rect(TEXTURE, x, trackY, 1, TRACK_WIDTH, 16*px, 3*px, 17*px, 9*px, 0xFFFFFFFF);
@@ -156,8 +170,12 @@ public class WSlider extends WWidget {
 
 			// thumbState values:
 			// 0: default, 1: dragging, 2: hovered
-			int thumbState = isFocused() ? 1 : (mouseX >= thumbX && mouseX <= thumbX + THUMB_SIZE && mouseY >= thumbY && mouseY <= thumbY + THUMB_SIZE ? 2 : 0);
-			ScreenDrawing.rect(TEXTURE, thumbX, thumbY, THUMB_SIZE, THUMB_SIZE, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
+			int thumbState = dragging ? 1 : (mouseX >= thumbX && mouseX <= thumbX + THUMB_SIZE && mouseY >= thumbY && mouseY <= thumbY + THUMB_SIZE ? 2 : 0);
+			ScreenDrawing.rect(TEXTURE, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
+
+			if (thumbState == 0 && isFocused()) {
+				ScreenDrawing.rect(TEXTURE, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, 0*px, 24*px, 8*px, 32*px, 0xFFFFFFFF);
+			}
 		}
 	}
 
@@ -194,5 +212,29 @@ public class WSlider extends WWidget {
 	@Environment(EnvType.CLIENT)
 	public void setBackgroundPainter(BackgroundPainter backgroundPainter) {
 		this.backgroundPainter = backgroundPainter;
+	}
+
+	@Override
+	public void onKeyPressed(int ch, int key, int modifiers) {
+		boolean valueChanged = false;
+		if (modifiers == 0) {
+			if ((ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN) && value > min) {
+				value--;
+				valueChanged = true;
+			} else if ((ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP) && value < max) {
+				value++;
+				valueChanged = true;
+			}
+		} else if (modifiers == GLFW.GLFW_MOD_CONTROL) {
+			if ((ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN) && value != min) {
+				value = min;
+				valueChanged = true;
+			} else if ((ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP) && value != max) {
+				value = max;
+				valueChanged = true;
+			}
+		}
+
+		if (valueChanged && valueChangeListener != null) valueChangeListener.accept(value);
 	}
 }

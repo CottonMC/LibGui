@@ -33,7 +33,7 @@ public class ConfigGui extends LightweightGuiDescription {
 		testField.setSuggestion("test");
 		root.add(testField, 0, 3, 4, 1);
 		root.add(new WSlider(-1, 1, Axis.VERTICAL).setValueChangeListener(System.out::println), 6, 0, 1, 3);
-		root.add(new WSlider(-1, 0, Axis.HORIZONTAL).setValueChangeListener(System.out::println), 1, 4, 4, 1);
+		root.add(new WSlider(1, 2, Axis.HORIZONTAL).setValueChangeListener(System.out::println), 1, 4, 4, 1);
 
 		root.add(new WKirbSprite(), 5, 4);
 		
