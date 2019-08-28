@@ -53,7 +53,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 		}
 		
 		for(WWidget child : children) {
-			child.paintBackground(x + child.getX(), y + child.getY());
+			child.paintBackground(x + child.getX(), y + child.getY(), mouseX - child.getX(), mouseY - child.getY());
 		}
 	}
 	
@@ -87,6 +87,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 				if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
 			}
 		}
+		System.out.println("CellHeight: "+cellHeight);
 		if (cellHeight<4) cellHeight=4;
 		
 		int layoutHeight = this.getHeight()-(margin*2);
@@ -111,6 +112,8 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 		if (presentCells>0) {
 			for(int i=0; i<presentCells; i++) {
 				int index = i+scrollOffset;
+				if (index>=data.size()) break;
+				if (index<0) continue; //THIS IS A THING THAT IS HAPPENING >:(
 				D d = data.get(index);
 				W w = configured.get(d);
 				if (w==null) {

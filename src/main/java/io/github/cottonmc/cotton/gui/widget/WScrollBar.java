@@ -126,6 +126,7 @@ public class WScrollBar extends WWidget {
 		if (this.value>maxValue-window) {
 			this.value = maxValue-window;
 		}
+		if (this.value<0) this.value = 0;
 		return this;
 	}
 }
