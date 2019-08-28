@@ -4,10 +4,8 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 import java.util.function.IntConsumer;
@@ -118,60 +116,38 @@ public class WSlider extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y) {
+	public void paintBackground(int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter != null) {
 			backgroundPainter.paintBackground(x, y, this);
 		} else {
 			float px = 1 / 32f;
+			int thumbX, thumbY, thumbXOffset;
 
 			if (axis == Axis.VERTICAL) {
 				int trackX = x + width / 2 - TRACK_WIDTH / 2;
+				thumbX = x + width / 2 - THUMB_SIZE / 2;
+				thumbY = y + height - THUMB_SIZE + 1 - (int) (coordToValueRatio * (value - min));
+				thumbXOffset = 0;
 
 				ScreenDrawing.rect(TEXTURE, trackX, y + 1, TRACK_WIDTH, 1, 16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
 				ScreenDrawing.rect(TEXTURE, trackX, y + 2, TRACK_WIDTH, height - 2, 16*px, 1*px, 22*px, 2*px, 0xFFFFFFFF);
 				ScreenDrawing.rect(TEXTURE, trackX, y + height, TRACK_WIDTH, 1, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
+				thumbX = x + (int) (coordToValueRatio * (value - min));
+				thumbY = y + height / 2 - THUMB_SIZE / 2;
+				thumbXOffset = 8;
 
 				ScreenDrawing.rect(TEXTURE, x, trackY, 1, TRACK_WIDTH, 16*px, 3*px, 17*px, 9*px, 0xFFFFFFFF);
 				ScreenDrawing.rect(TEXTURE, x + 1, trackY, width - 2, TRACK_WIDTH, 17*px, 3*px, 18*px, 9*px, 0xFFFFFFFF);
 				ScreenDrawing.rect(TEXTURE, x + width - 1, trackY, 1, TRACK_WIDTH, 18*px, 3*px, 19*px, 9*px, 0xFFFFFFFF);
 			}
+
+			// thumbState values:
+			// 0: default, 1: dragging, 2: hovered
+			int thumbState = isFocused() ? 1 : (mouseX >= thumbX && mouseX <= thumbX + THUMB_SIZE && mouseY >= thumbY && mouseY <= thumbY + THUMB_SIZE ? 2 : 0);
+			ScreenDrawing.rect(TEXTURE, thumbX, thumbY, THUMB_SIZE, THUMB_SIZE, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
 		}
-	}
-
-	@Environment(EnvType.CLIENT)
-	@Override
-	public void paintForeground(int x, int y, int mouseX, int mouseY) {
-		float px = 1 / 32f;
-		int thumbX, thumbY, thumbXOffset;
-
-		if (axis == Axis.VERTICAL) {
-			thumbX = x + width / 2 - THUMB_SIZE / 2;
-			thumbY = y + height - THUMB_SIZE + 1 - (int) (coordToValueRatio * (value - min));
-			thumbXOffset = 0;
-		} else {
-			thumbX = x + (int) (coordToValueRatio * (value - min));
-			thumbY = y + height / 2 - THUMB_SIZE / 2;
-			thumbXOffset = 8;
-		}
-
-		boolean dragging = isFocused();
-		// TODO: Replace with proper mouse events
-		if (dragging) {
-			if (GLFW.glfwGetMouseButton(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_MOUSE_BUTTON_1) == GLFW.GLFW_PRESS) {
-				onMouseDrag(mouseX - x, mouseY - y, 0);
-			} else {
-				onMouseUp(mouseX - x, mouseY - y, 0);
-			}
-		}
-
-		// thumbState values:
-		// 0: default, 1: dragging, 2: hovered
-		int thumbState = dragging ? 1 : (mouseX >= thumbX && mouseX <= thumbX + THUMB_SIZE && mouseY >= thumbY && mouseY <= thumbY + THUMB_SIZE ? 2 : 0);
-		ScreenDrawing.rect(TEXTURE, thumbX, thumbY, THUMB_SIZE, THUMB_SIZE, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
-
-		super.paintForeground(x, y, mouseX, mouseY);
 	}
 
 	public int getValue() {
@@ -190,6 +166,18 @@ public class WSlider extends WWidget {
 	public WSlider setFocusReleaseListener(@Nullable Runnable focusReleaseListener) {
 		this.focusReleaseListener = focusReleaseListener;
 		return this;
+	}
+
+	public int getMinValue() {
+		return min;
+	}
+
+	public int getMaxValue() {
+		return max;
+	}
+
+	public Axis getAxis() {
+		return axis;
 	}
 
 	@Environment(EnvType.CLIENT)
