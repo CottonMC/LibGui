@@ -103,7 +103,7 @@ public abstract class WPanel extends WWidget {
 		}
 		super.onMouseDrag(x, y, button);
 	}
-	
+	/*
 	@Override
 	public void onClick(int x, int y, int button) {
 		if (children.isEmpty()) return;
@@ -117,6 +117,24 @@ public abstract class WPanel extends WWidget {
 				return; //Only send the message to the first valid recipient
 			}
 		}
+	}*/
+	
+	/**
+	 * Finds the most specific child node at this location.
+	 */
+	@Override
+	public WWidget hit(int x, int y) {
+		if (children.isEmpty()) return this;
+		for(int i=children.size()-1; i>=0; i--) { //Backwards so topmost widgets get priority
+			WWidget child = children.get(i);
+			if (    x>=child.getX() &&
+					y>=child.getY() &&
+					x<child.getX()+child.getWidth() &&
+					y<child.getY()+child.getHeight()) {
+				return child.hit(x, y);
+			}
+		}
+		return this;
 	}
 	
 	@Override
@@ -127,11 +145,11 @@ public abstract class WPanel extends WWidget {
 	
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y) {
+	public void paintBackground(int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter!=null) backgroundPainter.paintBackground(x, y, this);
 		
 		for(WWidget child : children) {
-			child.paintBackground(x + child.getX(), y + child.getY());
+			child.paintBackground(x + child.getX(), y + child.getY(), mouseX-child.getX(), mouseY-child.getY());
 		}
 	}
 

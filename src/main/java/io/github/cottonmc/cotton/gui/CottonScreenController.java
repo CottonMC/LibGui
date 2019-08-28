@@ -306,7 +306,7 @@ public class CottonScreenController extends CraftingContainer<Inventory> impleme
 			}
 		}
 		
-		if (rootPanel!=null) rootPanel.onClick(x, y, button);
+		//if (rootPanel!=null) rootPanel.onClick(x, y, button);
 	}
 	
 	public void doCharType(char ch) {

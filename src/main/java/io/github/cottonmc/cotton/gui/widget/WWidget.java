@@ -177,6 +177,11 @@ public class WWidget {
 	}
 	
 	@Environment(EnvType.CLIENT)
+	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+		this.paintBackground(x, y);
+	}
+	
+	@Environment(EnvType.CLIENT)
 	public void paintBackground(int x, int y) {
 	}
 	
@@ -185,6 +190,10 @@ public class WWidget {
 		if (mouseX >= x && mouseX < x+getWidth() && mouseY >= y && mouseY < y+getHeight()) {
 			renderTooltip(mouseX, mouseY);
 		}
+	}
+	
+	public boolean isWithinBounds(int x, int y) {
+		return x>=0 && y>=0 && x<this.width && y<this.height;
 	}
 	
 	/**
@@ -220,5 +229,12 @@ public class WWidget {
 	 * @param information List containing all previous tooltip data.
 	 */
 	public void addInformation(List<String> information) {
-}
+	}
+	
+	/**
+	 * Find the most specific child node at this location. For non-panel widgets, returns this widget.
+	 */
+	public WWidget hit(int x, int y) {
+		return this;
+	}
 }

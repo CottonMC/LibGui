@@ -13,3 +13,5 @@ See the [Cotton wiki](https://cottonmc.github.io/Wiki/getting_started/SetupDevel
 And for code examples:
 * [Client-Only Guis](https://github.com/CottonMC/LibGui/wiki/Client-Sided-Guis) 
 * [Inventory Guis](https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs)
+
+For an idea of what's coming down the road for all my projects, you can check my roadmap at https://trello.com/b/0TVU8d63/falkreons-roadmap

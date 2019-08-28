@@ -10,6 +10,7 @@ public class WScrollBar extends WWidget {
 	
 	protected int anchor = -1;
 	protected int anchorValue = -1;
+	protected boolean sliding = false;
 	
 	public WScrollBar() {
 	}
@@ -31,39 +32,34 @@ public class WScrollBar extends WWidget {
 		}
 	}
 	
-	@Override
-	public void paintForeground(int x, int y, int mouseX, int mouseY) {
-		super.paintForeground(x, y, mouseX, mouseY);
-		
-		//Sneakily update bar position
-		if (anchor!=-1) {
-			onMouseDown(mouseX+x, mouseY+y, 0);
-		}
-	}
-	
 	/**
 	 * Gets the on-axis size of the scrollbar handle in gui pixels 
 	 */
 	public int getHandleSize() {
 		float percentage = (window>=maxValue) ? 1f : window / (float)maxValue;
 		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
-		return (int)(percentage*bar);
+		int result = (int)(percentage*bar);
+		if (result<6) result = 6;
+		return result;
 	}
 	
 	/**
 	 * Gets the number of pixels the scrollbar handle is able to move along its track from one end to the other.
 	 */
 	public int getMovableDistance() {
-		int logicalDistance = maxValue-window;
-		if (logicalDistance<0) logicalDistance = 0;
-		float percentage = logicalDistance / (float)maxValue;
-		
-		//System.out.println("MovableDistance! maxValue: "+maxValue+", window: "+window+", logicalDistance: "+logicalDistance+", percentage: "+percentage);
-		return (int) ( (axis==Axis.HORIZONTAL) ? (width-2)*percentage : (height-2)*percentage);
+		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
+		return bar-getHandleSize();
+	}
+	
+	public int pixelsToValues(int pixels) {
+		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
+		//int bar = getMovableDistance();
+		float percent = pixels / (float)bar;
+		return (int)(percent*(maxValue-window));
 	}
 	
 	public int getHandlePosition() {
-		float percent = value / (float)Math.max(maxValue, 1);
+		float percent = value / (float)Math.max(maxValue-window, 1);
 		return (int)(percent * getMovableDistance());
 	}
 	
@@ -73,6 +69,23 @@ public class WScrollBar extends WWidget {
 	 */
 	public int getMaxScrollValue() {
 		return maxValue - window;
+	}
+	
+	protected void adjustSlider(int x, int y) {
+		
+		int delta = 0;
+		if (axis==Axis.HORIZONTAL) {
+			delta = x-anchor;
+		} else {
+			delta = y-anchor;
+		}
+		
+		int valueDelta = pixelsToValues(delta);
+		int valueNew = anchorValue + valueDelta;
+		
+		if (valueNew>getMaxScrollValue()) valueNew = getMaxScrollValue();
+		if (valueNew<0) valueNew = 0;
+		this.value = valueNew;
 	}
 	
 	@Override
@@ -86,28 +99,13 @@ public class WScrollBar extends WWidget {
 			anchor = y;
 			anchorValue = value;
 		}
+		sliding = true;
 		return this;
 	}
 	
 	@Override
 	public void onMouseDrag(int x, int y, int button) {
-		int delta = 0;
-		if (axis==Axis.HORIZONTAL) {
-			delta = x-anchor;
-		} else {
-			delta = y-anchor;
-		}
-		
-		float percentMoved = (delta / (float)getMovableDistance());
-		int valueDelta = (int)(percentMoved * maxValue);
-		int valueNew = anchorValue + valueDelta;
-		if (valueNew>getMaxScrollValue()) valueNew = getMaxScrollValue();
-		if (valueNew<0) valueNew = 0;
-		this.value = valueNew;
-		
-		//System.out.println("Anchor: "+anchor+", Delta: "+delta+", PercentMoved: "+percentMoved+", ValueDelta: "+valueDelta);
-		
-		super.onMouseDrag(x, y, button);
+		adjustSlider(x, y);
 	}
 	
 	@Override
@@ -115,7 +113,7 @@ public class WScrollBar extends WWidget {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
 		anchor = -1;
 		anchorValue = -1;
-		
+		sliding = false;
 		return this;
 	}
 	

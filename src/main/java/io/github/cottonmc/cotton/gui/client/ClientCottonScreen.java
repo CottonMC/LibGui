@@ -57,7 +57,7 @@ public class ClientCottonScreen extends Screen {
 	
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		renderBackground();
+		renderBackground(mouseX, mouseY);
 		
 		super.render(mouseX, mouseY, partialTicks);
 		
@@ -69,14 +69,13 @@ public class ClientCottonScreen extends Screen {
 		}
 	}
 	
-	@Override
-	public void renderBackground() {
+	public void renderBackground(int mouseX, int mouseY) {
 		super.renderBackground();
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				root.paintBackground(left, top);
+				root.paintBackground(left, top, mouseX-left, mouseY-top);
 			}
 		}
 		
@@ -93,6 +92,7 @@ public class ClientCottonScreen extends Screen {
 	
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		if (description.getRootPanel()==null) return super.mouseClicked(mouseX, mouseY, mouseButton);
 		WWidget focus = description.getFocus();
 		if (focus!=null) {
 			
@@ -107,28 +107,36 @@ public class ClientCottonScreen extends Screen {
 			}
 		}
 		
-		if (description.getRootPanel()==null) return super.mouseClicked(mouseX, mouseY, mouseButton);
-		
 		boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-		lastResponder = description.getRootPanel().onMouseDown(containerX, containerY, mouseButton);
-		
+		if (lastResponder==null) {
+			lastResponder = description.getRootPanel().hit(containerX, containerY);
+			if (lastResponder!=null) lastResponder.onMouseDown(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
+		} else {
+			//This is a drag instead
+		}
 		return result;
+		
 	}
 	
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
 		if (description.getRootPanel()==null) return super.mouseReleased(mouseX, mouseY, mouseButton);
-		
 		boolean result = super.mouseReleased(mouseX, mouseY, mouseButton);
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
 		
-		WWidget responder = description.getRootPanel().onMouseUp(containerX, containerY, mouseButton);
-		if (responder!=null && responder==lastResponder) description.getRootPanel().onClick(containerX, containerY, mouseButton);
+		if (lastResponder!=null) {
+			lastResponder.onMouseUp(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
+			if (containerX>=0 && containerY>=0 && containerX<width && containerY<height) {
+				lastResponder.onClick(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
+			}
+		} else {
+			description.getRootPanel().onMouseUp(containerX, containerY, mouseButton);
+		}
+		
 		lastResponder = null;
 		return result;
 	}
@@ -136,12 +144,18 @@ public class ClientCottonScreen extends Screen {
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double unknown_1, double unknown_2) {
 		if (description.getRootPanel()==null) return super.mouseDragged(mouseX, mouseY, mouseButton, unknown_1, unknown_2);
-		
 		boolean result = super.mouseDragged(mouseX, mouseY, mouseButton, unknown_1, unknown_2);
+		
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-		description.getRootPanel().onMouseDrag(containerX, containerY, mouseButton);
+		
+		if (lastResponder!=null) {
+			lastResponder.onMouseDrag(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
+			return result;
+		} else {
+			if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
+			description.getRootPanel().onMouseDrag(containerX, containerY, mouseButton);
+		}
 		return result;
 	}
 	

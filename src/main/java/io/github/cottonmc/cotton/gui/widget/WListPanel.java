@@ -40,7 +40,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 	}
 	
 	@Override
-	public void paintBackground(int x, int y) {
+	public void paintBackground(int x, int y, int mouseX, int mouseY) {
 		if (getBackgroundPainter()!=null) {
 			getBackgroundPainter().paintBackground(x, y, this);
 		} else {
@@ -58,75 +58,83 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 	}
 	
 	@Override
-		public void layout() {
-			//super.layout();
-			
-			System.out.println("Validating");
-			
-			//Recompute cellHeight if needed
-			if (!fixedHeight) {
-				if (unconfigured.isEmpty()) {
-					if (configured.isEmpty()) {
-						W exemplar = supplier.get();
-						unconfigured.add(exemplar);
-						if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
-					} else {
-						W exemplar = configured.values().iterator().next();
-						if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
-					}
+	public void layout() {
+		
+		this.children.clear();
+		this.children.add(scrollBar);
+		scrollBar.setLocation(this.width-scrollBar.getWidth(), 0);
+		scrollBar.setSize(8, this.height);
+		//scrollBar.window = 6;
+		scrollBar.setMaxValue(data.size());
+		
+		//super.layout();
+		
+		//System.out.println("Validating");
+		
+		//Recompute cellHeight if needed
+		if (!fixedHeight) {
+			if (unconfigured.isEmpty()) {
+				if (configured.isEmpty()) {
+					W exemplar = supplier.get();
+					unconfigured.add(exemplar);
+					if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
 				} else {
-					W exemplar = unconfigured.get(0);
+					W exemplar = configured.values().iterator().next();
 					if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
 				}
+			} else {
+				W exemplar = unconfigured.get(0);
+				if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
 			}
-			if (cellHeight<4) cellHeight=4;
-			
-			int layoutHeight = this.getHeight()-(margin*2);
-			int cellsHigh = layoutHeight / cellHeight;
-			
-			
-			System.out.println("Adding children...");
-			
-			this.children.clear();
-			this.children.add(scrollBar);
-			scrollBar.setLocation(this.width-scrollBar.getWidth(), 0);
-			scrollBar.setSize(8, this.height);
-			
-			//Fix up the scrollbar handle and track metrics
-			scrollBar.window = cellsHigh;
-			scrollBar.setMaxValue(data.size());
-			int scrollOffset = scrollBar.value;
-			System.out.println(scrollOffset);
-			
-			int presentCells = Math.min(data.size()-scrollOffset, cellsHigh);
-			
-			if (presentCells>0) {
-				for(int i=0; i<presentCells; i++) {
-					int index = i+scrollOffset;
-					D d = data.get(index);
-					W w = configured.get(d);
-					if (w==null) {
-						if (unconfigured.isEmpty()) {
-							w = supplier.get();
-						} else {
-							w = unconfigured.remove(0);
-						}
-						configurator.accept(d, w);
-						configured.put(d, w);
-					}
-					
-					//At this point, w is nonnull and configured by d
-					if (w.canResize()) {
-						w.setSize(this.width-(margin*2), cellHeight);
-					}
-					w.x = margin;
-					w.y = margin + (cellHeight * i);
-					this.children.add(w);
-				}
-			}
-			
-			System.out.println("Children: "+children.size());
 		}
+		if (cellHeight<4) cellHeight=4;
+		
+		int layoutHeight = this.getHeight()-(margin*2);
+		int cellsHigh = layoutHeight / cellHeight;
+		
+		
+		//System.out.println("Adding children...");
+		
+		//this.children.clear();
+		//this.children.add(scrollBar);
+		//scrollBar.setLocation(this.width-scrollBar.getWidth(), 0);
+		//scrollBar.setSize(8, this.height);
+		
+		//Fix up the scrollbar handle and track metrics
+		scrollBar.window = cellsHigh;
+		//scrollBar.setMaxValue(data.size());
+		int scrollOffset = scrollBar.value;
+		//System.out.println(scrollOffset);
+		
+		int presentCells = Math.min(data.size()-scrollOffset, cellsHigh);
+		
+		if (presentCells>0) {
+			for(int i=0; i<presentCells; i++) {
+				int index = i+scrollOffset;
+				D d = data.get(index);
+				W w = configured.get(d);
+				if (w==null) {
+					if (unconfigured.isEmpty()) {
+						w = supplier.get();
+					} else {
+						w = unconfigured.remove(0);
+					}
+					configurator.accept(d, w);
+					configured.put(d, w);
+				}
+				
+				//At this point, w is nonnull and configured by d
+				if (w.canResize()) {
+					w.setSize(this.width-(margin*2) - scrollBar.getWidth(), cellHeight);
+				}
+				w.x = margin;
+				w.y = margin + (cellHeight * i);
+				this.children.add(w);
+			}
+		}
+		
+		//System.out.println("Children: "+children.size());
+	}
 	
 	public WListPanel<D, W> setListItemHeight(int height) {
 		cellHeight = height;
