@@ -119,6 +119,24 @@ public abstract class WPanel extends WWidget {
 		}
 	}*/
 	
+	/**
+	 * Finds the most specific child node at this location.
+	 */
+	@Override
+	public WWidget hit(int x, int y) {
+		if (children.isEmpty()) return this;
+		for(int i=children.size()-1; i>=0; i--) { //Backwards so topmost widgets get priority
+			WWidget child = children.get(i);
+			if (    x>=child.getX() &&
+					y>=child.getY() &&
+					x<child.getX()+child.getWidth() &&
+					y<child.getY()+child.getHeight()) {
+				return child.hit(x, y);
+			}
+		}
+		return this;
+	}
+	
 	@Override
 	public void validate(GuiDescription c) {
 		layout();

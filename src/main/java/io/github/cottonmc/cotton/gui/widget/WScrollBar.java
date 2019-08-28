@@ -1,11 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import org.lwjgl.glfw.GLFW;
-
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.Window;
 
 public class WScrollBar extends WWidget {
 	protected Axis axis = Axis.HORIZONTAL;
@@ -37,39 +32,34 @@ public class WScrollBar extends WWidget {
 		}
 	}
 	
-	@Override
-	public void paintForeground(int x, int y, int mouseX, int mouseY) {
-		super.paintForeground(x, y, mouseX, mouseY);
-		
-		//Sneakily update bar position
-		if (sliding) {
-			adjustSlider(mouseX+x, mouseY+y);
-		}
-	}
-	
 	/**
 	 * Gets the on-axis size of the scrollbar handle in gui pixels 
 	 */
 	public int getHandleSize() {
 		float percentage = (window>=maxValue) ? 1f : window / (float)maxValue;
 		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
-		return (int)(percentage*bar);
+		int result = (int)(percentage*bar);
+		if (result<6) result = 6;
+		return result;
 	}
 	
 	/**
 	 * Gets the number of pixels the scrollbar handle is able to move along its track from one end to the other.
 	 */
 	public int getMovableDistance() {
-		//int logicalDistance = maxValue-window;
-		//if (logicalDistance<0) logicalDistance = 0;
-		//float percentage = logicalDistance / (float)maxValue;
 		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
 		return bar-getHandleSize();
-		//return (int)(percentage*bar);
+	}
+	
+	public int pixelsToValues(int pixels) {
+		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
+		//int bar = getMovableDistance();
+		float percent = pixels / (float)bar;
+		return (int)(percent*(maxValue-window));
 	}
 	
 	public int getHandlePosition() {
-		float percent = value / (float)Math.max(maxValue, 1);
+		float percent = value / (float)Math.max(maxValue-window, 1);
 		return (int)(percent * getMovableDistance());
 	}
 	
@@ -82,9 +72,6 @@ public class WScrollBar extends WWidget {
 	}
 	
 	protected void adjustSlider(int x, int y) {
-		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
-			System.out.println("LEFT BUTTON PRESS");
-		}
 		
 		int delta = 0;
 		if (axis==Axis.HORIZONTAL) {
@@ -93,9 +80,9 @@ public class WScrollBar extends WWidget {
 			delta = y-anchor;
 		}
 		
-		float percentMoved = (delta / (float)getMovableDistance());
-		int valueDelta = (int)(percentMoved * maxValue);
+		int valueDelta = pixelsToValues(delta);
 		int valueNew = anchorValue + valueDelta;
+		
 		if (valueNew>getMaxScrollValue()) valueNew = getMaxScrollValue();
 		if (valueNew<0) valueNew = 0;
 		this.value = valueNew;
@@ -106,37 +93,20 @@ public class WScrollBar extends WWidget {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
 		
 		if (axis==Axis.HORIZONTAL) {
-			anchor = x-this.x;
+			anchor = x;
 			anchorValue = value;
 		} else {
-			anchor = y-this.y;
+			anchor = y;
 			anchorValue = value;
 		}
 		sliding = true;
-		System.out.println("Start sliding");
 		return this;
 	}
-	/*
+	
 	@Override
 	public void onMouseDrag(int x, int y, int button) {
-		int delta = 0;
-		if (axis==Axis.HORIZONTAL) {
-			delta = x-anchor;
-		} else {
-			delta = y-anchor;
-		}
-		
-		float percentMoved = (delta / (float)getMovableDistance());
-		int valueDelta = (int)(percentMoved * maxValue);
-		int valueNew = anchorValue + valueDelta;
-		if (valueNew>getMaxScrollValue()) valueNew = getMaxScrollValue();
-		if (valueNew<0) valueNew = 0;
-		this.value = valueNew;
-		
-		//System.out.println("Anchor: "+anchor+", Delta: "+delta+", PercentMoved: "+percentMoved+", ValueDelta: "+valueDelta);
-		
-		super.onMouseDrag(x, y, button);
-	}*/
+		adjustSlider(x, y);
+	}
 	
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
@@ -144,7 +114,6 @@ public class WScrollBar extends WWidget {
 		anchor = -1;
 		anchorValue = -1;
 		sliding = false;
-		System.out.println("Stop sliding");
 		return this;
 	}
 	

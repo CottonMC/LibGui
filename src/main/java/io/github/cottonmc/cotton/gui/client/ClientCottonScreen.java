@@ -93,16 +93,6 @@ public class ClientCottonScreen extends Screen {
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		if (description.getRootPanel()==null) return super.mouseClicked(mouseX, mouseY, mouseButton);
-		/*
-		boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
-		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseY-top;
-		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-		lastResponder = description.getRootPanel().onMouseDown(containerX, containerY, mouseButton);
-		
-		return result;*/
-		
-		
 		WWidget focus = description.getFocus();
 		if (focus!=null) {
 			
@@ -122,7 +112,8 @@ public class ClientCottonScreen extends Screen {
 		int containerY = (int)mouseY-top;
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
 		if (lastResponder==null) {
-			lastResponder = description.getRootPanel().onMouseDown(containerX, containerY, mouseButton);
+			lastResponder = description.getRootPanel().hit(containerX, containerY);
+			if (lastResponder!=null) lastResponder.onMouseDown(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
 		} else {
 			//This is a drag instead
 		}
@@ -133,16 +124,6 @@ public class ClientCottonScreen extends Screen {
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
 		if (description.getRootPanel()==null) return super.mouseReleased(mouseX, mouseY, mouseButton);
-		/*
-		boolean result = super.mouseReleased(mouseX, mouseY, mouseButton);
-		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseY-top;
-		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-		
-		WWidget responder = description.getRootPanel().onMouseUp(containerX, containerY, mouseButton);
-		if (responder!=null && responder==lastResponder) description.getRootPanel().onClick(containerX, containerY, mouseButton);
-		lastResponder = null;
-		return result;*/
 		boolean result = super.mouseReleased(mouseX, mouseY, mouseButton);
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
@@ -163,13 +144,6 @@ public class ClientCottonScreen extends Screen {
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double unknown_1, double unknown_2) {
 		if (description.getRootPanel()==null) return super.mouseDragged(mouseX, mouseY, mouseButton, unknown_1, unknown_2);
-		/*
-		boolean result = super.mouseDragged(mouseX, mouseY, mouseButton, unknown_1, unknown_2);
-		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseY-top;
-		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-		description.getRootPanel().onMouseDrag(containerX, containerY, mouseButton);
-		return result;*/
 		boolean result = super.mouseDragged(mouseX, mouseY, mouseButton, unknown_1, unknown_2);
 		
 		int containerX = (int)mouseX-left;

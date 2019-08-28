@@ -230,4 +230,11 @@ public class WWidget {
 	 */
 	public void addInformation(List<String> information) {
 	}
+	
+	/**
+	 * Find the most specific child node at this location. For non-panel widgets, returns this widget.
+	 */
+	public WWidget hit(int x, int y) {
+		return this;
+	}
 }
