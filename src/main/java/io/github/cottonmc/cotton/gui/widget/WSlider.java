@@ -33,7 +33,17 @@ public class WSlider extends WWidget {
 	private final Axis axis;
 
 	private int value;
-	private float valueToCoordRatio, coordToValueRatio;
+
+	/**
+	 * A value:coordinate ratio. Used for converting user input into values.
+	 */
+	private float valueToCoordRatio;
+
+	/**
+	 * A coordinate:value ratio. Used for rendering the thumb.
+	 */
+	private float coordToValueRatio;
+
 	@Nullable private IntConsumer valueChangeListener = null;
 	@Nullable private Runnable focusReleaseListener = null;
 
@@ -47,7 +57,7 @@ public class WSlider extends WWidget {
 
 		this.min = min;
 		this.max = max;
-		this.valueRange = max - min + 1;
+		this.valueRange = max - min;
 		this.axis = axis;
 		this.value = min;
 	}
@@ -92,8 +102,9 @@ public class WSlider extends WWidget {
 		if (isFocused()) {
 			int pos = (axis == Axis.VERTICAL ? (height - y) : x) - THUMB_SIZE / 2;
 			int rawValue = min + (int) (valueToCoordRatio * pos);
+			int previousValue = value;
 			value = MathHelper.clamp(rawValue, min, max);
-			if (valueChangeListener != null) valueChangeListener.accept(value);
+			if (value != previousValue && valueChangeListener != null) valueChangeListener.accept(value);
 		}
 	}
 
