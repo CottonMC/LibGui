@@ -30,7 +30,21 @@ public class ConfigGui extends LightweightGuiDescription {
 		WTextField testField = new WTextField();
 		testField.setSuggestion("test");
 		root.add(testField, 0, 3, 4, 1);
-		
+
+		/*
+		WSlider verticalSlider = new WSlider(-100, 100, Axis.VERTICAL);
+		verticalSlider.setDraggingFinishedListener(() -> System.out.println("Mouse released"));
+		verticalSlider.setValueChangeListener(System.out::println);
+
+		WLabeledSlider horizontalSlider = new WLabeledSlider(0, 500);
+		horizontalSlider.setLabelUpdater(value -> new LiteralText(value + "!"));
+		horizontalSlider.setDraggingFinishedListener(() -> System.out.println("Mouse released"));
+		horizontalSlider.setValue(250);
+
+		root.add(verticalSlider, 6, 0, 1, 3);
+		root.add(horizontalSlider, 1, 4, 4, 1);
+		*/
+
 		root.add(new WKirbSprite(), 5, 4);
 		
 		WButton doneButton = new WButton(new TranslatableText("gui.done"));
