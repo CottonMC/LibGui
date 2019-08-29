@@ -12,10 +12,11 @@ import java.util.function.IntConsumer;
  * <p>You can set two listeners on a slider:
  * <ul>
  *     <li>
- *         A value change listener that gets all value changes (except direct setValue calls).
+ *         A value change listener that gets all value changes (including direct setValue calls).
  *     </li>
  *     <li>
- *         A focus release listener that gets called when the player stops dragging the slider.
+ *         A dragging finished listener that gets called when the player stops dragging the slider
+ *         or modifies the value with the keyboard.
  *         For example, this can be used for sending sync packets to the server
  *         when the player has selected a value.
  *     </li>
@@ -43,8 +44,13 @@ public abstract class WAbstractSlider extends WWidget {
 	 */
 	protected float coordToValueRatio;
 
+	/**
+	 * True if there is a pending dragging finished event caused by the keyboard.
+	 */
+	private boolean valueChangedWithKeys = false;
+
 	@Nullable private IntConsumer valueChangeListener = null;
-	@Nullable private Runnable focusReleaseListener = null;
+	@Nullable private Runnable draggingFinishedListener = null;
 
 	protected WAbstractSlider(int min, int max, Axis axis) {
 		if (max <= min)
@@ -73,7 +79,7 @@ public abstract class WAbstractSlider extends WWidget {
 	@Override
 	public void setSize(int x, int y) {
 		super.setSize(x, y);
-		int trackHeight = (axis == Axis.HORIZONTAL ? x : y) - getThumbWidth() + 1;
+		int trackHeight = (axis == Axis.HORIZONTAL ? x : y) - getThumbWidth();
 		valueToCoordRatio = (float) (max - min) / trackHeight;
 		coordToValueRatio = 1 / valueToCoordRatio;
 	}
@@ -108,6 +114,7 @@ public abstract class WAbstractSlider extends WWidget {
 	@Override
 	public void onClick(int x, int y, int button) {
 		moveSlider(x, y);
+		if (draggingFinishedListener != null) draggingFinishedListener.run();
 	}
 
 	private void moveSlider(int x, int y) {
@@ -115,18 +122,14 @@ public abstract class WAbstractSlider extends WWidget {
 		int rawValue = min + Math.round(valueToCoordRatio * pos);
 		int previousValue = value;
 		value = MathHelper.clamp(rawValue, min, max);
-		if (value != previousValue && valueChangeListener != null) valueChangeListener.accept(value);
+		if (value != previousValue) onValueChanged(value);
 	}
 
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
 		dragging = false;
+		if (draggingFinishedListener != null) draggingFinishedListener.run();
 		return super.onMouseUp(x, y, button);
-	}
-
-	@Override
-	public void onFocusLost() {
-		if (focusReleaseListener != null) focusReleaseListener.run();
 	}
 
 	public int getValue() {
@@ -135,16 +138,15 @@ public abstract class WAbstractSlider extends WWidget {
 
 	public void setValue(int value) {
 		this.value = value;
+		onValueChanged(value);
 	}
 
-	public WAbstractSlider setValueChangeListener(@Nullable IntConsumer valueChangeListener) {
+	public void setValueChangeListener(@Nullable IntConsumer valueChangeListener) {
 		this.valueChangeListener = valueChangeListener;
-		return this;
 	}
 
-	public WAbstractSlider setFocusReleaseListener(@Nullable Runnable focusReleaseListener) {
-		this.focusReleaseListener = focusReleaseListener;
-		return this;
+	public void setDraggingFinishedListener(@Nullable Runnable draggingFinishedListener) {
+		this.draggingFinishedListener = draggingFinishedListener;
 	}
 
 	public int getMinValue() {
@@ -159,27 +161,50 @@ public abstract class WAbstractSlider extends WWidget {
 		return axis;
 	}
 
+	protected void onValueChanged(int value) {
+		if (valueChangeListener != null) valueChangeListener.accept(value);
+	}
+
 	@Override
 	public void onKeyPressed(int ch, int key, int modifiers) {
 		boolean valueChanged = false;
 		if (modifiers == 0) {
-			if ((ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN) && value > min) {
+			if (isDecreasingKey(ch) && value > min) {
 				value--;
 				valueChanged = true;
-			} else if ((ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP) && value < max) {
+			} else if (isIncreasingKey(ch) && value < max) {
 				value++;
 				valueChanged = true;
 			}
 		} else if (modifiers == GLFW.GLFW_MOD_CONTROL) {
-			if ((ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN) && value != min) {
+			if (isDecreasingKey(ch) && value != min) {
 				value = min;
 				valueChanged = true;
-			} else if ((ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP) && value != max) {
+			} else if (isIncreasingKey(ch) && value != max) {
 				value = max;
 				valueChanged = true;
 			}
 		}
 
-		if (valueChanged && valueChangeListener != null) valueChangeListener.accept(value);
+		if (valueChanged) {
+			onValueChanged(value);
+			valueChangedWithKeys = true;
+		}
+	}
+
+	@Override
+	public void onKeyReleased(int ch, int key, int modifiers) {
+		if (valueChangedWithKeys && (isDecreasingKey(ch) || isIncreasingKey(ch))) {
+			if (draggingFinishedListener != null) draggingFinishedListener.run();
+			valueChangedWithKeys = false;
+		}
+	}
+
+	private static boolean isDecreasingKey(int ch) {
+		return ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN;
+	}
+
+	private static boolean isIncreasingKey(int ch) {
+		return ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP;
 	}
 }

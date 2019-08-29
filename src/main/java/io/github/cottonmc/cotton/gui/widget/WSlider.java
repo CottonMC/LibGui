@@ -9,19 +9,9 @@ import net.minecraft.util.Identifier;
 import javax.annotation.Nullable;
 
 /**
- * A slider widget that can be used to select int values.
+ * A simple slider widget that can be used to select int values.
  *
- * <p>You can set two listeners on a slider:
- * <ul>
- *     <li>
- *         A value change listener that gets all value changes (except direct setValue calls).
- *     </li>
- *     <li>
- *         A focus release listener that gets called when the player stops dragging the slider.
- *         For example, this can be used for sending sync packets to the server
- *         when the player has selected a value.
- *     </li>
- * </ul>
+ * @see WAbstractSlider for supported listeners
  */
 public class WSlider extends WAbstractSlider {
 	public static final int TRACK_WIDTH = 6;
@@ -78,7 +68,7 @@ public class WSlider extends WAbstractSlider {
 				ScreenDrawing.rect(TEXTURE, trackX, y + height, TRACK_WIDTH, 1, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
-				thumbX = (int) (coordToValueRatio * (value - min));
+				thumbX = Math.round(coordToValueRatio * (value - min));
 				thumbY = height / 2 - THUMB_SIZE / 2;
 				thumbXOffset = 8;
 

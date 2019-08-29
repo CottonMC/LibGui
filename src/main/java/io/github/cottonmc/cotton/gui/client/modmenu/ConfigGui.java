@@ -3,11 +3,8 @@ package io.github.cottonmc.cotton.gui.client.modmenu;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
-import io.github.cottonmc.cotton.gui.widget.Axis;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
-import io.github.cottonmc.cotton.gui.widget.WLabeledSlider;
-import io.github.cottonmc.cotton.gui.widget.WSlider;
 import io.github.cottonmc.cotton.gui.widget.WTextField;
 import io.github.cottonmc.cotton.gui.widget.WToggleButton;
 import net.minecraft.client.MinecraftClient;
@@ -33,8 +30,20 @@ public class ConfigGui extends LightweightGuiDescription {
 		WTextField testField = new WTextField();
 		testField.setSuggestion("test");
 		root.add(testField, 0, 3, 4, 1);
-		root.add(new WSlider(-100, 100, Axis.VERTICAL).setValueChangeListener(System.out::println), 6, 0, 1, 3);
-		root.add(new WLabeledSlider(1, 100).setValueChangeListener(System.out::println), 1, 4, 4, 1);
+
+		/*
+		WSlider verticalSlider = new WSlider(-100, 100, Axis.VERTICAL);
+		verticalSlider.setDraggingFinishedListener(() -> System.out.println("Mouse released"));
+		verticalSlider.setValueChangeListener(System.out::println);
+
+		WLabeledSlider horizontalSlider = new WLabeledSlider(0, 500);
+		horizontalSlider.setLabelUpdater(value -> new LiteralText(value + "!"));
+		horizontalSlider.setDraggingFinishedListener(() -> System.out.println("Mouse released"));
+		horizontalSlider.setValue(250);
+
+		root.add(verticalSlider, 6, 0, 1, 3);
+		root.add(horizontalSlider, 1, 4, 4, 1);
+		*/
 
 		root.add(new WKirbSprite(), 5, 4);
 		
