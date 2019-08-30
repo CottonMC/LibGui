@@ -15,7 +15,7 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
  *     D's *must* have working equals and hashCode methods to distinguish them from each other!
  * <p> W is the WWidget class that will represent a single D of data.
  */
-public class WListPanel<D, W extends WWidget> extends WPanel {
+public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	protected List<D> data;
 	protected Class<W> listItemClass;
 	protected Supplier<W> supplier;
@@ -41,20 +41,24 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 	
 	@Override
 	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+		if (scrollBar.getValue()!=lastScroll) {
+			layout();
+			lastScroll = scrollBar.getValue();
+		}
+		
+		super.paintBackground(x, y, mouseX, mouseY);
+		/*
 		if (getBackgroundPainter()!=null) {
 			getBackgroundPainter().paintBackground(x, y, this);
 		} else {
 			ScreenDrawing.drawBeveledPanel(x, y, width, height);
 		}
 		
-		if (scrollBar.getValue()!=lastScroll) {
-			layout();
-			lastScroll = scrollBar.getValue();
-		}
+		
 		
 		for(WWidget child : children) {
 			child.paintBackground(x + child.getX(), y + child.getY(), mouseX - child.getX(), mouseY - child.getY());
-		}
+		}*/
 	}
 	
 	@Override
@@ -87,7 +91,6 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 				if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
 			}
 		}
-		System.out.println("CellHeight: "+cellHeight);
 		if (cellHeight<4) cellHeight=4;
 		
 		int layoutHeight = this.getHeight()-(margin*2);
@@ -110,7 +113,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 		int presentCells = Math.min(data.size()-scrollOffset, cellsHigh);
 		
 		if (presentCells>0) {
-			for(int i=0; i<presentCells; i++) {
+			for(int i=0; i<presentCells+1; i++) {
 				int index = i+scrollOffset;
 				if (index>=data.size()) break;
 				if (index<0) continue; //THIS IS A THING THAT IS HAPPENING >:(
@@ -131,7 +134,7 @@ public class WListPanel<D, W extends WWidget> extends WPanel {
 					w.setSize(this.width-(margin*2) - scrollBar.getWidth(), cellHeight);
 				}
 				w.x = margin;
-				w.y = margin + (cellHeight * i);
+				w.y = margin + ((cellHeight+margin) * i);
 				this.children.add(w);
 			}
 		}

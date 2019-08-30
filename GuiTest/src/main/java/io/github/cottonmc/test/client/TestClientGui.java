@@ -23,7 +23,7 @@ public class TestClientGui extends LightweightGuiDescription {
 
 	@Environment(EnvType.CLIENT)
 	public static final BackgroundPainter PANEL = (x, y, panel)->{
-		ScreenDrawing.drawBeveledPanel(x, y, panel.getWidth(), panel.getHeight());
+		ScreenDrawing.drawBeveledPanel(x-1, y-1, panel.getWidth()+2, panel.getHeight()+2);
 	};
 	
 	private static final Identifier PORTAL1 = new Identifier("libgui-test:portal.png");
@@ -69,6 +69,7 @@ public class TestClientGui extends LightweightGuiDescription {
 		};
 		WListPanel<String, PortalDestination> list = new WListPanel<String, PortalDestination>(data, PortalDestination.class, PortalDestination::new, configurator);
 		list.setListItemHeight(2*18);
+		list.setBackgroundPainter(PANEL);
 		root.add(list, 0, 2, 7, 6);
 		
 		root.add(new WButton(new LiteralText("Teleport")), 3,8,4,1);
