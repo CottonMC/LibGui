@@ -54,21 +54,7 @@ public class CottonClientScreen extends Screen {
 		}
 	}
 	
-	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		renderBackground(mouseX, mouseY);
-		
-		super.render(mouseX, mouseY, partialTicks);
-		
-		if (description!=null) {
-			WPanel root = description.getRootPanel();
-			if (root!=null) {
-				root.paintForeground(left, top, mouseX, mouseY);
-			}
-		}
-	}
-	
-	public void renderBackground(int mouseX, int mouseY) {
+	public void paint(int mouseX, int mouseY) {
 		super.renderBackground();
 		
 		if (description!=null) {
@@ -83,10 +69,34 @@ public class CottonClientScreen extends Screen {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
+	@Override
+	public void render(int mouseX, int mouseY, float partialTicks) {
+		paint(mouseX, mouseY);
+		
+		super.render(mouseX, mouseY, partialTicks);
+		
+		if (description!=null) {
+			WPanel root = description.getRootPanel();
+			if (root!=null) {
+				root.paintForeground(left, top, mouseX, mouseY);
+				
+				WWidget hitChild = root.hit(mouseX-left, mouseY-top);
+				if (hitChild!=null) hitChild.renderTooltip(left, top, mouseX-left, mouseY-top);
+			}
+		}
+	}
+	
 	
 	@Override
 	public void tick() {
 		super.tick();
+		if (description!=null) {
+			WPanel root = description.getRootPanel();
+			if (root!=null) {
+				root.tick();
+			}
+		}
 	}
 	
 	@Override

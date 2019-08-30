@@ -1,6 +1,7 @@
 package io.github.cottonmc.test.client;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
@@ -32,7 +33,12 @@ public class TestClientGui extends LightweightGuiDescription {
 		WGridPanel root = new WGridPanel(22);
 		this.setRootPanel(root);
 		
-		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR);
+		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
+			@Override
+			public void addInformation(List<String> information) {
+				information.add("Radical!");
+			}
+		};
 		root.add(title, 0, 0);
 		
 		WTextField text = new WTextField();

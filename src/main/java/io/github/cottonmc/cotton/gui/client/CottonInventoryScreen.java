@@ -5,20 +5,19 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.render.GuiLighting;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Nameable;
 
 public class CottonInventoryScreen<T extends CottonCraftingController> extends AbstractContainerScreen<T> {
-	protected CottonCraftingController container;
+	protected CottonCraftingController description;
 	public static final int PADDING = 8;
 	protected WWidget lastResponder = null;
 	protected WWidget focus = null;
 	
 	public CottonInventoryScreen(T container, PlayerEntity player) {
 		super(container, player.inventory, new LiteralText(""));
-		this.container = container;
+		this.description = container;
 		width = 18*9;
 		height = 18*9;
 		this.containerWidth = 18*9;
@@ -38,15 +37,15 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	public void init(MinecraftClient minecraftClient_1, int screenWidth, int screenHeight) {
 		super.init(minecraftClient_1, screenWidth, screenHeight);
 		
-		container.addPainters();
+		description.addPainters();
 		
 		reposition();
 	}
 	
 	public void reposition() {
-		WPanel basePanel = container.getRootPanel();
+		WPanel basePanel = description.getRootPanel();
 		if (basePanel!=null) {
-			basePanel.validate(container);
+			basePanel.validate(description);
 			
 			containerWidth = basePanel.getWidth();
 			containerHeight = basePanel.getHeight();
@@ -54,8 +53,6 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 			//DEBUG
 			if (containerWidth<16) containerWidth=300;
 			if (containerHeight<16) containerHeight=300;
-			//if (left<0 || left>300) left = 10;
-			//if (top<0 || top>300) top = 10;
 		}
 		left = (width / 2) - (containerWidth / 2);
 		top =  (height / 2) - (containerHeight / 2);
@@ -74,23 +71,23 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	
 	@Override
 	public boolean charTyped(char ch, int keyCode) {
-		if (container.getFocus()==null) return false;
-		container.getFocus().onCharTyped(ch);
+		if (description.getFocus()==null) return false;
+		description.getFocus().onCharTyped(ch);
 		return true;
 	}
 	
 	@Override
 	public boolean keyPressed(int ch, int keyCode, int modifiers) {
 		if (super.keyPressed(ch, keyCode, modifiers)) return true;
-		if (container.getFocus()==null) return false;
-		container.getFocus().onKeyPressed(ch, keyCode, modifiers);
+		if (description.getFocus()==null) return false;
+		description.getFocus().onKeyPressed(ch, keyCode, modifiers);
 		return true;
 	}
 	
 	@Override
 	public boolean keyReleased(int ch, int keyCode, int modifiers) {
-		if (container.getFocus()==null) return false;
-		container.getFocus().onKeyReleased(ch, keyCode, modifiers);
+		if (description.getFocus()==null) return false;
+		description.getFocus().onKeyReleased(ch, keyCode, modifiers);
 		return true;
 	}
 	
@@ -101,7 +98,7 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 		int containerY = (int)mouseY-top;
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
 		if (lastResponder==null) {
-			lastResponder = container.doMouseDown(containerX, containerY, mouseButton);
+			lastResponder = description.doMouseDown(containerX, containerY, mouseButton);
 		} else {
 			//This is a drag instead
 		}
@@ -120,7 +117,7 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 				lastResponder.onClick(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
 			}
 		} else {
-			container.doMouseUp(containerX, containerY, mouseButton);
+			description.doMouseUp(containerX, containerY, mouseButton);
 		}
 		
 		lastResponder = null;
@@ -139,86 +136,58 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 			return result;
 		} else {
 			if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-			container.doMouseDrag(containerX, containerY, mouseButton);
+			description.doMouseDrag(containerX, containerY, mouseButton);
 		}
 		return result;
 	}
 	
-	//Zapping this method may fix some positioning bugs - but may cause some backgroundPainter bugs. Will need to monitor.
-	/*
 	@Override
-	public void resize(MinecraftClient minecraftClient_1, int int_1, int int_2) {
-		//super.onScaleChanged(minecraftClient_1, int_1, int_2);
-		this.width = int_1;
-		this.height = int_2;
-		reposition();
-	}*/
+	protected void drawBackground(float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
-	/*
-	 * SPECIAL FUNCTIONS: Where possible, we want to draw everything based on *actual GUI state and composition* rather
-	 * than relying on pre-baked textures that the programmer then needs to carefully match up their GUI to.
-	 */
-	
-	private int multiplyColor(int color, float amount) {
-		int a = color & 0xFF000000;
-		float r = (color >> 16 & 255) / 255.0F;
-		float g = (color >> 8  & 255) / 255.0F;
-		float b = (color       & 255) / 255.0F;
+	public void paint(int mouseX, int mouseY) {
+		super.renderBackground();
 		
-		r = Math.min(r*amount, 1.0f);
-		g = Math.min(g*amount, 1.0f);
-		b = Math.min(b*amount, 1.0f);
-		
-		int ir = (int)(r*255);
-		int ig = (int)(g*255);
-		int ib = (int)(b*255);
-		
-		return    a |
-				(ir << 16) |
-				(ig <<  8) |
-				 ib;
-	}
-	
-	@Override
-	protected void drawBackground(float partialTicks, int mouseX, int mouseY) {
-		if (this.container==null) {
-			return;
+		if (description!=null) {
+			WPanel root = description.getRootPanel();
+			if (root!=null) {
+				root.paintBackground(left, top, mouseX-left, mouseY-top);
+			}
 		}
-		WPanel root = this.container.getRootPanel();
-		if (root==null) return;
 		
-		root.paintBackground(left, top, mouseX-left, mouseY-top);
-		
-		//TODO: Change this to a label that lives in the rootPanel instead?
-		if (container instanceof Nameable) {
-			Text name = ((Nameable)container).getDisplayName();
-			font.draw(name.asFormattedString(), left, top, container.getTitleColor());
-		} else if (getTitle() != null) {
-			font.draw(getTitle().asFormattedString(), left, top, container.getTitleColor());
+		if (getTitle() != null) {
+			font.draw(getTitle().asFormattedString(), left, top, description.getTitleColor());
 		}
 	}
 	
-	@Override
-	protected void drawForeground(int mouseX, int mouseY) {
-		if (this.container==null) {
-			System.out.println("CONTAINER IS NULL.");
-			return;
-		}
-		
-		if (this.container.getRootPanel()!=null) {
-			this.container.getRootPanel().paintForeground(0, 0, mouseX-left, mouseY-top);
-		}
-	}
-	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		// Render the background shadow
-		this.renderBackground();
-
-		this.drawBackground(partialTicks, mouseX, mouseY);
+		paint(mouseX, mouseY);
 		
 		super.render(mouseX, mouseY, partialTicks);
-		drawMouseoverTooltip(mouseX, mouseY);
+		GuiLighting.disable(); //Needed because super.render leaves dirty state
+		
+		if (description!=null) {
+			WPanel root = description.getRootPanel();
+			if (root!=null) {
+				root.paintForeground(left, top, mouseX, mouseY);
+				
+				WWidget hitChild = root.hit(mouseX-left, mouseY-top);
+				if (hitChild!=null) hitChild.renderTooltip(left, top, mouseX-left, mouseY-top);
+			}
+		}
+		
+		drawMouseoverTooltip(mouseX, mouseY); //Draws the itemstack tooltips
 	}
 	
+	@Override
+	public void tick() {
+		super.tick();
+		if (description!=null) {
+			WPanel root = description.getRootPanel();
+			if (root!=null) {
+				root.tick();
+			}
+		}
+	}
 }

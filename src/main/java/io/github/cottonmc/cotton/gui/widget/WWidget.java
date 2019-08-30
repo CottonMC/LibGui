@@ -68,18 +68,6 @@ public class WWidget {
 	}
 	
 	/**
-	 * Draw this Widget at the specified coordinates. The coordinates provided are the top-level device coordinates of
-	 * this widget's topleft corner, so don't translate by the widget X/Y! That's already been done. Your "valid"
-	 * drawing space is from (x, y) to (x + width - 1, y + height - 1) inclusive. However, no scissor or depth masking
-	 * is done, so please take care to respect your boundaries.
-	 * @param x The X coordinate of the leftmost pixels of this widget in device (opengl) coordinates
-	 * @param y The Y coordinate of the topmost pixels of this widget in device (opengl) coordinates
-	 */
-	public void paint(int x, int y) {
-		
-	}
-	
-	/**
 	 * Notifies this widget that the mouse has been pressed while inside its bounds
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
@@ -185,11 +173,12 @@ public class WWidget {
 	public void paintBackground(int x, int y) {
 	}
 	
+	@Deprecated
 	@Environment(EnvType.CLIENT)
 	public void paintForeground(int x, int y, int mouseX, int mouseY) {
-		if (mouseX >= x && mouseX < x+getWidth() && mouseY >= y && mouseY < y+getHeight()) {
-			renderTooltip(mouseX, mouseY);
-		}
+		//if (mouseX >= x && mouseX < x+getWidth() && mouseY >= y && mouseY < y+getHeight()) {
+		//	renderTooltip(mouseX, mouseY);
+		//}
 	}
 	
 	public boolean isWithinBounds(int x, int y) {
@@ -197,14 +186,11 @@ public class WWidget {
 	}
 	
 	/**
-	 * Internal method to conditionally render tooltip data. This requires an overriden {@link #addInformation(List)
+	 * Internal method to render tooltip data. This requires an overriden {@link #addInformation(List)
 	 * addInformation} method to insert data into the tooltip - without this, the method returns early, because no work
-	 * is needing to be done on an empty list.
-	 * @param tX The adjusted X coordinate at which to render the tooltip.
-	 * @param tY The adjusted X coordinate at which to render the tooltip.
 	 */
 	@Environment(EnvType.CLIENT)
-	protected void renderTooltip(int tX, int tY) {
+	public void renderTooltip(int x, int y, int tX, int tY) {
 		List<String> info = new ArrayList<>();
 		addInformation(info);
 
@@ -212,7 +198,7 @@ public class WWidget {
 			return;
 		
 		Screen screen = MinecraftClient.getInstance().currentScreen;
-		screen.renderTooltip(info, tX, tY);
+		screen.renderTooltip(info, tX+x, tY+y);
 	}
 	
 	/**
@@ -224,8 +210,7 @@ public class WWidget {
 	}
 	
 	/**
-	 * Adds information to this widget's tooltip. This requires a call to {@link #setRenderTooltip(boolean)
-	 * setRenderTooltip} (obviously passing in {@code true}), in order to enable the rendering of your tooltip.
+	 * Adds information to this widget's tooltip. If information remains empty after this call, no tooltip will be drawn.
 	 * @param information List containing all previous tooltip data.
 	 */
 	public void addInformation(List<String> information) {
@@ -237,4 +222,6 @@ public class WWidget {
 	public WWidget hit(int x, int y) {
 		return this;
 	}
+	
+	public void tick() {}
 }

@@ -204,10 +204,6 @@ public class ScreenDrawing {
 		TextRenderer render = MinecraftClient.getInstance().getFontManager().getTextRenderer(MinecraftClient.DEFAULT_TEXT_RENDERER_ID);
 		render.drawWithShadow(s, (float)(x - render.getStringWidth(s) / 2), (float)y, color);
 	}
-
-	public static void drawTooltip(String s, int x, int y) {
-
-	}
 	
 	public static int colorAtOpacity(int opaque, float opacity) {
 		if (opacity<0.0f) opacity=0.0f;
