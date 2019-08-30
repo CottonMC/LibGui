@@ -26,9 +26,9 @@ public class WScrollBar extends WWidget {
 		
 		int color = 0xFF_FFFFFF;
 		if (axis==Axis.HORIZONTAL) {
-			ScreenDrawing.rect(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, color);
+			ScreenDrawing.coloredRect(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, color);
 		} else {
-			ScreenDrawing.rect(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), color);
+			ScreenDrawing.coloredRect(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), color);
 		}
 	}
 	

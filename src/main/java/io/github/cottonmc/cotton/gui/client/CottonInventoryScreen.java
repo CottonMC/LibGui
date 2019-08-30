@@ -10,13 +10,13 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Nameable;
 
-public class CottonScreen<T extends CottonScreenController> extends AbstractContainerScreen<T> {
+public class CottonInventoryScreen<T extends CottonScreenController> extends AbstractContainerScreen<T> {
 	protected CottonScreenController container;
 	public static final int PADDING = 8;
 	protected WWidget lastResponder = null;
 	protected WWidget focus = null;
 	
-	public CottonScreen(T container, PlayerEntity player) {
+	public CottonInventoryScreen(T container, PlayerEntity player) {
 		super(container, player.inventory, new LiteralText(""));
 		this.container = container;
 		width = 18*9;

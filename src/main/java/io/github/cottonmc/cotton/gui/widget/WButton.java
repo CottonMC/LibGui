@@ -48,8 +48,8 @@ public class WButton extends WWidget {
 		
 		float buttonEndLeft = (200-(getWidth()/2)) * px;
 		
-		ScreenDrawing.rect(AbstractButtonWidget.WIDGETS_LOCATION, x, y, getWidth()/2, 20, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFFFFFF);
-		ScreenDrawing.rect(AbstractButtonWidget.WIDGETS_LOCATION, x+(getWidth()/2), y, getWidth()/2, 20, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(x, y, getWidth()/2, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(x+(getWidth()/2), y, getWidth()/2, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
 		
 		if (label!=null) {
 			int color = 0xE0E0E0;

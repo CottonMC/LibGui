@@ -1,6 +1,6 @@
 package io.github.cottonmc.test;
 
-import io.github.cottonmc.cotton.gui.client.ClientCottonScreen;
+import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.test.client.TestClientGui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +22,7 @@ public class GuiItem extends Item {
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
 		if (world.isClient) { 
-			MinecraftClient.getInstance().openScreen(new ClientCottonScreen(new TestClientGui()));
+			MinecraftClient.getInstance().openScreen(new CottonClientScreen(new TestClientGui()));
 		}
 		
 		return new TypedActionResult<ItemStack>(ActionResult.SUCCESS, (hand==Hand.MAIN_HAND) ? player.getMainHandStack() : player.getOffHandStack());

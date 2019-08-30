@@ -2,8 +2,10 @@ package io.github.cottonmc.cotton.gui.client;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.class_4493.class_4534;
+import net.minecraft.class_4493.class_4535;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
@@ -14,15 +16,11 @@ import net.minecraft.util.Identifier;
 public class ScreenDrawing {
 	private ScreenDrawing() {}
 	
-	public static void rect(Identifier texture, int left, int top, int width, int height, int color) {
-		rect(texture, left, top, width, height, 0, 0, 1, 1, color, 0);
+	public static void texturedRect(int left, int top, int width, int height, Identifier texture, int color) {
+		texturedRect(left, top, width, height, texture, 0, 0, 1, 1, color);
 	}
-	
-	public static void rect(Identifier texture, int left, int top, int width, int height, float u1, float v1, float u2, float v2, int color) {
-		rect(texture, left, top, width, height, u1, v1, u2, v2, color, 0);
-	}
-	
-	public static void rect(Identifier texture, int left, int top, int width, int height, float u1, float v1, float u2, float v2, int color, int z) {
+
+	public static void texturedRect(int left, int top, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color) {
 		MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
 		
 		//float scale = 0.00390625F;
@@ -35,24 +33,24 @@ public class ScreenDrawing {
 		float b = (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBufferBuilder();
-		GlStateManager.enableBlend();
+		RenderSystem.enableBlend();
 		//GlStateManager.disableTexture2D();
-		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		GlStateManager.color4f(r, g, b, 1.0f);
+		RenderSystem.blendFuncSeparate(class_4535.SRC_ALPHA, class_4534.ONE_MINUS_SRC_ALPHA, class_4535.ONE, class_4534.ZERO);
+		RenderSystem.color4f(r, g, b, 1.0f);
 		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(left,         top + height, z).texture(u1, v2).next();
-		buffer.vertex(left + width, top + height, z).texture(u2, v2).next();
-		buffer.vertex(left + width, top,          z).texture(u2, v1).next();
-		buffer.vertex(left,         top,          z).texture(u1, v1).next();
+		buffer.vertex(left,         top + height, 0).texture(u1, v2).next();
+		buffer.vertex(left + width, top + height, 0).texture(u2, v2).next();
+		buffer.vertex(left + width, top,          0).texture(u2, v1).next();
+		buffer.vertex(left,         top,          0).texture(u1, v1).next();
 		tessellator.draw();
 		//GlStateManager.enableTexture2D();
-		GlStateManager.disableBlend();
+		RenderSystem.disableBlend();
 	}
 	
 	/**
 	 * Draws an untextured rectangle of the specified RGB color.
 	 */
-	public static void rect(int left, int top, int width, int height, int color) {
+	public static void coloredRect(int left, int top, int width, int height, int color) {
 		if (width <= 0) width = 1;
 		if (height <= 0) height = 1;
 		
@@ -62,32 +60,32 @@ public class ScreenDrawing {
 		float b = (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBufferBuilder();
-		GlStateManager.enableBlend();
-		GlStateManager.disableTexture();
-		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		GlStateManager.color4f(r, g, b, a);
+		RenderSystem.enableBlend();
+		RenderSystem.disableTexture();
+		RenderSystem.blendFuncSeparate(class_4535.SRC_ALPHA, class_4534.ONE_MINUS_SRC_ALPHA, class_4535.ONE, class_4534.ZERO);
+		RenderSystem.color4f(r, g, b, a);
 		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION); //I thought GL_QUADS was deprecated but okay, sure.
 		buffer.vertex(left,         top + height, 0.0D).next();
 		buffer.vertex(left + width, top + height, 0.0D).next();
 		buffer.vertex(left + width, top,          0.0D).next();
 		buffer.vertex(left,         top,          0.0D).next();
 		tessellator.draw();
-		GlStateManager.enableTexture();
-		GlStateManager.disableBlend();
+		RenderSystem.enableTexture();
+		RenderSystem.disableBlend();
 	}
 	
 	public static void maskedRect(Identifier mask, Identifier texture, int left, int top, int width, int height) {
 		
 		
-		rect(mask, left, top, width, height, 0, 0, 1, 1, 0xFFFFFFFF, 7);
+		texturedRect(left, top, width, height, mask, 0, 0, 1, 1, 0xFFFFFFFF); //TODO: 7 Z
 		
-		GlStateManager.enableDepthTest();
-		GlStateManager.depthFunc(GL11.GL_EQUAL);
+		RenderSystem.enableDepthTest();
+		RenderSystem.depthFunc(GL11.GL_EQUAL);
 		
-		rect(texture, left, top, width, height, 0, 0, 1, 1, 0xFFFFFFFF, 7);
+		texturedRect(left, top, width, height, texture, 0, 0, 1, 1, 0xFFFFFFFF); //, 7);
 		
-		GlStateManager.depthFunc(GL11.GL_LESS);
-		GlStateManager.disableDepthTest();
+		RenderSystem.depthFunc(GL11.GL_LESS);
+		RenderSystem.disableDepthTest();
 	}
 
 	/**
@@ -144,25 +142,25 @@ public class ScreenDrawing {
 	}
 	
 	public static void drawGuiPanel(int x, int y, int width, int height, int shadow, int panel, int hilight, int outline) {
-		rect(x + 3,         y + 3,          width - 6, height - 6, panel); //Main panel area
+		coloredRect(x + 3,         y + 3,          width - 6, height - 6, panel); //Main panel area
 		
-		rect(x + 2,         y + 1,          width - 4, 2,          hilight); //Top hilight
-		rect(x + 2,         y + height - 3, width - 4, 2,          shadow); //Bottom shadow
-		rect(x + 1,         y + 2,          2,         height - 4, hilight); //Left hilight
-		rect(x + width - 3, y + 2,          2,         height - 4, shadow); //Right shadow
-		rect(x + width - 3, y + 2,          1,         1,          panel); //Topright non-hilight/non-shadow transition pixel
-		rect(x + 2,         y + height - 3, 1,         1,          panel); //Bottomleft non-hilight/non-shadow transition pixel
-		rect(x + 3,         y + 3,          1,         1,          hilight); //Topleft round hilight pixel
-		rect(x + width - 4, y + height - 4, 1,         1,          shadow); //Bottomright round shadow pixel
+		coloredRect(x + 2,         y + 1,          width - 4, 2,          hilight); //Top hilight
+		coloredRect(x + 2,         y + height - 3, width - 4, 2,          shadow); //Bottom shadow
+		coloredRect(x + 1,         y + 2,          2,         height - 4, hilight); //Left hilight
+		coloredRect(x + width - 3, y + 2,          2,         height - 4, shadow); //Right shadow
+		coloredRect(x + width - 3, y + 2,          1,         1,          panel); //Topright non-hilight/non-shadow transition pixel
+		coloredRect(x + 2,         y + height - 3, 1,         1,          panel); //Bottomleft non-hilight/non-shadow transition pixel
+		coloredRect(x + 3,         y + 3,          1,         1,          hilight); //Topleft round hilight pixel
+		coloredRect(x + width - 4, y + height - 4, 1,         1,          shadow); //Bottomright round shadow pixel
 		
-		rect(x + 2,         y,              width - 4, 1,          outline); //Top outline
-		rect(x,             y + 2,          1,         height - 4, outline); //Left outline
-		rect(x + width - 1, y + 2,          1,         height - 4, outline); //Right outline
-		rect(x + 2,         y + height - 1, width - 4, 1,          outline); //Bottom outline
-		rect(x + 1,         y + 1,          1,         1,          outline); //Topleft round pixel
-		rect(x + 1,         y + height - 2, 1,         1,          outline); //Bottomleft round pixel
-		rect(x + width - 2, y + 1,          1,         1,          outline); //Topright round pixel
-		rect(x + width - 2, y + height - 2, 1,         1,          outline); //Bottomright round pixel
+		coloredRect(x + 2,         y,              width - 4, 1,          outline); //Top outline
+		coloredRect(x,             y + 2,          1,         height - 4, outline); //Left outline
+		coloredRect(x + width - 1, y + 2,          1,         height - 4, outline); //Right outline
+		coloredRect(x + 2,         y + height - 1, width - 4, 1,          outline); //Bottom outline
+		coloredRect(x + 1,         y + 1,          1,         1,          outline); //Topleft round pixel
+		coloredRect(x + 1,         y + height - 2, 1,         1,          outline); //Bottomleft round pixel
+		coloredRect(x + width - 2, y + 1,          1,         1,          outline); //Topright round pixel
+		coloredRect(x + width - 2, y + height - 2, 1,         1,          outline); //Bottomright round pixel
 	}
 
 	/**
@@ -190,11 +188,11 @@ public class ScreenDrawing {
 	 * @param bottomright	color of the bottom/right bevel
 	 */
 	public static void drawBeveledPanel(int x, int y, int width, int height, int topleft, int panel, int bottomright) {
-		rect(x,             y,              width,     height,     panel); //Center panel
-		rect(x,             y,              width - 1, 1,          topleft); //Top shadow
-		rect(x,             y + 1,          1,         height - 2, topleft); //Left shadow
-		rect(x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
-		rect(x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
+		coloredRect(x,             y,              width,     height,     panel); //Center panel
+		coloredRect(x,             y,              width - 1, 1,          topleft); //Top shadow
+		coloredRect(x,             y + 1,          1,         height - 2, topleft); //Left shadow
+		coloredRect(x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
+		coloredRect(x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
 	}
 	
 	public static void drawString(String s, int x, int y, int color) {

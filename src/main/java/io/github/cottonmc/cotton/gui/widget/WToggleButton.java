@@ -87,7 +87,7 @@ public class WToggleButton extends WWidget {
 	@Override
 	public void paintBackground(int x, int y) {
 
-		ScreenDrawing.rect(isOn ? DEFAULT_ON_IMAGE : DEFAULT_OFF_IMAGE, x, y, 18, 18, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(x, y, 18, 18, isOn ? DEFAULT_ON_IMAGE : DEFAULT_OFF_IMAGE, 0xFFFFFFFF);
 		
 		if (label!=null) {
 

@@ -84,7 +84,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
 		if (thumbState == 1 && isFocused()) {
 			float px = 1 / 32f;
-			ScreenDrawing.rect(WSlider.TEXTURE, x + thumbX, y + thumbY, thumbWidth, thumbHeight, 24*px, 0*px, 32*px, 20*px, 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(x + thumbX, y + thumbY, thumbWidth, thumbHeight, WSlider.TEXTURE, 24*px, 0*px, 32*px, 20*px, 0xFFFFFFFF);
 		}
 
 		if (label != null) {
@@ -105,8 +105,8 @@ public class WLabeledSlider extends WAbstractSlider {
 		float buttonHeight = 20 * px;
 		float buttonEndLeft = (200 - halfWidth) * px;
 
-		ScreenDrawing.rect(AbstractButtonWidget.WIDGETS_LOCATION, x, y, halfWidth, 20, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
-		ScreenDrawing.rect(AbstractButtonWidget.WIDGETS_LOCATION, x + halfWidth, y, halfWidth, 20, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(x, y, halfWidth, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(x + halfWidth, y, halfWidth, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
 	}
 
 	@FunctionalInterface

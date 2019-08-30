@@ -65,9 +65,9 @@ public class WBar extends WWidget {
 	@Override
 	public void paintBackground(int x, int y) {
 		if (bg!=null) {
-			ScreenDrawing.rect(bg, x, y, getWidth(), getHeight(), 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), bg, 0xFFFFFFFF);
 		} else {
-			ScreenDrawing.rect(x, y, getWidth(), getHeight(), ScreenDrawing.colorAtOpacity(0x000000, 0.25f));
+			ScreenDrawing.coloredRect(x, y, getWidth(), getHeight(), ScreenDrawing.colorAtOpacity(0x000000, 0.25f));
 		}
 		
 		float percent = properties.get(field) / (float) properties.get(max);
@@ -87,25 +87,25 @@ public class WBar extends WWidget {
 				int top = y + getHeight();
 				top -= barSize;
 				if (bar!=null) {
-					ScreenDrawing.rect(bar, left, top, getWidth(), barSize, 0, 1 - percent, 1, 1, 0xFFFFFFFF);
+					ScreenDrawing.texturedRect(left, top, getWidth(), barSize, bar, 0, 1 - percent, 1, 1, 0xFFFFFFFF);
 				} else {
-					ScreenDrawing.rect(left, top, getWidth(), barSize,  ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
+					ScreenDrawing.coloredRect(left, top, getWidth(), barSize,  ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
 				break;
 			}
 			case RIGHT: {
 				if (bar!=null) {
-					ScreenDrawing.rect(bar, x, y, barSize, getHeight(), 0, 0, percent, 1, 0xFFFFFFFF);
+					ScreenDrawing.texturedRect(x, y, barSize, getHeight(), bar, 0, 0, percent, 1, 0xFFFFFFFF);
 				} else {
-					ScreenDrawing.rect(x, y, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
+					ScreenDrawing.coloredRect(x, y, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
 				break;
 			}
 			case DOWN: {
 				if (bar!=null) {
-					ScreenDrawing.rect(bar, x, y, getWidth(), barSize, 0, 0, 1, percent, 0xFFFFFFFF);
+					ScreenDrawing.texturedRect(x, y, getWidth(), barSize, bar, 0, 0, 1, percent, 0xFFFFFFFF);
 				} else {
-					ScreenDrawing.rect(x, y, getWidth(), barSize, ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
+					ScreenDrawing.coloredRect(x, y, getWidth(), barSize, ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
 				break;
 			}
@@ -114,9 +114,9 @@ public class WBar extends WWidget {
 				int top = y;
 				left -= barSize;
 				if (bar!=null) {
-					ScreenDrawing.rect(bar, left, top, barSize, getHeight(), 1 - percent, 0, 1, 1, 0xFFFFFFFF);
+					ScreenDrawing.texturedRect(left, top, barSize, getHeight(), bar, 1 - percent, 0, 1, 1, 0xFFFFFFFF);
 				} else {
-					ScreenDrawing.rect(left, top, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
+					ScreenDrawing.coloredRect(left, top, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
 				break;
 			}

@@ -75,7 +75,7 @@ public class WSprite extends WWidget {
 	@Override
 	public void paintBackground(int x, int y) {
 		if (singleImage) {
-			ScreenDrawing.rect(frames[0], x, y, getWidth(), getHeight(), tint);
+			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), frames[0], tint);
 		} else {
 			//grab the system time at the very start of the frame.
 			long now = System.nanoTime() / 1_000_000L;
@@ -85,7 +85,7 @@ public class WSprite extends WWidget {
 			if (!inBounds) currentFrame = 0;
 			//assemble and draw the frame calculated last iteration.
 			Identifier currentFrameTex = frames[currentFrame];
-			ScreenDrawing.rect(currentFrameTex, x, y, getWidth(), getHeight(), tint);
+			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), currentFrameTex, tint);
 
 			//calculate how much time has elapsed since the last animation change, and change the frame if necessary.
 			long elapsed = now - lastFrame;

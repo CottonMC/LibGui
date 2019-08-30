@@ -4,12 +4,11 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
-public class ClientCottonScreen extends Screen {
+public class CottonClientScreen extends Screen {
 	protected GuiDescription description;
 	protected int left = 0;
 	protected int top = 0;
@@ -18,12 +17,12 @@ public class ClientCottonScreen extends Screen {
 	
 	protected WWidget lastResponder = null;
 	
-	public ClientCottonScreen(GuiDescription description) {
+	public CottonClientScreen(GuiDescription description) {
 		super(new LiteralText(""));
 		this.description = description;
 	}
 	
-	public ClientCottonScreen(Text title, GuiDescription description) {
+	public CottonClientScreen(Text title, GuiDescription description) {
 		super(title);
 		this.description = description;
 	}

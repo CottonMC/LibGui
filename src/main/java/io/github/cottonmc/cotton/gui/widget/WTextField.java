@@ -8,14 +8,16 @@ import javax.annotation.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.class_4493;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.GlProgramManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
@@ -313,8 +315,8 @@ public class WTextField extends WWidget {
 		if (this.font==null) this.font = MinecraftClient.getInstance().textRenderer;
 		
 		int borderColor = (this.isFocused()) ? 0xFF_FFFFA0 : 0xFF_A0A0A0;
-		ScreenDrawing.rect(x-1, y-1, width+2, height+2, borderColor);
-		ScreenDrawing.rect(x, y, width, height, 0xFF000000);
+		ScreenDrawing.coloredRect(x-1, y-1, width+2, height+2, borderColor);
+		ScreenDrawing.coloredRect(x, y, width, height, 0xFF000000);
 		
 
 		int textColor = this.editable ? this.enabledColor : this.uneditableColor;
@@ -368,7 +370,7 @@ public class WTextField extends WWidget {
 				//} else {
 				//	caretLoc = textX+caretLoc-1;
 				//}
-				ScreenDrawing.rect(preCursorAdvance-1, textY-2, 1, 12, 0xFFD0D0D0);
+				ScreenDrawing.coloredRect(preCursorAdvance-1, textY-2, 1, 12, 0xFFD0D0D0);
 			//if (boolean_3) {
 			//	int var10001 = int_7 - 1;
 			//	var10002 = int_9 + 1;
@@ -402,18 +404,18 @@ public class WTextField extends WWidget {
 	private void invertedRect(int x, int y, int width, int height) {
 		Tessellator tessellator_1 = Tessellator.getInstance();
 		BufferBuilder bufferBuilder_1 = tessellator_1.getBufferBuilder();
-		GlStateManager.color4f(0.0F, 0.0F, 255.0F, 255.0F);
-		GlStateManager.disableTexture();
-		GlStateManager.enableColorLogicOp();
-		GlStateManager.logicOp(GlStateManager.LogicOp.OR_REVERSE);
+		RenderSystem.color4f(0.0F, 0.0F, 255.0F, 255.0F);
+		RenderSystem.disableTexture();
+		RenderSystem.enableColorLogicOp();
+		RenderSystem.logicOp(class_4493.LogicOp.OR_REVERSE);
 		bufferBuilder_1.begin(GL11.GL_QUADS, VertexFormats.POSITION);
 		bufferBuilder_1.vertex(x,       y+height, 0.0D).next();
 		bufferBuilder_1.vertex(x+width, y+height, 0.0D).next();
 		bufferBuilder_1.vertex(x+width, y,        0.0D).next();
 		bufferBuilder_1.vertex(x,       y,        0.0D).next();
 		tessellator_1.draw();
-		GlStateManager.disableColorLogicOp();
-		GlStateManager.enableTexture();
+		RenderSystem.disableColorLogicOp();
+		RenderSystem.enableTexture();
 	}
 
 	public WTextField setTextPredicate(Predicate<String> predicate_1) {
