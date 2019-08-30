@@ -131,7 +131,7 @@ public abstract class WPanel extends WWidget {
 					y>=child.getY() &&
 					x<child.getX()+child.getWidth() &&
 					y<child.getY()+child.getHeight()) {
-				return child.hit(x, y);
+				return child.hit(x-child.getX(), y-child.getY());
 			}
 		}
 		return this;

@@ -29,7 +29,7 @@ import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.world.World;
 
-public class CottonScreenController extends CraftingContainer<Inventory> implements GuiDescription {
+public class CottonCraftingController extends CraftingContainer<Inventory> implements GuiDescription {
 	
 	protected Inventory blockInventory;
 	protected PlayerInventory playerInventory;
@@ -43,7 +43,7 @@ public class CottonScreenController extends CraftingContainer<Inventory> impleme
 	
 	protected WWidget focus;
 	
-	public CottonScreenController(RecipeType<?> recipeType, int syncId, PlayerInventory playerInventory) {
+	public CottonCraftingController(RecipeType<?> recipeType, int syncId, PlayerInventory playerInventory) {
 		super(null, syncId);
 		this.blockInventory = null;
 		this.playerInventory = playerInventory;
@@ -52,7 +52,7 @@ public class CottonScreenController extends CraftingContainer<Inventory> impleme
 		this.propertyDelegate = null;//new ArrayPropertyDelegate(1);
 	}
 	
-	public CottonScreenController(RecipeType<?> recipeType, int syncId, PlayerInventory playerInventory, Inventory blockInventory, PropertyDelegate propertyDelegate) {
+	public CottonCraftingController(RecipeType<?> recipeType, int syncId, PlayerInventory playerInventory, Inventory blockInventory, PropertyDelegate propertyDelegate) {
 		super(null, syncId);
 		this.blockInventory = blockInventory;
 		this.playerInventory = playerInventory;
@@ -70,12 +70,12 @@ public class CottonScreenController extends CraftingContainer<Inventory> impleme
 		return LibGuiClient.config.darkMode ? darkTitleColor : titleColor;
 	}
 	
-	public CottonScreenController setRootPanel(WPanel panel) {
+	public CottonCraftingController setRootPanel(WPanel panel) {
 		this.rootPanel = panel;
 		return this;
 	}
 	
-	public CottonScreenController setTitleColor(int color) {
+	public CottonCraftingController setTitleColor(int color) {
 		this.titleColor = color;
 		return this;
 	}

@@ -1,6 +1,6 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import io.github.cottonmc.cotton.gui.CottonScreenController;
+import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
@@ -10,8 +10,8 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Nameable;
 
-public class CottonInventoryScreen<T extends CottonScreenController> extends AbstractContainerScreen<T> {
-	protected CottonScreenController container;
+public class CottonInventoryScreen<T extends CottonCraftingController> extends AbstractContainerScreen<T> {
+	protected CottonCraftingController container;
 	public static final int PADDING = 8;
 	protected WWidget lastResponder = null;
 	protected WWidget focus = null;

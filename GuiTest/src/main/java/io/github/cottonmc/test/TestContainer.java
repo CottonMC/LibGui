@@ -1,6 +1,6 @@
 package io.github.cottonmc.test;
 
-import io.github.cottonmc.cotton.gui.CottonScreenController;
+import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
@@ -9,7 +9,7 @@ import net.minecraft.container.BlockContext;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.LiteralText;
 
-public class TestContainer extends CottonScreenController {
+public class TestContainer extends CottonCraftingController {
 	
 	public TestContainer(int syncId, PlayerInventory playerInventory, BlockContext context) {
 		super(null, syncId, playerInventory, getBlockInventory(context), null);
