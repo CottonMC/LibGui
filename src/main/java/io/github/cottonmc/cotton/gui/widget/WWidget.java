@@ -110,10 +110,8 @@ public class WWidget {
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param amount The scrolled amount. Positive values are up and negative values are down.
-	 * @return true if the scrolling was handled
 	 */
-	public boolean onMouseScroll(int x, int y, double amount) {
-		return false;
+	public void onMouseScroll(int x, int y, double amount) {
 	}
 	
 	/**
