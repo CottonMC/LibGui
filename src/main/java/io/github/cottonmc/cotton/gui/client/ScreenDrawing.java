@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.minecraft.class_4493.class_4534;
 import net.minecraft.class_4493.class_4535;
 import net.minecraft.client.MinecraftClient;
@@ -16,11 +17,11 @@ import net.minecraft.util.Identifier;
 public class ScreenDrawing {
 	private ScreenDrawing() {}
 	
-	public static void texturedRect(int left, int top, int width, int height, Identifier texture, int color) {
-		texturedRect(left, top, width, height, texture, 0, 0, 1, 1, color);
+	public static void texturedRect(int x, int y, int width, int height, Identifier texture, int color) {
+		texturedRect(x, y, width, height, texture, 0, 0, 1, 1, color);
 	}
-
-	public static void texturedRect(int left, int top, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color) {
+	
+	public static void texturedRect(int x, int y, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color) {
 		MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
 		
 		//float scale = 0.00390625F;
@@ -38,13 +39,33 @@ public class ScreenDrawing {
 		RenderSystem.blendFuncSeparate(class_4535.SRC_ALPHA, class_4534.ONE_MINUS_SRC_ALPHA, class_4535.ONE, class_4534.ZERO);
 		RenderSystem.color4f(r, g, b, 1.0f);
 		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(left,         top + height, 0).texture(u1, v2).next();
-		buffer.vertex(left + width, top + height, 0).texture(u2, v2).next();
-		buffer.vertex(left + width, top,          0).texture(u2, v1).next();
-		buffer.vertex(left,         top,          0).texture(u1, v1).next();
+		buffer.vertex(x,         y + height, 0).texture(u1, v2).next();
+		buffer.vertex(x + width, y + height, 0).texture(u2, v2).next();
+		buffer.vertex(x + width, y,          0).texture(u2, v1).next();
+		buffer.vertex(x,         y,          0).texture(u1, v1).next();
 		tessellator.draw();
 		//GlStateManager.enableTexture2D();
 		RenderSystem.disableBlend();
+	}
+	
+	/**
+	 * If the texture is 256x256, this draws the texture at one pixel per texel.
+	 * @param x         the x coordinate of the box on-screen
+	 * @param y         the y coordinate of the box on-screen
+	 * @param width     the width of the box on-screen
+	 * @param height    the height of the box on-screen
+	 * @param texture   the Identifier for the texture
+	 * @param textureX  the x offset into the texture
+	 * @param textureY  the y offset into the texture
+	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
+	 */
+	public static void texturedGuiRect(int x, int y, int width, int height, Identifier texture, int textureX, int textureY, int color) {
+		float px = 1/256f;
+		texturedRect(x, y, width, height, texture, textureX*px, textureY*px, (textureX+width)*px, (textureY+height)*px, color);
+	}
+	
+	public static void texturedGuiRect(int left, int top, int width, int height, Identifier texture, int color) {
+		texturedGuiRect(left, top, width, height, texture, 0, 0, color);
 	}
 	
 	/**
@@ -195,11 +216,56 @@ public class ScreenDrawing {
 		coloredRect(x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
 	}
 	
-	public static void drawString(String s, int x, int y, int color) {
-		MinecraftClient.getInstance().textRenderer.draw(s, x, y, color);
-		//MinecraftClient.getInstance().getFontManager().getTextRenderer(MinecraftClient.DEFAULT_TEXT_RENDERER_ID).draw(s, x, y, color);
+	public static void drawString(String s, Alignment align, int x, int y, int width, int color) {
+		switch(align) {
+		case LEFT: {
+				MinecraftClient.getInstance().textRenderer.draw(s, x, y, color);
+			}
+			break;
+		case CENTER: {
+				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int l = (width-2) - (wid/2);
+				MinecraftClient.getInstance().textRenderer.draw(s, l, y, color);
+			}
+			break;
+		case RIGHT: {
+				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int l = width - wid;
+				MinecraftClient.getInstance().textRenderer.draw(s, l, y, color);
+			}
+			break;
+		}
 	}
 	
+	public static void drawStringWithShadow(String s, Alignment align, int x, int y, int width, int color) {
+		switch(align) {
+		case LEFT: {
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(s, x, y, color);
+			}
+			break;
+		case CENTER: {
+				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int l = (width-2) - (wid/2);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(s, l, y, color);
+			}
+			break;
+		case RIGHT: {
+				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int l = width - wid;
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(s, l, y, color);
+			}
+			break;
+		}
+	}
+	
+	public static void drawString(String s, int x, int y, int color) {
+		MinecraftClient.getInstance().textRenderer.draw(s, x, y, color);
+	}
+	
+	/**
+	 * @deprecated for removal; please use {@link #drawStringWithShadow(String, Alignment, int, int, int, int)}
+	 */
+	@Deprecated
 	public static void drawCenteredWithShadow(String s, int x, int y, int color) {
 		TextRenderer render = MinecraftClient.getInstance().getFontManager().getTextRenderer(MinecraftClient.DEFAULT_TEXT_RENDERER_ID);
 		render.drawWithShadow(s, (float)(x - render.getStringWidth(s) / 2), (float)y, color);

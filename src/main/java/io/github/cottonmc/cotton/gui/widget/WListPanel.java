@@ -7,6 +7,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.data.Axis;
 
 /**
  * Similar to the RecyclerView in Android, this widget represents a scrollable list of items.

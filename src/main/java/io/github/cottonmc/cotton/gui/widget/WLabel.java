@@ -2,10 +2,12 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 public class WLabel extends WWidget {
 	protected Text text;
+	protected Alignment alignment = Alignment.LEFT;
 	protected int color;
 	protected int darkmodeColor;
 
@@ -60,6 +62,11 @@ public class WLabel extends WWidget {
 	
 	public WLabel setText(Text text) {
 		this.text = text;
+		return this;
+	}
+	
+	public WLabel setAlignment(Alignment align) {
+		this.alignment = align;
 		return this;
 	}
 }

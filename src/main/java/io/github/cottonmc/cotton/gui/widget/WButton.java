@@ -30,10 +30,8 @@ public class WButton extends WWidget {
 	
 	
 	@Override
-	public void paintForeground(int x, int y, int mouseX, int mouseY) {
-		//System.out.println("Mouse: { "+mouseX+", "+mouseY+" }");
-		
-		boolean hovered = (mouseX>=x && mouseY>=y && mouseX<x+getWidth() && mouseY<y+getHeight());
+	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+		boolean hovered = (mouseX>=0 && mouseY>=0 && mouseX<getWidth() && mouseY<getHeight());
 		int state = 1; //1=regular. 2=hovered. 0=disabled.
 		if (!enabled) state = 0;
 		else if (hovered) state = 2;
@@ -61,9 +59,6 @@ public class WButton extends WWidget {
 			
 			ScreenDrawing.drawCenteredWithShadow(label.asFormattedString(), x+(getWidth()/2), y + ((20 - 8) / 2), color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
-		
-		
-		super.paintForeground(x, y, mouseX, mouseY);
 	}
 	
 	@Override

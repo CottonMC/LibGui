@@ -3,6 +3,8 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 
+import io.github.cottonmc.cotton.gui.widget.data.Axis;
+
 import javax.annotation.Nullable;
 import java.util.function.IntConsumer;
 

@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.data.Axis;
 
 public class WScrollBar extends WWidget {
 	protected Axis axis = Axis.HORIZONTAL;
