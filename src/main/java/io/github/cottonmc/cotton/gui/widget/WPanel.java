@@ -119,12 +119,6 @@ public abstract class WPanel extends WWidget {
 		}
 	}*/
 	
-	@Override
-	public void onMouseScroll(int x, int y, double amount) {
-		WWidget child = hit(x, y);
-		if (child != this) child.onMouseScroll(x - child.getX(), y - child.getY(), amount);
-	}
-	
 	/**
 	 * Finds the most specific child node at this location.
 	 */

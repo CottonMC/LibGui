@@ -171,12 +171,15 @@ public class CottonClientScreen extends Screen {
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
 		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
+		
 		WPanel root = description.getRootPanel();
-		WWidget child = root.hit((int) mouseX - left, (int) mouseY - top);
+		int containerX = (int)mouseX-left;
+		int containerY = (int)mouseY-top;
+		
+		WWidget child = root.hit(containerX, containerY);
 		if (child == root) return false;
-		// Use root.onMouseScroll to work in cases where the hit result is in a nested panel
-		// and the mouse position can't be moved to the widget space by subtracting the widget's position
-		root.onMouseScroll((int) mouseX - left, (int) mouseY - top, amount);
+		
+		child.onMouseScroll(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY(), amount);
 		return true;
 	}
 	
