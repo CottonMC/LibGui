@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import net.fabricmc.api.EnvType;
@@ -17,7 +18,8 @@ import javax.annotation.Nullable;
 public class WSlider extends WAbstractSlider {
 	public static final int TRACK_WIDTH = 6;
 	public static final int THUMB_SIZE = 8;
-	public static final Identifier TEXTURE = new Identifier("libgui", "textures/widget/slider.png");
+	public static final Identifier LIGHT_TEXTURE = new Identifier("libgui", "textures/widget/slider.png");
+	public static final Identifier DARK_TEXTURE = new Identifier("libgui", "textures/widget/slider_dark.png");
 
 	@Environment(EnvType.CLIENT)
 	@Nullable
@@ -27,6 +29,7 @@ public class WSlider extends WAbstractSlider {
 		super(min, max, axis);
 	}
 
+	@Deprecated
 	public WSlider(int max, Axis axis) {
 		this(0, max, axis);
 	}
@@ -46,6 +49,7 @@ public class WSlider extends WAbstractSlider {
 		return ao >= aoCenter - TRACK_WIDTH / 2 - 2 && ao <= aoCenter + TRACK_WIDTH / 2 + 2;
 	}
 
+	@SuppressWarnings("SuspiciousNameCombination")
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paintBackground(int x, int y, int mouseX, int mouseY) {
@@ -57,6 +61,7 @@ public class WSlider extends WAbstractSlider {
 			int thumbX, thumbY;
 			// thumbXOffset: thumb texture x offset in pixels
 			int thumbXOffset;
+			Identifier texture = LibGuiClient.config.darkMode ? DARK_TEXTURE : LIGHT_TEXTURE;
 
 			if (axis == Axis.VERTICAL) {
 				int trackX = x + width / 2 - TRACK_WIDTH / 2;
@@ -64,33 +69,39 @@ public class WSlider extends WAbstractSlider {
 				thumbY = height - THUMB_SIZE + 1 - (int) (coordToValueRatio * (value - min));
 				thumbXOffset = 0;
 
-				ScreenDrawing.texturedRect(trackX, y + 1, TRACK_WIDTH, 1, TEXTURE, 16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(trackX, y + 2, TRACK_WIDTH, height - 2, TEXTURE, 16*px, 1*px, 22*px, 2*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(trackX, y + height, TRACK_WIDTH, 1, TEXTURE, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(trackX, y + 1, TRACK_WIDTH, 1, texture, 16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(trackX, y + 2, TRACK_WIDTH, height - 2, texture, 16*px, 1*px, 22*px, 2*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(trackX, y + height, TRACK_WIDTH, 1, texture, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
 				thumbX = Math.round(coordToValueRatio * (value - min));
 				thumbY = height / 2 - THUMB_SIZE / 2;
 				thumbXOffset = 8;
 
-				ScreenDrawing.texturedRect(x, trackY, 1, TRACK_WIDTH, TEXTURE, 16*px, 3*px, 17*px, 9*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(x + 1, trackY, width - 2, TRACK_WIDTH, TEXTURE, 17*px, 3*px, 18*px, 9*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(x + width - 1, trackY, 1, TRACK_WIDTH, TEXTURE, 18*px, 3*px, 19*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(x, trackY, 1, TRACK_WIDTH, texture, 16*px, 3*px, 17*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(x + 1, trackY, width - 2, TRACK_WIDTH, texture, 17*px, 3*px, 18*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(x + width - 1, trackY, 1, TRACK_WIDTH, texture, 18*px, 3*px, 19*px, 9*px, 0xFFFFFFFF);
 			}
 
 			// thumbState values:
 			// 0: default, 1: dragging, 2: hovered
 			int thumbState = dragging ? 1 : (mouseX >= thumbX && mouseX <= thumbX + THUMB_SIZE && mouseY >= thumbY && mouseY <= thumbY + THUMB_SIZE ? 2 : 0);
-			ScreenDrawing.texturedRect(x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, TEXTURE, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
 
 			if (thumbState == 0 && isFocused()) {
-				ScreenDrawing.texturedRect(x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, TEXTURE, 0*px, 24*px, 8*px, 32*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, 0*px, 24*px, 8*px, 32*px, 0xFFFFFFFF);
 			}
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setBackgroundPainter(BackgroundPainter backgroundPainter) {
+	@Nullable
+	public BackgroundPainter getBackgroundPainter() {
+		return backgroundPainter;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void setBackgroundPainter(@Nullable BackgroundPainter backgroundPainter) {
 		this.backgroundPainter = backgroundPainter;
 	}
 }

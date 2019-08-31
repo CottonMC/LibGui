@@ -143,8 +143,18 @@ public abstract class WAbstractSlider extends WWidget {
 		onValueChanged(value);
 	}
 
+	@Nullable
+	public IntConsumer getValueChangeListener() {
+		return valueChangeListener;
+	}
+
 	public void setValueChangeListener(@Nullable IntConsumer valueChangeListener) {
 		this.valueChangeListener = valueChangeListener;
+	}
+
+	@Nullable
+	public Runnable getDraggingFinishedListener() {
+		return draggingFinishedListener;
 	}
 
 	public void setDraggingFinishedListener(@Nullable Runnable draggingFinishedListener) {
