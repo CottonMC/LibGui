@@ -142,6 +142,12 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	}
 	
 	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
+		return description.getRootPanel().onMouseScroll((int) mouseX - left, (int) mouseY - top, amount);
+	}
+	
+	@Override
 	protected void drawBackground(float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
 	public void paint(int mouseX, int mouseY) {

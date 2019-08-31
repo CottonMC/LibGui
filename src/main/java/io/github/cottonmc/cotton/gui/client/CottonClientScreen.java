@@ -169,6 +169,12 @@ public class CottonClientScreen extends Screen {
 	}
 	
 	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
+		return description.getRootPanel().onMouseScroll((int) mouseX - left, (int) mouseY - top, amount);
+	}
+	
+	@Override
 	public boolean charTyped(char ch, int keyCode) {
 		if (description.getFocus()==null) return false;
 		description.getFocus().onCharTyped(ch);

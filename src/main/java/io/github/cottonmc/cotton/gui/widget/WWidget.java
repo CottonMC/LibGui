@@ -106,6 +106,17 @@ public class WWidget {
 	}
 	
 	/**
+	 * Notifies this widget that the mouse has been scrolled inside its bounds.
+	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
+	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
+	 * @param amount The scrolled amount. Positive values are up and negative values are down.
+	 * @return true if the scrolling was handled
+	 */
+	public boolean onMouseScroll(int x, int y, double amount) {
+		return false;
+	}
+	
+	/**
 	 * Notifies this widget that a character has been typed. This method is subject to key repeat,
 	 * and may be called for characters that do not directly have a corresponding keyboard key.
 	 * @param ch the character typed
