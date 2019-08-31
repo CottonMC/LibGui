@@ -31,7 +31,7 @@ public class WLabel extends WWidget {
 	@Override
 	public void paintBackground(int x, int y) {
 		String translated = text.asFormattedString();
-		ScreenDrawing.drawString(translated, x, y, LibGuiClient.config.darkMode ? darkmodeColor : color);
+		ScreenDrawing.drawString(translated, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
 	}
 
 	@Override

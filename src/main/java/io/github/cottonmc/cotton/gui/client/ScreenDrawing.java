@@ -224,14 +224,14 @@ public class ScreenDrawing {
 			break;
 		case CENTER: {
 				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
-				int l = (width-2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.draw(s, l, y, color);
+				int l = (width/2) - (wid/2);
+				MinecraftClient.getInstance().textRenderer.draw(s, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
 				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.draw(s, l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(s, x+l, y, color);
 			}
 			break;
 		}
@@ -245,14 +245,14 @@ public class ScreenDrawing {
 			break;
 		case CENTER: {
 				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
-				int l = (width-2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.drawWithShadow(s, l, y, color);
+				int l = (width/2) - (wid/2);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(s, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
 				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.drawWithShadow(s, l, y, color);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(s, x+l, y, color);
 			}
 			break;
 		}

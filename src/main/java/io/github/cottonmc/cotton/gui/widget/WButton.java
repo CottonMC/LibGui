@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -12,6 +13,7 @@ public class WButton extends WWidget {
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
 	private boolean enabled = true;
+	protected Alignment alignment = Alignment.CENTER;
 	
 	private Runnable onClick;
 	
@@ -57,7 +59,7 @@ public class WButton extends WWidget {
 				color = 0xFFFFA0;
 			}
 			
-			ScreenDrawing.drawCenteredWithShadow(label.asFormattedString(), x+(getWidth()/2), y + ((20 - 8) / 2), color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawStringWithShadow(label.asFormattedString(), alignment, x, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	
@@ -77,15 +79,22 @@ public class WButton extends WWidget {
 		}
 	}
 
-	public void setOnClick(Runnable r) {
+	public WButton setOnClick(Runnable r) {
 		this.onClick = r;
+		return this;
 	}
 
 	public boolean isEnabled() {
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
+	public WButton setEnabled(boolean enabled) {
 		this.enabled = enabled;
+		return this;
+	}
+	
+	public WButton setAlignment(Alignment alignment) {
+		this.alignment = alignment;
+		return this;
 	}
 }
