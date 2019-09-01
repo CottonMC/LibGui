@@ -25,6 +25,11 @@ import java.util.function.IntConsumer;
  * </ul>
  */
 public abstract class WAbstractSlider extends WWidget {
+	/**
+	 * The minimum time between two draggingFinished events caused by scrolling ({@link #onMouseScroll}).
+	 */
+	private static final int SCROLLING_DRAGGING_FINISHED_RATE_LIMIT = 10;
+
 	protected final int min, max;
 	protected final Axis axis;
 
@@ -49,10 +54,12 @@ public abstract class WAbstractSlider extends WWidget {
 	/**
 	 * True if there is a pending dragging finished event caused by the keyboard.
 	 */
-	private boolean valueChangedWithKeys = false;
+	private boolean pendingDraggingFinishedFromKeyboard = false;
+	private int draggingFinishedFromScrollingTimer = 0;
+	private boolean pendingDraggingFinishedFromScrolling = false;
 
 	@Nullable private IntConsumer valueChangeListener = null;
-	@Nullable private Runnable draggingFinishedListener = null;
+	@Nullable private IntConsumer draggingFinishedListener = null;
 
 	protected WAbstractSlider(int min, int max, Axis axis) {
 		if (max <= min)
@@ -116,7 +123,7 @@ public abstract class WAbstractSlider extends WWidget {
 	@Override
 	public void onClick(int x, int y, int button) {
 		moveSlider(x, y);
-		if (draggingFinishedListener != null) draggingFinishedListener.run();
+		if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
 	}
 
 	private void moveSlider(int x, int y) {
@@ -130,8 +137,32 @@ public abstract class WAbstractSlider extends WWidget {
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
 		dragging = false;
-		if (draggingFinishedListener != null) draggingFinishedListener.run();
+		if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
 		return super.onMouseUp(x, y, button);
+	}
+
+	@Override
+	public void onMouseScroll(int x, int y, double amount) {
+		int previous = value;
+		value = MathHelper.clamp(value + (int) (valueToCoordRatio * amount * 2), min, max);
+
+		if (previous != value) {
+			onValueChanged(value);
+			pendingDraggingFinishedFromScrolling = true;
+		}
+	}
+
+	@Override
+	public void tick() {
+		if (draggingFinishedFromScrollingTimer > 0) {
+			draggingFinishedFromScrollingTimer--;
+		}
+
+		if (pendingDraggingFinishedFromScrolling && draggingFinishedFromScrollingTimer <= 0) {
+			if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
+			pendingDraggingFinishedFromScrolling = false;
+			draggingFinishedFromScrollingTimer = SCROLLING_DRAGGING_FINISHED_RATE_LIMIT;
+		}
 	}
 
 	public int getValue() {
@@ -153,11 +184,11 @@ public abstract class WAbstractSlider extends WWidget {
 	}
 
 	@Nullable
-	public Runnable getDraggingFinishedListener() {
+	public IntConsumer getDraggingFinishedListener() {
 		return draggingFinishedListener;
 	}
 
-	public void setDraggingFinishedListener(@Nullable Runnable draggingFinishedListener) {
+	public void setDraggingFinishedListener(@Nullable IntConsumer draggingFinishedListener) {
 		this.draggingFinishedListener = draggingFinishedListener;
 	}
 
@@ -200,15 +231,15 @@ public abstract class WAbstractSlider extends WWidget {
 
 		if (valueChanged) {
 			onValueChanged(value);
-			valueChangedWithKeys = true;
+			pendingDraggingFinishedFromKeyboard = true;
 		}
 	}
 
 	@Override
 	public void onKeyReleased(int ch, int key, int modifiers) {
-		if (valueChangedWithKeys && (isDecreasingKey(ch) || isIncreasingKey(ch))) {
-			if (draggingFinishedListener != null) draggingFinishedListener.run();
-			valueChangedWithKeys = false;
+		if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch) || isIncreasingKey(ch))) {
+			if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
+			pendingDraggingFinishedFromKeyboard = false;
 		}
 	}
 
