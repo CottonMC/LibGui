@@ -28,7 +28,7 @@ public abstract class WAbstractSlider extends WWidget {
 	/**
 	 * The minimum time between two draggingFinished events caused by scrolling ({@link #onMouseScroll}).
 	 */
-	private static final int SCROLLING_DRAGGING_FINISHED_RATE_LIMIT = 10;
+	private static final int DRAGGING_FINISHED_RATE_LIMIT_FOR_SCROLLING = 10;
 
 	protected final int min, max;
 	protected final Axis axis;
@@ -161,7 +161,7 @@ public abstract class WAbstractSlider extends WWidget {
 		if (pendingDraggingFinishedFromScrolling && draggingFinishedFromScrollingTimer <= 0) {
 			if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
 			pendingDraggingFinishedFromScrolling = false;
-			draggingFinishedFromScrollingTimer = SCROLLING_DRAGGING_FINISHED_RATE_LIMIT;
+			draggingFinishedFromScrollingTimer = DRAGGING_FINISHED_RATE_LIMIT_FOR_SCROLLING;
 		}
 	}
 
