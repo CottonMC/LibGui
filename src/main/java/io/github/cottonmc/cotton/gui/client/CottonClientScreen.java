@@ -177,8 +177,6 @@ public class CottonClientScreen extends Screen {
 		int containerY = (int)mouseY-top;
 		
 		WWidget child = root.hit(containerX, containerY);
-		if (child == root) return false;
-		
 		child.onMouseScroll(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY(), amount);
 		return true;
 	}

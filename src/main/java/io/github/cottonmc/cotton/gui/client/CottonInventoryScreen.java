@@ -150,8 +150,6 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 		int containerY = (int)mouseY-top;
 		
 		WWidget child = root.hit(containerX, containerY);
-		if (child == root) return false;
-		
 		child.onMouseScroll(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY(), amount);
 		return true;
 	}
