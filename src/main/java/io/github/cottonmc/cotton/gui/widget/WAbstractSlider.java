@@ -170,8 +170,11 @@ public abstract class WAbstractSlider extends WWidget {
 	}
 
 	public void setValue(int value) {
-		this.value = value;
-		onValueChanged(value);
+		int previous = this.value;
+		this.value = MathHelper.clamp(value, min, max);
+		if (previous != this.value) {
+			onValueChanged(this.value);
+		}
 	}
 
 	@Nullable
