@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import org.lwjgl.glfw.GLFW;
+
 import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
@@ -78,10 +80,22 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	
 	@Override
 	public boolean keyPressed(int ch, int keyCode, int modifiers) {
-		if (super.keyPressed(ch, keyCode, modifiers)) return true;
-		if (description.getFocus()==null) return false;
-		description.getFocus().onKeyPressed(ch, keyCode, modifiers);
-		return true;
+		if (keyCode==GLFW.GLFW_KEY_ESCAPE) {
+			this.minecraft.player.closeContainer();
+			return true;
+		} else {
+			//if (super.keyPressed(ch, keyCode, modifiers)) return true;
+			if (description.getFocus()==null) {
+				if (MinecraftClient.getInstance().options.keyInventory.matchesKey(ch, keyCode)) {
+					this.minecraft.player.closeContainer();
+					return true;
+				}
+				return false;
+			} else {
+				description.getFocus().onKeyPressed(ch, keyCode, modifiers);
+				return true;
+			}
+		}
 	}
 	
 	@Override
@@ -139,6 +153,19 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 			description.doMouseDrag(containerX, containerY, mouseButton);
 		}
 		return result;
+	}
+	
+	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
+		
+		WPanel root = description.getRootPanel();
+		int containerX = (int)mouseX-left;
+		int containerY = (int)mouseY-top;
+		
+		WWidget child = root.hit(containerX, containerY);
+		child.onMouseScroll(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY(), amount);
+		return true;
 	}
 	
 	@Override
