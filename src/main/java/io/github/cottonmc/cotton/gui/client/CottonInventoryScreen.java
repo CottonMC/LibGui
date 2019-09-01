@@ -156,6 +156,19 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	}
 	
 	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
+		
+		WPanel root = description.getRootPanel();
+		int containerX = (int)mouseX-left;
+		int containerY = (int)mouseY-top;
+		
+		WWidget child = root.hit(containerX, containerY);
+		child.onMouseScroll(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY(), amount);
+		return true;
+	}
+	
+	@Override
 	protected void drawBackground(float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
 	public void paint(int mouseX, int mouseY) {
