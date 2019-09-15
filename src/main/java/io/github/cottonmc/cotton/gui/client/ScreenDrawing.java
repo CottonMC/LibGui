@@ -2,11 +2,10 @@ package io.github.cottonmc.cotton.gui.client;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
-import net.minecraft.class_4493.class_4534;
-import net.minecraft.class_4493.class_4535;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
@@ -36,7 +35,7 @@ public class ScreenDrawing {
 		BufferBuilder buffer = tessellator.getBufferBuilder();
 		RenderSystem.enableBlend();
 		//GlStateManager.disableTexture2D();
-		RenderSystem.blendFuncSeparate(class_4535.SRC_ALPHA, class_4534.ONE_MINUS_SRC_ALPHA, class_4535.ONE, class_4534.ZERO);
+		RenderSystem.blendFuncSeparate(GlStateManager.class_4535.SRC_ALPHA, GlStateManager.class_4534.ONE_MINUS_SRC_ALPHA, GlStateManager.class_4535.ONE, GlStateManager.class_4534.ZERO);
 		RenderSystem.color4f(r, g, b, 1.0f);
 		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV); //I thought GL_QUADS was deprecated but okay, sure.
 		buffer.vertex(x,         y + height, 0).texture(u1, v2).next();
@@ -83,7 +82,7 @@ public class ScreenDrawing {
 		BufferBuilder buffer = tessellator.getBufferBuilder();
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
-		RenderSystem.blendFuncSeparate(class_4535.SRC_ALPHA, class_4534.ONE_MINUS_SRC_ALPHA, class_4535.ONE, class_4534.ZERO);
+		RenderSystem.blendFuncSeparate(GlStateManager.class_4535.SRC_ALPHA, GlStateManager.class_4534.ONE_MINUS_SRC_ALPHA, GlStateManager.class_4535.ONE, GlStateManager.class_4534.ZERO);
 		RenderSystem.color4f(r, g, b, a);
 		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION); //I thought GL_QUADS was deprecated but okay, sure.
 		buffer.vertex(left,         top + height, 0.0D).next();

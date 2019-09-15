@@ -6,6 +6,7 @@ import blue.endless.jankson.JsonObject;
 import io.github.cottonmc.jankson.JanksonFactory;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

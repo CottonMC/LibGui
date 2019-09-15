@@ -2,6 +2,10 @@ buildscript {
 	repositories {
 		jcenter()
 		maven {
+			name = 'Modmuss'
+			url = 'https://maven.modmuss50.me/'
+		}
+		maven {
 			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
 		}
@@ -11,7 +15,7 @@ buildscript {
 		System.out.println(rootProject.name);
 		if (rootProject.name=="LibGUI") {
 			System.out.println("Added libgui to classpath");
-			classpath 'fabric-loom:fabric-loom.gradle.plugin:0.2.4-SNAPSHOT'
+			classpath 'fabric-loom:fabric-loom.gradle.plugin:0.2.5-SNAPSHOT'
 		}
 	}
 }
@@ -48,15 +52,15 @@ repositories {
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-	modApi "net.fabricmc:fabric-loader:${project.loader_version}"
-	modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modApi "io.github.cottonmc:Jankson:${project.jankson_version}"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "io.github.cottonmc:Jankson:${project.jankson_version}"
 	include "io.github.cottonmc:Jankson:${project.jankson_version}"
 
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
 
-	modImplementation "io.github.prospector:modmenu:1.7.9+build.118"
+	modImplementation "io.github.prospector:modmenu:1.7.10-unstable.19w35a+build.2"
 	//modApi "io.github.prospector:modmenu:1.7.9+build.118"
 }
 

@@ -80,7 +80,8 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	
 	@Override
 	public boolean keyPressed(int ch, int keyCode, int modifiers) {
-		if (keyCode==GLFW.GLFW_KEY_ESCAPE) {
+		//System.out.println("Key " + Integer.toHexString(ch)+" "+Integer.toHexString(keyCode));
+		if (ch==GLFW.GLFW_KEY_ESCAPE) {
 			this.minecraft.player.closeContainer();
 			return true;
 		} else {
