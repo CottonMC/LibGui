@@ -1,6 +1,8 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,20 +23,33 @@ import javax.annotation.Nullable;
 public class WLabeledSlider extends WAbstractSlider {
 	@Nullable private Text label = null;
 	@Nullable private LabelUpdater labelUpdater = null;
+	private Alignment labelAlignment = Alignment.CENTER;
 
 	public WLabeledSlider(int min, int max) {
-		super(min, max, Axis.HORIZONTAL);
+		this(min, max, Axis.HORIZONTAL);
 	}
 
-	public WLabeledSlider(int min, int max, Text label) {
+	public WLabeledSlider(int min, int max, Axis axis) {
+		super(min, max, axis);
+	}
+
+	public WLabeledSlider(int min, int max, Axis axis, @Nullable Text label) {
+		this(min, max, axis);
+		this.label = label;
+	}
+
+	public WLabeledSlider(int min, int max, @Nullable Text label) {
 		this(min, max);
 		this.label = label;
 	}
 
-
 	@Override
 	public void setSize(int x, int y) {
-		super.setSize(x, 20);
+		if (axis == Axis.HORIZONTAL) {
+			super.setSize(x, 20);
+		} else {
+			super.setSize(20, y);
+		}
 	}
 
 	@Nullable
@@ -54,6 +69,19 @@ public class WLabeledSlider extends WAbstractSlider {
 		}
 	}
 
+	public Alignment getLabelAlignment() {
+		return labelAlignment;
+	}
+
+	public void setLabelAlignment(Alignment labelAlignment) {
+		this.labelAlignment = labelAlignment;
+	}
+
+	@Nullable
+	public LabelUpdater getLabelUpdater() {
+		return labelUpdater;
+	}
+
 	public void setLabelUpdater(@Nullable LabelUpdater labelUpdater) {
 		this.labelUpdater = labelUpdater;
 	}
@@ -71,27 +99,39 @@ public class WLabeledSlider extends WAbstractSlider {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paintBackground(int x, int y, int mouseX, int mouseY) {
-		drawButton(x, y, 0, width);
+		int aWidth = axis == Axis.HORIZONTAL ? width : height;
+		int aHeight = axis == Axis.HORIZONTAL ? height : width;
+		int rotMouseX = axis == Axis.HORIZONTAL ? mouseX : (height - mouseY);
+		int rotMouseY = axis == Axis.HORIZONTAL ? mouseY : mouseX;
+
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(x, y, 0);
+		if (axis == Axis.VERTICAL) {
+			RenderSystem.translatef(0, height, 0);
+			RenderSystem.rotatef(270, 0, 0, 1);
+		}
+		drawButton(0, 0, 0, aWidth);
 
 		// 1: regular, 2: hovered, 0: disabled/dragging
 		int thumbX = Math.round(coordToValueRatio * (value - min));
 		int thumbY = 0;
 		int thumbWidth = getThumbWidth();
-		int thumbHeight = height;
-		boolean hovering = mouseX >= thumbX && mouseX <= thumbX + thumbWidth && mouseY >= thumbY && mouseY <= thumbY + thumbHeight;
+		int thumbHeight = aHeight;
+		boolean hovering = rotMouseX >= thumbX && rotMouseX <= thumbX + thumbWidth && rotMouseY >= thumbY && rotMouseY <= thumbY + thumbHeight;
 		int thumbState = dragging || hovering ? 2 : 1;
 
-		drawButton(x + thumbX, y + thumbY, thumbState, thumbWidth);
+		drawButton(thumbX, thumbY, thumbState, thumbWidth);
 
 		if (thumbState == 1 && isFocused()) {
 			float px = 1 / 32f;
-			ScreenDrawing.texturedRect(x + thumbX, y + thumbY, thumbWidth, thumbHeight, WSlider.TEXTURE, 24*px, 0*px, 32*px, 20*px, 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(thumbX, thumbY, thumbWidth, thumbHeight, WSlider.LIGHT_TEXTURE, 24*px, 0*px, 32*px, 20*px, 0xFFFFFFFF);
 		}
 
 		if (label != null) {
 			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
-			ScreenDrawing.drawCenteredWithShadow(label.asFormattedString(), x + width / 2, y + height / 2 - 4, color);
+			ScreenDrawing.drawStringWithShadow(label.asFormattedString(), labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
+		RenderSystem.popMatrix();
 	}
 
 	// state = 1: regular, 2: hovered, 0: disabled/dragging

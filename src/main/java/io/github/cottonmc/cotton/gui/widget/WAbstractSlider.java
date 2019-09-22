@@ -14,7 +14,7 @@ import java.util.function.IntConsumer;
  * <p>You can set two listeners on a slider:
  * <ul>
  *     <li>
- *         A value change listener that gets all value changes (including direct setValue calls).
+ *         A value change listener that gets all value changes.
  *     </li>
  *     <li>
  *         A dragging finished listener that gets called when the player stops dragging the slider
@@ -25,6 +25,11 @@ import java.util.function.IntConsumer;
  * </ul>
  */
 public abstract class WAbstractSlider extends WWidget {
+	/**
+	 * The minimum time between two draggingFinished events caused by scrolling ({@link #onMouseScroll}).
+	 */
+	private static final int DRAGGING_FINISHED_RATE_LIMIT_FOR_SCROLLING = 10;
+
 	protected final int min, max;
 	protected final Axis axis;
 
@@ -49,10 +54,12 @@ public abstract class WAbstractSlider extends WWidget {
 	/**
 	 * True if there is a pending dragging finished event caused by the keyboard.
 	 */
-	private boolean valueChangedWithKeys = false;
+	private boolean pendingDraggingFinishedFromKeyboard = false;
+	private int draggingFinishedFromScrollingTimer = 0;
+	private boolean pendingDraggingFinishedFromScrolling = false;
 
 	@Nullable private IntConsumer valueChangeListener = null;
-	@Nullable private Runnable draggingFinishedListener = null;
+	@Nullable private IntConsumer draggingFinishedListener = null;
 
 	protected WAbstractSlider(int min, int max, Axis axis) {
 		if (max <= min)
@@ -116,7 +123,7 @@ public abstract class WAbstractSlider extends WWidget {
 	@Override
 	public void onClick(int x, int y, int button) {
 		moveSlider(x, y);
-		if (draggingFinishedListener != null) draggingFinishedListener.run();
+		if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
 	}
 
 	private void moveSlider(int x, int y) {
@@ -130,24 +137,76 @@ public abstract class WAbstractSlider extends WWidget {
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
 		dragging = false;
-		if (draggingFinishedListener != null) draggingFinishedListener.run();
+		if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
 		return super.onMouseUp(x, y, button);
+	}
+
+	@Override
+	public void onMouseScroll(int x, int y, double amount) {
+		int previous = value;
+		value = MathHelper.clamp(value + (int) (valueToCoordRatio * amount * 2), min, max);
+
+		if (previous != value) {
+			onValueChanged(value);
+			pendingDraggingFinishedFromScrolling = true;
+		}
+	}
+
+	@Override
+	public void tick() {
+		if (draggingFinishedFromScrollingTimer > 0) {
+			draggingFinishedFromScrollingTimer--;
+		}
+
+		if (pendingDraggingFinishedFromScrolling && draggingFinishedFromScrollingTimer <= 0) {
+			if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
+			pendingDraggingFinishedFromScrolling = false;
+			draggingFinishedFromScrollingTimer = DRAGGING_FINISHED_RATE_LIMIT_FOR_SCROLLING;
+		}
 	}
 
 	public int getValue() {
 		return value;
 	}
 
+	/**
+	 * Sets the slider value without calling listeners.
+	 * @param value the new value
+	 */
 	public void setValue(int value) {
-		this.value = value;
-		onValueChanged(value);
+		setValue(value, false);
+	}
+
+	/**
+	 * Sets the slider value.
+	 *
+	 * @param value the new value
+	 * @param callListeners if true, call all slider listeners
+	 */
+	public void setValue(int value, boolean callListeners) {
+		int previous = this.value;
+		this.value = MathHelper.clamp(value, min, max);
+		if (callListeners && previous != this.value) {
+			onValueChanged(this.value);
+			if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
+		}
+	}
+
+	@Nullable
+	public IntConsumer getValueChangeListener() {
+		return valueChangeListener;
 	}
 
 	public void setValueChangeListener(@Nullable IntConsumer valueChangeListener) {
 		this.valueChangeListener = valueChangeListener;
 	}
 
-	public void setDraggingFinishedListener(@Nullable Runnable draggingFinishedListener) {
+	@Nullable
+	public IntConsumer getDraggingFinishedListener() {
+		return draggingFinishedListener;
+	}
+
+	public void setDraggingFinishedListener(@Nullable IntConsumer draggingFinishedListener) {
 		this.draggingFinishedListener = draggingFinishedListener;
 	}
 
@@ -190,15 +249,15 @@ public abstract class WAbstractSlider extends WWidget {
 
 		if (valueChanged) {
 			onValueChanged(value);
-			valueChangedWithKeys = true;
+			pendingDraggingFinishedFromKeyboard = true;
 		}
 	}
 
 	@Override
 	public void onKeyReleased(int ch, int key, int modifiers) {
-		if (valueChangedWithKeys && (isDecreasingKey(ch) || isIncreasingKey(ch))) {
-			if (draggingFinishedListener != null) draggingFinishedListener.run();
-			valueChangedWithKeys = false;
+		if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch) || isIncreasingKey(ch))) {
+			if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
+			pendingDraggingFinishedFromKeyboard = false;
 		}
 	}
 
