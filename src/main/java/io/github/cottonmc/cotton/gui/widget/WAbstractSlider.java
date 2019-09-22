@@ -14,7 +14,7 @@ import java.util.function.IntConsumer;
  * <p>You can set two listeners on a slider:
  * <ul>
  *     <li>
- *         A value change listener that gets all value changes (including direct setValue calls).
+ *         A value change listener that gets all value changes.
  *     </li>
  *     <li>
  *         A dragging finished listener that gets called when the player stops dragging the slider
@@ -169,11 +169,26 @@ public abstract class WAbstractSlider extends WWidget {
 		return value;
 	}
 
+	/**
+	 * Sets the slider value without calling listeners.
+	 * @param value the new value
+	 */
 	public void setValue(int value) {
+		setValue(value, false);
+	}
+
+	/**
+	 * Sets the slider value.
+	 *
+	 * @param value the new value
+	 * @param callListeners if true, call all slider listeners
+	 */
+	public void setValue(int value, boolean callListeners) {
 		int previous = this.value;
 		this.value = MathHelper.clamp(value, min, max);
-		if (previous != this.value) {
+		if (callListeners && previous != this.value) {
 			onValueChanged(this.value);
+			if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
 		}
 	}
 
