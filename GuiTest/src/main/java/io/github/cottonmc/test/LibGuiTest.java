@@ -1,7 +1,14 @@
 package io.github.cottonmc.test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Optional;
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.container.BlockContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,6 +40,27 @@ public class LibGuiTest implements ModInitializer {
 		ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MODID, "gui"), (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf)->{
 			return new TestContainer(syncId, player.inventory, BlockContext.create(player.getEntityWorld(), buf.readBlockPos()));
 		});
+		
+		Optional<ModContainer> containerOpt = FabricLoader.getInstance().getModContainer("jankson");
+		if (containerOpt.isPresent()) {
+			ModContainer jankson = containerOpt.get();
+			System.out.println("Jankson root path: "+jankson.getRootPath());
+			try {
+				Files.list(jankson.getRootPath()).forEach((path)->{
+					path.getFileSystem().getFileStores().forEach((store)->{
+						System.out.println("        Filestore: "+store.name());
+					});
+					System.out.println("    "+path.toAbsolutePath());
+				});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Path modJson = jankson.getPath("/fabric.mod.json");
+			System.out.println("Jankson fabric.mod.json path: "+modJson);
+			System.out.println(Files.exists(modJson) ? "Exists" : "Does Not Exist");
+		} else {
+			System.out.println("Container isn't present!");
+		}
 	}
 
 }
