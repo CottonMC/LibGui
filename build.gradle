@@ -60,8 +60,7 @@ dependencies {
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
 
-	modImplementation "io.github.prospector:modmenu:1.7.10-unstable.19w35a+build.2"
-	//modApi "io.github.prospector:modmenu:1.7.9+build.118"
+	modCompileOnly "io.github.prospector:modmenu:1.7.10-unstable.19w35a+build.2"
 }
 
 processResources {
