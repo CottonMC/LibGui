@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
-public class CottonClientScreen extends Screen {
+public class CottonClientScreen extends Screen implements TextHoverRendererScreen {
 	protected GuiDescription description;
 	protected int left = 0;
 	protected int top = 0;
@@ -207,4 +207,9 @@ public class CottonClientScreen extends Screen {
 	//public Element getFocused() {
 		//return this;
 	//}
+
+	@Override
+	public void renderTextHover(Text text, int x, int y) {
+		renderComponentHoverEffect(text, x, y);
+	}
 }
