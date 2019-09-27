@@ -5,7 +5,7 @@ buildscript {
 }
 
 plugins {
-	id 'fabric-loom' version '0.2.4-SNAPSHOT'
+	id 'fabric-loom' version '0.2.5-SNAPSHOT'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -36,13 +36,14 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
 	modApi "net.fabricmc:fabric-loader:${project.loader_version}"
 	modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modApi "io.github.cottonmc:Jankson:${project.jankson_version}"
-	include "io.github.cottonmc:Jankson:${project.jankson_version}"
+	modApi "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
+	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
 
-	modApi ("io.github.prospector:modmenu:1.7.10-unstable.19w35a+build.2")// { transitive = false }
+	//modApi ("io.github.prospector:modmenu:1.7.10-unstable.19w35a+build.2")// { transitive = false }
+	modCompileOnly "io.github.prospector:modmenu:1.7.10-unstable.19w35a+build.2"
 	//modApi ("io.github.cottonmc:LibGui:1.3.1-SNAPSHOT") { changing = true }
 	compile (project(":LibGUI")) { transitive = false };
 	runtime (project(":LibGUI")) { transitive = false };

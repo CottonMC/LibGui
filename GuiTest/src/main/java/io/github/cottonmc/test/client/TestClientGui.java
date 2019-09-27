@@ -12,8 +12,12 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WListPanel;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
+import io.github.cottonmc.cotton.gui.widget.WSlider;
 import io.github.cottonmc.cotton.gui.widget.WSprite;
 import io.github.cottonmc.cotton.gui.widget.WTextField;
+import io.github.cottonmc.cotton.gui.widget.WWidget;
+import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import io.github.cottonmc.cotton.gui.widget.data.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.LiteralText;
@@ -26,8 +30,12 @@ public class TestClientGui extends LightweightGuiDescription {
 		ScreenDrawing.drawBeveledPanel(x-1, y-1, panel.getWidth()+2, panel.getHeight()+2);
 	};
 	
-	private static final Identifier PORTAL1 = new Identifier("libgui-test:portal.png");
-	private static final Identifier PORTAL2 = new Identifier("libgui-test:portal2.png");
+	//private static final Identifier PORTAL1 = new Identifier("libgui-test:portal.png");
+	//private static final Identifier PORTAL2 = new Identifier("libgui-test:portal2.png");
+	
+	private int r = 0;
+	private int g = 0;
+	private int b = 0;
 	
 	public TestClientGui() {
 		WGridPanel root = new WGridPanel(22);
@@ -45,7 +53,7 @@ public class TestClientGui extends LightweightGuiDescription {
 		text.setSuggestion("Search");
 		root.add(text, 0, 1, 8, 1);
 		text.setSize(7*18, 20);
-		
+		/*
 		ArrayList<String> data = new ArrayList<>();
 		data.add("Wolfram Alpha");
 		data.add("Strange Home");
@@ -72,11 +80,35 @@ public class TestClientGui extends LightweightGuiDescription {
 		list.setBackgroundPainter(PANEL);
 		root.add(list, 0, 2, 7, 6);
 		
-		root.add(new WButton(new LiteralText("Teleport")), 3,8,4,1);
+		root.add(new WButton(new LiteralText("Teleport")), 3,8,4,1);*/
+		WColorBox col = new WColorBox();
+		root.add(col, 3,2,1,3);
+		
+		WSlider r = new WSlider(0, 100, Axis.VERTICAL);
+		root.add(r, 0, 2, 1, 3);
+		r.setValueChangeListener((i)->{
+			this.r = i;
+			updateCol(col);
+			System.out.println("h: "+this.r+" s: "+this.g+ " l: "+this.b);
+			System.out.println("col is now "+Integer.toHexString(col.color));
+		});
+		WSlider g = new WSlider(0, 100, Axis.VERTICAL);
+		root.add(g, 1, 2, 1, 3);
+		g.setValueChangeListener((i)->{
+			this.g = i;
+			updateCol(col);
+		});
+		WSlider b = new WSlider(0, 100, Axis.VERTICAL);
+		root.add(b, 2, 2, 1, 3);
+		b.setValueChangeListener((i)->{
+			this.b = i;
+			updateCol(col);
+		});
+		
 		
 		root.validate(this);
 	}
-	
+	/*
 	public static class PortalDestination extends WPlainPanel {
 		WSprite sprite;
 		WLabel label;
@@ -93,6 +125,27 @@ public class TestClientGui extends LightweightGuiDescription {
 			this.setSize(7*18, 2*18);
 			
 			this.setBackgroundPainter(PANEL); //Would fail on a serverside gui
+		}
+	}*/
+	
+	private void updateCol(WColorBox col) {
+		Color.HSL hsl = new Color.HSL(r/100f, g/100f, b/100f);
+		col.setColor(hsl.toRgb());
+	}
+	
+	public static class WColorBox extends WWidget {
+		protected int color = 0xFF_FFFFFF;
+		public WColorBox() {}
+		
+		public void setColor(int col) {
+			this.color = col;
+		}
+		
+		@Override
+		public void paintBackground(int x, int y, int mouseX, int mouseY) {
+			super.paintBackground(x, y, mouseX, mouseY);
+			
+			ScreenDrawing.coloredRect(x, y, this.getWidth(), this.getHeight(), color);
 		}
 	}
 }

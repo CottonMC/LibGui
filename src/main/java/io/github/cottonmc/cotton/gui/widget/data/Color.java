@@ -173,10 +173,69 @@ public interface Color {
 		/** HSL Luma, from 0..1 */
 		private float luma;
 		
+		/**
+		 * 
+		 * @param hue   hue angle, between 0 and 1
+		 * @param sat   saturation, between 0 and 1
+		 * @param luma  luminance, between 0 and 1
+		 */
+		public HSL(float hue, float sat, float luma) {
+			this.hue = hue;
+			this.sat = sat;
+			this.luma = luma;
+		}
+		
 		public int toRgb() {
-			float chroma = 1 - (Math.abs(2*luma - 1));
-			//TODO: Finish implementing
-			return 0;
+			float chroma = (1 - (Math.abs(2*luma - 1))) * sat;
+			
+			int h = (int)(hue*6); h %= 6;
+			
+			float x = 1f-Math.abs((hue*6 % 2)-1f); x *= chroma;
+			float m = luma - (chroma/2);
+			
+			while (h<0) h+=6;
+			if (h>=6) h = h % 6;
+			float rf = 0;
+			float gf = 0;
+			float bf = 0;
+			
+			switch(h) {
+			case 0:
+				rf = chroma+m;
+				gf = x+m;
+				bf = 0+m;
+				break;
+			case 1:
+				rf = x+m;
+				gf = chroma+m;
+				bf = 0+m;
+				break;
+			case 2:
+				rf = 0+m;
+				gf = chroma+m;
+				bf = x+m;
+				break;
+			case 3:
+				rf = 0+m;
+				gf = x+m;
+				bf = chroma+m;
+				break;
+			case 4:
+				rf = x+m;
+				gf = 0+m;
+				bf = chroma+m;
+				break;
+			case 5:
+				rf = chroma+m;
+				gf = 0+m;
+				bf = x+m;
+			}
+			
+			int r = f_255(rf);
+			int g = f_255(gf);
+			int b = f_255(bf);
+			
+			return 0xFF_000000 | (r << 16) | (g << 8) | b;
 		}
 		
 		public float getHue() {
@@ -185,6 +244,48 @@ public interface Color {
 		
 		public float getSaturation() {
 			return sat;
+		}
+		
+		public float getLuma() {
+			return luma;
+		}
+		
+		private static int f_255(float f) {
+			int result = (int)(f*255);
+			return Math.min(255,Math.max(0, result));
+		}
+	}
+	
+	public static class LCH implements Color {
+		/** HCL Luma, from 0..1 */
+		private float luma;
+		/** HCL Chroma, from 0..1 */
+		private float chroma;
+		/** HCL Hue, from 0..1 */
+		private float hue;
+		
+		
+		
+		public LCH(float luma, float chroma, float hue) {
+			this.luma = luma;
+			this.chroma = chroma;
+			this.hue = hue;
+		}
+		
+		@Override
+		public int toRgb() {
+			
+			
+			//Was going to steal Grondag code but then I looked at it
+			return 0; //TODO: Implement
+		}
+		
+		public float getHue() {
+			return hue;
+		}
+		
+		public float getChroma() {
+			return chroma;
 		}
 		
 		public float getLuma() {
