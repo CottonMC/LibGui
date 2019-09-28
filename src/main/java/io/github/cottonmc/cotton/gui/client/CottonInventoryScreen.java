@@ -10,8 +10,9 @@ import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
-public class CottonInventoryScreen<T extends CottonCraftingController> extends AbstractContainerScreen<T> {
+public class CottonInventoryScreen<T extends CottonCraftingController> extends AbstractContainerScreen<T> implements TextHoverRendererScreen {
 	protected CottonCraftingController description;
 	public static final int PADDING = 8;
 	protected WWidget lastResponder = null;
@@ -155,7 +156,7 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 		}
 		return result;
 	}
-	
+
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
 		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
@@ -217,5 +218,10 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 				root.tick();
 			}
 		}
+	}
+
+	@Override
+	public void renderTextHover(Text text, int x, int y) {
+		renderComponentHoverEffect(text, x, y);
 	}
 }
