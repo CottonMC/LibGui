@@ -185,6 +185,41 @@ public interface Color {
 			this.luma = luma;
 		}
 		
+		public HSL(int rgb) {
+			float r = i_f(rgb >> 16);
+			float g = i_f(rgb >> 8);
+			float b = i_f(rgb);
+			
+			float max = Math.max(r, Math.max(g, b));
+			float min = Math.min(r, Math.min(g, b));
+			
+			hue = 0;
+			if (max==min) {
+				hue = 0;
+			} else if (max==r) {
+				hue = (g-b)/(max-min);
+				hue *= 60f/360f;
+			} else if (max==g) {
+				hue = 2 + (b-r)/(max-min);
+				hue *= 60f/360f;
+			} else { //max==b
+				hue = 4 + (r-g)/(max-min);
+				hue *= 60f/360f;
+			}
+			if (hue<0) hue+=1;
+			
+			luma = (max+min)/2f;
+			
+			sat = 0;
+			if (max==0) {
+				// the saturation of black is zero, special-cased because (0-0)/0 is undefined
+			} else if (min==1) {
+				// the saturation of white is zero: (1-1)/1, special-cased for kicks I guess
+			} else {
+				sat = (max-luma) / Math.min(luma, 1-luma);
+			}
+		}
+		
 		public int toRgb() {
 			float chroma = (1 - (Math.abs(2*luma - 1))) * sat;
 			
@@ -253,6 +288,10 @@ public interface Color {
 		private static int f_255(float f) {
 			int result = (int)(f*255);
 			return Math.min(255,Math.max(0, result));
+		}
+		
+		private static float i_f(int i) {
+			return (i & 0xFF) / 255f;
 		}
 	}
 	
