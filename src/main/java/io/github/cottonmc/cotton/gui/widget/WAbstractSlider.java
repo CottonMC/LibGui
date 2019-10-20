@@ -30,8 +30,16 @@ public abstract class WAbstractSlider extends WWidget {
 	 */
 	private static final int DRAGGING_FINISHED_RATE_LIMIT_FOR_SCROLLING = 10;
 
-	protected final int min, max;
+	protected int min, max;
 	protected final Axis axis;
+
+	/**
+	 * Setters for min and max
+	 */
+	public void setMinAndMax(int min, int max) {
+		this.min = min;
+		this.max = max;
+	}
 
 	protected int value;
 
