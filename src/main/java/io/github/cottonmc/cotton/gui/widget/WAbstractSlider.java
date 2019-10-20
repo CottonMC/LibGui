@@ -33,16 +33,6 @@ public abstract class WAbstractSlider extends WWidget {
 	protected int min, max;
 	protected final Axis axis;
 
-	/**
-	 * Setters for min and max
-	 */
-	public void setMin(int min) {
-		this.min = min;
-	}
-	public void setMax(int max) {
-		this.max = max;
-	}
-
 	protected int value;
 
 	/**
@@ -226,6 +216,14 @@ public abstract class WAbstractSlider extends WWidget {
 
 	public int getMaxValue() {
 		return max;
+	}
+
+	public void setMinValue(int min) {
+		this.min = min;
+	}
+
+	public void setMaxValue(int max) {
+		this.max = max;
 	}
 
 	public Axis getAxis() {
