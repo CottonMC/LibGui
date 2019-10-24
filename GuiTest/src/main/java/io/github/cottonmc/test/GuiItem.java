@@ -25,6 +25,6 @@ public class GuiItem extends Item {
 			MinecraftClient.getInstance().openScreen(new CottonClientScreen(new TestClientGui()));
 		}
 		
-		return new TypedActionResult<ItemStack>(ActionResult.SUCCESS, (hand==Hand.MAIN_HAND) ? player.getMainHandStack() : player.getOffHandStack(), false);
+		return new TypedActionResult<ItemStack>(ActionResult.SUCCESS, (hand==Hand.MAIN_HAND) ? player.getMainHandStack() : player.getOffHandStack());
 	}
 }
