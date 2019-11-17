@@ -13,7 +13,7 @@ buildscript {
 	
 	dependencies {
 		System.out.println(rootProject.name);
-		if (rootProject.name=="LibGUI") {
+		if (rootProject.name.equalsIgnoreCase("LibGUI")) {
 			System.out.println("Added libgui to classpath");
 			classpath 'fabric-loom:fabric-loom.gradle.plugin:0.2.5-SNAPSHOT'
 		}
