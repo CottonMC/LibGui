@@ -18,7 +18,6 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
  */
 public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	protected List<D> data;
-	protected Class<W> listItemClass;
 	protected Supplier<W> supplier;
 	protected BiConsumer<D, W> configurator;
 	
@@ -31,13 +30,20 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	
 	protected WScrollBar scrollBar = new WScrollBar(Axis.VERTICAL);
 	int lastScroll = -1;
-	
-	public WListPanel(List<D> data, Class<W> listItemClass, Supplier<W> supplier, BiConsumer<D, W> configurator) {
+
+	public WListPanel(List<D> data, Supplier<W> supplier, BiConsumer<D, W> configurator) {
 		this.data = data;
-		this.listItemClass = listItemClass;
 		this.supplier = supplier;
 		this.configurator = configurator;
 		scrollBar.setMaxValue(data.size());
+	}
+
+	/**
+	 * @deprecated Use {@link #WListPanel(List, Supplier, BiConsumer)} instead.
+	 */
+	@Deprecated
+	public WListPanel(List<D> data, Class<W> listItemClass, Supplier<W> supplier, BiConsumer<D, W> configurator) {
+		this(data, supplier, configurator);
 	}
 	
 	@Override
