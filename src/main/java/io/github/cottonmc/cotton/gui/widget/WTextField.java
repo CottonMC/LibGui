@@ -402,7 +402,7 @@ public class WTextField extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private void invertedRect(int x, int y, int width, int height) {
 		Tessellator tessellator_1 = Tessellator.getInstance();
-		BufferBuilder bufferBuilder_1 = tessellator_1.getBufferBuilder();
+		BufferBuilder bufferBuilder_1 = tessellator_1.getBuffer();
 		RenderSystem.color4f(0.0F, 0.0F, 255.0F, 255.0F);
 		RenderSystem.disableTexture();
 		RenderSystem.enableColorLogicOp();

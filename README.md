@@ -8,7 +8,7 @@ GUI system. Controls can be hung on an itemslot grid or offset from it. Panel st
 and opacity can be customized, and everything can be extended.
 
 
-See the [Cotton wiki](https://cottonmc.github.io/Wiki/getting_started/SetupDeveloper.html) for setup
+See the [LibGui wiki](https://github.com/CottonMC/LibGui/wiki) for setup
 
 And for code examples:
 * [Client-Only Guis](https://github.com/CottonMC/LibGui/wiki/Client-Sided-Guis) 
