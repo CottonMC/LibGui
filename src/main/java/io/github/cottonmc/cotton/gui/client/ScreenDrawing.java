@@ -35,7 +35,7 @@ public class ScreenDrawing {
 		BufferBuilder buffer = tessellator.getBuffer();
 		RenderSystem.enableBlend();
 		//GlStateManager.disableTexture2D();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
 		RenderSystem.color4f(r, g, b, 1.0f);
 		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE); //I thought GL_QUADS was deprecated but okay, sure.
 		buffer.vertex(x,         y + height, 0).texture(u1, v2).next();
@@ -82,7 +82,7 @@ public class ScreenDrawing {
 		BufferBuilder buffer = tessellator.getBuffer();
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
 		RenderSystem.color4f(r, g, b, a);
 		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION); //I thought GL_QUADS was deprecated but okay, sure.
 		buffer.vertex(left,         top + height, 0.0D).next();
