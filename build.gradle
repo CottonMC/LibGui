@@ -15,7 +15,7 @@ buildscript {
 		System.out.println(rootProject.name);
 		if (rootProject.name.equalsIgnoreCase("LibGUI")) {
 			System.out.println("Added libgui to classpath");
-			classpath 'fabric-loom:fabric-loom.gradle.plugin:0.2.5-SNAPSHOT'
+			classpath 'fabric-loom:fabric-loom.gradle.plugin:0.2.6-SNAPSHOT'
 		}
 	}
 }
@@ -51,7 +51,7 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"

@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.minecraft.client.render.DiffuseLighting;
 import org.lwjgl.glfw.GLFW;
 
 import io.github.cottonmc.cotton.gui.CottonCraftingController;
@@ -7,7 +8,6 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
-import net.minecraft.client.render.GuiLighting;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -32,7 +32,8 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	 * 
 	 * * "width" and "height" are the width and height of the overall screen
 	 * * "containerWidth" and "containerHeight" are the width and height of the panel to render
-	 * * "left" and "top" are *actually* self-explanatory
+	 * * ~~"left" and "top" are *actually* self-explanatory~~
+	 *   * "left" and "top" are now (1.15) "x" and "y". A bit less self-explanatory, I guess.
 	 * * coordinates start at 0,0 at the topleft of the screen.
 	 */
 	
@@ -57,8 +58,8 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 			if (containerWidth<16) containerWidth=300;
 			if (containerHeight<16) containerHeight=300;
 		}
-		left = (width / 2) - (containerWidth / 2);
-		top =  (height / 2) - (containerHeight / 2);
+		x = (width / 2) - (containerWidth / 2);
+		y =  (height / 2) - (containerHeight / 2);
 	}
 	
 	@Override
@@ -110,8 +111,8 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
-		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseY-top;
+		int containerX = (int)mouseX-x;
+		int containerY = (int)mouseY-y;
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
 		if (lastResponder==null) {
 			lastResponder = description.doMouseDown(containerX, containerY, mouseButton);
@@ -124,8 +125,8 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) { //Testing shows that STATE IS ACTUALLY BUTTON
 		boolean result = super.mouseReleased(mouseX, mouseY, mouseButton);
-		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseY-top;
+		int containerX = (int)mouseX-x;
+		int containerY = (int)mouseY-y;
 		
 		if (lastResponder!=null) {
 			lastResponder.onMouseUp(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
@@ -144,8 +145,8 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double unknown_1, double unknown_2) {
 		boolean result = super.mouseDragged(mouseX, mouseY, mouseButton, unknown_1, unknown_2);
 		
-		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseY-top;
+		int containerX = (int)mouseX-x;
+		int containerY = (int)mouseY-y;
 		
 		if (lastResponder!=null) {
 			lastResponder.onMouseDrag(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
@@ -162,8 +163,8 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
 		
 		WPanel root = description.getRootPanel();
-		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseY-top;
+		int containerX = (int)mouseX-x;
+		int containerY = (int)mouseY-y;
 		
 		WWidget child = root.hit(containerX, containerY);
 		child.onMouseScroll(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY(), amount);
@@ -179,12 +180,12 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				root.paintBackground(left, top, mouseX-left, mouseY-top);
+				root.paintBackground(x, y, mouseX-x, mouseY-y);
 			}
 		}
 		
 		if (getTitle() != null) {
-			font.draw(getTitle().asFormattedString(), left, top, description.getTitleColor());
+			font.draw(getTitle().asFormattedString(), x, y, description.getTitleColor());
 		}
 	}
 	
@@ -194,15 +195,15 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 		paint(mouseX, mouseY);
 		
 		super.render(mouseX, mouseY, partialTicks);
-		GuiLighting.disable(); //Needed because super.render leaves dirty state
+		DiffuseLighting.disable(); //Needed because super.render leaves dirty state
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				root.paintForeground(left, top, mouseX, mouseY);
+				root.paintForeground(x, y, mouseX, mouseY);
 				
-				WWidget hitChild = root.hit(mouseX-left, mouseY-top);
-				if (hitChild!=null) hitChild.renderTooltip(left, top, mouseX-left, mouseY-top);
+				WWidget hitChild = root.hit(mouseX-x, mouseY-y);
+				if (hitChild!=null) hitChild.renderTooltip(x, y, mouseX-x, mouseY-y);
 			}
 		}
 		
