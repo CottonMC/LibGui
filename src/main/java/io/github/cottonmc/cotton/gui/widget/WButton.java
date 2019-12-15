@@ -30,7 +30,6 @@ public class WButton extends WWidget {
 		return true;
 	}
 	
-	
 	@Override
 	public void paintBackground(int x, int y, int mouseX, int mouseY) {
 		boolean hovered = (mouseX>=0 && mouseY>=0 && mouseX<getWidth() && mouseY<getHeight());
@@ -92,7 +91,20 @@ public class WButton extends WWidget {
 		this.enabled = enabled;
 		return this;
 	}
-	
+
+	public Text getLabel() {
+		return label;
+	}
+
+	public WButton setLabel(Text label) {
+		this.label = label;
+		return this;
+	}
+
+	public Alignment getAlignment() {
+		return alignment;
+	}
+
 	public WButton setAlignment(Alignment alignment) {
 		this.alignment = alignment;
 		return this;
