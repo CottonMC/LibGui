@@ -21,7 +21,7 @@ public class WToggleButton extends WWidget {
 	protected Identifier onImage;
 	protected Identifier offImage;
 
-	protected Text label = null;
+	@Nullable protected Text label = null;
 
 	protected boolean isOn = false;
 	@Nullable protected Consumer<Boolean> onToggle = null;
@@ -124,11 +124,12 @@ public class WToggleButton extends WWidget {
 		return this;
 	}
 
+	@Nullable
 	public Text getLabel() {
 		return label;
 	}
 
-	public void setLabel(Text label) {
+	public void setLabel(@Nullable Text label) {
 		this.label = label;
 	}
 
