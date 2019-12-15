@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class WToggleButton extends WWidget {
-	/** Default On / Off Images */
+	// Default on/off images
 	protected final static Identifier DEFAULT_OFF_IMAGE = new Identifier("libgui:textures/widget/toggle_off.png");
 	protected final static Identifier DEFAULT_ON_IMAGE  = new Identifier("libgui:textures/widget/toggle_on.png");
 
@@ -129,8 +129,9 @@ public class WToggleButton extends WWidget {
 		return label;
 	}
 
-	public void setLabel(@Nullable Text label) {
+	public WToggleButton setLabel(@Nullable Text label) {
 		this.label = label;
+		return this;
 	}
 
 	/**
