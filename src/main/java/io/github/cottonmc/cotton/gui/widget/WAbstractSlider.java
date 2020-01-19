@@ -220,10 +220,18 @@ public abstract class WAbstractSlider extends WWidget {
 
 	public void setMinValue(int min) {
 		this.min = min;
+		if (this.value < min) {
+			this.value = min;
+			onValueChanged(this.value);
+		}
 	}
 
 	public void setMaxValue(int max) {
 		this.max = max;
+		if (this.value > max) {
+			this.value = max;
+			onValueChanged(this.value);
+		}
 	}
 
 	public Axis getAxis() {
