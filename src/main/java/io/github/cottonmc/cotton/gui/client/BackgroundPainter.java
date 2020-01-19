@@ -93,7 +93,7 @@ public interface BackgroundPainter {
 		private final Identifier texture;
 		private final int cornerSize;
 		private final float cornerUv;
-		private int padding = 8;
+		private int padding = 0;
 
 		/**
 		 * Creates a nine-patch background painter with 4 px corners and a 0.25 cornerUv (corner fraction of whole texture).
