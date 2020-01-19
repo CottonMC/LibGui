@@ -287,8 +287,8 @@ public class CottonCraftingController extends CraftingContainer<Inventory> imple
 		return null;
 	}
 	
-	public void doMouseDrag(int x, int y, int button) {
-		if (rootPanel!=null) rootPanel.onMouseDrag(x, y, button);
+	public void doMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
+		if (rootPanel!=null) rootPanel.onMouseDrag(x, y, button, deltaX, deltaY);
 	}
 	
 	public void doClick(int x, int y, int button) {

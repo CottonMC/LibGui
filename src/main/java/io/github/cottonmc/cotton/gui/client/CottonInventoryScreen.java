@@ -142,18 +142,18 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 	}
 	
 	@Override
-	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double unknown_1, double unknown_2) {
-		boolean result = super.mouseDragged(mouseX, mouseY, mouseButton, unknown_1, unknown_2);
+	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
+		boolean result = super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 		
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
 		
 		if (lastResponder!=null) {
-			lastResponder.onMouseDrag(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
+			lastResponder.onMouseDrag(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton, deltaX, deltaY);
 			return result;
 		} else {
 			if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-			description.doMouseDrag(containerX, containerY, mouseButton);
+			description.doMouseDrag(containerX, containerY, mouseButton, deltaX, deltaY);
 		}
 		return result;
 	}
@@ -169,6 +169,18 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends A
 		WWidget child = root.hit(containerX, containerY);
 		child.onMouseScroll(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY(), amount);
 		return true;
+	}
+
+	@Override
+	public void mouseMoved(double mouseX, double mouseY) {
+		if (description.getRootPanel()==null) return;
+
+		WPanel root = description.getRootPanel();
+		int containerX = (int)mouseX-x;
+		int containerY = (int)mouseX-y;
+
+		WWidget child = root.hit(containerX, containerY);
+		child.onMouseMove(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY());
 	}
 	
 	@Override

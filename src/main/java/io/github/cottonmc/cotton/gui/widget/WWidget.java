@@ -78,6 +78,22 @@ public class WWidget {
 	}
 	
 	/**
+	 * Notifies this widget that the mouse has been moved while pressed and inside its bounds.
+	 *
+	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
+	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
+	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+	 * @param deltaX The amount of dragging on the X axis
+	 * @param deltaY The amount of dragging on the Y axis
+	 *
+	 * @since 1.5.0
+	 * @implSpec The default implementation calls {@link #onMouseDrag(int, int, int)}.
+	 */
+	public void onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
+		onMouseDrag(x, y, button);
+	}
+
+	/**
 	 * Notifies this widget that the mouse has been moved while pressed and inside its bounds
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
@@ -112,6 +128,16 @@ public class WWidget {
 	 * @param amount The scrolled amount. Positive values are up and negative values are down.
 	 */
 	public void onMouseScroll(int x, int y, double amount) {
+	}
+
+	/**
+	 * Notifies this widget that the mouse has been moved while inside its bounds.
+	 *
+	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
+	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
+	 * @since 1.5.0
+	 */
+	public void onMouseMove(int x, int y) {
 	}
 	
 	/**
