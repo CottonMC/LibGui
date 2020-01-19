@@ -390,7 +390,7 @@ public class WTextField extends WWidget {
 				b = a;
 				a = tmp;
 			}
-			invertedRect(textX+a-1, textY-1, b-a, 12);
+			invertedRect(textX+a-1, textY-1, Math.min(b-a, width - OFFSET_X_TEXT), 12);
 		//	int int_10 = int_6 + MinecraftClient.getInstance().textRenderer.getStringWidth(trimText.substring(0, adjustedCursor));
 		//	var10002 = int_7 - 1;
 		//	var10003 = int_10 - 1;
@@ -557,7 +557,7 @@ public class WTextField extends WWidget {
 	@Override
 	public void onKeyPressed(int ch, int key, int modifiers) {
 		if (!this.editable) return;
-		
+
 		if (Screen.isCopy(ch)) {
 			String selection = getSelection();
 			if (selection!=null) {
@@ -593,6 +593,10 @@ public class WTextField extends WWidget {
 					if (cursor>text.length()) cursor = text.length();
 				}
 			}
+			return;
+		} else if (Screen.isSelectAll(ch)) {
+			select = 0;
+			cursor = text.length();
 			return;
 		}
 		
