@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.client;
 
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import net.minecraft.util.Identifier;
 
 public interface BackgroundPainter {
 	/**
@@ -54,5 +55,113 @@ public interface BackgroundPainter {
 			
 			ScreenDrawing.drawGuiPanel(left-8, top-8, panel.getWidth()+16, panel.getHeight()+16, shadowColor, panelColor, hilightColor, 0xFF000000);
 		};
+	}
+
+	/**
+	 * Utility method to call {@link NinePatch#NinePatch(Identifier)}.
+	 *
+	 * @param texture the background painter texture
+	 * @return a new nine-patch background painter
+	 */
+	public static BackgroundPainter.NinePatch createNinePatch(Identifier texture) {
+		return new NinePatch(texture);
+	}
+
+	/**
+	 * Utility method to call {@link NinePatch#NinePatch(Identifier)}
+	 * and set the padding of the nine-patch painter.
+	 *
+	 * @param texture the background painter texture
+	 * @param padding the padding of the painter
+	 * @return a new nine-patch background painter
+	 */
+	public static BackgroundPainter.NinePatch createNinePatch(Identifier texture, int padding) {
+		return new NinePatch(texture).setPadding(padding);
+	}
+
+	/**
+	 * The nine-patch background painter paints rectangles using a nine-patch texture.
+	 *
+	 * <p>Nine-patch textures are separated into nine sections: four corners, four edges and a center part.
+	 * The edges and the center are stretched to fill the area between the corners.
+	 *
+	 * <p>{@code NinePatch} painters have a customizable padding that can be applied.
+	 * For example, a GUI panel for a container block might have a padding of 8 pixels, like {@link BackgroundPainter#VANILLA}.
+	 * You can set the padding using {@link NinePatch#setPadding(int)}.
+	 */
+	public static class NinePatch implements BackgroundPainter {
+		private final Identifier texture;
+		private final int cornerSize;
+		private final float cornerUv;
+		private int padding = 8;
+
+		/**
+		 * Creates a nine-patch background painter with 4 px corners and a 0.25 cornerUv (corner fraction of whole texture).
+		 *
+		 * @param texture the texture ID
+		 */
+		public NinePatch(Identifier texture) {
+			this(texture, 4, 0.25f);
+		}
+
+		/**
+		 * Creates a nine-patch background painter.
+		 *
+		 * @param texture the texture ID
+		 * @param cornerSize the size of the corners on the screen
+		 * @param cornerUv the fraction of the corners of the whole texture
+		 */
+		public NinePatch(Identifier texture, int cornerSize, float cornerUv) {
+			this.texture = texture;
+			this.cornerSize = cornerSize;
+			this.cornerUv = cornerUv;
+		}
+
+		public int getPadding() {
+			return padding;
+		}
+
+		public NinePatch setPadding(int padding) {
+			this.padding = padding;
+			return this;
+		}
+
+		public Identifier getTexture() {
+			return texture;
+		}
+
+		public int getCornerSize() {
+			return cornerSize;
+		}
+
+		public float getCornerUv() {
+			return cornerUv;
+		}
+
+		@Override
+		public void paintBackground(int left, int top, WWidget panel) {
+			int width = panel.getWidth() + 2 * padding;
+			int height = panel.getHeight() + 2 * padding;
+			left = left - padding;
+			top = top - padding;
+			int x1 = left + cornerSize;
+			int x2 = left + width - cornerSize;
+			int y1 = top + cornerSize;
+			int y2 = top + height - cornerSize;
+			float uv1 = cornerUv;
+			float uv2 = 1.0f - cornerUv;
+
+			ScreenDrawing.texturedRect(left, top, cornerSize, cornerSize, texture, 0, 0, uv1, uv1, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(x2, top, cornerSize, cornerSize, texture, uv2, 0, 1, uv1, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(left, y2, cornerSize, cornerSize, texture, 0, uv2, uv1, 1, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(x2, y2, cornerSize, cornerSize, texture, uv2, uv2, 1, 1, 0xFF_FFFFFF);
+
+			ScreenDrawing.texturedRect(x1, top, width - 2 * cornerSize, cornerSize, texture, uv1, 0, uv2, uv1, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(left, y1, cornerSize, height - 2 * cornerSize, texture, 0, uv1, uv1, uv2, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(x1, y2, width - 2 * cornerSize, cornerSize, texture, uv1, uv2, uv2, 1, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(x2, y1, cornerSize, height - 2 * cornerSize, texture, uv2, uv1, 1, uv2, 0xFF_FFFFFF);
+
+			ScreenDrawing.texturedRect(x1, y1, width - 2 * cornerSize, height - 2 * cornerSize, texture, uv1, uv1, uv2, uv2, 0xFF_FFFFFF);
+		}
 	}
 }
