@@ -24,10 +24,13 @@ public class WClippedPanel extends WPanel {
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		MinecraftClient mc = MinecraftClient.getInstance();
+		int rawHeight = mc.getWindow().getHeight();
 		double scaleFactor = mc.getWindow().getScaleFactor();
 		int scaledWidth = (int) (getWidth() * scaleFactor);
 		int scaledHeight = (int) (getHeight() * scaleFactor);
-		GL11.glScissor((int) (x * scaleFactor), (int) ((y + scaleFactor * (1 - this.y + 18)) * scaleFactor), scaledWidth, scaledHeight);
+
+		// Expression for Y coordinate adapted from vini2003's Spinnery (code snippet released under WTFPL)
+		GL11.glScissor((int) (x * scaleFactor), (int) (rawHeight - (y * scaleFactor) - scaledHeight), scaledWidth, scaledHeight);
 
 		for(WWidget child : children) {
 			child.paintBackground(x + child.getX(), y + child.getY(), mouseX-child.getX(), mouseY-child.getY());
