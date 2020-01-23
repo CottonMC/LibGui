@@ -7,12 +7,12 @@ import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
-public class CottonInventoryScreen<T extends CottonCraftingController> extends AbstractContainerScreen<T> implements TextHoverRendererScreen {
+public class CottonInventoryScreen<T extends CottonCraftingController> extends ContainerScreen<T> implements TextHoverRendererScreen {
 	protected CottonCraftingController description;
 	public static final int PADDING = 8;
 	protected WWidget lastResponder = null;

@@ -13,6 +13,9 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.Identifier;
 
+/**
+ * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.
+ */
 public class ScreenDrawing {
 	private ScreenDrawing() {}
 	

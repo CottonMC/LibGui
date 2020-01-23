@@ -99,8 +99,8 @@ public class CottonCraftingController extends CraftingContainer<Inventory> imple
 				return ItemStack.EMPTY;
 			}
 			
-			if (slotNumber>=this.slotList.size()) return ItemStack.EMPTY;
-			Slot slot = this.slotList.get(slotNumber);
+			if (slotNumber>=this.slots.size()) return ItemStack.EMPTY;
+			Slot slot = this.slots.get(slotNumber);
 			if (slot == null || !slot.canTakeItems(player)) {
 				return ItemStack.EMPTY;
 			}
@@ -179,7 +179,7 @@ public class CottonCraftingController extends CraftingContainer<Inventory> imple
 	private boolean insertItem(ItemStack toInsert, Inventory inventory, boolean walkBackwards) {
 		//Make a unified list of slots *only from this inventory*
 		ArrayList<Slot> inventorySlots = new ArrayList<>();
-		for(Slot slot : slotList) {
+		for(Slot slot : slots) {
 			if (slot.inventory==inventory) inventorySlots.add(slot);
 		}
 		if (inventorySlots.isEmpty()) return false;
@@ -229,7 +229,7 @@ public class CottonCraftingController extends CraftingContainer<Inventory> imple
 		boolean swapToStorage = true;
 		boolean inserted = false;
 		
-		for(Slot slot : slotList) {
+		for(Slot slot : slots) {
 			if (slot.inventory==inventory && slot instanceof ValidatedSlot) {
 				int index = ((ValidatedSlot)slot).getInventoryIndex();
 				if (PlayerInventory.isValidHotbarIndex(index)) {

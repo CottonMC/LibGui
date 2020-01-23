@@ -27,10 +27,6 @@ public class WKirbSprite extends WWidget {
 	private int frameTime = 300;
 	private long lastFrame;
 
-	/**
-	 * Create a new sprite with a single image.
-	 * @param image The location of the image to display.
-	 */
 	public WKirbSprite() {
 		state = (LibGuiClient.config.darkMode) ? State.ASLEEP : State.AWAKE;
 	}

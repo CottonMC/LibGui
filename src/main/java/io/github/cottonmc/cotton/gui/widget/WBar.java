@@ -154,7 +154,6 @@ public class WBar extends WWidget {
 	 * Creates a WBar that has a constant maximum-value instead of getting the maximum from a field.
 	 * @param bg         the background image to use for the bar
 	 * @param bar        the foreground image that represents the filled bar
-	 * @param properties the PropertyDelegate to pull bar values from
 	 * @param field      the field index for bar values
 	 * @param maxValue   the constant maximum value for the bar
 	 * @param dir        the direction the bar should grow towards

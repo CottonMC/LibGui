@@ -80,6 +80,8 @@ public class WWidget {
 	/**
 	 * Notifies this widget that the mouse has been moved while pressed and inside its bounds.
 	 *
+	 * <p>The default implementation calls {@link #onMouseDrag(int, int, int)} for backwards compatibility.
+	 *
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
@@ -87,7 +89,6 @@ public class WWidget {
 	 * @param deltaY The amount of dragging on the Y axis
 	 *
 	 * @since 1.5.0
-	 * @implSpec The default implementation calls {@link #onMouseDrag(int, int, int)}.
 	 */
 	public void onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
 		onMouseDrag(x, y, button);

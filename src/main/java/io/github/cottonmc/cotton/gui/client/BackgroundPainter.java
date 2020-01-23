@@ -5,6 +5,10 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
+/**
+ * Background painters are used to paint the background of a widget.
+ * The background painter instance of a widget can be changed to customize the look of a widget.
+ */
 public interface BackgroundPainter {
 	/**
 	 * Paint the specified panel to the screen.
@@ -13,13 +17,20 @@ public interface BackgroundPainter {
 	 * @param panel The panel being painted
 	 */
 	public void paintBackground(int left, int top, WWidget panel);
-	
-	
-	
+
+
+	/**
+	 * The {@code VANILLA} background painter draws a vanilla-like gui panel using {@link ScreenDrawing#drawGuiPanel(int, int, int, int)}.
+	 *
+	 * <p>This background painter applies a padding of 8 pixels to all sides around the widget.
+	 */
 	public static BackgroundPainter VANILLA = (left, top, panel) -> {
 		ScreenDrawing.drawGuiPanel(left-8, top-8, panel.getWidth()+16, panel.getHeight()+16);
 	};
 
+	/**
+	 * The {@code SLOT} background painter draws item slots or slot-like widgets.
+	 */
 	public static BackgroundPainter SLOT = (left, top, panel) -> {
 		if (!(panel instanceof WItemSlot)) {
 			ScreenDrawing.drawBeveledPanel(left-1, top-1, panel.getWidth()+2, panel.getHeight()+2, 0xB8000000, 0x4C000000, 0xB8FFFFFF);
@@ -42,13 +53,27 @@ public interface BackgroundPainter {
 			}
 		}
 	};
-	
+
+	/**
+	 * Creates a colorful gui panel painter. This painter paints the panel using the specified color.
+	 *
+	 * @param panelColor the panel background color
+	 * @return a colorful gui panel painter
+	 * @see ScreenDrawing#drawGuiPanel(int, int, int, int, int)
+	 */
 	public static BackgroundPainter createColorful(int panelColor) {
 		return (left, top, panel) -> {
 			ScreenDrawing.drawGuiPanel(left-8, top-8, panel.getWidth()+16, panel.getHeight()+16, panelColor);
 		};
 	}
-	
+
+	/**
+	 * Creates a colorful gui panel painter that has a custom contrast between the shadows and highlights.
+	 *
+	 * @param panelColor the panel background color
+	 * @param contrast the contrast between the shadows and highlights
+	 * @return a colorful gui panel painter
+	 */
 	public static BackgroundPainter createColorful(int panelColor, float contrast) {
 		return (left, top, panel) -> {
 			int shadowColor = ScreenDrawing.multiplyColor(panelColor, 1.0f - contrast);
@@ -59,7 +84,9 @@ public interface BackgroundPainter {
 	}
 
 	/**
-	 * Utility method to call {@link NinePatch#NinePatch(Identifier)}.
+	 * Creates a new nine-patch background painter.
+	 *
+	 * <p>This method is equivalent to {@code new NinePatch(texture)}.
 	 *
 	 * @param texture the background painter texture
 	 * @return a new nine-patch background painter
@@ -69,8 +96,9 @@ public interface BackgroundPainter {
 	}
 
 	/**
-	 * Utility method to call {@link NinePatch#NinePatch(Identifier)}
-	 * and set the padding of the nine-patch painter.
+	 * Creates a new nine-patch background painter with a custom padding.
+	 *
+	 * <p>This method is equivalent to {@code new NinePatch(texture).setPadding(padding)}.
 	 *
 	 * @param texture the background painter texture
 	 * @param padding the padding of the painter
@@ -100,7 +128,7 @@ public interface BackgroundPainter {
 	 *
 	 * <p>Nine-patch textures are separated into nine sections: four corners, four edges and a center part.
 	 * The edges and the center are either tiled or stretched, depending on the {@linkplain BackgroundPainter.NinePatch.Mode mode},
-	 * to fill the area between the corners.
+	 * to fill the area between the corners. The default mode is {@link BackgroundPainter.NinePatch.Mode#TILING}.
 	 *
 	 * <p>{@code NinePatch} painters have a customizable padding that can be applied.
 	 * For example, a GUI panel for a container block might have a padding of 8 pixels, like {@link BackgroundPainter#VANILLA}.
@@ -215,11 +243,17 @@ public interface BackgroundPainter {
 			return this;
 		}
 
+		/**
+		 * Sets the {@linkplain Mode mode} of this painter to {@link Mode#STRETCHING}.
+		 */
 		public NinePatch stretch() {
 			this.mode = Mode.STRETCHING;
 			return this;
 		}
 
+		/**
+		 * Sets the {@linkplain Mode mode} of this painter to {@link Mode#TILING}.
+		 */
 		public NinePatch tile() {
 			this.mode = Mode.TILING;
 			return this;
@@ -288,12 +322,12 @@ public interface BackgroundPainter {
 		public enum Mode {
 			/**
 			 * The texture is stretched to fill the edges and the center.
-			 * This is the default mode.
 			 */
 			STRETCHING,
 
 			/**
 			 * The texture is tiled to fill the edges and the center.
+			 * This is the default mode.
 			 */
 			TILING;
 		}
