@@ -169,10 +169,17 @@ public interface BackgroundPainter {
 	 *     <tr>
 	 *         <th>Key</th>
 	 *         <th>Value</th>
+	 *         <th>Description</th>
 	 *     </tr>
 	 *     <tr>
 	 *         <td>{@code mode}</td>
 	 *         <td>{@link Mode#STRETCHING stretching} | {@link Mode#TILING tiling}</td>
+	 *         <td>The texture filling mode</td>
+	 *     </tr>
+	 *     <tr>
+	 *         <td>{@code cornerUv}</td>
+	 *         <td>a float</td>
+	 *         <td>the fraction of the corners of the whole texture</td>
 	 *     </tr>
 	 * </table>
 	 *
@@ -181,7 +188,6 @@ public interface BackgroundPainter {
 	public static class NinePatch implements BackgroundPainter {
 		private final Identifier texture;
 		private final int cornerSize;
-		private final float cornerUv;
 		private int topPadding = 0;
 		private int leftPadding = 0;
 		private int bottomPadding = 0;
@@ -189,12 +195,12 @@ public interface BackgroundPainter {
 		private Mode mode = null;
 
 		/**
-		 * Creates a nine-patch background painter with 4 px corners and a 0.25 cornerUv (corner fraction of whole texture).
+		 * Creates a nine-patch background painter with 4 px corners.
 		 *
 		 * @param texture the texture ID
 		 */
 		public NinePatch(Identifier texture) {
-			this(texture, 4, 0.25f);
+			this(texture, 4);
 		}
 
 		/**
@@ -202,12 +208,10 @@ public interface BackgroundPainter {
 		 *
 		 * @param texture the texture ID
 		 * @param cornerSize the size of the corners on the screen
-		 * @param cornerUv the fraction of the corners of the whole texture
 		 */
-		public NinePatch(Identifier texture, int cornerSize, float cornerUv) {
+		public NinePatch(Identifier texture, int cornerSize) {
 			this.texture = texture;
 			this.cornerSize = cornerSize;
-			this.cornerUv = cornerUv;
 		}
 
 		public int getTopPadding() {
@@ -274,10 +278,6 @@ public interface BackgroundPainter {
 			return cornerSize;
 		}
 
-		public float getCornerUv() {
-			return cornerUv;
-		}
-
 		@Nullable
 		public Mode getMode() {
 			return mode;
@@ -295,6 +295,7 @@ public interface BackgroundPainter {
 
 		@Override
 		public void paintBackground(int left, int top, WWidget panel) {
+			NinePatchMetadataLoader.TextureProperties properties = NinePatchMetadataLoader.INSTANCE.getProperties(texture);
 			int width = panel.getWidth() + leftPadding + rightPadding;
 			int height = panel.getHeight() + topPadding + bottomPadding;
 			left = left - leftPadding;
@@ -303,9 +304,10 @@ public interface BackgroundPainter {
 			int x2 = left + width - cornerSize;
 			int y1 = top + cornerSize;
 			int y2 = top + height - cornerSize;
+			float cornerUv = properties.getCornerUv();
 			float uv1 = cornerUv;
 			float uv2 = 1.0f - cornerUv;
-			Mode mode = this.mode != null ? this.mode : NinePatchMetadataLoader.INSTANCE.getProperties(texture).getMode();
+			Mode mode = this.mode != null ? this.mode : properties.getMode();
 
 			ScreenDrawing.texturedRect(left, top, cornerSize, cornerSize, texture, 0, 0, uv1, uv1, 0xFF_FFFFFF);
 			ScreenDrawing.texturedRect(x2, top, cornerSize, cornerSize, texture, uv2, 0, 1, uv1, 0xFF_FFFFFF);

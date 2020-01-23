@@ -57,35 +57,44 @@ public class NinePatchMetadataLoader extends SinglePreparationResourceReloadList
 			Identifier id = entry.getKey();
 			Properties props = entry.getValue();
 
-			if (!props.containsKey("mode")) {
-				LibGuiClient.logger.error("Metadata file for nine-patch texture {} is missing required key 'mode'", id);
-				continue;
+			BackgroundPainter.NinePatch.Mode mode = TextureProperties.DEFAULT.getMode();
+			float cornerUv = TextureProperties.DEFAULT.getCornerUv();
+
+			if (props.containsKey("mode")) {
+				String modeStr = props.getProperty("mode");
+				mode = BackgroundPainter.NinePatch.Mode.fromString(modeStr);
+				if (mode == null) {
+					LibGuiClient.logger.error("Invalid mode '{}' in nine-patch metadata file for texture {}", modeStr, id);
+					continue;
+				}
 			}
 
-			String modeStr = props.getProperty("mode");
-			BackgroundPainter.NinePatch.Mode mode = BackgroundPainter.NinePatch.Mode.fromString(modeStr);
-
-			if (mode == null) {
-				LibGuiClient.logger.error("Invalid mode '{}' in nine-patch metadata file for texture {}", modeStr, id);
-				continue;
+			if (props.containsKey("cornerUv")) {
+				cornerUv = Float.parseFloat(props.getProperty("cornerUv"));
 			}
 
-			TextureProperties texProperties = new TextureProperties(mode);
+			TextureProperties texProperties = new TextureProperties(mode, cornerUv);
 			properties.put(id, texProperties);
 		}
 	}
 
 	public static class TextureProperties {
-		public static final TextureProperties DEFAULT = new TextureProperties(BackgroundPainter.NinePatch.Mode.STRETCHING);
+		public static final TextureProperties DEFAULT = new TextureProperties(BackgroundPainter.NinePatch.Mode.STRETCHING, 0.25f);
 
 		private final BackgroundPainter.NinePatch.Mode mode;
+		private final float cornerUv;
 
-		public TextureProperties(BackgroundPainter.NinePatch.Mode mode) {
+		public TextureProperties(BackgroundPainter.NinePatch.Mode mode, float cornerUv) {
 			this.mode = mode;
+			this.cornerUv = cornerUv;
 		}
 
 		public BackgroundPainter.NinePatch.Mode getMode() {
 			return mode;
+		}
+
+		public float getCornerUv() {
+			return cornerUv;
 		}
 	}
 }
