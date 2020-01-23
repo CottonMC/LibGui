@@ -83,7 +83,7 @@ public class CottonCraftingController extends CraftingContainer<Inventory> imple
 	@Environment(EnvType.CLIENT)
 	public void addPainters() {
 		if (this.rootPanel!=null) {
-			this.rootPanel.setBackgroundPainter(BackgroundPainter.VANILLA);
+			this.rootPanel.setBackgroundPainter(BackgroundPainter.VANILLA_9PATCH);
 		}
 	}
 	

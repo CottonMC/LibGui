@@ -31,6 +31,24 @@ public interface BackgroundPainter {
 	};
 
 	/**
+	 * The {@code VANILLA_9PATCH} background painter draws a vanilla-like gui panel using nine-patch textures.
+	 *
+	 * <p>This background painter uses {@code libgui:textures/widget/panel_light.png} as the light texture and
+	 * {@code libgui:textures/widget/panel_dark.png} as the dark texture.
+	 *
+	 * <p>This background painter is the default painter for root panels.
+	 * You can override {@link io.github.cottonmc.cotton.gui.GuiDescription#addPainters()} to customize the painter yourself.
+	 *
+	 * <p>This background painter applies a padding of 8 pixels to all sides around the widget.
+	 *
+	 * @since 1.5.0
+	 */
+	public static BackgroundPainter VANILLA_9PATCH = createLightDarkVariants(
+			createNinePatch(new Identifier("libgui", "textures/widget/panel_light.png"), 8),
+			createNinePatch(new Identifier("libgui", "textures/widget/panel_dark.png"), 8)
+	);
+
+	/**
 	 * The {@code SLOT} background painter draws item slots or slot-like widgets.
 	 */
 	public static BackgroundPainter SLOT = (left, top, panel) -> {
@@ -92,6 +110,7 @@ public interface BackgroundPainter {
 	 *
 	 * @param texture the background painter texture
 	 * @return a new nine-patch background painter
+	 * @since 1.5.0
 	 */
 	public static BackgroundPainter.NinePatch createNinePatch(Identifier texture) {
 		return new NinePatch(texture);
@@ -105,6 +124,7 @@ public interface BackgroundPainter {
 	 * @param texture the background painter texture
 	 * @param padding the padding of the painter
 	 * @return a new nine-patch background painter
+	 * @since 1.5.0
 	 */
 	public static BackgroundPainter.NinePatch createNinePatch(Identifier texture, int padding) {
 		return new NinePatch(texture).setPadding(padding);
@@ -117,6 +137,7 @@ public interface BackgroundPainter {
 	 * @param light the light mode background painter
 	 * @param dark the dark mode background painter
 	 * @return a new background painter that chooses between the two inputs
+	 * @since 1.5.0
 	 */
 	public static BackgroundPainter createLightDarkVariants(BackgroundPainter light, BackgroundPainter dark) {
 		return (left, top, panel) -> {
@@ -154,6 +175,8 @@ public interface BackgroundPainter {
 	 *         <td>{@link Mode#STRETCHING stretching} | {@link Mode#TILING tiling}</td>
 	 *     </tr>
 	 * </table>
+	 *
+	 * @since 1.5.0
 	 */
 	public static class NinePatch implements BackgroundPainter {
 		private final Identifier texture;
