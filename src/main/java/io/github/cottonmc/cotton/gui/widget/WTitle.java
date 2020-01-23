@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 /**
  * A panel title widget with a 3D effect.
  *
- * <img src="https://github.com/CottonMC/docs/images/libgui_title.png" alt="Screenshot of a title widget">
+ * <p><img src="https://raw.githubusercontent.com/CottonMC/docs/master/images/libgui_title.png" alt="Screenshot of a title widget">
  *
  * <p>Titles should be added to their panels at (0, 0) and they should be as wide as the panel.
  * The default title painter assumes that the containing panel uses {@link BackgroundPainter#VANILLA} or
