@@ -5,6 +5,8 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
+import javax.annotation.Nullable;
+
 /**
  * Background painters are used to paint the background of a widget.
  * The background painter instance of a widget can be changed to customize the look of a widget.
@@ -128,11 +130,30 @@ public interface BackgroundPainter {
 	 *
 	 * <p>Nine-patch textures are separated into nine sections: four corners, four edges and a center part.
 	 * The edges and the center are either tiled or stretched, depending on the {@linkplain BackgroundPainter.NinePatch.Mode mode},
-	 * to fill the area between the corners. The default mode is {@link BackgroundPainter.NinePatch.Mode#TILING}.
+	 * to fill the area between the corners. By default, the texture mode is loaded from the texture metadata.
+	 * The default mode for that is {@link BackgroundPainter.NinePatch.Mode#STRETCHING}.
 	 *
 	 * <p>{@code NinePatch} painters have a customizable padding that can be applied.
 	 * For example, a GUI panel for a container block might have a padding of 8 pixels, like {@link BackgroundPainter#VANILLA}.
 	 * You can set the padding using {@link NinePatch#setPadding(int)}.
+	 *
+	 * <h2>Nine-patch metadata</h2>
+	 * You can specify metadata for a nine-patch texture in a resource pack by creating a metadata file.
+	 * Metadata files can currently specify the filling mode of the painter that paints the texture.
+	 * <p>The metadata file for a texture has to be placed in the same directory as the texture.
+	 * The file name must be {@code X.9patch} where X is the texture file name (including .png).
+	 * <p>Metadata files use {@linkplain java.util.Properties .properties format} with the following keys:
+	 * <table border="1">
+	 *     <caption>Properties</caption>
+	 *     <tr>
+	 *         <th>Key</th>
+	 *         <th>Value</th>
+	 *     </tr>
+	 *     <tr>
+	 *         <td>{@code mode}</td>
+	 *         <td>{@link Mode#STRETCHING stretching} | {@link Mode#TILING tiling}</td>
+	 *     </tr>
+	 * </table>
 	 */
 	public static class NinePatch implements BackgroundPainter {
 		private final Identifier texture;
@@ -142,7 +163,7 @@ public interface BackgroundPainter {
 		private int leftPadding = 0;
 		private int bottomPadding = 0;
 		private int rightPadding = 0;
-		private Mode mode = Mode.STRETCHING;
+		private Mode mode = null;
 
 		/**
 		 * Creates a nine-patch background painter with 4 px corners and a 0.25 cornerUv (corner fraction of whole texture).
@@ -234,28 +255,18 @@ public interface BackgroundPainter {
 			return cornerUv;
 		}
 
+		@Nullable
 		public Mode getMode() {
 			return mode;
 		}
 
-		public NinePatch setMode(Mode mode) {
+		/**
+		 * Sets the {@linkplain Mode mode} of this painter to the specified mode.
+		 * <p>If the {@code mode} is not null, it will override the one specified in the texture metadata.
+		 * A null mode uses the texture metadata.
+		 */
+		public NinePatch setMode(@Nullable Mode mode) {
 			this.mode = mode;
-			return this;
-		}
-
-		/**
-		 * Sets the {@linkplain Mode mode} of this painter to {@link Mode#STRETCHING}.
-		 */
-		public NinePatch stretch() {
-			this.mode = Mode.STRETCHING;
-			return this;
-		}
-
-		/**
-		 * Sets the {@linkplain Mode mode} of this painter to {@link Mode#TILING}.
-		 */
-		public NinePatch tile() {
-			this.mode = Mode.TILING;
 			return this;
 		}
 
@@ -271,6 +282,7 @@ public interface BackgroundPainter {
 			int y2 = top + height - cornerSize;
 			float uv1 = cornerUv;
 			float uv2 = 1.0f - cornerUv;
+			Mode mode = this.mode != null ? this.mode : NinePatchMetadataLoader.INSTANCE.getProperties(texture).getMode();
 
 			ScreenDrawing.texturedRect(left, top, cornerSize, cornerSize, texture, 0, 0, uv1, uv1, 0xFF_FFFFFF);
 			ScreenDrawing.texturedRect(x2, top, cornerSize, cornerSize, texture, uv2, 0, 1, uv1, 0xFF_FFFFFF);
@@ -322,14 +334,24 @@ public interface BackgroundPainter {
 		public enum Mode {
 			/**
 			 * The texture is stretched to fill the edges and the center.
+			 * This is the default mode.
 			 */
 			STRETCHING,
 
 			/**
 			 * The texture is tiled to fill the edges and the center.
-			 * This is the default mode.
 			 */
 			TILING;
+
+			@Nullable
+			static Mode fromString(String str) {
+				if (str == null) return null;
+
+				if (str.equalsIgnoreCase("stretching")) return STRETCHING;
+				if (str.equalsIgnoreCase("tiling")) return TILING;
+
+				return null;
+			}
 		}
 	}
 }

@@ -5,8 +5,10 @@ import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonObject;
 import io.github.cottonmc.jankson.JanksonFactory;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 
+import net.minecraft.resource.ResourceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,6 +26,8 @@ public class LibGuiClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		config = loadConfig();
+
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NinePatchMetadataLoader.INSTANCE);
 	}
 
 	public static LibGuiConfig loadConfig() {
