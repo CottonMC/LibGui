@@ -45,11 +45,6 @@ import java.util.*;
  *         <td>{@link Mode#STRETCHING stretching} | {@link Mode#TILING tiling}</td>
  *         <td>The texture filling mode</td>
  *     </tr>
- *     <tr>
- *         <td>{@code cornerUv}</td>
- *         <td>a float</td>
- *         <td>the fraction of the corners of the whole texture</td>
- *     </tr>
  * </table>
  *
  * @since 1.5.0
@@ -57,6 +52,7 @@ import java.util.*;
 public class NinePatch implements BackgroundPainter {
     private final Identifier texture;
     private final int cornerSize;
+    private final float cornerUv;
     private int topPadding = 0;
     private int leftPadding = 0;
     private int bottomPadding = 0;
@@ -64,12 +60,12 @@ public class NinePatch implements BackgroundPainter {
     private Mode mode = null;
 
     /**
-     * Creates a nine-patch background painter with 4 px corners.
+     * Creates a nine-patch background painter with 4 px corners and a 0.25 corner UV.
      *
      * @param texture the texture ID
      */
     public NinePatch(Identifier texture) {
-        this(texture, 4);
+        this(texture, 4, 0.25f);
     }
 
     /**
@@ -77,10 +73,12 @@ public class NinePatch implements BackgroundPainter {
      *
      * @param texture the texture ID
      * @param cornerSize the size of the corners on the screen
+	 * @param cornerUv the fraction of the corners from the whole texture
      */
-    public NinePatch(Identifier texture, int cornerSize) {
+    public NinePatch(Identifier texture, int cornerSize, float cornerUv) {
         this.texture = texture;
         this.cornerSize = cornerSize;
+        this.cornerUv = cornerUv;
     }
 
     public int getTopPadding() {
@@ -164,7 +162,6 @@ public class NinePatch implements BackgroundPainter {
 
     @Override
     public void paintBackground(int left, int top, WWidget panel) {
-        TextureProperties properties = MetadataLoader.INSTANCE.getProperties(texture);
         int width = panel.getWidth() + leftPadding + rightPadding;
         int height = panel.getHeight() + topPadding + bottomPadding;
         left = left - leftPadding;
@@ -173,10 +170,9 @@ public class NinePatch implements BackgroundPainter {
         int x2 = left + width - cornerSize;
         int y1 = top + cornerSize;
         int y2 = top + height - cornerSize;
-        float cornerUv = properties.getCornerUv();
         float uv1 = cornerUv;
         float uv2 = 1.0f - cornerUv;
-        Mode mode = this.mode != null ? this.mode : properties.getMode();
+        Mode mode = this.mode != null ? this.mode : MetadataLoader.INSTANCE.getProperties(texture).getMode();
 
         ScreenDrawing.texturedRect(left, top, cornerSize, cornerSize, texture, 0, 0, uv1, uv1, 0xFF_FFFFFF);
         ScreenDrawing.texturedRect(x2, top, cornerSize, cornerSize, texture, uv2, 0, 1, uv1, 0xFF_FFFFFF);
@@ -249,22 +245,16 @@ public class NinePatch implements BackgroundPainter {
     }
 
 	public static class TextureProperties {
-		public static final TextureProperties DEFAULT = new TextureProperties(Mode.STRETCHING, 0.25f);
+		public static final TextureProperties DEFAULT = new TextureProperties(Mode.STRETCHING);
 
 		private final Mode mode;
-		private final float cornerUv;
 
-		public TextureProperties(Mode mode, float cornerUv) {
+		public TextureProperties(Mode mode) {
 			this.mode = mode;
-			this.cornerUv = cornerUv;
 		}
 
 		public Mode getMode() {
 			return mode;
-		}
-
-		public float getCornerUv() {
-			return cornerUv;
 		}
 	}
 
@@ -314,7 +304,7 @@ public class NinePatch implements BackgroundPainter {
 				Properties props = entry.getValue();
 
 				Mode mode = TextureProperties.DEFAULT.getMode();
-				float cornerUv = TextureProperties.DEFAULT.getCornerUv();
+//				float cornerUv = TextureProperties.DEFAULT.getCornerUv();
 
 				if (props.containsKey("mode")) {
 					String modeStr = props.getProperty("mode");
@@ -325,11 +315,11 @@ public class NinePatch implements BackgroundPainter {
 					}
 				}
 
-				if (props.containsKey("cornerUv")) {
-					cornerUv = Float.parseFloat(props.getProperty("cornerUv"));
-				}
+//				if (props.containsKey("cornerUv")) {
+//					cornerUv = Float.parseFloat(props.getProperty("cornerUv"));
+//				}
 
-				TextureProperties texProperties = new TextureProperties(mode, cornerUv);
+				TextureProperties texProperties = new TextureProperties(mode);
 				properties.put(id, texProperties);
 			}
 		}
