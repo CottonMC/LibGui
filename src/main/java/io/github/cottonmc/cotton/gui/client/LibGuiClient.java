@@ -27,7 +27,7 @@ public class LibGuiClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		config = loadConfig();
 
-		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NinePatchMetadataLoader.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NinePatch.MetadataLoader.INSTANCE);
 	}
 
 	public static LibGuiConfig loadConfig() {

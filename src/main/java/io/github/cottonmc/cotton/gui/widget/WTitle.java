@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.client.NinePatch;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.fabricmc.api.EnvType;
@@ -17,7 +18,7 @@ import javax.annotation.Nullable;
  *
  * <p>Titles should be added to their panels at (0, 0) and they should be as wide as the panel.
  * The default title painter assumes that the containing panel uses {@link BackgroundPainter#VANILLA} or
- * a {@linkplain BackgroundPainter.NinePatch nine-patch background painter} with a padding of 8.
+ * a {@linkplain NinePatch nine-patch background painter} with a padding of 8.
  */
 public class WTitle extends WWidget {
 	public static final BackgroundPainter DEFAULT_BACKGROUND_PAINTER =

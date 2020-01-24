@@ -45,7 +45,7 @@ public class LightweightGuiDescription implements GuiDescription {
 	@Override
 	public void addPainters() {
 		if (this.rootPanel!=null) {
-			this.rootPanel.setBackgroundPainter(BackgroundPainter.VANILLA_9PATCH);
+			this.rootPanel.setBackgroundPainter(BackgroundPainter.VANILLA);
 		}
 	}
 
