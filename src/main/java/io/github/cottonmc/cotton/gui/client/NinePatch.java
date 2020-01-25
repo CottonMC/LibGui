@@ -49,6 +49,7 @@ import java.util.*;
  *
  * @since 1.5.0
  */
+@Environment(EnvType.CLIENT)
 public class NinePatch implements BackgroundPainter {
     private final Identifier texture;
     private final int cornerSize;
@@ -258,7 +259,6 @@ public class NinePatch implements BackgroundPainter {
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
 	public static class MetadataLoader extends SinglePreparationResourceReloadListener<Map<Identifier, Properties>> implements IdentifiableResourceReloadListener {
 		public static final MetadataLoader INSTANCE = new MetadataLoader();
 
