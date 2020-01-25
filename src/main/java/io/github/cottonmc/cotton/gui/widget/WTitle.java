@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import com.google.common.annotations.Beta;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.NinePatch;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -19,7 +20,10 @@ import javax.annotation.Nullable;
  * <p>Titles should be added to their panels at (0, 0) and they should be as wide as the panel.
  * The default title painter assumes that the containing panel uses {@link BackgroundPainter#VANILLA} or
  * a {@linkplain NinePatch nine-patch background painter} with a padding of 8.
+ *
+ * <p>This widget is experimental and may be removed in a future release of LibGui.
  */
+@Beta
 public class WTitle extends WWidget {
 	public static final BackgroundPainter DEFAULT_BACKGROUND_PAINTER =
 			BackgroundPainter.createLightDarkVariants(
