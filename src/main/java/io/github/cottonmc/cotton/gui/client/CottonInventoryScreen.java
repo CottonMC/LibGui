@@ -177,7 +177,7 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends C
 
 		WPanel root = description.getRootPanel();
 		int containerX = (int)mouseX-x;
-		int containerY = (int)mouseX-y;
+		int containerY = (int)mouseY-y;
 
 		WWidget child = root.hit(containerX, containerY);
 		child.onMouseMove(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY());

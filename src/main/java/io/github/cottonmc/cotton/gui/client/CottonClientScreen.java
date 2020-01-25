@@ -187,7 +187,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 
 		WPanel root = description.getRootPanel();
 		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseX-top;
+		int containerY = (int)mouseY-top;
 
 		WWidget child = root.hit(containerX, containerY);
 		child.onMouseMove(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY());
