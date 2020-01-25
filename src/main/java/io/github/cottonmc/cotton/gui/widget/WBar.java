@@ -11,6 +11,8 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
+import javax.annotation.Nullable;
+
 public class WBar extends WWidget {
 	protected final Identifier bg;
 	protected final Identifier bar;
@@ -149,7 +151,29 @@ public class WBar extends WWidget {
 	public void createPeers(GuiDescription c) {
 		if (properties==null) properties = c.getPropertyDelegate();
 	}
-	
+
+	/**
+	 * Gets the current properties of this bar.
+	 *
+	 * @return the current property delegate, or null if not initialized yet
+	 */
+	@Nullable
+	public PropertyDelegate getProperties() {
+		return properties;
+	}
+
+	/**
+	 * Sets the current properties of this bar.
+	 *
+	 * <p>This method is meant for situations when a GUI description is unavailable (such as HUDs).
+	 * {@link GuiDescription#getPropertyDelegate()} should be preferred over this if available.
+	 *
+	 * @param properties the properties
+	 */
+	public void setProperties(PropertyDelegate properties) {
+		this.properties = properties;
+	}
+
 	/**
 	 * Creates a WBar that has a constant maximum-value instead of getting the maximum from a field.
 	 * @param bg         the background image to use for the bar
