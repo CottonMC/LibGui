@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 
 /**
@@ -67,7 +66,18 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 			child.paintBackground(x + child.getX(), y + child.getY(), mouseX - child.getX(), mouseY - child.getY());
 		}*/
 	}
-	
+
+	private W createChild() {
+		W child = supplier.get();
+		child.setParent(this);
+		// Set up the widget's host
+		if (host != null) {
+			child.validate(host);
+			child.createPeers(host);
+		}
+		return child;
+	}
+
 	@Override
 	public void layout() {
 		
@@ -86,7 +96,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		if (!fixedHeight) {
 			if (unconfigured.isEmpty()) {
 				if (configured.isEmpty()) {
-					W exemplar = supplier.get();
+					W exemplar = createChild();
 					unconfigured.add(exemplar);
 					if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
 				} else {
@@ -128,7 +138,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 				W w = configured.get(d);
 				if (w==null) {
 					if (unconfigured.isEmpty()) {
-						w = supplier.get();
+						w = createChild();
 					} else {
 						w = unconfigured.remove(0);
 					}

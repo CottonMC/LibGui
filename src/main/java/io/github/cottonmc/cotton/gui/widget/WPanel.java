@@ -140,6 +140,9 @@ public abstract class WPanel extends WWidget {
 	@Override
 	public void validate(GuiDescription c) {
 		layout();
+		for (WWidget child : children) {
+			child.validate(c);
+		}
 		if (c!=null) createPeers(c);
 	}
 	
