@@ -33,6 +33,18 @@ public enum CottonHud implements HudRenderCallback {
 	}
 
 	/**
+	 * Adds a new widget to the HUD at the specified offsets.
+	 *
+	 * @param widget the widget
+	 * @param x the x offset
+	 * @param y the y offset
+	 * @see Positioner#of documentation about the offsets
+	 */
+	public void add(WWidget widget, int x, int y) {
+		add(widget, Positioner.of(x, y));
+	}
+
+	/**
 	 * Adds a new widget to the HUD with a custom positioner.
 	 *
 	 * @param widget the widget

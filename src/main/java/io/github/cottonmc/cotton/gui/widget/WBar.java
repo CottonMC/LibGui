@@ -169,9 +169,11 @@ public class WBar extends WWidget {
 	 * {@link GuiDescription#getPropertyDelegate()} should be preferred over this if available.
 	 *
 	 * @param properties the properties
+	 * @return this bar
 	 */
-	public void setProperties(PropertyDelegate properties) {
+	public WBar setProperties(PropertyDelegate properties) {
 		this.properties = properties;
+		return this;
 	}
 
 	/**
