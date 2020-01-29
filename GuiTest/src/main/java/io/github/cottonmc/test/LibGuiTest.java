@@ -34,7 +34,7 @@ public class LibGuiTest implements ModInitializer {
 		GUI_BLOCK_ITEM = new BlockItem(GUI_BLOCK, new Item.Settings().group(ItemGroup.MISC));
 		Registry.register(Registry.ITEM, new Identifier(MODID, "gui"), GUI_BLOCK_ITEM);
 		GUI_BLOCKENTITY_TYPE = BlockEntityType.Builder.create(GuiBlockEntity::new, GUI_BLOCK).build(null);
-		Registry.register(Registry.BLOCK_ENTITY, new Identifier(MODID, "gui"), GUI_BLOCKENTITY_TYPE);
+		Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "gui"), GUI_BLOCKENTITY_TYPE);
 		
 		
 		ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MODID, "gui"), (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf)->{
