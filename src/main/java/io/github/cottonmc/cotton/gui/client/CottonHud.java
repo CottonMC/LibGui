@@ -51,7 +51,7 @@ public enum CottonHud implements HudRenderCallback {
 	 * @param x the x offset
 	 * @param y the y offset
 	 * @param width the width of the widget
-	 * @param height the heigh of the widget
+	 * @param height the height of the widget
 	 * @see Positioner#of documentation about the offsets
 	 */
 	public void add(WWidget widget, int x, int y, int width, int height) {
@@ -67,6 +67,20 @@ public enum CottonHud implements HudRenderCallback {
 	 */
 	public void add(WWidget widget, Positioner positioner) {
 		widgets.add(widget);
+		setPositioner(widget, positioner);
+	}
+
+	/**
+	 * Adds a new widget to the HUD with a custom positioner and resizes it.
+	 *
+	 * @param widget the widget
+	 * @param positioner the positioner
+	 * @param width the width of the widget
+	 * @param height the height of the widget
+	 */
+	public void add(WWidget widget, Positioner positioner, int width, int height) {
+		widgets.add(widget);
+		widget.setSize(width, height);
 		setPositioner(widget, positioner);
 	}
 
@@ -130,6 +144,20 @@ public enum CottonHud implements HudRenderCallback {
 		static Positioner of(int x, int y) {
 			return (widget, hudWidth, hudHeight) -> {
 				widget.setLocation((hudWidth + x) % hudWidth, (hudHeight + y) % hudHeight);
+			};
+		}
+
+		/**
+		 * Creates a new positioner that centers widgets on the X axis and offsets them on the Y axis.
+		 *
+		 * <p>If the Y offset is negative, the offset is subtracted from the HUD height.
+		 *
+		 * @param y the y offset
+		 * @return a centering positioner
+		 */
+		static Positioner horizontallyCentered(int y) {
+			return (widget, hudWidth, hudHeight) -> {
+				widget.setLocation((hudWidth - widget.getWidth()) / 2, (hudHeight + y) % hudHeight);
 			};
 		}
 	}
