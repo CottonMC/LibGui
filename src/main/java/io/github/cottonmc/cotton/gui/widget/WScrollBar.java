@@ -121,13 +121,40 @@ public class WScrollBar extends WWidget {
 	public int getValue() {
 		return value;
 	}
-	
+
+	public WScrollBar setValue(int value) {
+		this.value = value;
+		checkValue();
+		return this;
+	}
+
+	public int getMaxValue() {
+		return maxValue;
+	}
+
 	public WScrollBar setMaxValue(int max) {
 		this.maxValue = max;
+		checkValue();
+		return this;
+	}
+
+	public int getWindow() {
+		return window;
+	}
+
+	public WScrollBar setWindow(int window) {
+		this.window = window;
+		return this;
+	}
+
+	/**
+	 * Checks that the current value is in the correct range
+	 * and adjusts it if needed.
+	 */
+	protected void checkValue() {
 		if (this.value>maxValue-window) {
 			this.value = maxValue-window;
 		}
 		if (this.value<0) this.value = 0;
-		return this;
 	}
 }

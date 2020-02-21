@@ -122,9 +122,9 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		//scrollBar.setSize(8, this.height);
 		
 		//Fix up the scrollbar handle and track metrics
-		scrollBar.window = cellsHigh;
+		scrollBar.setWindow(cellsHigh);
 		//scrollBar.setMaxValue(data.size());
-		int scrollOffset = scrollBar.value;
+		int scrollOffset = scrollBar.getValue();
 		//System.out.println(scrollOffset);
 		
 		int presentCells = Math.min(data.size()-scrollOffset, cellsHigh);
