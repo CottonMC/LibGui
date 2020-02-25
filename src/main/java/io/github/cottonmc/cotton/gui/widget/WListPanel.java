@@ -111,8 +111,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		if (cellHeight<4) cellHeight=4;
 		
 		int layoutHeight = this.getHeight()-(margin*2);
-		int cellsHigh = layoutHeight / cellHeight;
-		
+		int cellsHigh = Math.max(layoutHeight / cellHeight, 1); // At least one cell is always visible
 		
 		//System.out.println("Adding children...");
 		
