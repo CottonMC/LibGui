@@ -1,36 +1,36 @@
 {
-  "schemaVersion": 1,
-  "id": "libgui",
-  "version": "${version}",
+	"schemaVersion": 1,
+	"id": "libgui",
+	"version": "${version}",
 
-  "name": "LibGui",
-  "description": "Easy grid-based GUIs for Fabric",
-  "authors": [
-    "Falkreon"
-  ],
-  "contact": {
-    "sources": "https://github.com/CottonMC/LibGUI"
-  },
+	"name": "LibGui",
+	"description": "Easy grid-based GUIs for Fabric",
+	"authors": [
+		"Falkreon"
+	],
+	"contact": {
+		"sources": "https://github.com/CottonMC/LibGUI"
+	},
 
-  "license": "MIT",
-  "icon": "assets/libgui/icon.png",
+	"license": "MIT",
+	"icon": "assets/libgui/icon.png",
 
-  "environment": "*",
-  "entrypoints": {
-    "client": [ "io.github.cottonmc.cotton.gui.client.LibGuiClient" ],
-	"modmenu": [ "io.github.cottonmc.cotton.gui.client.modmenu.ModMenuSupport" ]
-  },
-  "depends": {
-    "fabricloader": ">=0.4.0",
-    "fabric": "*",
-	"minecraft": ">=1.16-"
-  },
-  "suggests": {
-    "flamingo": "*"
-  },
+	"environment": "*",
+	"entrypoints": {
+		"client": ["io.github.cottonmc.cotton.gui.client.LibGuiClient"],
+		"modmenu": ["io.github.cottonmc.cotton.gui.client.modmenu.ModMenuSupport"]
+	},
+	"depends": {
+		"fabricloader": ">=0.4.0",
+		"fabric": "*",
+		"minecraft": ">=1.16-"
+	},
+	"suggests": {
+		"flamingo": "*"
+	},
 
-  "custom": {
-  	"modmenu:api": true,
-  	"modmenu:clientsideOnly": false
-  }
+	"custom": {
+		"modmenu:api": true,
+		"modmenu:clientsideOnly": false
+	}
 }
