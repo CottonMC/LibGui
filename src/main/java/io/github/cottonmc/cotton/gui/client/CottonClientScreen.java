@@ -65,7 +65,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 		}
 		
 		if (getTitle() != null) {
-			font.draw(getTitle().asFormattedString(), left, top, description.getTitleColor());
+			textRenderer.draw(getTitle().asFormattedString(), left, top, description.getTitleColor());
 		}
 	}
 	
@@ -222,6 +222,6 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 
 	@Override
 	public void renderTextHover(Text text, int x, int y) {
-		renderComponentHoverEffect(text, x, y);
+		renderTextHoverEffect(text, x, y);
 	}
 }

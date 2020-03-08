@@ -84,13 +84,13 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends C
 	public boolean keyPressed(int ch, int keyCode, int modifiers) {
 		//System.out.println("Key " + Integer.toHexString(ch)+" "+Integer.toHexString(keyCode));
 		if (ch==GLFW.GLFW_KEY_ESCAPE) {
-			this.minecraft.player.closeContainer();
+			this.client.player.closeContainer();
 			return true;
 		} else {
 			//if (super.keyPressed(ch, keyCode, modifiers)) return true;
 			if (description.getFocus()==null) {
 				if (MinecraftClient.getInstance().options.keyInventory.matchesKey(ch, keyCode)) {
-					this.minecraft.player.closeContainer();
+					this.client.player.closeContainer();
 					return true;
 				}
 				return false;
@@ -197,7 +197,7 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends C
 		}
 		
 		if (getTitle() != null) {
-			font.draw(getTitle().asFormattedString(), x, y, description.getTitleColor());
+			textRenderer.draw(getTitle().asFormattedString(), x, y, description.getTitleColor());
 		}
 	}
 	
@@ -235,6 +235,6 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends C
 
 	@Override
 	public void renderTextHover(Text text, int x, int y) {
-		renderComponentHoverEffect(text, x, y);
+		renderTextHoverEffect(text, x, y);
 	}
 }

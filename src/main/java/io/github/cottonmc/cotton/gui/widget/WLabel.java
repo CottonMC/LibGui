@@ -57,7 +57,7 @@ public class WLabel extends WWidget {
 		if (hoveredText != null) {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
 			if (screen != null) {
-				screen.handleComponentClicked(hoveredText);
+				screen.handleTextClick(hoveredText);
 			}
 		}
 	}

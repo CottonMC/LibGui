@@ -19,7 +19,7 @@ public class ModMenuSupport implements ModMenuApi {
 	public Function<Screen, ? extends Screen> getConfigScreenFactory() {
 		return screen -> new CottonClientScreen(new TranslatableText("options.libgui.libgui_settings"), new ConfigGui(screen)) {
 			public void onClose() {
-				this.minecraft.openScreen(screen);
+				this.client.openScreen(screen);
 			}
 			
 			protected void init() {
