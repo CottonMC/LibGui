@@ -87,6 +87,9 @@ public class WItemSlot extends WWidget {
 
 	/**
 	 * Returns true if the contents of this {@code WItemSlot} can be modified by players.
+	 *
+	 * @return true if this slot is modifiable
+	 * @since 1.8.0
 	 */
 	public boolean isModifiable() {
 		return modifiable;
