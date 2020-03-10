@@ -2,12 +2,14 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.client.TextHoverRendererScreen;
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.Texts;
 import net.minecraft.text.Text;
 
@@ -79,6 +81,14 @@ public class WText extends WWidget {
 			String str = line.asFormattedString();
 
 			ScreenDrawing.drawString(str, alignment, x, y + i * font.fontHeight, width, c);
+		}
+
+		Text hoveredText = getTextAt(mouseX, mouseY);
+		if (hoveredText != null) {
+			Screen screen = MinecraftClient.getInstance().currentScreen;
+			if (screen instanceof TextHoverRendererScreen) {
+				((TextHoverRendererScreen) screen).renderTextHover(hoveredText, x + mouseX, y + mouseY);
+			}
 		}
 	}
 
