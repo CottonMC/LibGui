@@ -10,17 +10,17 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.container.Slot;
 import net.minecraft.inventory.Inventory;
 
 public class WItemSlot extends WWidget {
-	private final List<Slot> peers = Lists.newArrayList();
+	private final List<ValidatedSlot> peers = Lists.newArrayList();
 	private BackgroundPainter backgroundPainter;
 	private Inventory inventory;
 	private int startIndex = 0;
 	private int slotsWide = 1;
 	private int slotsHigh = 1;
 	private boolean big = false;
+	private boolean modifiable = true;
 	
 	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big, boolean ltr) {
 		this.inventory = inventory;
@@ -84,7 +84,22 @@ public class WItemSlot extends WWidget {
 	public boolean isBigSlot() {
 		return big;
 	}
-	
+
+	/**
+	 * Returns true if the contents of this {@code WItemSlot} can be modified by players.
+	 */
+	public boolean isModifiable() {
+		return modifiable;
+	}
+
+	public WItemSlot setModifiable(boolean modifiable) {
+		this.modifiable = modifiable;
+		for (ValidatedSlot peer : peers) {
+			peer.setModifiable(modifiable);
+		}
+		return this;
+	}
+
 	@Override
 	public void createPeers(GuiDescription c) {
 		super.createPeers(c);
@@ -94,6 +109,7 @@ public class WItemSlot extends WWidget {
 		for (int y = 0; y < slotsHigh; y++) {
 			for (int x = 0; x < slotsWide; x++) {
 				ValidatedSlot slot = new ValidatedSlot(inventory, index, this.getAbsoluteX() + (x * 18), this.getAbsoluteY() + (y * 18));
+				slot.setModifiable(modifiable);
 				peers.add(slot);
 				c.addSlotPeer(slot);
 				index++;

@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 
 public class ValidatedSlot extends Slot {
 	private final int slotNumber;
+	private boolean modifiable = true;
 	
 	public ValidatedSlot(Inventory inventoryIn, int index, int xPosition, int yPosition) {
 		super(inventoryIn, index, xPosition, yPosition);
@@ -16,12 +17,12 @@ public class ValidatedSlot extends Slot {
 	
 	@Override
 	public boolean canInsert(ItemStack stack) {
-		return inventory.isValidInvStack(slotNumber, stack);
+		return modifiable && inventory.isValidInvStack(slotNumber, stack);
 	}
 	
 	@Override
 	public boolean canTakeItems(PlayerEntity player) {
-		return inventory.canPlayerUseInv(player);
+		return modifiable && inventory.canPlayerUseInv(player);
 	}
 	
 	@Override
@@ -39,7 +40,18 @@ public class ValidatedSlot extends Slot {
 		
 		return result;
 	}
-	
+
+	/**
+	 * Returns true if the item in this slot can be modified by players.
+	 */
+	public boolean isModifiable() {
+		return modifiable;
+	}
+
+	public void setModifiable(boolean modifiable) {
+		this.modifiable = modifiable;
+	}
+
 	public int getInventoryIndex() {
 		return slotNumber;
 	}
