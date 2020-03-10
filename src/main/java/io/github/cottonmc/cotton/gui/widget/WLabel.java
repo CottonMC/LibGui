@@ -14,6 +14,9 @@ import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
 
+/**
+ * A single-line label widget.
+ */
 public class WLabel extends WWidget {
 	protected Text text;
 	protected Alignment alignment = Alignment.LEFT;
@@ -34,6 +37,10 @@ public class WLabel extends WWidget {
 	}
 
 	public WLabel(String text) {
+		this(text, DEFAULT_TEXT_COLOR);
+	}
+
+	public WLabel(Text text) {
 		this(text, DEFAULT_TEXT_COLOR);
 	}
 
