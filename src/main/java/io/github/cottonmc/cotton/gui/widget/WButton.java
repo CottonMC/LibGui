@@ -54,9 +54,9 @@ public class WButton extends WWidget {
 			int color = 0xE0E0E0;
 			if (!enabled) {
 				color = 0xA0A0A0;
-			} else if (hovered) {
+			} /*else if (hovered) {
 				color = 0xFFFFA0;
-			}
+			}*/
 			
 			ScreenDrawing.drawStringWithShadow(label.asFormattedString(), alignment, x, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
