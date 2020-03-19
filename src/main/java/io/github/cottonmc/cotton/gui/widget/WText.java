@@ -98,7 +98,7 @@ public class WText extends WWidget {
 
 		Text hoveredText = getTextAt(x, y);
 		if (hoveredText != null) {
-			MinecraftClient.getInstance().currentScreen.handleTextClick(hoveredText);
+			MinecraftClient.getInstance().currentScreen.handleComponentClicked(hoveredText);
 		}
 	}
 
