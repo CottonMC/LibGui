@@ -6,7 +6,6 @@ import io.github.cottonmc.cotton.gui.client.TextHoverRendererScreen;
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -28,6 +27,7 @@ public class WText extends WWidget {
 	protected int darkmodeColor;
 	protected Alignment alignment = Alignment.LEFT;
 	private List<Text> wrappedLines;
+	private boolean wrappingScheduled = false;
 
 	public WText(Text text) {
 		this(text, WLabel.DEFAULT_TEXT_COLOR);
@@ -42,9 +42,7 @@ public class WText extends WWidget {
 	@Override
 	public void setSize(int x, int y) {
 		super.setSize(x, y);
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			wrapLines();
-		}
+		wrappingScheduled = true;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -74,6 +72,11 @@ public class WText extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+		if (wrappingScheduled) {
+			wrapLines();
+			wrappingScheduled = false;
+		}
+
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
 		for (int i = 0; i < wrappedLines.size(); i++) {
 			Text line = wrappedLines.get(i);
@@ -108,10 +111,7 @@ public class WText extends WWidget {
 
 	public WText setText(Text text) {
 		this.text = text;
-
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			wrapLines();
-		}
+		wrappingScheduled = true;
 
 		return this;
 	}
