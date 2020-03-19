@@ -13,12 +13,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.InventoryProvider;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.container.ArrayPropertyDelegate;
-import net.minecraft.container.BlockContext;
-import net.minecraft.container.CraftingContainer;
-import net.minecraft.container.PropertyDelegate;
-import net.minecraft.container.Slot;
-import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -27,9 +21,12 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.screen.*;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.world.World;
 
-public class CottonCraftingController extends CraftingContainer<Inventory> implements GuiDescription {
+public class CottonCraftingController extends AbstractRecipeScreenHandler<Inventory> implements GuiDescription {
 	
 	protected Inventory blockInventory;
 	protected PlayerInventory playerInventory;
@@ -337,7 +334,7 @@ public class CottonCraftingController extends CraftingContainer<Inventory> imple
 		return new WPlayerInvPanel(this.playerInventory);
 	}
 	
-	public static Inventory getBlockInventory(BlockContext ctx) {
+	public static Inventory getBlockInventory(ScreenHandlerContext ctx) {
 		return ctx.run((world, pos) -> {
 			BlockState state = world.getBlockState(pos);
 			Block b = state.getBlock();
@@ -359,7 +356,7 @@ public class CottonCraftingController extends CraftingContainer<Inventory> imple
 		}).orElse(EmptyInventory.INSTANCE);
 	}
 	
-	public static PropertyDelegate getBlockPropertyDelegate(BlockContext ctx) {
+	public static PropertyDelegate getBlockPropertyDelegate(ScreenHandlerContext ctx) {
 		return ctx.run((world, pos) -> {
 			BlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();

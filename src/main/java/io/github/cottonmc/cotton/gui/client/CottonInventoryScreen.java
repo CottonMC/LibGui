@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
 import org.lwjgl.glfw.GLFW;
 
@@ -7,12 +8,11 @@ import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
-public class CottonInventoryScreen<T extends CottonCraftingController> extends ContainerScreen<T> implements TextHoverRendererScreen {
+public class CottonInventoryScreen<T extends CottonCraftingController> extends HandledScreen<T> implements TextHoverRendererScreen {
 	protected CottonCraftingController description;
 	public static final int PADDING = 8;
 	protected WWidget lastResponder = null;
@@ -23,15 +23,15 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends C
 		this.description = container;
 		width = 18*9;
 		height = 18*9;
-		this.containerWidth = 18*9;
-		this.containerHeight = 18*9;
+		this.backgroundWidth = 18*9;
+		this.backgroundHeight = 18*9;
 	}
 	
 	/*
 	 * RENDERING NOTES:
 	 * 
 	 * * "width" and "height" are the width and height of the overall screen
-	 * * "containerWidth" and "containerHeight" are the width and height of the panel to render
+	 * * "backgroundWidth" and "backgroundHeight" are the width and height of the panel to render
 	 * * ~~"left" and "top" are *actually* self-explanatory~~
 	 *   * "left" and "top" are now (1.15) "x" and "y". A bit less self-explanatory, I guess.
 	 * * coordinates start at 0,0 at the topleft of the screen.
@@ -50,16 +50,16 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends C
 		WPanel basePanel = description.getRootPanel();
 		if (basePanel!=null) {
 			basePanel.validate(description);
-			
-			containerWidth = basePanel.getWidth();
-			containerHeight = basePanel.getHeight();
+
+			backgroundWidth = basePanel.getWidth();
+			backgroundHeight = basePanel.getHeight();
 			
 			//DEBUG
-			if (containerWidth<16) containerWidth=300;
-			if (containerHeight<16) containerHeight=300;
+			if (backgroundWidth<16) backgroundWidth=300;
+			if (backgroundHeight<16) backgroundHeight=300;
 		}
-		x = (width / 2) - (containerWidth / 2);
-		y =  (height / 2) - (containerHeight / 2);
+		x = (width / 2) - (backgroundWidth / 2);
+		y =  (height / 2) - (backgroundHeight / 2);
 	}
 	
 	@Override
@@ -84,13 +84,13 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends C
 	public boolean keyPressed(int ch, int keyCode, int modifiers) {
 		//System.out.println("Key " + Integer.toHexString(ch)+" "+Integer.toHexString(keyCode));
 		if (ch==GLFW.GLFW_KEY_ESCAPE) {
-			this.client.player.closeContainer();
+			this.client.player.closeHandledScreen();
 			return true;
 		} else {
 			//if (super.keyPressed(ch, keyCode, modifiers)) return true;
 			if (description.getFocus()==null) {
 				if (MinecraftClient.getInstance().options.keyInventory.matchesKey(ch, keyCode)) {
-					this.client.player.closeContainer();
+					this.client.player.closeHandledScreen();
 					return true;
 				}
 				return false;

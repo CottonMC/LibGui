@@ -6,7 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.container.PropertyDelegate;
+import net.minecraft.screen.PropertyDelegate;
 
 public interface GuiDescription {
 	public WPanel getRootPanel();
