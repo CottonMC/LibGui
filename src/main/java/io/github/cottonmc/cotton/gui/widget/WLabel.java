@@ -26,20 +26,43 @@ public class WLabel extends WWidget {
 	public static final int DEFAULT_TEXT_COLOR = 0x404040;
 	public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
 
+	/**
+	 * Constructs a new label.
+	 *
+	 * @param text the text of the label
+	 * @param color the color of the label
+	 */
 	public WLabel(String text, int color) {
 		this(new LiteralText(text), color);
 	}
-	
+
+	/**
+	 * Constructs a new label.
+	 *
+	 * @param text the text of the label
+	 * @param color the color of the label
+	 */
 	public WLabel(Text text, int color) {
 		this.text = text;
 		this.color = color;
 		this.darkmodeColor = (color==DEFAULT_TEXT_COLOR) ? DEFAULT_DARKMODE_TEXT_COLOR : color;
 	}
 
+	/**
+	 * Constructs a new label with the {@linkplain #DEFAULT_TEXT_COLOR default text color}.
+	 *
+	 * @param text the text of the label
+	 */
 	public WLabel(String text) {
 		this(text, DEFAULT_TEXT_COLOR);
 	}
 
+	/**
+	 * Constructs a new label with the {@linkplain #DEFAULT_TEXT_COLOR default text color}.
+	 *
+	 * @param text the text of the label
+	 * @since 1.8.0
+	 */
 	public WLabel(Text text) {
 		this(text, DEFAULT_TEXT_COLOR);
 	}

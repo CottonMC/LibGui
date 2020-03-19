@@ -13,6 +13,10 @@ public class WSprite extends WWidget {
 	protected long lastFrame;
 	protected boolean singleImage = false;
 	protected int tint = 0xFFFFFFFF;
+	protected float u1 = 0;
+	protected float v1 = 0;
+	protected float u2 = 1;
+	protected float v2 = 1;
 
 	/**
 	 * Create a new sprite with a single image.
@@ -21,6 +25,23 @@ public class WSprite extends WWidget {
 	public WSprite(Identifier image) {
 		this.frames = new Identifier[]{image};
 		this.singleImage = true;
+	}
+
+	/**
+	 * Create a new sprite with a single image and custom UV values.
+	 *
+	 * @param image The location of the image to display.
+	 * @param u1 the left edge of the texture
+	 * @param v1 the top edge of the texture
+	 * @param u2 the right edge of the texture
+	 * @param v2 the bottom edge of the texture
+	 */
+	public WSprite(Identifier image, float u1, float v1, float u2, float v2) {
+		this(image);
+		this.u1 = u1;
+		this.v1 = v1;
+		this.u2 = u2;
+		this.v2 = v2;
 	}
 
 	/**
@@ -33,7 +54,7 @@ public class WSprite extends WWidget {
 		this.frames = frames;
 		if (frames.length==1) this.singleImage = true;
 	}
-	
+
 	public WSprite setImage(Identifier image) {
 		this.frames = new Identifier[]{image};
 		this.singleImage = true;
@@ -41,7 +62,7 @@ public class WSprite extends WWidget {
 		this.currentFrameTime = 0;
 		return this;
 	}
-	
+
 	public WSprite setFrames(Identifier... frames) {
 		this.frames = frames;
 		if (frames.length==1) singleImage = true;
@@ -51,7 +72,7 @@ public class WSprite extends WWidget {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Sets the tint for this sprite to the following color-with-alpha. If you don't want to specify
 	 * alpha, use {@link #setOpaqueTint(int)} instead.
@@ -60,9 +81,29 @@ public class WSprite extends WWidget {
 		this.tint = tint;
 		return this;
 	}
-	
+
 	public WSprite setOpaqueTint(int tint) {
 		this.tint = tint | 0xFF000000;
+		return this;
+	}
+
+	/**
+	 * Sets the UV values of this sprite.
+	 *
+	 * @param u1 the left edge of the texture
+	 * @param v1 the top edge of the texture
+	 * @param u2 the right edge of the texture
+	 * @param v2 the bottom edge of the texture
+	 *
+	 * @return this sprite
+	 * @since 1.8.0
+	 */
+	public WSprite setUv(float u1, float v1, float u2, float v2) {
+		this.u1 = u1;
+		this.v1 = v1;
+		this.u2 = u2;
+		this.v2 = v2;
+
 		return this;
 	}
 
@@ -85,7 +126,7 @@ public class WSprite extends WWidget {
 			if (!inBounds) currentFrame = 0;
 			//assemble and draw the frame calculated last iteration.
 			Identifier currentFrameTex = frames[currentFrame];
-			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), currentFrameTex, tint);
+			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), currentFrameTex, u1, v1, u2, v2, tint);
 
 			//calculate how much time has elapsed since the last animation change, and change the frame if necessary.
 			long elapsed = now - lastFrame;
