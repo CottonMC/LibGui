@@ -13,10 +13,18 @@ public class WScrollBar extends WWidget {
 	protected int anchor = -1;
 	protected int anchorValue = -1;
 	protected boolean sliding = false;
-	
+
+	/**
+	 * Constructs a horizontal scroll bar.
+	 */
 	public WScrollBar() {
 	}
-	
+
+	/**
+	 * Constructs a scroll bar with a custom axis.
+	 *
+	 * @param axis the axis
+	 */
 	public WScrollBar(Axis axis) {
 		this.axis = axis;
 	}

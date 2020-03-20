@@ -51,7 +51,12 @@ public abstract class WPanel extends WWidget {
 			expandToFit(child);
 		}
 	}
-	
+
+	/**
+	 * Expands this panel be at least as large as the widget.
+	 *
+	 * @param w the widget
+	 */
 	protected void expandToFit(WWidget w) {
 		int pushRight = w.getX()+w.getWidth();
 		int pushDown =  w.getY()+w.getHeight();

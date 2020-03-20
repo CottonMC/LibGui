@@ -13,11 +13,44 @@ import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
 
+/**
+ * A bar that displays int values from a {@link PropertyDelegate}.
+ *
+ * <p>Bars can be used for all kinds of bars including
+ * progress bars (and progress arrows) and energy bars.
+ */
 public class WBar extends WWidget {
+	/**
+	 * The background texture. If not null, it will be
+	 * drawn behind the bar contents.
+	 */
 	protected final Identifier bg;
+
+	/**
+	 * The bar texture. If not null, it will be
+	 * drawn to represent the current field.
+	 */
 	protected final Identifier bar;
+
+	/**
+	 * The ID of the displayed property in the {@link #properties}.
+	 */
 	protected final int field;
+
+	/**
+	 * The ID of the property representing the maximum value of the {@link #field}.
+	 *
+	 * <p>If {@code max} is 0, the {@link #maxValue} constant will be used instead.
+	 */
 	protected final int max;
+
+	/**
+	 * The constant maximum value of the {@link #field}.
+	 *
+	 * <p>This constant will only be used if {@link #max} is 0.
+	 *
+	 * @see #withConstantMaximum(Identifier, Identifier, int, int, Direction)
+	 */
 	protected int maxValue;
 	protected PropertyDelegate properties;
 	protected final Direction direction;
@@ -40,10 +73,11 @@ public class WBar extends WWidget {
 	/**
 	 * Adds a tooltip to the WBar.
 	 *
-	 * Formatting Guide: The tooltip label is passed into String.Format and can recieve two integers
+	 * Formatting Guide: The tooltip label is passed into {@code String.format} and can receive two integers
 	 * (%d) - the first is the current value of the bar's focused field, and the second is the
 	 * bar's focused maximum.
-	 * @param label String to render on the tooltip.
+	 *
+	 * @param label Translation key of the string to render on the tooltip.
 	 * @return WBar with tooltip enabled and set.
 	 */
 	public WBar withTooltip(String label) {
