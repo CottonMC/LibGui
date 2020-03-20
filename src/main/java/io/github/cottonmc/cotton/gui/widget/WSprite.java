@@ -13,9 +13,14 @@ public class WSprite extends WWidget {
 	protected long lastFrame;
 	protected boolean singleImage = false;
 	protected int tint = 0xFFFFFFFF;
+
+	/** The left edge of the texture as a fraction. */
 	protected float u1 = 0;
+	/** The top edge of the texture as a fraction. */
 	protected float v1 = 0;
+	/** The right edge of the texture as a fraction. */
 	protected float u2 = 1;
+	/** The bottom edge of the texture as a fraction. */
 	protected float v2 = 1;
 
 	/**
