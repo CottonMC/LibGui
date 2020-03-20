@@ -59,7 +59,7 @@ dependencies {
 
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
-	def modmenu = "1.8.5+build.23"
+	def modmenu = "1.11.0+build.2"
 	modCompileOnly "io.github.prospector:modmenu:$modmenu"
 	modRuntime "io.github.prospector:modmenu:$modmenu" // for testing
 }

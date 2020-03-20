@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 
@@ -21,15 +22,53 @@ public class WScrollBar extends WWidget {
 	}
 	
 	@Override
-	public void paintBackground(int x, int y) {
-		ScreenDrawing.drawBeveledPanel(x, y, width, height, 0xFF373737, 0xFF_000000, 0xFFFFFFFF);
-		if (maxValue<=0) return;
-		
-		int color = 0xFF_FFFFFF;
-		if (axis==Axis.HORIZONTAL) {
-			ScreenDrawing.coloredRect(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, color);
+	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+		if (LibGuiClient.config.darkMode) {
+			ScreenDrawing.drawBeveledPanel(x, y, width, height, 0xFF_212121, 0xFF_2F2F2F, 0xFF_5D5D5D);
 		} else {
-			ScreenDrawing.coloredRect(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), color);
+			ScreenDrawing.drawBeveledPanel(x, y, width, height, 0xFF_373737, 0xFF_8B8B8B, 0xFF_FFFFFF);
+		}
+		if (maxValue<=0) return;
+
+		// Handle colors
+		int top, middle, bottom;
+
+		if (sliding) {
+			if (LibGuiClient.config.darkMode) {
+				top = 0xFF_6C6C6C;
+				middle = 0xFF_2F2F2F;
+				bottom = 0xFF_212121;
+			} else {
+				top = 0xFF_FFFFFF;
+				middle = 0xFF_8B8B8B;
+				bottom = 0xFF_555555;
+			}
+		} else if (isWithinBounds(mouseX, mouseY)) {
+			if (LibGuiClient.config.darkMode) {
+				top = 0xFF_5F6A9D;
+				middle = 0xFF_323F6E;
+				bottom = 0xFF_0B204A;
+			} else {
+				top = 0xFF_CFD0F7;
+				middle = 0xFF_8791C7;
+				bottom = 0xFF_343E75;
+			}
+		} else {
+			if (LibGuiClient.config.darkMode) {
+				top = 0xFF_6C6C6C;
+				middle = 0xFF_414141;
+				bottom = 0xFF_212121;
+			} else {
+				top = 0xFF_FFFFFF;
+				middle = 0xFF_C6C6C6;
+				bottom = 0xFF_555555;
+			}
+		}
+
+		if (axis==Axis.HORIZONTAL) {
+			ScreenDrawing.drawBeveledPanel(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, top, middle, bottom);
+		} else {
+			ScreenDrawing.drawBeveledPanel(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), top, middle, bottom);
 		}
 	}
 	
