@@ -5,6 +5,9 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
+/**
+ * A panel that is clipped to only render widgets inside its bounds.
+ */
 public class WClippedPanel extends WPanel {
 	@Deprecated
 	protected Identifier mask;

@@ -116,7 +116,7 @@ public class WSprite extends WWidget {
 	@Override
 	public void paintBackground(int x, int y) {
 		if (singleImage) {
-			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), frames[0], tint);
+			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), frames[0], u1, v1, u2, v2, tint);
 		} else {
 			//grab the system time at the very start of the frame.
 			long now = System.nanoTime() / 1_000_000L;
