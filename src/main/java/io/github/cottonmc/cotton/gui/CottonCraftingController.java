@@ -421,7 +421,7 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 		//(implied) extends Container {
 			@Override
 			public boolean canUse(PlayerEntity entity) {
-				return (blockInventory!=null) ? blockInventory.canPlayerUseInv(entity) : true;
+				return (blockInventory!=null) ? blockInventory.canPlayerUse(entity) : true;
 			}
 		//}
 	//}

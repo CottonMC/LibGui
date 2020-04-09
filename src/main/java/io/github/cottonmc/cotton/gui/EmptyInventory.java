@@ -13,32 +13,32 @@ public class EmptyInventory implements Inventory {
 	public void clear() {}
 	
 	@Override
-	public int getInvSize() {
+	public int size() {
 		return 0;
 	}
 	
 	@Override
-	public boolean isInvEmpty() {
+	public boolean isEmpty() {
 		return true;
 	}
 	
 	@Override
-	public ItemStack getInvStack(int slot) {
+	public ItemStack getStack(int slot) {
 		return ItemStack.EMPTY;
 	}
 	
 	@Override
-	public ItemStack takeInvStack(int slot, int count) {
+	public ItemStack removeStack(int slot, int count) {
 		return ItemStack.EMPTY;
 	}
 	
 	@Override
-	public ItemStack removeInvStack(int slot) {
+	public ItemStack removeStack(int slot) {
 		return ItemStack.EMPTY;
 	}
 	
 	@Override
-	public void setInvStack(int slot, ItemStack stack) {
+	public void setStack(int slot, ItemStack stack) {
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class EmptyInventory implements Inventory {
 	}
 
 	@Override
-	public boolean canPlayerUseInv(PlayerEntity player) {
+	public boolean canPlayerUse(PlayerEntity player) {
 		return true;
 	}
 
