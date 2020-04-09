@@ -110,15 +110,15 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 				if (blockInventory!=null) {
 					if (slot.inventory==blockInventory) {
 						//Try to transfer the item from the block into the player's inventory
-						if (!this.insertItem(toTransfer, this.playerInventory, true)) {
+						if (!this.insertItem(toTransfer, this.playerInventory, true, player)) {
 							return ItemStack.EMPTY;
 						}
-					} else if (!this.insertItem(toTransfer, this.blockInventory, false)) { //Try to transfer the item from the player to the block
+					} else if (!this.insertItem(toTransfer, this.blockInventory, false, player)) { //Try to transfer the item from the player to the block
 						return ItemStack.EMPTY;
 					}
 				} else {
 					//There's no block, just swap between the player's storage and their hotbar
-					if (!swapHotbar(toTransfer, slotNumber, this.playerInventory)) {
+					if (!swapHotbar(toTransfer, slotNumber, this.playerInventory, player)) {
 						return ItemStack.EMPTY;
 					}
 				}
@@ -137,9 +137,9 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 	}
 	
 	/** WILL MODIFY toInsert! Returns true if anything was inserted. */
-	private boolean insertIntoExisting(ItemStack toInsert, Slot slot) {
+	private boolean insertIntoExisting(ItemStack toInsert, Slot slot, PlayerEntity player) {
 		ItemStack curSlotStack = slot.getStack();
-		if (!curSlotStack.isEmpty() && canStacksCombine(toInsert, curSlotStack)) {
+		if (!curSlotStack.isEmpty() && canStacksCombine(toInsert, curSlotStack) && slot.canTakeItems(player)) {
 			int combinedAmount = curSlotStack.getCount() + toInsert.getCount();
 			if (combinedAmount <= toInsert.getMaxCount()) {
 				toInsert.setCount(0);
@@ -173,7 +173,7 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 		return false;
 	}
 	
-	private boolean insertItem(ItemStack toInsert, Inventory inventory, boolean walkBackwards) {
+	private boolean insertItem(ItemStack toInsert, Inventory inventory, boolean walkBackwards, PlayerEntity player) {
 		//Make a unified list of slots *only from this inventory*
 		ArrayList<Slot> inventorySlots = new ArrayList<>();
 		for(Slot slot : slots) {
@@ -186,13 +186,13 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 		if (walkBackwards) {
 			for(int i=inventorySlots.size()-1; i>=0; i--) {
 				Slot curSlot = inventorySlots.get(i);
-				if (insertIntoExisting(toInsert, curSlot)) inserted = true;
+				if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
 				if (toInsert.isEmpty()) break;
 			}
 		} else {
 			for(int i=0; i<inventorySlots.size(); i++) {
 				Slot curSlot = inventorySlots.get(i);
-				if (insertIntoExisting(toInsert, curSlot)) inserted = true;
+				if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
 				if (toInsert.isEmpty()) break;
 			}
 			
@@ -219,7 +219,7 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 		return inserted;
 	}
 	
-	private boolean swapHotbar(ItemStack toInsert, int slotNumber, Inventory inventory) {
+	private boolean swapHotbar(ItemStack toInsert, int slotNumber, Inventory inventory, PlayerEntity player) {
 		//Feel out the slots to see what's storage versus hotbar
 		ArrayList<Slot> storageSlots = new ArrayList<>();
 		ArrayList<Slot> hotbarSlots = new ArrayList<>();
@@ -243,7 +243,7 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 			//swap from hotbar to storage
 			for(int i=0; i<storageSlots.size(); i++) {
 				Slot curSlot = storageSlots.get(i);
-				if (insertIntoExisting(toInsert, curSlot)) inserted = true;
+				if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
 				if (toInsert.isEmpty()) break;
 			}
 			if (!toInsert.isEmpty()) {
@@ -257,7 +257,7 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 			//swap from storage to hotbar
 			for(int i=0; i<hotbarSlots.size(); i++) {
 				Slot curSlot = hotbarSlots.get(i);
-				if (insertIntoExisting(toInsert, curSlot)) inserted = true;
+				if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
 				if (toInsert.isEmpty()) break;
 			}
 			if (!toInsert.isEmpty()) {
@@ -340,13 +340,19 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 			Block b = state.getBlock();
 			
 			if (b instanceof InventoryProvider) {
-				return ((InventoryProvider)b).getInventory(state, world, pos);
+				Inventory inventory = ((InventoryProvider)b).getInventory(state, world, pos);
+				if (inventory != null) {
+					return inventory;
+				}
 			}
 			
 			BlockEntity be = world.getBlockEntity(pos);
 			if (be!=null) {
 				if (be instanceof InventoryProvider) {
-					return ((InventoryProvider)be).getInventory(state, world, pos);
+					Inventory inventory = ((InventoryProvider)be).getInventory(state, world, pos);
+					if (inventory != null) {
+						return inventory;
+					}
 				} else if (be instanceof Inventory) {
 					return (Inventory)be;
 				}
