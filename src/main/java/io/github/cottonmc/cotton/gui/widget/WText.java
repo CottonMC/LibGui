@@ -72,7 +72,7 @@ public class WText extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paintBackground(int x, int y, int mouseX, int mouseY) {
-		if (wrappingScheduled) {
+		if (wrappedLines == null || wrappingScheduled) {
 			wrapLines();
 			wrappingScheduled = false;
 		}
@@ -110,6 +110,7 @@ public class WText extends WWidget {
 	}
 
 	public WText setText(Text text) {
+		Objects.requireNonNull(text, "text is null");
 		this.text = text;
 		wrappingScheduled = true;
 
