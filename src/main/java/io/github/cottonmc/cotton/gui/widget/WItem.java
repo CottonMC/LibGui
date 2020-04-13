@@ -41,6 +41,7 @@ public class WItem extends WWidget {
 		return true;
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void tick() {
 		if (ticks++ >= duration) {

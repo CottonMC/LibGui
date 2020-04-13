@@ -169,7 +169,11 @@ public abstract class WPanel extends WWidget {
 			child.paintForeground(x + child.getX(), y + child.getY(), mouseX, mouseY);
 		}
 	}
-	
+
+	/**
+	 * Ticks all children of this panel.
+	 */
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void tick() {
 		for(WWidget child : children) child.tick();
