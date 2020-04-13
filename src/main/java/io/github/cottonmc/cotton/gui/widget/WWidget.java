@@ -9,32 +9,78 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 
+import javax.annotation.Nullable;
+
+/**
+ * The base class for all widgets.
+ */
 public class WWidget {
+	/**
+	 * The containing panel of this widget.
+	 * Can be null if this widget is the root panel or a HUD widget.
+	 */
+	@Nullable
 	protected WPanel parent;
 	protected int x = 0;
 	protected int y = 0;
 	protected int width = 18;
 	protected int height = 18;
+
+	/**
+	 * The containing {@link GuiDescription} of this widget.
+	 * Can be null if this widget is a {@linkplain io.github.cottonmc.cotton.gui.client.CottonHud HUD} widget.
+	 */
+	@Nullable
 	protected GuiDescription host;
-	
+
+	/**
+	 * Sets the location of this widget relative to its parent.
+	 *
+	 * @param x the new X coordinate
+	 * @param y the new Y coordinate
+	 */
 	public void setLocation(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-	
+
+	/**
+	 * Sets the size of this widget.
+	 *
+	 * <p>Overriding methods may restrict one of the dimensions to be
+	 * a constant value, for example {@code super.setSize(x, 20)}.
+	 *
+	 * @param x the new width
+	 * @param y the new height
+	 */
 	public void setSize(int x, int y) {
 		this.width = x;
 		this.height = y;
 	}
-	
+
+	/**
+	 * Gets the X coordinate of this widget relative to its parent.
+	 *
+	 * @return the X coordinate
+	 */
 	public int getX() {
 		return x;
 	}
-	
+
+	/**
+	 * Gets the Y coordinate of this widget relative to its parent.
+	 *
+	 * @return the Y coordinate
+	 */
 	public int getY() {
 		return y;
 	}
-	
+
+	/**
+	 * Gets the absolute X coordinate of this widget.
+	 *
+	 * @return the absolute X coordinate
+	 */
 	public int getAbsoluteX() {
 		if (parent==null) {
 			return getX();
@@ -42,7 +88,12 @@ public class WWidget {
 			return getX() + parent.getAbsoluteX();
 		}
 	}
-	
+
+	/**
+	 * Gets the absolute Y coordinate of this widget.
+	 *
+	 * @return the absolute Y coordinate
+	 */
 	public int getAbsoluteY() {
 		if (parent==null) {
 			return getY();
@@ -58,11 +109,21 @@ public class WWidget {
 	public int getHeight() {
 		return height;
 	}
-	
+
+	/**
+	 * Checks whether this widget can be resized using {@link #setSize}.
+	 *
+	 * @return true if this widget can be resized, false otherwise
+	 */
 	public boolean canResize() {
 		return false;
 	}
-	
+
+	/**
+	 * Sets the parent panel of this widget.
+	 *
+	 * @param parent the new parent
+	 */
 	public void setParent(WPanel parent) {
 		this.parent = parent;
 	}
@@ -216,7 +277,16 @@ public class WWidget {
 		//	renderTooltip(mouseX, mouseY);
 		//}
 	}
-	
+
+	/**
+	 * Checks whether a location is within this widget's bounds.
+	 *
+	 * <p>The default implementation checks that X and Y are at least 0 and below the width and height of this widget.
+	 *
+	 * @param x the X coordinate
+	 * @param y the Y coordinate
+	 * @return true if the location is within this widget, false otherwise
+	 */
 	public boolean isWithinBounds(int x, int y) {
 		return x>=0 && y>=0 && x<this.width && y<this.height;
 	}
@@ -258,6 +328,10 @@ public class WWidget {
 	public WWidget hit(int x, int y) {
 		return this;
 	}
-	
+
+	/**
+	 * Executes a client-side tick for this widget.
+	 */
+	@Environment(EnvType.CLIENT)
 	public void tick() {}
 }
