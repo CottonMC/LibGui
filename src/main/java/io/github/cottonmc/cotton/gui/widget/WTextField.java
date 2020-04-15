@@ -529,13 +529,15 @@ public class WTextField extends WWidget {
 		
 		renderButton(x, y);
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onClick(int x, int y, int button) {
 		requestFocus();
 		cursor = getCaretPos(this.text, x-OFFSET_X_TEXT);
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onCharTyped(char ch) {
 		if (this.text.length()<this.maxLength) {
@@ -553,7 +555,8 @@ public class WTextField extends WWidget {
 	public void insertText(int ofs, String s) {
 		//TODO: Implement
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyPressed(int ch, int key, int modifiers) {
 		if (!this.editable) return;

@@ -95,6 +95,7 @@ public class WText extends WWidget {
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onClick(int x, int y, int button) {
 		if (button != 0) return; // only left clicks

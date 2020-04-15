@@ -2,6 +2,8 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -66,7 +68,8 @@ public class WButton extends WWidget {
 	public void setSize(int x, int y) {
 		super.setSize(x, 20);
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onClick(int x, int y, int button) {
 		super.onClick(x, y, button);

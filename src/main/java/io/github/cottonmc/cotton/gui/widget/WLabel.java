@@ -88,6 +88,7 @@ public class WLabel extends WWidget {
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onClick(int x, int y, int button) {
 		Text hoveredText = getTextAt(x, y);

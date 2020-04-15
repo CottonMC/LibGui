@@ -134,6 +134,7 @@ public class WWidget {
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
 	 */
+	@Environment(EnvType.CLIENT)
 	public WWidget onMouseDown(int x, int y, int button) {
 		return this;
 	}
@@ -151,6 +152,7 @@ public class WWidget {
 	 *
 	 * @since 1.5.0
 	 */
+	@Environment(EnvType.CLIENT)
 	public void onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
 		onMouseDrag(x, y, button);
 	}
@@ -161,6 +163,7 @@ public class WWidget {
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
 	 */
+	@Environment(EnvType.CLIENT)
 	public void onMouseDrag(int x, int y, int button) {
 	}
 	
@@ -170,6 +173,7 @@ public class WWidget {
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
 	 */
+	@Environment(EnvType.CLIENT)
 	public WWidget onMouseUp(int x, int y, int button) {
 		return this;
 	}
@@ -180,6 +184,7 @@ public class WWidget {
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
 	 */
+	@Environment(EnvType.CLIENT)
 	public void onClick(int x, int y, int button) {
 	}
 	
@@ -189,6 +194,7 @@ public class WWidget {
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param amount The scrolled amount. Positive values are up and negative values are down.
 	 */
+	@Environment(EnvType.CLIENT)
 	public void onMouseScroll(int x, int y, double amount) {
 	}
 
@@ -199,6 +205,7 @@ public class WWidget {
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @since 1.5.0
 	 */
+	@Environment(EnvType.CLIENT)
 	public void onMouseMove(int x, int y) {
 	}
 	
@@ -207,6 +214,7 @@ public class WWidget {
 	 * and may be called for characters that do not directly have a corresponding keyboard key.
 	 * @param ch the character typed
 	 */
+	@Environment(EnvType.CLIENT)
 	public void onCharTyped(char ch) {
 	}
 	
@@ -214,6 +222,7 @@ public class WWidget {
 	 * Notifies this widget that a key has been pressed.
 	 * @param key the GLFW scancode of the key
 	 */
+	@Environment(EnvType.CLIENT)
 	public void onKeyPressed(int ch, int key, int modifiers) {
 	}
 	
@@ -221,6 +230,7 @@ public class WWidget {
 	 * Notifies this widget that a key has been released
 	 * @param key the GLFW scancode of the key
 	 */
+	@Environment(EnvType.CLIENT)
 	public void onKeyReleased(int ch, int key, int modifiers) {
 	}
 	

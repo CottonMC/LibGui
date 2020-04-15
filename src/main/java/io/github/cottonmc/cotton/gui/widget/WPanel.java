@@ -86,7 +86,8 @@ public abstract class WPanel extends WWidget {
 		int pushDown =  w.getY()+w.getHeight();
 		this.setSize(Math.max(this.getWidth(), pushRight), Math.max(this.getHeight(), pushDown));
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
 		if (children.isEmpty()) return super.onMouseUp(x, y, button);
@@ -101,7 +102,8 @@ public abstract class WPanel extends WWidget {
 		}
 		return super.onMouseUp(x, y, button);
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public WWidget onMouseDown(int x, int y, int button) {
 		if (children.isEmpty()) return super.onMouseDown(x, y, button);
@@ -116,7 +118,8 @@ public abstract class WPanel extends WWidget {
 		}
 		return super.onMouseDown(x, y, button);
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onMouseDrag(int x, int y, int button) {
 		if (children.isEmpty()) return;

@@ -105,6 +105,7 @@ public abstract class WAbstractSlider extends WWidget {
 		return true;
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public WWidget onMouseDown(int x, int y, int button) {
 		// Check if cursor is inside or <=2px away from track
@@ -114,6 +115,7 @@ public abstract class WAbstractSlider extends WWidget {
 		return super.onMouseDown(x, y, button);
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onMouseDrag(int x, int y, int button) {
 		if (isFocused()) {
@@ -122,6 +124,7 @@ public abstract class WAbstractSlider extends WWidget {
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onClick(int x, int y, int button) {
 		moveSlider(x, y);
@@ -136,6 +139,7 @@ public abstract class WAbstractSlider extends WWidget {
 		if (value != previousValue) onValueChanged(value);
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
 		dragging = false;
@@ -143,6 +147,7 @@ public abstract class WAbstractSlider extends WWidget {
 		return super.onMouseUp(x, y, button);
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onMouseScroll(int x, int y, double amount) {
 		int previous = value;
@@ -245,6 +250,7 @@ public abstract class WAbstractSlider extends WWidget {
 		if (valueChangeListener != null) valueChangeListener.accept(value);
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyPressed(int ch, int key, int modifiers) {
 		boolean valueChanged = false;
@@ -272,6 +278,7 @@ public abstract class WAbstractSlider extends WWidget {
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyReleased(int ch, int key, int modifiers) {
 		if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch) || isIncreasingKey(ch))) {
