@@ -23,7 +23,14 @@ public class WLabel extends WWidget {
 	protected int color;
 	protected int darkmodeColor;
 
+	/**
+	 * The default text color for light mode labels.
+	 */
 	public static final int DEFAULT_TEXT_COLOR = 0x404040;
+
+	/**
+	 * The default text color for {@linkplain io.github.cottonmc.cotton.gui.client.LibGuiConfig#darkMode dark mode} labels.
+	 */
 	public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
 
 	/**
