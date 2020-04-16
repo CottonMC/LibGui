@@ -41,6 +41,7 @@ public class WTextField extends WWidget {
 	protected int uneditableColor = 0x707070;
 	protected int backgroundColor = 0xFF_000000;
 	protected int focusedColor = 0xFF_FFFFA0;
+	private boolean resize;
 
 	public boolean isDrawFocusBorder() {
 		return drawFocusBorder;
@@ -147,7 +148,11 @@ public class WTextField extends WWidget {
 
 	@Override
 	public boolean canResize() {
-		return true;
+		return this.resize;
+	}
+
+	public void setResize(boolean resize) {
+		this.resize = resize;
 	}
 
 	@Override
