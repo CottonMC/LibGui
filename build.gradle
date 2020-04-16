@@ -40,7 +40,7 @@ if(rootProject.file('private.gradle').exists()) { //Publishing details
 }
 
 archivesBaseName = project.archives_base_name
-version = "$project.mod_version+$project.minecraft_version" + "-" + gitVersion()
+version = "$project.mod_version+$project.minecraft_version" + "-" + versionDetails().gitHash
 group = project.maven_group
 
 minecraft {
