@@ -39,7 +39,7 @@ if(rootProject.file('private.gradle').exists()) { //Publishing details
 }
 
 archivesBaseName = project.archives_base_name
-version = "$project.mod_version+$project.minecraft_version" + (forkAuthor ? "-${forkAuthor}" : "")
+version = "$project.mod_version+$project.minecraft_version"
 group = project.maven_group
 
 minecraft {
