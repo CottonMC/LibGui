@@ -10,7 +10,7 @@ buildscript {
 			url = 'https://maven.fabricmc.net/'
 		}
 	}
-
+	
 	dependencies {
 		System.out.println(rootProject.name);
 		if (rootProject.name.equalsIgnoreCase("LibGUI")) {
