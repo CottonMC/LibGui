@@ -39,8 +39,9 @@ public class WGridPanel extends WPanel {
 		if (w.canResize()) {
 			w.setSize(grid, grid);
 		}
-		if (w.shouldExpandToFit)
+		if (w.shouldExpandToFit) {
 			expandToFit(w);
+		}
 	}
 
 	/**
@@ -59,7 +60,8 @@ public class WGridPanel extends WPanel {
 		if (w.canResize()) {
 			w.setSize(width * grid, height * grid);
 		}
-		if (w.shouldExpandToFit)
+		if (w.shouldExpandToFit) {
 			expandToFit(w);
+		}
 	}
 }
