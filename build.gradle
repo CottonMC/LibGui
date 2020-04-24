@@ -24,7 +24,6 @@ plugins {
 	//id 'fabric-loom' version '0.2.4-SNAPSHOT'
 	id 'maven-publish'
 	id "com.jfrog.artifactory" version "4.9.0"
-	id "com.palantir.git-version" version "0.12.3"
 }
 
 
@@ -40,7 +39,7 @@ if(rootProject.file('private.gradle').exists()) { //Publishing details
 }
 
 archivesBaseName = project.archives_base_name
-version = "$project.mod_version+$project.minecraft_version" + "-" + versionDetails().gitHash
+version = "$project.mod_version+$project.minecraft_version"
 group = project.maven_group
 
 minecraft {
