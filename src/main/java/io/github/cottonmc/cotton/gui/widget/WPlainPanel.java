@@ -21,8 +21,9 @@ public class WPlainPanel extends WPanel {
 		if (w.canResize()) {
 			w.setSize(18, 18);
 		}
-		if (w.shouldExpandToFit)
+		if (w.shouldExpandToFit) {
 			expandToFit(w);
+		}
 		//valid = false;
 	}
 
@@ -42,8 +43,9 @@ public class WPlainPanel extends WPanel {
 		if (w.canResize()) {
 			w.setSize(width, height);
 		}
-		if (w.shouldExpandToFit)
+		if (w.shouldExpandToFit) {
 			expandToFit(w);
+		}
 		//valid = false;
 	}
 }
