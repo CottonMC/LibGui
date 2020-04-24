@@ -16,25 +16,34 @@ public class WWidget {
 	protected int width = 18;
 	protected int height = 18;
 	protected GuiDescription host;
-	
+	protected boolean shouldExpandToFit = true;
+
+	public boolean getShouldExpandToFit() {
+		return shouldExpandToFit;
+	}
+
+	public void setShouldExpandToFit(boolean value) {
+		shouldExpandToFit = value;
+	}
+
 	public void setLocation(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	public void setSize(int x, int y) {
 		this.width = x;
 		this.height = y;
 	}
-	
+
 	public int getX() {
 		return x;
 	}
-	
+
 	public int getY() {
 		return y;
 	}
-	
+
 	public int getAbsoluteX() {
 		if (parent==null) {
 			return getX();
@@ -42,7 +51,7 @@ public class WWidget {
 			return getX() + parent.getAbsoluteX();
 		}
 	}
-	
+
 	public int getAbsoluteY() {
 		if (parent==null) {
 			return getY();
@@ -50,23 +59,23 @@ public class WWidget {
 			return getY() + parent.getAbsoluteY();
 		}
 	}
-	
+
 	public int getWidth() {
 		return width;
 	}
-	
+
 	public int getHeight() {
 		return height;
 	}
-	
+
 	public boolean canResize() {
 		return false;
 	}
-	
+
 	public void setParent(WPanel parent) {
 		this.parent = parent;
 	}
-	
+
 	/**
 	 * Notifies this widget that the mouse has been pressed while inside its bounds
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
@@ -76,7 +85,7 @@ public class WWidget {
 	public WWidget onMouseDown(int x, int y, int button) {
 		return this;
 	}
-	
+
 	/**
 	 * Notifies this widget that the mouse has been moved while pressed and inside its bounds.
 	 *
@@ -102,7 +111,7 @@ public class WWidget {
 	 */
 	public void onMouseDrag(int x, int y, int button) {
 	}
-	
+
 	/**
 	 * Notifies this widget that the mouse has been released while inside its bounds
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
@@ -112,7 +121,7 @@ public class WWidget {
 	public WWidget onMouseUp(int x, int y, int button) {
 		return this;
 	}
-	
+
 	/**
 	 * Notifies this widget that the mouse has been pressed and released, both while inside its bounds.
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
@@ -121,7 +130,7 @@ public class WWidget {
 	 */
 	public void onClick(int x, int y, int button) {
 	}
-	
+
 	/**
 	 * Notifies this widget that the mouse has been scrolled inside its bounds.
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
@@ -140,7 +149,7 @@ public class WWidget {
 	 */
 	public void onMouseMove(int x, int y) {
 	}
-	
+
 	/**
 	 * Notifies this widget that a character has been typed. This method is subject to key repeat,
 	 * and may be called for characters that do not directly have a corresponding keyboard key.
@@ -148,34 +157,34 @@ public class WWidget {
 	 */
 	public void onCharTyped(char ch) {
 	}
-	
+
 	/**
 	 * Notifies this widget that a key has been pressed.
 	 * @param key the GLFW scancode of the key
 	 */
 	public void onKeyPressed(int ch, int key, int modifiers) {
 	}
-	
+
 	/**
 	 * Notifies this widget that a key has been released
 	 * @param key the GLFW scancode of the key
 	 */
 	public void onKeyReleased(int ch, int key, int modifiers) {
 	}
-	
+
 	/** Notifies this widget that it has gained focus */
 	public void onFocusGained() {
 	}
-	
+
 	/** Notifies this widget that it has lost focus */
 	public void onFocusLost() {
 	}
-	
+
 	public boolean isFocused() {
 		if (host==null) return false;
 		return host.isFocused(this);
 	}
-	
+
 	public void requestFocus() {
 		if (host!=null) {
 			host.requestFocus(this);
@@ -183,15 +192,15 @@ public class WWidget {
 			System.out.println("host is null");
 		}
 	}
-	
+
 	public void releaseFocus() {
 		if (host!=null) host.releaseFocus(this);
 	}
-	
+
 	public boolean canFocus() {
 		return false;
 	}
-	
+
 	/**
 	 * Creates "heavyweight" component peers
 	 * @param c the top-level Container that will hold the peers
@@ -199,16 +208,16 @@ public class WWidget {
 	public void createPeers(GuiDescription c) {
 		host=c;
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public void paintBackground(int x, int y, int mouseX, int mouseY) {
 		this.paintBackground(x, y);
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public void paintBackground(int x, int y) {
 	}
-	
+
 	@Deprecated
 	@Environment(EnvType.CLIENT)
 	public void paintForeground(int x, int y, int mouseX, int mouseY) {
@@ -216,11 +225,11 @@ public class WWidget {
 		//	renderTooltip(mouseX, mouseY);
 		//}
 	}
-	
+
 	public boolean isWithinBounds(int x, int y) {
 		return x>=0 && y>=0 && x<this.width && y<this.height;
 	}
-	
+
 	/**
 	 * Internal method to render tooltip data. This requires an overriden {@link #addInformation(List)
 	 * addInformation} method to insert data into the tooltip - without this, the method returns early, because no work
@@ -232,11 +241,11 @@ public class WWidget {
 
 		if (info.size() == 0)
 			return;
-		
+
 		Screen screen = MinecraftClient.getInstance().currentScreen;
 		screen.renderTooltip(info, tX+x, tY+y);
 	}
-	
+
 	/**
 	 * Creates component peers, lays out children, and initializes animation data for this Widget and all its children.
 	 * The host container must clear any heavyweight peers from its records before this method is called.
@@ -244,20 +253,20 @@ public class WWidget {
 	public void validate(GuiDescription host) {
 		//valid = true;
 	}
-	
+
 	/**
 	 * Adds information to this widget's tooltip. If information remains empty after this call, no tooltip will be drawn.
 	 * @param information List containing all previous tooltip data.
 	 */
 	public void addInformation(List<String> information) {
 	}
-	
+
 	/**
 	 * Find the most specific child node at this location. For non-panel widgets, returns this widget.
 	 */
 	public WWidget hit(int x, int y) {
 		return this;
 	}
-	
+
 	public void tick() {}
 }
