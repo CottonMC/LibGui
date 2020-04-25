@@ -136,4 +136,26 @@ public class WText extends WWidget {
 		this.darkmodeColor = this.color;
 		return this;
 	}
+
+	/**
+	 * Gets the alignment of this text widget.
+	 *
+	 * @return the alignment
+	 * @since 1.9.0
+	 */
+	public Alignment getAlignment() {
+		return alignment;
+	}
+
+	/**
+	 * Sets the alignment of this text widget.
+	 *
+	 * @param alignment the new alignment
+	 * @return this widget
+	 * @since 1.9.0
+	 */
+	public WText setAlignment(Alignment alignment) {
+		this.alignment = alignment;
+		return this;
+	}
 }
