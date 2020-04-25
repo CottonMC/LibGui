@@ -45,6 +45,11 @@ public class WText extends WWidget {
 		wrappingScheduled = true;
 	}
 
+	@Override
+	public boolean canResize() {
+		return true;
+	}
+
 	@Environment(EnvType.CLIENT)
 	private void wrapLines() {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
