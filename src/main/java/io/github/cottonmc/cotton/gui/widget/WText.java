@@ -10,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.Texts;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
@@ -48,7 +49,7 @@ public class WText extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private void wrapLines() {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		wrappedLines = Texts.wrapLines(text, width, font);
+		wrappedLines = font.method_27527().method_27491(text, width, Style.field_24360, false);
 	}
 
 	@Environment(EnvType.CLIENT)
