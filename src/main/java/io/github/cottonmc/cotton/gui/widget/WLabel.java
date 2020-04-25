@@ -69,8 +69,7 @@ public class WLabel extends WWidget {
 
 	@Override
 	public void paintBackground(int x, int y, int mouseX, int mouseY) {
-		String translated = text.asFormattedString();
-		ScreenDrawing.drawString(translated, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
+		ScreenDrawing.drawString(text, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
 
 		Text hoveredText = getTextAt(mouseX, mouseY);
 		if (hoveredText != null) {
@@ -96,14 +95,7 @@ public class WLabel extends WWidget {
 	@Nullable
 	private Text getTextAt(int x, int y) {
 		if (isWithinBounds(x, y)) {
-			int i = 0;
-			for (Text component : text) {
-				TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
-				i += renderer.getStringWidth(component.asFormattedString());
-				if (i > x) {
-					return component;
-				}
-			}
+			return MinecraftClient.getInstance().textRenderer.method_27527().method_27489(text, x);
 		}
 		return null;
 	}

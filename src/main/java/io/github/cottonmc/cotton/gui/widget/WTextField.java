@@ -321,7 +321,7 @@ public class WTextField extends WWidget {
 		int textColor = this.editable ? this.enabledColor : this.uneditableColor;
 		
 		//TODO: Scroll offset
-		String trimText = font.trimToWidth(this.text, this.width-OFFSET_X_TEXT);
+		String trimText = font.method_27523(this.text, this.width-OFFSET_X_TEXT);
 		
 		boolean selection = (select!=-1);
 		boolean focused = this.isFocused(); //this.isFocused() && this.focusedTicks / 6 % 2 == 0 && boolean_1; //Blinks the cursor
@@ -347,16 +347,16 @@ public class WTextField extends WWidget {
 		int preCursorAdvance = textX;
 		if (!trimText.isEmpty()) {
 			String string_2 = trimText.substring(0,adjustedCursor);
-			preCursorAdvance = font.drawWithShadow(string_2, textX, textY, textColor);
+			preCursorAdvance = font.drawWithShadow(ScreenDrawing.getMatrices(), string_2, textX, textY, textColor);
 		}
 
 		if (adjustedCursor<trimText.length()) {
-			font.drawWithShadow(trimText.substring(adjustedCursor), preCursorAdvance-1, (float)textY, textColor);
+			font.drawWithShadow(ScreenDrawing.getMatrices(), trimText.substring(adjustedCursor), preCursorAdvance-1, (float)textY, textColor);
 		}
 			
 
 		if (text.length()==0 && this.suggestion != null) {
-			font.drawWithShadow(this.suggestion, textX, textY, -8355712);
+			font.drawWithShadow(ScreenDrawing.getMatrices(), this.suggestion, textX, textY, -8355712);
 		}
 
 		//int var10002;
@@ -378,7 +378,7 @@ public class WTextField extends WWidget {
 			//	DrawableHelper.fill(int_9, var10001, var10002, var10003 + 9, -3092272);
 				
 			} else {
-				font.drawWithShadow("_", preCursorAdvance, textY, textColor);
+				font.drawWithShadow(ScreenDrawing.getMatrices(), "_", preCursorAdvance, textY, textColor);
 			}
 		}
 

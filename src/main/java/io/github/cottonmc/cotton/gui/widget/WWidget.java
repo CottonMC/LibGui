@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 public class WWidget {
 	protected WPanel parent;
@@ -222,19 +225,25 @@ public class WWidget {
 	}
 	
 	/**
-	 * Internal method to render tooltip data. This requires an overriden {@link #addInformation(List)
-	 * addInformation} method to insert data into the tooltip - without this, the method returns early, because no work
+	 * Internal method to render tooltip data. This requires an overriden {@link #addTooltip(List)
+	 * addTooltip} method to insert data into the tooltip - without this, the method returns early, because no work
 	 */
 	@Environment(EnvType.CLIENT)
 	public void renderTooltip(int x, int y, int tX, int tY) {
-		List<String> info = new ArrayList<>();
-		addInformation(info);
+		List<Text> info = new ArrayList<>();
+		addTooltip(info);
+
+		List<String> stringInfo = new ArrayList<>();
+		addInformation(stringInfo);
+		for (String line : stringInfo) {
+			info.add(new LiteralText(line));
+		}
 
 		if (info.size() == 0)
 			return;
-		
+
 		Screen screen = MinecraftClient.getInstance().currentScreen;
-		screen.renderTooltip(info, tX+x, tY+y);
+		screen.renderTooltip(ScreenDrawing.getMatrices(), info, tX+x, tY+y);
 	}
 	
 	/**
@@ -248,8 +257,17 @@ public class WWidget {
 	/**
 	 * Adds information to this widget's tooltip. If information remains empty after this call, no tooltip will be drawn.
 	 * @param information List containing all previous tooltip data.
+	 * @deprecated Replaced with {@link #addTooltip(List)}
 	 */
+	@Deprecated
 	public void addInformation(List<String> information) {
+	}
+
+	/**
+	 * Adds lines to this widget's tooltip. If the lines remain empty after this call, no tooltip will be drawn.
+	 * @param tooltip List containing all previous tooltip data.
+	 */
+	public void addTooltip(List<Text> tooltip) {
 	}
 	
 	/**

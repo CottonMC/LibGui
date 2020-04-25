@@ -48,7 +48,7 @@ public class WText extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private void wrapLines() {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		wrappedLines = Texts.wrapLines(text, width, font, true, true);
+		wrappedLines = Texts.wrapLines(text, width, font);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -59,11 +59,7 @@ public class WText extends WWidget {
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
 			Text line = wrappedLines.get(lineIndex);
-			int xi = 0;
-			for (Text part : line) {
-				xi += font.getStringWidth(part.asFormattedString());
-				if (xi > x) return part;
-			}
+			return font.method_27527().method_27489(line, x);
 		}
 
 		return null;
@@ -81,9 +77,8 @@ public class WText extends WWidget {
 		for (int i = 0; i < wrappedLines.size(); i++) {
 			Text line = wrappedLines.get(i);
 			int c = LibGuiClient.config.darkMode ? darkmodeColor : color;
-			String str = line.asFormattedString();
 
-			ScreenDrawing.drawString(str, alignment, x, y + i * font.fontHeight, width, c);
+			ScreenDrawing.drawString(line, alignment, x, y + i * font.fontHeight, width, c);
 		}
 
 		Text hoveredText = getTextAt(mouseX, mouseY);

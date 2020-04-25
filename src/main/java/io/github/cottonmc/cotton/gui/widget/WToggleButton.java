@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -75,7 +76,7 @@ public class WToggleButton extends WWidget {
 		ScreenDrawing.texturedRect(x, y, 18, 18, isOn ? onImage : offImage, 0xFFFFFFFF);
 		
 		if (label!=null) {
-			ScreenDrawing.drawString(label.asFormattedString(), x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawString(label, x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	

@@ -129,7 +129,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
 		if (label != null) {
 			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
-			ScreenDrawing.drawStringWithShadow(label.asFormattedString(), labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
+			ScreenDrawing.drawStringWithShadow(label, labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
 		RenderSystem.popMatrix();
 	}

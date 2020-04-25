@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.client;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
 
 import io.github.cottonmc.cotton.gui.CottonCraftingController;
@@ -182,12 +183,12 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends H
 		WWidget child = root.hit(containerX, containerY);
 		child.onMouseMove(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY());
 	}
-	
+
 	@Override
-	protected void drawBackground(float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
+	protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
 	public void paint(int mouseX, int mouseY) {
-		super.renderBackground();
+		super.renderBackground(ScreenDrawing.matrices);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
@@ -197,16 +198,17 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends H
 		}
 		
 		if (getTitle() != null) {
-			textRenderer.draw(getTitle().asFormattedString(), x, y, description.getTitleColor());
+			textRenderer.method_27528(ScreenDrawing.matrices, getTitle(), x, y, description.getTitleColor());
 		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
+		ScreenDrawing.matrices = matrices;
 		paint(mouseX, mouseY);
 		
-		super.render(mouseX, mouseY, partialTicks);
+		super.render(matrices, mouseX, mouseY, partialTicks);
 		DiffuseLighting.disable(); //Needed because super.render leaves dirty state
 		
 		if (description!=null) {
@@ -219,7 +221,7 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends H
 			}
 		}
 		
-		drawMouseoverTooltip(mouseX, mouseY); //Draws the itemstack tooltips
+		drawMouseoverTooltip(matrices, mouseX, mouseY); //Draws the itemstack tooltips
 	}
 	
 	@Override
@@ -235,6 +237,6 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends H
 
 	@Override
 	public void renderTextHover(Text text, int x, int y) {
-		renderTextHoverEffect(text, x, y);
+		renderTextHoverEffect(ScreenDrawing.matrices, text, x, y);
 	}
 }

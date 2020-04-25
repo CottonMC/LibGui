@@ -58,7 +58,7 @@ public class WButton extends WWidget {
 				color = 0xFFFFA0;
 			}*/
 			
-			ScreenDrawing.drawStringWithShadow(label.asFormattedString(), alignment, x, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawStringWithShadow(label, alignment, x, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	
