@@ -318,10 +318,9 @@ public class WTextField extends WWidget {
 	public void renderButton(int x, int y, boolean renderBackground) {
 		if (this.font==null) this.font = MinecraftClient.getInstance().textRenderer;
 		
-		int borderColor = (this.isFocused()) ? focusedColor : unfocusedColor;
-		if (drawFocusBorder) ScreenDrawing.coloredRect(x - 1, y - 1, width + 2, height + 2, borderColor);
-		
 		if (renderBackground) {
+			int borderColor = (this.isFocused()) ? focusedColor : unfocusedColor;
+			if (drawFocusBorder) ScreenDrawing.coloredRect(x - 1, y - 1, width + 2, height + 2, borderColor);
 			ScreenDrawing.coloredRect(x, y, width, height, backgroundColor);
 		}
 
