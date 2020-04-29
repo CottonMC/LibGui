@@ -35,18 +35,7 @@ public class WWidget {
 	 */
 	@Nullable
 	protected GuiDescription host;
-	
-	protected boolean shouldExpandToFit = true;
 
-	public boolean getShouldExpandToFit() {
-		return shouldExpandToFit;
-	}
-
-	
-	public void setShouldExpandToFit(boolean value) {
-		shouldExpandToFit = value;
-	}
-	
 	/**
 	 * Sets the location of this widget relative to its parent.
 	 *
@@ -373,4 +362,11 @@ public class WWidget {
 	 */
 	@Environment(EnvType.CLIENT)
 	public void tick() {}
+	
+	/**
+	 * Should this WWidget be included when the layout renderer generates a layout ?
+	 */
+	public boolean shouldExpandToFit() {
+		return true;
+	}
 }

@@ -41,70 +41,6 @@ public class WTextField extends WWidget {
 	protected int uneditableColor = 0x707070;
 	protected int backgroundColor = 0xFF_000000;
 	protected int focusedColor = 0xFF_FFFFA0;
-	private boolean resize;
-	
-	public boolean isDrawFocusBorder() {
-		return drawFocusBorder;
-	}
-	
-	public void setDrawFocusBorder(boolean drawFocusBorder) {
-		this.drawFocusBorder = drawFocusBorder;
-	}
-	
-	public boolean isDrawTextWithShadow() {
-		return drawTextWithShadow;
-	}
-	
-	public void setDrawTextWithShadow(boolean drawTextWithShadow) {
-		this.drawTextWithShadow = drawTextWithShadow;
-	}
-	
-	public int getSuggestionColor() {
-		return suggestionColor;
-	}
-	
-	public void setSuggestionColor(int suggestionColor) {
-		this.suggestionColor = suggestionColor;
-	}
-	
-	protected int suggestionColor = -8355712;
-	
-	public int getEnabledColor() {
-		return enabledColor;
-	}
-	
-	public int getUneditableColor() {
-		return uneditableColor;
-	}
-	
-	public void setUneditableColor(int uneditableColor) {
-		this.uneditableColor = uneditableColor;
-	}
-	
-	public int getBackgroundColor() {
-		return backgroundColor;
-	}
-	
-	public void setBackgroundColor(int backgroundColor) {
-		this.backgroundColor = backgroundColor;
-	}
-	
-	public int getFocusedColor() {
-		return focusedColor;
-	}
-	
-	public void setFocusedColor(int focusedColor) {
-		this.focusedColor = focusedColor;
-	}
-	
-	public int getUnfocusedColor() {
-		return unfocusedColor;
-	}
-	
-	public void setUnfocusedColor(int unfocusedColor) {
-		this.unfocusedColor = unfocusedColor;
-	}
-	
 	protected int unfocusedColor = 0xFF_A0A0A0;
 	
 	@Nullable
@@ -148,11 +84,7 @@ public class WTextField extends WWidget {
 	
 	@Override
 	public boolean canResize() {
-		return this.resize;
-	}
-	
-	public void setResize(boolean resize) {
-		this.resize = resize;
+		return true;
 	}
 	
 	@Override
@@ -383,13 +315,14 @@ public class WTextField extends WWidget {
 	}*/
 
 	@Environment(EnvType.CLIENT)
-	public void renderButton(int x, int y) {
+	public void renderButton(int x, int y, boolean renderBackground) {
 		if (this.font==null) this.font = MinecraftClient.getInstance().textRenderer;
 		
-		int borderColor = (this.isFocused()) ? focusedColor : unfocusedColor;
-		if (drawFocusBorder) ScreenDrawing.coloredRect(x-1, y-1, width+2, height+2, borderColor);
-		ScreenDrawing.coloredRect(x, y, width, height, backgroundColor);
-		
+		if (renderBackground) {
+			int borderColor = (this.isFocused()) ? focusedColor : unfocusedColor;
+			if (drawFocusBorder) ScreenDrawing.coloredRect(x - 1, y - 1, width + 2, height + 2, borderColor);
+			ScreenDrawing.coloredRect(x, y, width, height, backgroundColor);
+		}
 
 		int textColor = this.editable ? this.enabledColor : this.uneditableColor;
 		
@@ -459,7 +392,7 @@ public class WTextField extends WWidget {
 			//	int var10001 = int_7 - 1;
 			//	var10002 = int_9 + 1;
 			//	var10003 = int_7 + 1;
-			//	
+			//
 			//	DrawableHelper.fill(int_9, var10001, var10002, var10003 + 9, -3092272);
 			
 			} else {
@@ -514,9 +447,10 @@ public class WTextField extends WWidget {
 	
 	public WTextField setMaxLength(int max) {
 		this.maxLength = max;
-		if (this.getText().length() > max) {
-			this.setText(this.getText().substring(0, max));
-			this.onChanged.accept(this.getText());
+		String text = this.getText();
+		if (this.text.length() > max) {
+			this.setText(text.substring(0, max));
+			this.onChanged.accept(text);
 		}
 		return this;
 	}
@@ -598,10 +532,6 @@ public class WTextField extends WWidget {
 	@Override
 	public void paintBackground(int x, int y) {
 		
-		if (backgroundPainter != null) {
-			backgroundPainter.paintBackground(x, y, this);
-		}
-
 		/*
 		if (isFocused()) {
 			ScreenDrawing.rect(x-1, y-1, this.getWidth()+2, this.getHeight()+2, 0xFFFFFFFF);
@@ -617,7 +547,12 @@ public class WTextField extends WWidget {
 		//int ofs = MinecraftClient.getInstance().textRenderer.getStringWidth(this.text);
 		ScreenDrawing.rect(x+OFFSET_X_TEXT+getCaretOffset(this.text, cursor), y+OFFSET_Y_TEXT-2, 1, OFFSET_Y_TEXT*2, 0xFFE0E0E0);*/
 		
-		renderButton(x, y);
+		if (backgroundPainter != null) {
+			backgroundPainter.paintBackground(x, y, this);
+			renderButton(x, y, false);
+		} else {
+			renderButton(x, y, true);
+		}
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -697,7 +632,7 @@ public class WTextField extends WWidget {
 		
 		if (modifiers==0) {
 			if (ch==GLFW.GLFW_KEY_DELETE || ch==GLFW.GLFW_KEY_BACKSPACE) {
-				if (getText().length() > 0 && cursor > 0) {
+				if (getText().length()>0 && cursor>0) {
 					if (select>=0 && select!=cursor) {
 						int a = select;
 						int b = cursor;
@@ -715,7 +650,7 @@ public class WTextField extends WWidget {
 						String before = this.getText().substring(0, cursor);
 						String after = this.getText().substring(cursor, this.getText().length());
 						
-						before = before.substring(0, before.length()-1);
+						before = before.substring(0,before.length()-1);
 						setText(before+after);
 						cursor--;
 					}
@@ -732,7 +667,7 @@ public class WTextField extends WWidget {
 					cursor = Math.max(cursor, select);
 					select = -1; //Clear the selection anchor
 				} else {
-					if (cursor < getText().length()) cursor++;
+					if (cursor<getText().length()) cursor++;
 				}
 			} else {
 				//System.out.println("Ch: "+ch+", Key: "+key);
@@ -790,4 +725,74 @@ public class WTextField extends WWidget {
 		int ofs = font.getStringWidth(s.substring(0, pos))+1;		
 		return ofs; //(font.isRightToLeft()) ? -ofs : ofs;
 	}
+	
+	public boolean isDrawFocusBorder() {
+		return drawFocusBorder;
+	}
+	
+	public WTextField setDrawFocusBorder(boolean drawFocusBorder) {
+		this.drawFocusBorder = drawFocusBorder;
+		return this;
+	}
+	
+	public boolean isDrawTextWithShadow() {
+		return drawTextWithShadow;
+	}
+	
+	public WTextField setDrawTextWithShadow(boolean drawTextWithShadow) {
+		this.drawTextWithShadow = drawTextWithShadow;
+		return this;
+	}
+	
+	public int getSuggestionColor() {
+		return suggestionColor;
+	}
+	
+	public WTextField setSuggestionColor(int suggestionColor) {
+		this.suggestionColor = suggestionColor;
+		return this;
+	}
+	
+	protected int suggestionColor = 0xFF_808080;
+	
+	public int getEnabledColor() {
+		return enabledColor;
+	}
+	
+	public int getUneditableColor() {
+		return uneditableColor;
+	}
+	
+	public WTextField setUneditableColor(int uneditableColor) {
+		this.uneditableColor = uneditableColor;
+		return this;
+	}
+	
+	public int getBackgroundColor() {
+		return backgroundColor;
+	}
+	
+	public WTextField setBackgroundColor(int backgroundColor) {
+		this.backgroundColor = backgroundColor;
+		return this;
+	}
+	
+	public int getFocusedColor() {
+		return focusedColor;
+	}
+	
+	public WTextField setFocusedColor(int focusedColor) {
+		this.focusedColor = focusedColor;
+		return this;
+	}
+	
+	public int getUnfocusedColor() {
+		return unfocusedColor;
+	}
+	
+	public WTextField setUnfocusedColor(int unfocusedColor) {
+		this.unfocusedColor = unfocusedColor;
+		return this;
+	}
+	
 }
