@@ -7,6 +7,7 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -160,23 +161,23 @@ public class WBar extends WWidget {
 	}
 
 	@Override
-	public void addInformation(List<String> information) {
+	public void addTooltip(List<Text> information) {
 		if (tooltipLabel!=null) {
 			int value = (field>=0) ? properties.get(field) : 0;
 			int valMax = (max>=0) ? properties.get(max) : maxValue;
-			String formatted = tooltipLabel;
+			Text formatted;
 			try {
-				formatted = new TranslatableText(tooltipLabel, Integer.valueOf(value), Integer.valueOf(valMax)).asFormattedString();
+				formatted = new TranslatableText(tooltipLabel, Integer.valueOf(value), Integer.valueOf(valMax));
 			} catch (Throwable t) {
-				formatted = t.getLocalizedMessage();
+				formatted = new LiteralText(t.getLocalizedMessage());
 			} //Fallback to raw tooltipLabel
 			information.add(formatted);
 		}
 		if (tooltipTextComponent!=null) {
 			try {
-				information.add(tooltipTextComponent.asFormattedString());
+				information.add(tooltipTextComponent);
 			} catch (Throwable t) {
-				information.add(t.getLocalizedMessage());
+				information.add(new LiteralText(t.getLocalizedMessage()));
 			}
 		}
 	}

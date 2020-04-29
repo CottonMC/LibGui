@@ -16,25 +16,49 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
  * <p> W is the WWidget class that will represent a single D of data.
  */
 public class WListPanel<D, W extends WWidget> extends WClippedPanel {
+	/**
+	 * The list of data that this list represents.
+	 */
 	protected List<D> data;
+
+	/**
+	 * The supplier of new empty widgets.
+	 */
 	protected Supplier<W> supplier;
+
+	/**
+	 * The widget configurator that configures the passed widget
+	 * to display the passed data.
+	 */
 	protected BiConsumer<D, W> configurator;
 	
 	protected HashMap<D, W> configured = new HashMap<>();
 	protected List<W> unconfigured = new ArrayList<>();
+
+	/**
+	 * The height of each child cell.
+	 */
 	protected int cellHeight = 20;
+
+	/**
+	 * Whether this list has a fixed height for items.
+	 */
 	protected boolean fixedHeight = false;
 	
 	protected int margin = 4;
-	
+
+	/**
+	 * The scroll bar of this list.
+	 */
 	protected WScrollBar scrollBar = new WScrollBar(Axis.VERTICAL);
-	int lastScroll = -1;
+	private int lastScroll = -1;
 
 	public WListPanel(List<D> data, Supplier<W> supplier, BiConsumer<D, W> configurator) {
 		this.data = data;
 		this.supplier = supplier;
 		this.configurator = configurator;
 		scrollBar.setMaxValue(data.size());
+		scrollBar.setParent(this);
 	}
 
 	/**
@@ -157,7 +181,13 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		
 		//System.out.println("Children: "+children.size());
 	}
-	
+
+	/**
+	 * Sets the height of this list's items to a constant value.
+	 *
+	 * @param height the item height
+	 * @return this list
+	 */
 	public WListPanel<D, W> setListItemHeight(int height) {
 		cellHeight = height;
 		fixedHeight = true;

@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.*;
 
@@ -104,7 +105,8 @@ public enum CottonHud implements HudRenderCallback {
 	}
 
 	@Override
-	public void onHudRender(float tickDelta) {
+	public void onHudRender(MatrixStack matrices, float tickDelta) {
+		ScreenDrawing.matrices = matrices;
 		Window window = MinecraftClient.getInstance().getWindow();
 		int hudWidth = window.getScaledWidth();
 		int hudHeight = window.getScaledHeight();

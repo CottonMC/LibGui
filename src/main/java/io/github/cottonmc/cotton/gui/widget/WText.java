@@ -10,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.Texts;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
@@ -45,10 +46,15 @@ public class WText extends WWidget {
 		wrappingScheduled = true;
 	}
 
+	@Override
+	public boolean canResize() {
+		return true;
+	}
+
 	@Environment(EnvType.CLIENT)
 	private void wrapLines() {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		wrappedLines = Texts.wrapLines(text, width, font, true, true);
+		wrappedLines = font.method_27527().method_27491(text, width, Style.field_24360, false);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -59,11 +65,7 @@ public class WText extends WWidget {
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
 			Text line = wrappedLines.get(lineIndex);
-			int xi = 0;
-			for (Text part : line) {
-				xi += font.getStringWidth(part.asFormattedString());
-				if (xi > x) return part;
-			}
+			return font.method_27527().method_27489(line, x);
 		}
 
 		return null;
@@ -81,9 +83,8 @@ public class WText extends WWidget {
 		for (int i = 0; i < wrappedLines.size(); i++) {
 			Text line = wrappedLines.get(i);
 			int c = LibGuiClient.config.darkMode ? darkmodeColor : color;
-			String str = line.asFormattedString();
 
-			ScreenDrawing.drawString(str, alignment, x, y + i * font.fontHeight, width, c);
+			ScreenDrawing.drawString(line, alignment, x, y + i * font.fontHeight, width, c);
 		}
 
 		Text hoveredText = getTextAt(mouseX, mouseY);
@@ -95,6 +96,7 @@ public class WText extends WWidget {
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onClick(int x, int y, int button) {
 		if (button != 0) return; // only left clicks
@@ -139,6 +141,28 @@ public class WText extends WWidget {
 
 	public WText disableDarkmode() {
 		this.darkmodeColor = this.color;
+		return this;
+	}
+
+	/**
+	 * Gets the alignment of this text widget.
+	 *
+	 * @return the alignment
+	 * @since 1.9.0
+	 */
+	public Alignment getAlignment() {
+		return alignment;
+	}
+
+	/**
+	 * Sets the alignment of this text widget.
+	 *
+	 * @param alignment the new alignment
+	 * @return this widget
+	 * @since 1.9.0
+	 */
+	public WText setAlignment(Alignment alignment) {
+		this.alignment = alignment;
 		return this;
 	}
 }
