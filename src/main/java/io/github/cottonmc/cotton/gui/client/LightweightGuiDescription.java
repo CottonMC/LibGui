@@ -1,6 +1,6 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import javax.annotation.Nullable;
+import net.minecraft.screen.PropertyDelegate;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
@@ -8,7 +8,8 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
-import net.minecraft.screen.PropertyDelegate;
+
+import javax.annotation.Nullable;
 
 /**
  * A GuiDescription without any associated Minecraft classes

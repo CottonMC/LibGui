@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -8,7 +7,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 
-import java.util.*;
+import io.github.cottonmc.cotton.gui.widget.WWidget;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Manages widgets that are painted on the in-game HUD.

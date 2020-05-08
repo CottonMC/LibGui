@@ -1,10 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +7,11 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
+import io.github.cottonmc.cotton.gui.GuiDescription;
+
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The base class for all widgets.

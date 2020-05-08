@@ -1,17 +1,17 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.inventory.Inventory;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.inventory.Inventory;
+
+import java.util.List;
 
 public class WItemSlot extends WWidget {
 	private final List<ValidatedSlot> peers = Lists.newArrayList();

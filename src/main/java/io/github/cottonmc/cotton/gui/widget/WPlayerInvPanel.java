@@ -1,7 +1,8 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import net.minecraft.entity.player.PlayerInventory;
+
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 
 public class WPlayerInvPanel extends WPlainPanel {
 	private WItemSlot inv;

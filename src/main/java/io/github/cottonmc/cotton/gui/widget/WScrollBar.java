@@ -1,9 +1,10 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import net.minecraft.client.util.math.MatrixStack;
+
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
-import net.minecraft.client.util.math.MatrixStack;
 
 public class WScrollBar extends WAbstractSlider {
 	protected int window = 16;

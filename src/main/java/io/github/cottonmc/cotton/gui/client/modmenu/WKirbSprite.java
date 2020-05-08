@@ -1,14 +1,15 @@
 package io.github.cottonmc.cotton.gui.client.modmenu;
 
-import java.util.ArrayList;
-
-import io.github.cottonmc.cotton.gui.client.LibGuiClient;
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
+import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.WWidget;
+
+import java.util.ArrayList;
 
 public class WKirbSprite extends WWidget {
 	private static final Identifier KIRB = new Identifier("libgui:textures/widget/kirb.png");

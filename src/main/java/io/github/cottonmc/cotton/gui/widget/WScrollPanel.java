@@ -1,8 +1,9 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import net.minecraft.client.util.math.MatrixStack;
+
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
-import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,11 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+
+import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 
 public class WSprite extends WWidget {
 	protected int currentFrame= 0;

@@ -1,14 +1,14 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
-import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
+
+import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+
+import java.util.List;
 
 /**
  * Panels are widgets tthat contain other widgets.

@@ -1,12 +1,13 @@
 package io.github.cottonmc.cotton.gui;
 
-import javax.annotation.Nullable;
-
-import io.github.cottonmc.cotton.gui.widget.WPanel;
-import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.screen.PropertyDelegate;
+
+import io.github.cottonmc.cotton.gui.widget.WPanel;
+import io.github.cottonmc.cotton.gui.widget.WWidget;
+
+import javax.annotation.Nullable;
 
 public interface GuiDescription {
 	public WPanel getRootPanel();

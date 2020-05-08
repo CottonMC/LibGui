@@ -1,11 +1,12 @@
 package io.github.cottonmc.cotton.gui.client.modmenu;
 
 
-import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
-import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import net.minecraft.text.TranslatableText;
+
+import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 
 public class ModMenuSupport implements ModMenuApi {
 	

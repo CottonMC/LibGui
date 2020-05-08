@@ -1,13 +1,14 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import net.minecraft.client.util.math.MatrixStack;
+
+import io.github.cottonmc.cotton.gui.widget.data.Axis;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
-
-import io.github.cottonmc.cotton.gui.widget.data.Axis;
-import net.minecraft.client.util.math.MatrixStack;
 
 /**
  * Similar to the RecyclerView in Android, this widget represents a scrollable list of items.

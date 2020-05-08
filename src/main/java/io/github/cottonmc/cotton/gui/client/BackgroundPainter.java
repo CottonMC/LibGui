@@ -1,8 +1,9 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.minecraft.util.Identifier;
+
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
-import net.minecraft.util.Identifier;
 
 /**
  * Background painters are used to paint the background of a widget.

@@ -1,8 +1,8 @@
 package io.github.cottonmc.cotton.gui.style;
 
-import java.util.HashMap;
-
 import io.github.cottonmc.cotton.gui.widget.data.Color;
+
+import java.util.HashMap;
 
 public class StyleEntry {
 	private String selector = "*";

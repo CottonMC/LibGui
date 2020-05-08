@@ -1,9 +1,8 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.MinecraftClient;
 
 /**
  * A panel that is clipped to only render widgets inside its bounds.
