@@ -144,11 +144,11 @@ public abstract class WAbstractSlider extends WWidget {
 				axisPos = y;
 				break;
 			case LEFT:
-				axisPos = x;
+				axisPos = width - x;
 				break;
 			case RIGHT:
 			default:
-				axisPos = width - x;
+				axisPos = x;
 				break;
 		}
 
