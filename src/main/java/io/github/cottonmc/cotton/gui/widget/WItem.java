@@ -54,17 +54,13 @@ public class WItem extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		RenderSystem.pushMatrix();
 		RenderSystem.enableDepthTest();
-		RenderSystem.translatef(x, y, 0);
 
 		MinecraftClient mc = MinecraftClient.getInstance();
 		ItemRenderer renderer = mc.getItemRenderer();
 		renderer.zOffset = 100f;
-		renderer.renderGuiItem(mc.player, items.get(current), getWidth() / 2 - 9, getHeight() / 2 - 9);
+		renderer.renderGuiItem(mc.player, items.get(current), x + getWidth() / 2 - 9, y + getHeight() / 2 - 9);
 		renderer.zOffset = 0f;
-
-		RenderSystem.popMatrix();
 	}
 
 	/**
