@@ -62,7 +62,9 @@ public class WSlider extends WAbstractSlider {
 			if (axis == Axis.VERTICAL) {
 				int trackX = x + width / 2 - TRACK_WIDTH / 2;
 				thumbX = width / 2 - THUMB_SIZE / 2;
-				thumbY = height - THUMB_SIZE + 1 - (int) (coordToValueRatio * (value - min));
+				thumbY = direction == Direction.UP
+						? (height - THUMB_SIZE) + 1 - (int) (coordToValueRatio * (value - min))
+						: Math.round(coordToValueRatio * (value - min));
 				thumbXOffset = 0;
 
 				ScreenDrawing.texturedRect(trackX, y + 1, TRACK_WIDTH, 1, texture, 16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
@@ -70,7 +72,9 @@ public class WSlider extends WAbstractSlider {
 				ScreenDrawing.texturedRect(trackX, y + height, TRACK_WIDTH, 1, texture, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
-				thumbX = Math.round(coordToValueRatio * (value - min));
+				thumbX = direction == Direction.RIGHT
+						? (width - THUMB_SIZE) + 1 - (int) (coordToValueRatio * (value - min))
+						: Math.round(coordToValueRatio * (value - min));
 				thumbY = height / 2 - THUMB_SIZE / 2;
 				thumbXOffset = 8;
 

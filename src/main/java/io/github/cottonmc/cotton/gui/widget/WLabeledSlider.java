@@ -163,7 +163,9 @@ public class WLabeledSlider extends WAbstractSlider {
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		int aWidth = axis == Axis.HORIZONTAL ? width : height;
 		int aHeight = axis == Axis.HORIZONTAL ? height : width;
-		int rotMouseX = axis == Axis.HORIZONTAL ? mouseX : (height - mouseY);
+		int rotMouseX = axis == Axis.HORIZONTAL
+				? (direction == Direction.RIGHT ? width - mouseX : mouseX)
+				: (direction == Direction.UP ? height - mouseY : mouseY);
 		int rotMouseY = axis == Axis.HORIZONTAL ? mouseY : mouseX;
 
 		matrices.push();

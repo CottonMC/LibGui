@@ -22,6 +22,10 @@ public class WScrollBar extends WAbstractSlider {
 	 */
 	public WScrollBar(Axis axis) {
 		super(0, 100, axis);
+
+		if (axis == Axis.VERTICAL) {
+			setDirection(Direction.DOWN);
+		}
 	}
 
 	@Override

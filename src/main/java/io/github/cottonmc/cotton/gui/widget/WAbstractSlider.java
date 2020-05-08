@@ -34,6 +34,7 @@ public abstract class WAbstractSlider extends WWidget {
 
 	protected int min, max;
 	protected final Axis axis;
+	protected Direction direction;
 
 	protected int value;
 
@@ -71,6 +72,7 @@ public abstract class WAbstractSlider extends WWidget {
 		this.max = max;
 		this.axis = axis;
 		this.value = min;
+		this.direction = (axis == Axis.HORIZONTAL) ? Direction.RIGHT : Direction.UP;
 	}
 
 	/**
@@ -132,7 +134,25 @@ public abstract class WAbstractSlider extends WWidget {
 	}
 
 	private void moveSlider(int x, int y) {
-		int pos = (axis == Axis.VERTICAL ? (height - y) : x) - getThumbWidth() / 2;
+		int axisPos;
+
+		switch (direction) {
+			case UP:
+				axisPos = height - y;
+				break;
+			case DOWN:
+				axisPos = y;
+				break;
+			case LEFT:
+				axisPos = x;
+				break;
+			case RIGHT:
+			default:
+				axisPos = width - x;
+				break;
+		}
+
+		int pos = axisPos - getThumbWidth() / 2;
 		int rawValue = min + Math.round(valueToCoordRatio * pos);
 		int previousValue = value;
 		value = MathHelper.clamp(rawValue, min, max);
@@ -246,6 +266,31 @@ public abstract class WAbstractSlider extends WWidget {
 		return axis;
 	}
 
+	/**
+	 * Gets the direction of this slider.
+	 *
+	 * @return the direction
+	 * @since 2.0.0
+	 */
+	public Direction getDirection() {
+		return direction;
+	}
+
+	/**
+	 * Sets the direction of this slider.
+	 *
+	 * @param direction the new direction
+	 * @throws IllegalArgumentException if the {@linkplain Direction#getAxis() direction axis} is not equal to {@link #axis}.
+	 * @since 2.0.0
+	 */
+	public void setDirection(Direction direction) {
+		if (direction.getAxis() != axis) {
+			throw new IllegalArgumentException("Incorrect axis: " + axis);
+		}
+
+		this.direction = direction;
+	}
+
 	protected void onValueChanged(int value) {
 		if (valueChangeListener != null) valueChangeListener.accept(value);
 	}
@@ -293,5 +338,22 @@ public abstract class WAbstractSlider extends WWidget {
 
 	private static boolean isIncreasingKey(int ch) {
 		return ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP;
+	}
+
+	public enum Direction {
+		UP(Axis.VERTICAL),
+		DOWN(Axis.VERTICAL),
+		LEFT(Axis.HORIZONTAL),
+		RIGHT(Axis.HORIZONTAL);
+
+		private final Axis axis;
+
+		Direction(Axis axis) {
+			this.axis = axis;
+		}
+
+		public Axis getAxis() {
+			return axis;
+		}
 	}
 }
