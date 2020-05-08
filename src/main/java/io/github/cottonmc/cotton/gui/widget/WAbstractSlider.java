@@ -170,8 +170,12 @@ public abstract class WAbstractSlider extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onMouseScroll(int x, int y, double amount) {
+		if (direction == Direction.LEFT || direction == Direction.DOWN) {
+			amount = -amount;
+		}
+
 		int previous = value;
-		value = MathHelper.clamp(value + (int) (valueToCoordRatio * amount * 2), min, max);
+		value = MathHelper.clamp(value + (int) Math.signum(amount) * MathHelper.ceil(valueToCoordRatio * Math.abs(amount) * 2), min, max);
 
 		if (previous != value) {
 			onValueChanged(value);
