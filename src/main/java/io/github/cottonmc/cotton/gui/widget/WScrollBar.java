@@ -129,7 +129,7 @@ public class WScrollBar extends WAbstractSlider {
 	}
 
 	public void setMaxValue(int max) {
-		super.setMaxValue(max);
+		super.setMaxValue(max - window);
 		checkValue();
 	}
 

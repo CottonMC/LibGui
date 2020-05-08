@@ -102,9 +102,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		this.children.add(scrollBar);
 		scrollBar.setLocation(this.width-scrollBar.getWidth(), 0);
 		scrollBar.setSize(8, this.height);
-		//scrollBar.window = 6;
-		scrollBar.setMaxValue(data.size());
-		
+
 		//super.layout();
 		
 		//System.out.println("Validating");
@@ -139,7 +137,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		
 		//Fix up the scrollbar handle and track metrics
 		scrollBar.setWindow(cellsHigh);
-		//scrollBar.setMaxValue(data.size());
+		scrollBar.setMaxValue(data.size());
 		int scrollOffset = scrollBar.getValue();
 		//System.out.println(scrollOffset);
 		
