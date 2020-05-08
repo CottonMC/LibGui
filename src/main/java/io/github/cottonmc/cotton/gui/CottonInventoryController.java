@@ -374,7 +374,7 @@ public class CottonInventoryController extends ScreenHandler implements GuiDescr
 	//extends ScreenHandler {
 		@Override
 		public boolean canUse(PlayerEntity entity) {
-			return (blockInventory!=null) ? blockInventory.canPlayerUseInv(entity) : true;
+			return (blockInventory!=null) ? blockInventory.canPlayerUse(entity) : true;
 		}
 	//}
 

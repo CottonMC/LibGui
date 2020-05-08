@@ -2,11 +2,11 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -72,11 +72,11 @@ public class WToggleButton extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		ScreenDrawing.texturedRect(x, y, 18, 18, isOn ? onImage : offImage, 0xFFFFFFFF);
 		
 		if (label!=null) {
-			ScreenDrawing.drawString(label, x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawString(matrices, label, x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	

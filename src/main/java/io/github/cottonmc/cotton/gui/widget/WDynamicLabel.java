@@ -3,6 +3,7 @@ package io.github.cottonmc.cotton.gui.widget;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
+import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.function.Supplier;
 
@@ -33,9 +34,9 @@ public class WDynamicLabel extends WWidget {
 	}
 
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		String tr = text.get();
-		ScreenDrawing.drawString(tr, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
+		ScreenDrawing.drawString(matrices, tr, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
 	}
 
 	@Override

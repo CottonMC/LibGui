@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
@@ -33,7 +34,7 @@ public class WButton extends WWidget {
 	}
 	
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		boolean hovered = (mouseX>=0 && mouseY>=0 && mouseX<getWidth() && mouseY<getHeight());
 		int state = 1; //1=regular. 2=hovered. 0=disabled.
 		if (!enabled) state = 0;
@@ -60,7 +61,7 @@ public class WButton extends WWidget {
 				color = 0xFFFFA0;
 			}*/
 			
-			ScreenDrawing.drawStringWithShadow(label, alignment, x, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawStringWithShadow(matrices, label, alignment, x, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	

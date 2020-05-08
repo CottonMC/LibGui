@@ -55,36 +55,33 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 		}
 	}
 	
-	public void paint(int mouseX, int mouseY) {
-		super.renderBackground(ScreenDrawing.matrices);
+	public void paint(MatrixStack matrices, int mouseX, int mouseY) {
+		super.renderBackground(matrices);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				root.paintBackground(left, top, mouseX-left, mouseY-top);
+				root.paint(matrices, left, top, mouseX-left, mouseY-top);
 			}
 		}
 		
 		if (getTitle() != null) {
-			textRenderer.method_27528(ScreenDrawing.matrices, getTitle(), left, top, description.getTitleColor());
+			textRenderer.method_27528(matrices, getTitle(), left, top, description.getTitleColor());
 		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
-		ScreenDrawing.matrices = matrices;
-		paint(mouseX, mouseY);
+		paint(matrices, mouseX, mouseY);
 		
 		super.render(matrices, mouseX, mouseY, partialTicks);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				root.paintForeground(left, top, mouseX, mouseY);
-				
 				WWidget hitChild = root.hit(mouseX-left, mouseY-top);
-				if (hitChild!=null) hitChild.renderTooltip(left, top, mouseX-left, mouseY-top);
+				if (hitChild!=null) hitChild.renderTooltip(matrices, left, top, mouseX-left, mouseY-top);
 			}
 		}
 	}
@@ -223,7 +220,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	//}
 
 	@Override
-	public void renderTextHover(Text text, int x, int y) {
-		renderTextHoverEffect(ScreenDrawing.matrices, text, x, y);
+	public void renderTextHover(MatrixStack matrices, Text text, int x, int y) {
+		renderTextHoverEffect(matrices, text, x, y);
 	}
 }

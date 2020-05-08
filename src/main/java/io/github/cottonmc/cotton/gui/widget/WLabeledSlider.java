@@ -7,6 +7,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
@@ -156,7 +157,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		int aWidth = axis == Axis.HORIZONTAL ? width : height;
 		int aHeight = axis == Axis.HORIZONTAL ? height : width;
 		int rotMouseX = axis == Axis.HORIZONTAL ? mouseX : (height - mouseY);
@@ -187,7 +188,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
 		if (label != null) {
 			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
-			ScreenDrawing.drawStringWithShadow(label, labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
+			ScreenDrawing.drawStringWithShadow(matrices, label, labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
 		RenderSystem.popMatrix();
 	}

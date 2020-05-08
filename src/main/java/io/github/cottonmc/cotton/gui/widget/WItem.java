@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -52,7 +53,7 @@ public class WItem extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		RenderSystem.pushMatrix();
 		RenderSystem.enableDepthTest();
 		RenderSystem.translatef(x, y, 0);

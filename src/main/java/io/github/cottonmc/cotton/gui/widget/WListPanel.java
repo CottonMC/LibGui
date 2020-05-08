@@ -7,6 +7,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import net.minecraft.client.util.math.MatrixStack;
 
 /**
  * Similar to the RecyclerView in Android, this widget represents a scrollable list of items.
@@ -70,13 +71,13 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	}
 	
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (scrollBar.getValue()!=lastScroll) {
 			layout();
 			lastScroll = scrollBar.getValue();
 		}
 		
-		super.paintBackground(x, y, mouseX, mouseY);
+		super.paint(matrices, x, y, mouseX, mouseY);
 		/*
 		if (getBackgroundPainter()!=null) {
 			getBackgroundPainter().paintBackground(x, y, this);

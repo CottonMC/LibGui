@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
@@ -103,11 +104,11 @@ public class WWidget {
 			return getY() + parent.getAbsoluteY();
 		}
 	}
-	
+
 	public int getWidth() {
 		return width;
 	}
-	
+
 	public int getHeight() {
 		return height;
 	}
@@ -129,7 +130,7 @@ public class WWidget {
 	public void setParent(WPanel parent) {
 		this.parent = parent;
 	}
-	
+
 	/**
 	 * Notifies this widget that the mouse has been pressed while inside its bounds
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
@@ -140,7 +141,7 @@ public class WWidget {
 	public WWidget onMouseDown(int x, int y, int button) {
 		return this;
 	}
-	
+
 	/**
 	 * Notifies this widget that the mouse has been moved while pressed and inside its bounds.
 	 *
@@ -168,7 +169,7 @@ public class WWidget {
 	@Environment(EnvType.CLIENT)
 	public void onMouseDrag(int x, int y, int button) {
 	}
-	
+
 	/**
 	 * Notifies this widget that the mouse has been released while inside its bounds
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
@@ -179,7 +180,7 @@ public class WWidget {
 	public WWidget onMouseUp(int x, int y, int button) {
 		return this;
 	}
-	
+
 	/**
 	 * Notifies this widget that the mouse has been pressed and released, both while inside its bounds.
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
@@ -189,7 +190,7 @@ public class WWidget {
 	@Environment(EnvType.CLIENT)
 	public void onClick(int x, int y, int button) {
 	}
-	
+
 	/**
 	 * Notifies this widget that the mouse has been scrolled inside its bounds.
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
@@ -210,7 +211,7 @@ public class WWidget {
 	@Environment(EnvType.CLIENT)
 	public void onMouseMove(int x, int y) {
 	}
-	
+
 	/**
 	 * Notifies this widget that a character has been typed. This method is subject to key repeat,
 	 * and may be called for characters that do not directly have a corresponding keyboard key.
@@ -219,7 +220,7 @@ public class WWidget {
 	@Environment(EnvType.CLIENT)
 	public void onCharTyped(char ch) {
 	}
-	
+
 	/**
 	 * Notifies this widget that a key has been pressed.
 	 * @param key the GLFW scancode of the key
@@ -227,7 +228,7 @@ public class WWidget {
 	@Environment(EnvType.CLIENT)
 	public void onKeyPressed(int ch, int key, int modifiers) {
 	}
-	
+
 	/**
 	 * Notifies this widget that a key has been released
 	 * @param key the GLFW scancode of the key
@@ -235,20 +236,20 @@ public class WWidget {
 	@Environment(EnvType.CLIENT)
 	public void onKeyReleased(int ch, int key, int modifiers) {
 	}
-	
+
 	/** Notifies this widget that it has gained focus */
 	public void onFocusGained() {
 	}
-	
+
 	/** Notifies this widget that it has lost focus */
 	public void onFocusLost() {
 	}
-	
+
 	public boolean isFocused() {
 		if (host==null) return false;
 		return host.isFocused(this);
 	}
-	
+
 	public void requestFocus() {
 		if (host!=null) {
 			host.requestFocus(this);
@@ -256,15 +257,15 @@ public class WWidget {
 			System.out.println("host is null");
 		}
 	}
-	
+
 	public void releaseFocus() {
 		if (host!=null) host.releaseFocus(this);
 	}
-	
+
 	public boolean canFocus() {
 		return false;
 	}
-	
+
 	/**
 	 * Creates "heavyweight" component peers
 	 * @param c the top-level Container that will hold the peers
@@ -272,22 +273,19 @@ public class WWidget {
 	public void createPeers(GuiDescription c) {
 		host=c;
 	}
-	
+
+	/**
+	 * Paints this widget.
+	 *
+	 * @param matrices the rendering matrix stack
+	 * @param x        this widget's X coordinate on the screen
+	 * @param y        this widget's Y coordinate on the screen
+	 * @param mouseX   the X coordinate of the cursor
+	 * @param mouseY   the X coordinate of the cursor
+	 * @since 2.0.0
+	 */
 	@Environment(EnvType.CLIENT)
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
-		this.paintBackground(x, y);
-	}
-	
-	@Environment(EnvType.CLIENT)
-	public void paintBackground(int x, int y) {
-	}
-	
-	@Deprecated
-	@Environment(EnvType.CLIENT)
-	public void paintForeground(int x, int y, int mouseX, int mouseY) {
-		//if (mouseX >= x && mouseX < x+getWidth() && mouseY >= y && mouseY < y+getHeight()) {
-		//	renderTooltip(mouseX, mouseY);
-		//}
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 	}
 
 	/**
@@ -302,13 +300,13 @@ public class WWidget {
 	public boolean isWithinBounds(int x, int y) {
 		return x>=0 && y>=0 && x<this.width && y<this.height;
 	}
-	
+
 	/**
 	 * Internal method to render tooltip data. This requires an overriden {@link #addTooltip(List)
 	 * addTooltip} method to insert data into the tooltip - without this, the method returns early, because no work
 	 */
 	@Environment(EnvType.CLIENT)
-	public void renderTooltip(int x, int y, int tX, int tY) {
+	public void renderTooltip(MatrixStack matrices, int x, int y, int tX, int tY) {
 		List<Text> info = new ArrayList<>();
 		addTooltip(info);
 
@@ -316,9 +314,9 @@ public class WWidget {
 			return;
 
 		Screen screen = MinecraftClient.getInstance().currentScreen;
-		screen.renderTooltip(ScreenDrawing.getMatrices(), info, tX+x, tY+y);
+		screen.renderTooltip(matrices, info, tX+x, tY+y);
 	}
-	
+
 	/**
 	 * Creates component peers, lays out children, and initializes animation data for this Widget and all its children.
 	 * The host container must clear any heavyweight peers from its records before this method is called.
@@ -333,7 +331,7 @@ public class WWidget {
 	 */
 	public void addTooltip(List<Text> tooltip) {
 	}
-	
+
 	/**
 	 * Find the most specific child node at this location. For non-panel widgets, returns this widget.
 	 */

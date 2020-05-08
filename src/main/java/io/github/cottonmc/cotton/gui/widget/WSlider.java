@@ -6,6 +6,7 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
@@ -52,7 +53,7 @@ public class WSlider extends WAbstractSlider {
 	@SuppressWarnings("SuspiciousNameCombination")
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter != null) {
 			backgroundPainter.paintBackground(x, y, this);
 		} else {

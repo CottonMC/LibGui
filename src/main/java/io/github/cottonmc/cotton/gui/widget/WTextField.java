@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -310,7 +311,7 @@ public class WTextField extends WWidget {
 	}*/
 
 	@Environment(EnvType.CLIENT)
-	public void renderButton(int x, int y) {
+	protected void renderTextField(MatrixStack matrices, int x, int y) {
 		if (this.font==null) this.font = MinecraftClient.getInstance().textRenderer;
 		
 		int borderColor = (this.isFocused()) ? 0xFF_FFFFA0 : 0xFF_A0A0A0;
@@ -347,16 +348,16 @@ public class WTextField extends WWidget {
 		int preCursorAdvance = textX;
 		if (!trimText.isEmpty()) {
 			String string_2 = trimText.substring(0,adjustedCursor);
-			preCursorAdvance = font.drawWithShadow(ScreenDrawing.getMatrices(), string_2, textX, textY, textColor);
+			preCursorAdvance = font.drawWithShadow(matrices, string_2, textX, textY, textColor);
 		}
 
 		if (adjustedCursor<trimText.length()) {
-			font.drawWithShadow(ScreenDrawing.getMatrices(), trimText.substring(adjustedCursor), preCursorAdvance-1, (float)textY, textColor);
+			font.drawWithShadow(matrices, trimText.substring(adjustedCursor), preCursorAdvance-1, (float)textY, textColor);
 		}
 			
 
 		if (text.length()==0 && this.suggestion != null) {
-			font.drawWithShadow(ScreenDrawing.getMatrices(), this.suggestion, textX, textY, -8355712);
+			font.drawWithShadow(matrices, this.suggestion, textX, textY, 0xFF808080);
 		}
 
 		//int var10002;
@@ -378,7 +379,7 @@ public class WTextField extends WWidget {
 			//	DrawableHelper.fill(int_9, var10001, var10002, var10003 + 9, -3092272);
 				
 			} else {
-				font.drawWithShadow(ScreenDrawing.getMatrices(), "_", preCursorAdvance, textY, textColor);
+				font.drawWithShadow(matrices, "_", preCursorAdvance, textY, textColor);
 			}
 		}
 
@@ -510,7 +511,7 @@ public class WTextField extends WWidget {
 	}
 	
 	@Override
-	public void paintBackground(int x, int y) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		
 		/*
 		if (isFocused()) {
@@ -527,7 +528,7 @@ public class WTextField extends WWidget {
 		//int ofs = MinecraftClient.getInstance().textRenderer.getStringWidth(this.text);
 		ScreenDrawing.rect(x+OFFSET_X_TEXT+getCaretOffset(this.text, cursor), y+OFFSET_Y_TEXT-2, 1, OFFSET_Y_TEXT*2, 0xFFE0E0E0);*/
 		
-		renderButton(x, y);
+		renderTextField(matrices, x, y);
 	}
 
 	@Environment(EnvType.CLIENT)
