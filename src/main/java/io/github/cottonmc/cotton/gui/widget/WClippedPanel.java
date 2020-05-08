@@ -4,24 +4,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
 
 /**
  * A panel that is clipped to only render widgets inside its bounds.
  */
 public class WClippedPanel extends WPanel {
-	@Deprecated
-	protected Identifier mask;
-
-	/**
-	 * @deprecated {@code WClippedPanel} does not support clipping masks anymore.
-	 */
-	@Deprecated
-	public WClippedPanel setClippingMask(Identifier mask) {
-		this.mask = mask;
-		return this;
-	}
-	
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (getBackgroundPainter()!=null) getBackgroundPainter().paintBackground(x, y, this);

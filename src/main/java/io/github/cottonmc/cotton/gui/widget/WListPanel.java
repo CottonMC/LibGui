@@ -61,14 +61,6 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		scrollBar.setMaxValue(data.size());
 		scrollBar.setParent(this);
 	}
-
-	/**
-	 * @deprecated Use {@link #WListPanel(List, Supplier, BiConsumer)} instead.
-	 */
-	@Deprecated
-	public WListPanel(List<D> data, Class<W> listItemClass, Supplier<W> supplier, BiConsumer<D, W> configurator) {
-		this(data, supplier, configurator);
-	}
 	
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {

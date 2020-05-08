@@ -30,11 +30,6 @@ public class WSlider extends WAbstractSlider {
 		super(min, max, axis);
 	}
 
-	@Deprecated
-	public WSlider(int max, Axis axis) {
-		this(0, max, axis);
-	}
-
 	@Override
 	protected int getThumbWidth() {
 		return THUMB_SIZE;
