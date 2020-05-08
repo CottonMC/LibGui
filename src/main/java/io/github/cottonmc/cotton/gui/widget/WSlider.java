@@ -72,7 +72,7 @@ public class WSlider extends WAbstractSlider {
 				ScreenDrawing.texturedRect(trackX, y + height, TRACK_WIDTH, 1, texture, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
-				thumbX = direction == Direction.RIGHT
+				thumbX = direction == Direction.LEFT
 						? (width - THUMB_SIZE) + 1 - (int) (coordToValueRatio * (value - min))
 						: Math.round(coordToValueRatio * (value - min));
 				thumbY = height / 2 - THUMB_SIZE / 2;

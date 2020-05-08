@@ -72,7 +72,7 @@ public abstract class WAbstractSlider extends WWidget {
 		this.max = max;
 		this.axis = axis;
 		this.value = min;
-		this.direction = (axis == Axis.HORIZONTAL) ? Direction.RIGHT : Direction.UP;
+		this.direction = (axis == Axis.HORIZONTAL) ? Direction.LEFT : Direction.UP;
 	}
 
 	/**
