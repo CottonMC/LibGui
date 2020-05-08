@@ -30,7 +30,7 @@ public class WScrollBar extends WAbstractSlider {
 
 	@Override
 	protected int getThumbWidth() {
-		return window;
+		return Math.round(window * coordToValueRatio);
 	}
 
 	@Override
@@ -86,9 +86,24 @@ public class WScrollBar extends WAbstractSlider {
 
 		if (axis==Axis.HORIZONTAL) {
 			ScreenDrawing.drawBeveledPanel(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, top, middle, bottom);
+
+			if (isFocused()) {
+				drawBeveledOutline(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, 0xFF_FFFFA7, 0xFF_C9CA71, 0xFF_8C8F39);
+			}
 		} else {
 			ScreenDrawing.drawBeveledPanel(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), top, middle, bottom);
+
+			if (isFocused()) {
+				drawBeveledOutline(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), 0xFF_FFFFA7, 0xFF_C9CA71, 0xFF_8C8F39);
+			}
 		}
+	}
+
+	private static void drawBeveledOutline(int x, int y, int width, int height, int topleft, int center, int bottomright) {
+		ScreenDrawing.coloredRect(x,             y,              width - 1, 1,          topleft); //Top shadow
+		ScreenDrawing.coloredRect(x,             y + 1,          1,         height - 2, topleft); //Left shadow
+		ScreenDrawing.coloredRect(x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
+		ScreenDrawing.coloredRect(x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
 	}
 	
 	/**
@@ -111,26 +126,12 @@ public class WScrollBar extends WAbstractSlider {
 	}
 	
 	public int getHandlePosition() {
-		float percent = value / (float)Math.max(getMaxValue()-window, 1);
+		float percent = value / (float)Math.max(getMaxValue(), 1);
 		return (int)(percent * getMovableDistance());
-	}
-	
-	/**
-	 * Gets the maximum scroll value achievable; this will typically be the maximum value minus the
-	 * window size
-	 */
-	public int getMaxScrollValue() {
-		return getMaxValue() - window;
-	}
-
-	public void setValue(int value) {
-		super.setValue(value);
-		checkValue();
 	}
 
 	public void setMaxValue(int max) {
 		super.setMaxValue(max - window);
-		checkValue();
 	}
 
 	public int getWindow() {
@@ -140,16 +141,5 @@ public class WScrollBar extends WAbstractSlider {
 	public WScrollBar setWindow(int window) {
 		this.window = window;
 		return this;
-	}
-
-	/**
-	 * Checks that the current value is in the correct range
-	 * and adjusts it if needed.
-	 */
-	protected void checkValue() {
-		if (this.value>getMaxValue()-window) {
-			this.value = getMaxValue()-window;
-		}
-		if (this.value<0) this.value = 0;
 	}
 }
