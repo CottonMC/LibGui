@@ -9,7 +9,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
@@ -65,12 +64,11 @@ public class ScreenDrawing {
 		RenderSystem.enableBlend();
 		//GlStateManager.disableTexture2D();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		RenderSystem.color4f(r, g, b, 1.0f);
-		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(x,         y + height, 0).texture(u1, v2).next();
-		buffer.vertex(x + width, y + height, 0).texture(u2, v2).next();
-		buffer.vertex(x + width, y,          0).texture(u2, v1).next();
-		buffer.vertex(x,         y,          0).texture(u1, v1).next();
+		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR_TEXTURE); //I thought GL_QUADS was deprecated but okay, sure.
+		buffer.vertex(x,         y + height, 0).color(r, g, b, 1.0f).texture(u1, v2).next();
+		buffer.vertex(x + width, y + height, 0).color(r, g, b, 1.0f).texture(u2, v2).next();
+		buffer.vertex(x + width, y,          0).color(r, g, b, 1.0f).texture(u2, v1).next();
+		buffer.vertex(x,         y,          0).color(r, g, b, 1.0f).texture(u1, v1).next();
 		tessellator.draw();
 		//GlStateManager.enableTexture2D();
 		RenderSystem.disableBlend();
@@ -126,12 +124,11 @@ public class ScreenDrawing {
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		RenderSystem.color4f(r, g, b, a);
-		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(left,         top + height, 0.0D).next();
-		buffer.vertex(left + width, top + height, 0.0D).next();
-		buffer.vertex(left + width, top,          0.0D).next();
-		buffer.vertex(left,         top,          0.0D).next();
+		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR); //I thought GL_QUADS was deprecated but okay, sure.
+		buffer.vertex(left,         top + height, 0.0D).color(r, g, b, a).next();
+		buffer.vertex(left + width, top + height, 0.0D).color(r, g, b, a).next();
+		buffer.vertex(left + width, top,          0.0D).color(r, g, b, a).next();
+		buffer.vertex(left,         top,          0.0D).color(r, g, b, a).next();
 		tessellator.draw();
 		RenderSystem.enableTexture();
 		RenderSystem.disableBlend();
