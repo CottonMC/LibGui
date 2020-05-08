@@ -73,7 +73,7 @@ public class WSlider extends WAbstractSlider {
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
 				thumbX = direction == Direction.LEFT
-						? (width - THUMB_SIZE) + 1 - (int) (coordToValueRatio * (value - min))
+						? (width - THUMB_SIZE) - (int) (coordToValueRatio * (value - min))
 						: Math.round(coordToValueRatio * (value - min));
 				thumbY = height / 2 - THUMB_SIZE / 2;
 				thumbXOffset = 8;
