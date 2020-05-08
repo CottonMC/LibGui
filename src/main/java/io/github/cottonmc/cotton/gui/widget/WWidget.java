@@ -9,7 +9,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
@@ -313,12 +312,6 @@ public class WWidget {
 		List<Text> info = new ArrayList<>();
 		addTooltip(info);
 
-		List<String> stringInfo = new ArrayList<>();
-		addInformation(stringInfo);
-		for (String line : stringInfo) {
-			info.add(new LiteralText(line));
-		}
-
 		if (info.size() == 0)
 			return;
 
@@ -332,15 +325,6 @@ public class WWidget {
 	 */
 	public void validate(GuiDescription host) {
 		//valid = true;
-	}
-	
-	/**
-	 * Adds information to this widget's tooltip. If information remains empty after this call, no tooltip will be drawn.
-	 * @param information List containing all previous tooltip data.
-	 * @deprecated Replaced with {@link #addTooltip(List)}
-	 */
-	@Deprecated
-	public void addInformation(List<String> information) {
 	}
 
 	/**
