@@ -336,28 +336,38 @@ public abstract class WAbstractSlider extends WWidget {
 		}
 	}
 
-	private static boolean isDecreasingKey(int ch) {
-		return ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN;
+	private boolean isDecreasingKey(int ch) {
+		return direction.isInverted()
+				? (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP)
+				: (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN);
 	}
 
-	private static boolean isIncreasingKey(int ch) {
-		return ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP;
+	private boolean isIncreasingKey(int ch) {
+		return direction.isInverted()
+				? (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN)
+				: (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP);
 	}
 
 	public enum Direction {
-		UP(Axis.VERTICAL),
-		DOWN(Axis.VERTICAL),
-		LEFT(Axis.HORIZONTAL),
-		RIGHT(Axis.HORIZONTAL);
+		UP(Axis.VERTICAL, false),
+		DOWN(Axis.VERTICAL, true),
+		LEFT(Axis.HORIZONTAL, true),
+		RIGHT(Axis.HORIZONTAL, false);
 
 		private final Axis axis;
+		private final boolean inverted;
 
-		Direction(Axis axis) {
+		Direction(Axis axis, boolean inverted) {
 			this.axis = axis;
+			this.inverted = inverted;
 		}
 
 		public Axis getAxis() {
 			return axis;
+		}
+
+		public boolean isInverted() {
+			return inverted;
 		}
 	}
 }
