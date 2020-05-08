@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -17,7 +19,21 @@ import net.minecraft.util.Identifier;
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.
  */
 public class ScreenDrawing {
+	// Internal MatrixStack for rendering strings.
+	// TODO (2.0): Remove
+	static MatrixStack matrices;
+
 	private ScreenDrawing() {}
+
+	/**
+	 * Gets the currently bound matrix stack.
+	 *
+	 * @return the matrix stack
+	 * @since 1.9.0
+	 */
+	public static MatrixStack getMatrices() {
+		return matrices;
+	}
 
 	/**
 	 * Draws a textured rectangle.
@@ -295,19 +311,51 @@ public class ScreenDrawing {
 	public static void drawString(String s, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
-				MinecraftClient.getInstance().textRenderer.draw(s, x, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x, y, color);
 			}
 			break;
 		case CENTER: {
 				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
 				int l = (width/2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.draw(s, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
 				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.draw(s, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x+l, y, color);
+			}
+			break;
+		}
+	}
+
+	/**
+	 * Draws a text component with a custom alignment.
+	 *
+	 * @param text  the text
+	 * @param align the alignment of the string
+	 * @param x     the X position
+	 * @param y     the Y position
+	 * @param width the width of the string, used for aligning
+	 * @param color the text color
+	 * @since 1.9.0
+	 */
+	public static void drawString(Text text, Alignment align, int x, int y, int width, int color) {
+		switch(align) {
+		case LEFT: {
+				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
+			}
+			break;
+		case CENTER: {
+				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int l = (width/2) - (wid/2);
+				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
+			}
+			break;
+		case RIGHT: {
+				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int l = width - wid;
+				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
 			}
 			break;
 		}
@@ -326,19 +374,50 @@ public class ScreenDrawing {
 	public static void drawStringWithShadow(String s, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
-				MinecraftClient.getInstance().textRenderer.drawWithShadow(s, x, y, color);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x, y, color);
 			}
 			break;
 		case CENTER: {
 				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
 				int l = (width/2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.drawWithShadow(s, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
 				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.drawWithShadow(s, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x+l, y, color);
+			}
+			break;
+		}
+	}
+
+	/**
+	 * Draws a shadowed text component.
+	 *
+	 * @param text  the text component
+	 * @param align the alignment of the string
+	 * @param x     the X position
+	 * @param y     the Y position
+	 * @param width the width of the string, used for aligning
+	 * @param color the text color
+	 */
+	public static void drawStringWithShadow(Text text, Alignment align, int x, int y, int width, int color) {
+		switch(align) {
+		case LEFT: {
+				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
+			}
+			break;
+		case CENTER: {
+				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int l = (width/2) - (wid/2);
+				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
+			}
+			break;
+		case RIGHT: {
+				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int l = width - wid;
+				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
 			}
 			break;
 		}
@@ -353,7 +432,19 @@ public class ScreenDrawing {
 	 * @param color the text color
 	 */
 	public static void drawString(String s, int x, int y, int color) {
-		MinecraftClient.getInstance().textRenderer.draw(s, x, y, color);
+		MinecraftClient.getInstance().textRenderer.draw(matrices, s, x, y, color);
+	}
+
+	/**
+	 * Draws a left-aligned text component.
+	 *
+	 * @param text  the text component
+	 * @param x     the X position
+	 * @param y     the Y position
+	 * @param color the text color
+	 */
+	public static void drawString(Text text, int x, int y, int color) {
+		MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
 	}
 
 	/**
@@ -361,8 +452,8 @@ public class ScreenDrawing {
 	 */
 	@Deprecated
 	public static void drawCenteredWithShadow(String s, int x, int y, int color) {
-		TextRenderer render = MinecraftClient.getInstance().getFontManager().getTextRenderer(MinecraftClient.DEFAULT_TEXT_RENDERER_ID);
-		render.drawWithShadow(s, (float)(x - render.getStringWidth(s) / 2), (float)y, color);
+		TextRenderer render = MinecraftClient.getInstance().textRenderer;
+		render.drawWithShadow(matrices, s, (float)(x - render.getStringWidth(s) / 2), (float)y, color);
 	}
 
 	public static int colorAtOpacity(int opaque, float opacity) {

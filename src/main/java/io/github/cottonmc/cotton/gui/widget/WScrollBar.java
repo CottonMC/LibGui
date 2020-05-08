@@ -3,6 +3,8 @@ package io.github.cottonmc.cotton.gui.widget;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class WScrollBar extends WWidget {
 	protected Axis axis = Axis.HORIZONTAL;
@@ -150,12 +152,14 @@ public class WScrollBar extends WWidget {
 		sliding = true;
 		return this;
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onMouseDrag(int x, int y, int button) {
 		adjustSlider(x, y);
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
 		//TODO: Clicking before or after the handle should jump instead of scrolling

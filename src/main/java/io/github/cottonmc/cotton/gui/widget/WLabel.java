@@ -23,7 +23,14 @@ public class WLabel extends WWidget {
 	protected int color;
 	protected int darkmodeColor;
 
+	/**
+	 * The default text color for light mode labels.
+	 */
 	public static final int DEFAULT_TEXT_COLOR = 0x404040;
+
+	/**
+	 * The default text color for {@linkplain io.github.cottonmc.cotton.gui.client.LibGuiConfig#darkMode dark mode} labels.
+	 */
 	public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
 
 	/**
@@ -69,8 +76,7 @@ public class WLabel extends WWidget {
 
 	@Override
 	public void paintBackground(int x, int y, int mouseX, int mouseY) {
-		String translated = text.asFormattedString();
-		ScreenDrawing.drawString(translated, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
+		ScreenDrawing.drawString(text, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
 
 		Text hoveredText = getTextAt(mouseX, mouseY);
 		if (hoveredText != null) {
@@ -81,6 +87,7 @@ public class WLabel extends WWidget {
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onClick(int x, int y, int button) {
 		Text hoveredText = getTextAt(x, y);
@@ -96,14 +103,7 @@ public class WLabel extends WWidget {
 	@Nullable
 	private Text getTextAt(int x, int y) {
 		if (isWithinBounds(x, y)) {
-			int i = 0;
-			for (Text component : text) {
-				TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
-				i += renderer.getStringWidth(component.asFormattedString());
-				if (i > x) {
-					return component;
-				}
-			}
+			return MinecraftClient.getInstance().textRenderer.method_27527().method_27489(text, x);
 		}
 		return null;
 	}

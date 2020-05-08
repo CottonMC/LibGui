@@ -9,7 +9,15 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+/**
+ * Panels are widgets tthat contain other widgets.
+ */
 public abstract class WPanel extends WWidget {
+	/**
+	 * The widgets contained within this panel.
+	 *
+	 * <p>The list is mutable.
+	 */
 	protected final List<WWidget> children = Lists.newArrayList();
 	@Environment(EnvType.CLIENT)
 	private BackgroundPainter backgroundPainter = null;
@@ -21,7 +29,12 @@ public abstract class WPanel extends WWidget {
 			child.createPeers(c);
 		}
 	}
-	
+
+	/**
+	 * Removes the widget from this panel.
+	 *
+	 * @param w the removed widget
+	 */
 	public void remove(WWidget w) {
 		children.remove(w);
 	}
@@ -30,13 +43,24 @@ public abstract class WPanel extends WWidget {
 	public boolean canResize() {
 		return true;
 	}
-	
+
+	/**
+	 * Sets the {@link BackgroundPainter} of this panel.
+	 *
+	 * @param painter the new painter
+	 * @return this panel
+	 */
 	@Environment(EnvType.CLIENT)
 	public WPanel setBackgroundPainter(BackgroundPainter painter) {
 		this.backgroundPainter = painter;
 		return this;
 	}
-	
+
+	/**
+	 * Gets the current {@link BackgroundPainter} of this panel.
+	 *
+	 * @return the painter
+	 */
 	@Environment(EnvType.CLIENT)
 	public BackgroundPainter getBackgroundPainter() {
 		return this.backgroundPainter;
@@ -62,7 +86,8 @@ public abstract class WPanel extends WWidget {
 		int pushDown =  w.getY()+w.getHeight();
 		this.setSize(Math.max(this.getWidth(), pushRight), Math.max(this.getHeight(), pushDown));
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public WWidget onMouseUp(int x, int y, int button) {
 		if (children.isEmpty()) return super.onMouseUp(x, y, button);
@@ -77,7 +102,8 @@ public abstract class WPanel extends WWidget {
 		}
 		return super.onMouseUp(x, y, button);
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public WWidget onMouseDown(int x, int y, int button) {
 		if (children.isEmpty()) return super.onMouseDown(x, y, button);
@@ -92,7 +118,8 @@ public abstract class WPanel extends WWidget {
 		}
 		return super.onMouseDown(x, y, button);
 	}
-	
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onMouseDrag(int x, int y, int button) {
 		if (children.isEmpty()) return;
@@ -169,7 +196,11 @@ public abstract class WPanel extends WWidget {
 			child.paintForeground(x + child.getX(), y + child.getY(), mouseX, mouseY);
 		}
 	}
-	
+
+	/**
+	 * Ticks all children of this panel.
+	 */
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void tick() {
 		for(WWidget child : children) child.tick();

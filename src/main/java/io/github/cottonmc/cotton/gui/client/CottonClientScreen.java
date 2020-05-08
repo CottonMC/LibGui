@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
@@ -55,7 +56,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	}
 	
 	public void paint(int mouseX, int mouseY) {
-		super.renderBackground();
+		super.renderBackground(ScreenDrawing.matrices);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
@@ -65,16 +66,17 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 		}
 		
 		if (getTitle() != null) {
-			textRenderer.draw(getTitle().asFormattedString(), left, top, description.getTitleColor());
+			textRenderer.method_27528(ScreenDrawing.matrices, getTitle(), left, top, description.getTitleColor());
 		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
+		ScreenDrawing.matrices = matrices;
 		paint(mouseX, mouseY);
 		
-		super.render(mouseX, mouseY, partialTicks);
+		super.render(matrices, mouseX, mouseY, partialTicks);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
@@ -222,6 +224,6 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 
 	@Override
 	public void renderTextHover(Text text, int x, int y) {
-		renderTextHoverEffect(text, x, y);
+		renderTextHoverEffect(ScreenDrawing.matrices, text, x, y);
 	}
 }

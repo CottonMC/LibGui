@@ -25,19 +25,47 @@ public class WLabeledSlider extends WAbstractSlider {
 	@Nullable private LabelUpdater labelUpdater = null;
 	private Alignment labelAlignment = Alignment.CENTER;
 
+	/**
+	 * Constructs a horizontal slider with no default label.
+	 *
+	 * @param min the minimum value
+	 * @param max the maximum value
+	 */
 	public WLabeledSlider(int min, int max) {
 		this(min, max, Axis.HORIZONTAL);
 	}
 
+	/**
+	 * Constructs a slider with no default label.
+	 *
+	 * @param min the minimum value
+	 * @param max the maximum value
+	 * @param axis the slider axis
+	 */
 	public WLabeledSlider(int min, int max, Axis axis) {
 		super(min, max, axis);
 	}
 
+	/**
+	 * Constructs a slider.
+	 *
+	 * @param min the minimum value
+	 * @param max the maximum value
+	 * @param axis the slider axis
+	 * @param label the slider label (can be null)
+	 */
 	public WLabeledSlider(int min, int max, Axis axis, @Nullable Text label) {
 		this(min, max, axis);
 		this.label = label;
 	}
 
+	/**
+	 * Constructs a horizontal slider.
+	 *
+	 * @param min the minimum value
+	 * @param max the maximum value
+	 * @param label the slider label (can be null)
+	 */
 	public WLabeledSlider(int min, int max, @Nullable Text label) {
 		this(min, max);
 		this.label = label;
@@ -52,11 +80,21 @@ public class WLabeledSlider extends WAbstractSlider {
 		}
 	}
 
+	/**
+	 * Gets the current label of this slider.
+	 *
+	 * @return the label
+	 */
 	@Nullable
 	public Text getLabel() {
 		return label;
 	}
 
+	/**
+	 * Sets the label of this slider.
+	 *
+	 * @param label the new label
+	 */
 	public void setLabel(@Nullable Text label) {
 		this.label = label;
 	}
@@ -69,19 +107,39 @@ public class WLabeledSlider extends WAbstractSlider {
 		}
 	}
 
+	/**
+	 * Gets the text alignment of this slider's label.
+	 *
+	 * @return the alignment
+	 */
 	public Alignment getLabelAlignment() {
 		return labelAlignment;
 	}
 
+	/**
+	 * Sets the text alignment of this slider's label.
+	 *
+	 * @param labelAlignment the new alignment
+	 */
 	public void setLabelAlignment(Alignment labelAlignment) {
 		this.labelAlignment = labelAlignment;
 	}
 
+	/**
+	 * Gets the {@link LabelUpdater} of this slider.
+	 *
+	 * @return the label updater
+	 */
 	@Nullable
 	public LabelUpdater getLabelUpdater() {
 		return labelUpdater;
 	}
 
+	/**
+	 * Sets the {@link LabelUpdater} of this slider.
+	 *
+	 * @param labelUpdater the new label updater
+	 */
 	public void setLabelUpdater(@Nullable LabelUpdater labelUpdater) {
 		this.labelUpdater = labelUpdater;
 	}
@@ -129,7 +187,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
 		if (label != null) {
 			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
-			ScreenDrawing.drawStringWithShadow(label.asFormattedString(), labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
+			ScreenDrawing.drawStringWithShadow(label, labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
 		RenderSystem.popMatrix();
 	}
@@ -150,8 +208,19 @@ public class WLabeledSlider extends WAbstractSlider {
 		ScreenDrawing.texturedRect(x + halfWidth, y, halfWidth, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
 	}
 
+	/**
+	 * A label updater updates the label of a slider based on the current value.
+	 *
+	 * <p>Useful for situations when you want to have display values on the slider.
+	 */
 	@FunctionalInterface
 	public interface LabelUpdater {
+		/**
+		 * Gets the updated label for the new slider value.
+		 *
+		 * @param value the slider value
+		 * @return the label
+		 */
 		Text updateLabel(int value);
 	}
 }

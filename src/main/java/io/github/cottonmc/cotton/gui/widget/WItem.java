@@ -41,6 +41,7 @@ public class WItem extends WWidget {
 		return true;
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void tick() {
 		if (ticks++ >= duration) {
@@ -55,7 +56,6 @@ public class WItem extends WWidget {
 		RenderSystem.pushMatrix();
 		RenderSystem.enableDepthTest();
 		RenderSystem.translatef(x, y, 0);
-		RenderSystem.scalef(1.2f, 1.2f, 1.0f);
 
 		MinecraftClient mc = MinecraftClient.getInstance();
 		ItemRenderer renderer = mc.getItemRenderer();
