@@ -2,56 +2,80 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.minecraft.client.util.math.MatrixStack;
 
-import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Similar to the JScrollPane in Swing, this widget represents a vertically scrollable list of widgets.
+ * Similar to the JScrollPane in Swing, this widget represents a scrollable widget.
  *
  * @since 2.0.0
  */
 public class WScrollPanel extends WClippedPanel {
-	/**
-	 * The spacing between widgets.
-	 */
-	protected int spacing = 4;
+	private final WWidget widget;
+
+	private boolean scrollingHorizontally = false;
+	private boolean scrollingVertically = true;
 
 	/**
-	 * The scroll bar of this panel.
+	 * The horizontal scroll bar of this panel.
 	 */
-	protected WScrollBar scrollBar = new WScrollBar(Axis.VERTICAL);
+	protected WScrollBar horizontalScrollBar = new WScrollBar(Axis.HORIZONTAL);
 
-	private int lastScroll = -1;
+	/**
+	 * The vertical scroll bar of this panel.
+	 */
+	protected WScrollBar verticalScrollBar = new WScrollBar(Axis.VERTICAL);
 
-	// The list of *all* children as opposed to visible children, excluding the scroll bar.
-	private final List<WWidget> allChildren = new ArrayList<>();
+	private int lastHorizontalScroll = -1;
+	private int lastVerticalScroll = -1;
 
-	public WScrollPanel() {
-		scrollBar.setParent(this);
-		children.add(scrollBar);
-	}
+	/**
+	 * Creates a vertically scrolling panel.
+	 *
+	 * @param widget the viewed widget
+	 */
+	public WScrollPanel(WWidget widget) {
+		this.widget = widget;
 
-	public void add(WWidget widget, int width, int height) {
 		widget.setParent(this);
-		allChildren.add(widget);
+		horizontalScrollBar.setParent(this);
+		verticalScrollBar.setParent(this);
+
 		children.add(widget);
-		if (canResize()) {
-			widget.setSize(width, height);
-		}
+		children.add(verticalScrollBar); // Only vertical scroll bar
 	}
 
-	public void add(WWidget widget) {
-		add(widget, 18, 18);
+	public boolean isScrollingHorizontally() {
+		return scrollingHorizontally;
+	}
+
+	public WScrollPanel setScrollingHorizontally(boolean scrollingHorizontally) {
+		if (scrollingHorizontally != this.scrollingHorizontally) {
+			this.scrollingHorizontally = scrollingHorizontally;
+			layout();
+		}
+
+		return this;
+	}
+
+	public boolean isScrollingVertically() {
+		return scrollingVertically;
+	}
+
+	public WScrollPanel setScrollingVertically(boolean scrollingVertically) {
+		if (scrollingVertically != this.scrollingVertically) {
+			this.scrollingVertically = scrollingVertically;
+			layout();
+		}
+
+		return this;
 	}
 
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		if (scrollBar.getValue() != lastScroll) {
+		if (verticalScrollBar.getValue() != lastVerticalScroll || horizontalScrollBar.getValue() != lastHorizontalScroll) {
 			layout();
-			lastScroll = scrollBar.getValue();
+			lastHorizontalScroll = horizontalScrollBar.getValue();
+			lastVerticalScroll = verticalScrollBar.getValue();
 		}
 
 		super.paint(matrices, x, y, mouseX, mouseY);
@@ -60,57 +84,22 @@ public class WScrollPanel extends WClippedPanel {
 	@Override
 	public void layout() {
 		children.clear();
-		scrollBar.setLocation(this.width - scrollBar.getWidth(), 0);
-		scrollBar.setSize(8, this.height);
+		verticalScrollBar.setLocation(this.width - verticalScrollBar.getWidth(), 0);
+		verticalScrollBar.setSize(8, this.height);
+		horizontalScrollBar.setLocation(0, this.height - horizontalScrollBar.getHeight());
+		horizontalScrollBar.setSize(scrollingVertically ? (this.width - verticalScrollBar.getWidth()) : this.width, 8);
 
-		int offset = scrollBar.getValue();
-		int height = 0;
+		children.add(widget);
+		int x = scrollingHorizontally ? -horizontalScrollBar.getValue() : 0;
+		int y = scrollingVertically ? -verticalScrollBar.getValue() : 0;
+		widget.setLocation(x, y);
 
-		for (int i = 0; i < allChildren.size(); i++) {
-			WWidget child = allChildren.get(i);
-			int minY = height - offset;
-			child.setLocation(0, minY);
-			int maxY = minY + child.getHeight();
+		verticalScrollBar.setWindow(this.height);
+		verticalScrollBar.setMaxValue(widget.getHeight() + 1);
+		horizontalScrollBar.setWindow(this.width);
+		horizontalScrollBar.setMaxValue(widget.getWidth() + 1);
 
-			if ((minY >= 0 && minY < getHeight()) || (maxY >= 0 && maxY < getHeight()) || (minY < 0 && maxY >= getHeight())) {
-				children.add(child);
-			}
-
-			if (i != allChildren.size() - 1) {
-				height += spacing;
-			}
-
-			height += child.getHeight();
-		}
-
-		children.add(scrollBar);
-		scrollBar.setWindow(Math.min(height / 4, 18));
-		scrollBar.setMaxValue(height);
-	}
-
-	@Override
-	public void validate(GuiDescription c) {
-		for (WWidget child : allChildren) {
-			child.validate(c);
-		}
-		super.validate(c);
-	}
-
-	@Override
-	public void createPeers(GuiDescription c) {
-		super.createPeers(c);
-		for (WWidget child : allChildren) {
-			child.createPeers(c);
-		}
-	}
-
-	public int getSpacing() {
-		return spacing;
-	}
-
-	public WScrollPanel setSpacing(int spacing) {
-		this.spacing = spacing;
-
-		return this;
+		if (scrollingVertically) children.add(verticalScrollBar);
+		if (scrollingHorizontally) children.add(horizontalScrollBar);
 	}
 }
