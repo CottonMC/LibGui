@@ -3,6 +3,7 @@ package io.github.cottonmc.cotton.gui.widget;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class WSprite extends WWidget {
@@ -119,7 +120,7 @@ public class WSprite extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (singleImage) {
 			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), frames[0], u1, v1, u2, v2, tint);
 		} else {

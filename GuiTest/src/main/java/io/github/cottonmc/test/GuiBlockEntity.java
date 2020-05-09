@@ -3,7 +3,7 @@ package io.github.cottonmc.test;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DefaultedList;
+import net.minecraft.util.collection.DefaultedList;
 
 public class GuiBlockEntity extends BlockEntity implements ImplementedInventory {
 	
@@ -19,7 +19,7 @@ public class GuiBlockEntity extends BlockEntity implements ImplementedInventory 
 	}
 	
 	@Override
-	public boolean canPlayerUseInv(PlayerEntity player) {
+	public boolean canPlayerUse(PlayerEntity player) {
 		return pos.isWithinDistance(player.getBlockPos(), 4.5);
 	}
 

@@ -34,6 +34,7 @@ public abstract class WAbstractSlider extends WWidget {
 
 	protected int min, max;
 	protected final Axis axis;
+	protected Direction direction;
 
 	protected int value;
 
@@ -71,6 +72,7 @@ public abstract class WAbstractSlider extends WWidget {
 		this.max = max;
 		this.axis = axis;
 		this.value = min;
+		this.direction = (axis == Axis.HORIZONTAL) ? Direction.LEFT : Direction.UP;
 	}
 
 	/**
@@ -132,7 +134,25 @@ public abstract class WAbstractSlider extends WWidget {
 	}
 
 	private void moveSlider(int x, int y) {
-		int pos = (axis == Axis.VERTICAL ? (height - y) : x) - getThumbWidth() / 2;
+		int axisPos;
+
+		switch (direction) {
+			case UP:
+				axisPos = height - y;
+				break;
+			case DOWN:
+				axisPos = y;
+				break;
+			case LEFT:
+				axisPos = width - x;
+				break;
+			case RIGHT:
+			default:
+				axisPos = x;
+				break;
+		}
+
+		int pos = axisPos - getThumbWidth() / 2;
 		int rawValue = min + Math.round(valueToCoordRatio * pos);
 		int previousValue = value;
 		value = MathHelper.clamp(rawValue, min, max);
@@ -150,8 +170,12 @@ public abstract class WAbstractSlider extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onMouseScroll(int x, int y, double amount) {
+		if (direction == Direction.LEFT || direction == Direction.DOWN) {
+			amount = -amount;
+		}
+
 		int previous = value;
-		value = MathHelper.clamp(value + (int) (valueToCoordRatio * amount * 2), min, max);
+		value = MathHelper.clamp(value + (int) Math.signum(amount) * MathHelper.ceil(valueToCoordRatio * Math.abs(amount) * 2), min, max);
 
 		if (previous != value) {
 			onValueChanged(value);
@@ -246,6 +270,31 @@ public abstract class WAbstractSlider extends WWidget {
 		return axis;
 	}
 
+	/**
+	 * Gets the direction of this slider.
+	 *
+	 * @return the direction
+	 * @since 2.0.0
+	 */
+	public Direction getDirection() {
+		return direction;
+	}
+
+	/**
+	 * Sets the direction of this slider.
+	 *
+	 * @param direction the new direction
+	 * @throws IllegalArgumentException if the {@linkplain Direction#getAxis() direction axis} is not equal to {@link #axis}.
+	 * @since 2.0.0
+	 */
+	public void setDirection(Direction direction) {
+		if (direction.getAxis() != axis) {
+			throw new IllegalArgumentException("Incorrect axis: " + axis);
+		}
+
+		this.direction = direction;
+	}
+
 	protected void onValueChanged(int value) {
 		if (valueChangeListener != null) valueChangeListener.accept(value);
 	}
@@ -287,11 +336,38 @@ public abstract class WAbstractSlider extends WWidget {
 		}
 	}
 
-	private static boolean isDecreasingKey(int ch) {
-		return ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN;
+	private boolean isDecreasingKey(int ch) {
+		return direction.isInverted()
+				? (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP)
+				: (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN);
 	}
 
-	private static boolean isIncreasingKey(int ch) {
-		return ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP;
+	private boolean isIncreasingKey(int ch) {
+		return direction.isInverted()
+				? (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN)
+				: (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP);
+	}
+
+	public enum Direction {
+		UP(Axis.VERTICAL, false),
+		DOWN(Axis.VERTICAL, true),
+		LEFT(Axis.HORIZONTAL, true),
+		RIGHT(Axis.HORIZONTAL, false);
+
+		private final Axis axis;
+		private final boolean inverted;
+
+		Direction(Axis axis, boolean inverted) {
+			this.axis = axis;
+			this.inverted = inverted;
+		}
+
+		public Axis getAxis() {
+			return axis;
+		}
+
+		public boolean isInverted() {
+			return inverted;
+		}
 	}
 }

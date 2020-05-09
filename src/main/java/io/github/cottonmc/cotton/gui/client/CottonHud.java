@@ -106,7 +106,6 @@ public enum CottonHud implements HudRenderCallback {
 
 	@Override
 	public void onHudRender(MatrixStack matrices, float tickDelta) {
-		ScreenDrawing.matrices = matrices;
 		Window window = MinecraftClient.getInstance().getWindow();
 		int hudWidth = window.getScaledWidth();
 		int hudHeight = window.getScaledHeight();
@@ -116,7 +115,7 @@ public enum CottonHud implements HudRenderCallback {
 				positioner.reposition(widget, hudWidth, hudHeight);
 			}
 
-			widget.paintBackground(widget.getX(), widget.getY(), -1, -1);
+			widget.paint(matrices, widget.getX(), widget.getY(), -1, -1);
 		}
 	}
 

@@ -17,20 +17,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeFinder;
-import net.minecraft.recipe.RecipeInputProvider;
-import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.world.World;
 
-public class CottonCraftingController extends AbstractRecipeScreenHandler<Inventory> implements GuiDescription {
+public class CottonInventoryController extends ScreenHandler implements GuiDescription {
 	
 	protected Inventory blockInventory;
 	protected PlayerInventory playerInventory;
-	protected RecipeType<?> recipeType;
 	protected World world;
 	protected PropertyDelegate propertyDelegate;
 	
@@ -40,20 +35,18 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 	
 	protected WWidget focus;
 	
-	public CottonCraftingController(RecipeType<?> recipeType, int syncId, PlayerInventory playerInventory) {
+	public CottonInventoryController(int syncId, PlayerInventory playerInventory) {
 		super(null, syncId);
 		this.blockInventory = null;
 		this.playerInventory = playerInventory;
-		this.recipeType = recipeType;
 		this.world = playerInventory.player.world;
 		this.propertyDelegate = null;//new ArrayPropertyDelegate(1);
 	}
 	
-	public CottonCraftingController(RecipeType<?> recipeType, int syncId, PlayerInventory playerInventory, Inventory blockInventory, PropertyDelegate propertyDelegate) {
+	public CottonInventoryController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, PropertyDelegate propertyDelegate) {
 		super(null, syncId);
 		this.blockInventory = blockInventory;
 		this.playerInventory = playerInventory;
-		this.recipeType = recipeType;
 		this.world = playerInventory.player.world;
 		this.propertyDelegate = propertyDelegate;
 		if (propertyDelegate!=null && propertyDelegate.size()>0) this.addProperties(propertyDelegate);
@@ -67,12 +60,12 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 		return LibGuiClient.config.darkMode ? darkTitleColor : titleColor;
 	}
 	
-	public CottonCraftingController setRootPanel(WPanel panel) {
+	public CottonInventoryController setRootPanel(WPanel panel) {
 		this.rootPanel = panel;
 		return this;
 	}
 	
-	public CottonCraftingController setTitleColor(int color) {
+	public CottonInventoryController setTitleColor(int color) {
 		this.titleColor = color;
 		return this;
 	}
@@ -378,52 +371,11 @@ public class CottonCraftingController extends AbstractRecipeScreenHandler<Invent
 		}).orElse(new ArrayPropertyDelegate(0));
 	}
 	
-	//extends CraftingContainer<Inventory> {
+	//extends ScreenHandler {
 		@Override
-		public void populateRecipeFinder(RecipeFinder recipeFinder) {
-			if (this.blockInventory instanceof RecipeInputProvider) {
-				((RecipeInputProvider)this.blockInventory).provideRecipeInputs(recipeFinder);
-			}
+		public boolean canUse(PlayerEntity entity) {
+			return (blockInventory!=null) ? blockInventory.canPlayerUse(entity) : true;
 		}
-		
-		@Override
-		public void clearCraftingSlots() {
-			if (this.blockInventory!=null) this.blockInventory.clear();
-		}
-		
-		@Override
-		public boolean matches(Recipe<? super Inventory> recipe) {
-			if (blockInventory==null || world==null) return false;
-			return false; //TODO recipe support
-		}
-		
-		@Override
-		public int getCraftingResultSlotIndex() {
-			return -1;
-		}
-
-		@Override
-		public int getCraftingWidth() {
-			return 1;
-		}
-
-		@Override
-		public int getCraftingHeight() {
-			return 1;
-		}
-
-		@Override
-		@Environment(EnvType.CLIENT)
-		public int getCraftingSlotCount() {
-			return 1;
-		}
-		
-		//(implied) extends Container {
-			@Override
-			public boolean canUse(PlayerEntity entity) {
-				return (blockInventory!=null) ? blockInventory.canPlayerUse(entity) : true;
-			}
-		//}
 	//}
 
 	@Override

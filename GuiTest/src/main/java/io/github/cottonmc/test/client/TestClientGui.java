@@ -20,7 +20,9 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class TestClientGui extends LightweightGuiDescription {
@@ -43,8 +45,8 @@ public class TestClientGui extends LightweightGuiDescription {
 		
 		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
 			@Override
-			public void addInformation(List<String> information) {
-				information.add("Radical!");
+			public void addTooltip(List<Text> tooltip) {
+				tooltip.add(new LiteralText("Radical!"));
 			}
 		};
 		root.add(title, 0, 0);
@@ -142,9 +144,7 @@ public class TestClientGui extends LightweightGuiDescription {
 		}
 		
 		@Override
-		public void paintBackground(int x, int y, int mouseX, int mouseY) {
-			super.paintBackground(x, y, mouseX, mouseY);
-			
+		public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 			ScreenDrawing.coloredRect(x, y, this.getWidth(), this.getHeight(), color);
 		}
 	}

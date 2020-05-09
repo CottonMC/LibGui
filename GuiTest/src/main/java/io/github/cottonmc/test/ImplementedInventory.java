@@ -6,7 +6,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.DefaultedList;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public interface ImplementedInventory extends SidedInventory {
      * @return the available slots
      */
     @Override
-    default int[] getInvAvailableSlots(Direction side) {
+    default int[] getAvailableSlots(Direction side) {
         int[] result = new int[getItems().size()];
         for (int i = 0; i < result.length; i++) {
             result[i] = i;
@@ -84,7 +84,7 @@ public interface ImplementedInventory extends SidedInventory {
      * @return true if the stack can be inserted
      */
     @Override
-    default boolean canInsertInvStack(int slot, ItemStack stack, Direction side) {
+    default boolean canInsert(int slot, ItemStack stack, Direction side) {
         return true;
     }
 
@@ -99,7 +99,7 @@ public interface ImplementedInventory extends SidedInventory {
      * @return true if the stack can be extracted
      */
     @Override
-    default boolean canExtractInvStack(int slot, ItemStack stack, Direction side) {
+    default boolean canExtract(int slot, ItemStack stack, Direction side) {
         return true;
     }
 
@@ -113,7 +113,7 @@ public interface ImplementedInventory extends SidedInventory {
      * @return the inventory size
      */
     @Override
-    default int getInvSize() {
+    default int size() {
         return getItems().size();
     }
 
@@ -121,9 +121,9 @@ public interface ImplementedInventory extends SidedInventory {
      * @return true if this inventory has only empty stacks, false otherwise
      */
     @Override
-    default boolean isInvEmpty() {
-        for (int i = 0; i < getInvSize(); i++) {
-            ItemStack stack = getInvStack(i);
+    default boolean isEmpty() {
+        for (int i = 0; i < size(); i++) {
+            ItemStack stack = getStack(i);
             if (!stack.isEmpty()) {
                 return false;
             }
@@ -139,7 +139,7 @@ public interface ImplementedInventory extends SidedInventory {
      * @return the item in the slot
      */
     @Override
-    default ItemStack getInvStack(int slot) {
+    default ItemStack getStack(int slot) {
         return getItems().get(slot);
     }
 
@@ -154,7 +154,7 @@ public interface ImplementedInventory extends SidedInventory {
      * @return a stack
      */
     @Override
-    default ItemStack takeInvStack(int slot, int count) {
+    default ItemStack removeStack(int slot, int count) {
         ItemStack result = Inventories.splitStack(getItems(), slot, count);
         if (!result.isEmpty()) {
             markDirty();
@@ -172,24 +172,24 @@ public interface ImplementedInventory extends SidedInventory {
      * @return the removed stack
      */
     @Override
-    default ItemStack removeInvStack(int slot) {
+    default ItemStack removeStack(int slot) {
         return Inventories.removeStack(getItems(), slot);
     }
 
     /**
      * Replaces the current stack in the {@code slot} with the provided stack.
      *
-     * <p>If the stack is too big for this inventory ({@link Inventory#getInvMaxStackAmount()}),
+     * <p>If the stack is too big for this inventory ({@link Inventory#getMaxCountPerStack()} ()}),
      * it gets resized to this inventory's maximum amount.
      *
      * @param slot the slot
      * @param stack the stack
      */
     @Override
-    default void setInvStack(int slot, ItemStack stack) {
+    default void setStack(int slot, ItemStack stack) {
         getItems().set(slot, stack);
-        if (stack.getCount() > getInvMaxStackAmount()) {
-            stack.setCount(getInvMaxStackAmount());
+        if (stack.getCount() > getMaxCountPerStack()) {
+            stack.setCount(getMaxCountPerStack());
         }
     }
 
@@ -207,7 +207,7 @@ public interface ImplementedInventory extends SidedInventory {
     }
 
     @Override
-    default boolean canPlayerUseInv(PlayerEntity player) {
+    default boolean canPlayerUse(PlayerEntity player) {
         return true;
     }
 }

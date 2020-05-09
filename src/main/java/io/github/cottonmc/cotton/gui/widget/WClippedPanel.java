@@ -1,28 +1,16 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
 
 /**
  * A panel that is clipped to only render widgets inside its bounds.
  */
 public class WClippedPanel extends WPanel {
-	@Deprecated
-	protected Identifier mask;
-
-	/**
-	 * @deprecated {@code WClippedPanel} does not support clipping masks anymore.
-	 */
-	@Deprecated
-	public WClippedPanel setClippingMask(Identifier mask) {
-		this.mask = mask;
-		return this;
-	}
-	
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (getBackgroundPainter()!=null) getBackgroundPainter().paintBackground(x, y, this);
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -36,7 +24,7 @@ public class WClippedPanel extends WPanel {
 		GL11.glScissor((int) (x * scaleFactor), (int) (rawHeight - (y * scaleFactor) - scaledHeight), scaledWidth, scaledHeight);
 
 		for(WWidget child : children) {
-			child.paintBackground(x + child.getX(), y + child.getY(), mouseX-child.getX(), mouseY-child.getY());
+			child.paint(matrices, x + child.getX(), y + child.getY(), mouseX-child.getX(), mouseY-child.getY());
 		}
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);

@@ -9,7 +9,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.Texts;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -73,7 +73,7 @@ public class WText extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (wrappedLines == null || wrappingScheduled) {
 			wrapLines();
 			wrappingScheduled = false;
@@ -84,14 +84,14 @@ public class WText extends WWidget {
 			Text line = wrappedLines.get(i);
 			int c = LibGuiClient.config.darkMode ? darkmodeColor : color;
 
-			ScreenDrawing.drawString(line, alignment, x, y + i * font.fontHeight, width, c);
+			ScreenDrawing.drawString(matrices, line, alignment, x, y + i * font.fontHeight, width, c);
 		}
 
 		Text hoveredText = getTextAt(mouseX, mouseY);
 		if (hoveredText != null) {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
 			if (screen instanceof TextHoverRendererScreen) {
-				((TextHoverRendererScreen) screen).renderTextHover(hoveredText, x + mouseX, y + mouseY);
+				((TextHoverRendererScreen) screen).renderTextHover(matrices, hoveredText, x + mouseX, y + mouseY);
 			}
 		}
 	}

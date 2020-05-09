@@ -1,11 +1,11 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import io.github.cottonmc.cotton.gui.CottonInventoryController;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
 
-import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
@@ -13,8 +13,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
-public class CottonInventoryScreen<T extends CottonCraftingController> extends HandledScreen<T> implements TextHoverRendererScreen {
-	protected CottonCraftingController description;
+public class CottonInventoryScreen<T extends CottonInventoryController> extends HandledScreen<T> implements TextHoverRendererScreen {
+	protected CottonInventoryController description;
 	public static final int PADDING = 8;
 	protected WWidget lastResponder = null;
 	protected WWidget focus = null;
@@ -187,26 +187,25 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends H
 	@Override
 	protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
-	public void paint(int mouseX, int mouseY) {
-		super.renderBackground(ScreenDrawing.matrices);
+	public void paint(MatrixStack matrices, int mouseX, int mouseY) {
+		super.renderBackground(matrices);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				root.paintBackground(x, y, mouseX-x, mouseY-y);
+				root.paint(matrices, x, y, mouseX-x, mouseY-y);
 			}
 		}
 		
 		if (getTitle() != null) {
-			textRenderer.method_27528(ScreenDrawing.matrices, getTitle(), x, y, description.getTitleColor());
+			textRenderer.method_27528(matrices, getTitle(), x, y, description.getTitleColor());
 		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
-		ScreenDrawing.matrices = matrices;
-		paint(mouseX, mouseY);
+		paint(matrices, mouseX, mouseY);
 		
 		super.render(matrices, mouseX, mouseY, partialTicks);
 		DiffuseLighting.disable(); //Needed because super.render leaves dirty state
@@ -214,10 +213,8 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends H
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				root.paintForeground(x, y, mouseX, mouseY);
-				
 				WWidget hitChild = root.hit(mouseX-x, mouseY-y);
-				if (hitChild!=null) hitChild.renderTooltip(x, y, mouseX-x, mouseY-y);
+				if (hitChild!=null) hitChild.renderTooltip(matrices, x, y, mouseX-x, mouseY-y);
 			}
 		}
 		
@@ -236,7 +233,7 @@ public class CottonInventoryScreen<T extends CottonCraftingController> extends H
 	}
 
 	@Override
-	public void renderTextHover(Text text, int x, int y) {
-		renderTextHoverEffect(ScreenDrawing.matrices, text, x, y);
+	public void renderTextHover(MatrixStack matrices, Text text, int x, int y) {
+		renderTextHoverEffect(matrices, text, x, y);
 	}
 }

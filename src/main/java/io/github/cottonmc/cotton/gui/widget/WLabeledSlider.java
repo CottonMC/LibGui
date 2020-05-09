@@ -1,13 +1,15 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Quaternion;
 
 import javax.annotation.Nullable;
 
@@ -21,6 +23,8 @@ import javax.annotation.Nullable;
  * @see WAbstractSlider for more information about listeners
  */
 public class WLabeledSlider extends WAbstractSlider {
+	private static final Quaternion ROTATION_Z_270 = Vector3f.POSITIVE_X.getDegreesQuaternion(270);
+
 	@Nullable private Text label = null;
 	@Nullable private LabelUpdater labelUpdater = null;
 	private Alignment labelAlignment = Alignment.CENTER;
@@ -156,17 +160,19 @@ public class WLabeledSlider extends WAbstractSlider {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		int aWidth = axis == Axis.HORIZONTAL ? width : height;
 		int aHeight = axis == Axis.HORIZONTAL ? height : width;
-		int rotMouseX = axis == Axis.HORIZONTAL ? mouseX : (height - mouseY);
+		int rotMouseX = axis == Axis.HORIZONTAL
+				? (direction == Direction.LEFT ? width - mouseX : mouseX)
+				: (direction == Direction.UP ? height - mouseY : mouseY);
 		int rotMouseY = axis == Axis.HORIZONTAL ? mouseY : mouseX;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(x, y, 0);
+		matrices.push();
+		matrices.translate(x, y, 0);
 		if (axis == Axis.VERTICAL) {
-			RenderSystem.translatef(0, height, 0);
-			RenderSystem.rotatef(270, 0, 0, 1);
+			matrices.translate(0, height, 0);
+			matrices.multiply(ROTATION_Z_270);
 		}
 		drawButton(0, 0, 0, aWidth);
 
@@ -187,9 +193,9 @@ public class WLabeledSlider extends WAbstractSlider {
 
 		if (label != null) {
 			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
-			ScreenDrawing.drawStringWithShadow(label, labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
+			ScreenDrawing.drawStringWithShadow(matrices, label, labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
-		RenderSystem.popMatrix();
+		matrices.pop();
 	}
 
 	// state = 1: regular, 2: hovered, 0: disabled/dragging

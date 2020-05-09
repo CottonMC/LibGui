@@ -8,6 +8,7 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
 
 /**
  * Panels are widgets tthat contain other widgets.
@@ -180,20 +181,11 @@ public abstract class WPanel extends WWidget {
 	
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter!=null) backgroundPainter.paintBackground(x, y, this);
 		
 		for(WWidget child : children) {
-			child.paintBackground(x + child.getX(), y + child.getY(), mouseX-child.getX(), mouseY-child.getY());
-		}
-	}
-
-	@Environment(EnvType.CLIENT)
-	@Override
-	@Deprecated
-	public void paintForeground(int x, int y, int mouseX, int mouseY) {
-		for(WWidget child : children) {
-			child.paintForeground(x + child.getX(), y + child.getY(), mouseX, mouseY);
+			child.paint(matrices, x + child.getX(), y + child.getY(), mouseX-child.getX(), mouseY-child.getY());
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import net.minecraft.client.util.math.MatrixStack;
 
 /**
  * Similar to the RecyclerView in Android, this widget represents a scrollable list of items.
@@ -60,23 +61,15 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		scrollBar.setMaxValue(data.size());
 		scrollBar.setParent(this);
 	}
-
-	/**
-	 * @deprecated Use {@link #WListPanel(List, Supplier, BiConsumer)} instead.
-	 */
-	@Deprecated
-	public WListPanel(List<D> data, Class<W> listItemClass, Supplier<W> supplier, BiConsumer<D, W> configurator) {
-		this(data, supplier, configurator);
-	}
 	
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (scrollBar.getValue()!=lastScroll) {
 			layout();
 			lastScroll = scrollBar.getValue();
 		}
 		
-		super.paintBackground(x, y, mouseX, mouseY);
+		super.paint(matrices, x, y, mouseX, mouseY);
 		/*
 		if (getBackgroundPainter()!=null) {
 			getBackgroundPainter().paintBackground(x, y, this);
@@ -109,9 +102,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		this.children.add(scrollBar);
 		scrollBar.setLocation(this.width-scrollBar.getWidth(), 0);
 		scrollBar.setSize(8, this.height);
-		//scrollBar.window = 6;
-		scrollBar.setMaxValue(data.size());
-		
+
 		//super.layout();
 		
 		//System.out.println("Validating");
@@ -146,7 +137,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		
 		//Fix up the scrollbar handle and track metrics
 		scrollBar.setWindow(cellsHigh);
-		//scrollBar.setMaxValue(data.size());
+		scrollBar.setMaxValue(data.size());
 		int scrollOffset = scrollBar.getValue();
 		//System.out.println(scrollOffset);
 		

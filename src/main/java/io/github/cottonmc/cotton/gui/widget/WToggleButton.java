@@ -2,11 +2,11 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -54,29 +54,13 @@ public class WToggleButton extends WWidget {
 		this.label = label;
 	}
 
-	/**
-	 * @deprecated Use {@link #WToggleButton(Identifier, Identifier)} instead.
-	 */
-	@Deprecated
-	public WToggleButton(Identifier onImage, Identifier offImage, int width, int height) {
-		this(onImage, offImage);
-	}
-
-	/**
-	 * @deprecated Use {@link #WToggleButton(Identifier, Identifier, Text)} instead.
-	 */
-	@Deprecated
-	public WToggleButton(Text label, Identifier onImage, Identifier offImage, int width, int height) {
-		this(onImage, offImage, label);
-	}
-
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintBackground(int x, int y) {
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		ScreenDrawing.texturedRect(x, y, 18, 18, isOn ? onImage : offImage, 0xFFFFFFFF);
 		
 		if (label!=null) {
-			ScreenDrawing.drawString(label, x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawString(matrices, label, x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	
@@ -105,16 +89,6 @@ public class WToggleButton extends WWidget {
 	public boolean getToggle() { return this.isOn; }
 	public void setToggle(boolean on) { this.isOn = on; }
 
-	/**
-	 * Set on toggle handler
-	 *
-	 * @deprecated Use {@link #setOnToggle(Consumer)}
-	 */
-	@Deprecated
-	public void setOnToggle(Runnable r) {
-		this.onToggle = on -> r.run();
-	}
-
 	@Nullable
 	public Consumer<Boolean> getOnToggle() {
 		return this.onToggle;
@@ -133,14 +107,6 @@ public class WToggleButton extends WWidget {
 	public WToggleButton setLabel(@Nullable Text label) {
 		this.label = label;
 		return this;
-	}
-
-	/**
-	 * @deprecated Use {@link #setColor} instead.
-	 */
-	@Deprecated
-	public WToggleButton color(int light, int dark) {
-		return setColor(light, dark);
 	}
 
 	public WToggleButton setColor(int light, int dark) {

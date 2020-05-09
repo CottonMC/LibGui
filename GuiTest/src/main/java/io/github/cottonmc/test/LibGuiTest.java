@@ -10,13 +10,13 @@ import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.container.BlockContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.registry.Registry;
 
 public class LibGuiTest implements ModInitializer {
@@ -38,7 +38,7 @@ public class LibGuiTest implements ModInitializer {
 		
 		
 		ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MODID, "gui"), (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf)->{
-			return new TestContainer(syncId, player.inventory, BlockContext.create(player.getEntityWorld(), buf.readBlockPos()));
+			return new TestController(syncId, player.inventory, ScreenHandlerContext.create(player.getEntityWorld(), buf.readBlockPos()));
 		});
 		
 		Optional<ModContainer> containerOpt = FabricLoader.getInstance().getModContainer("jankson");

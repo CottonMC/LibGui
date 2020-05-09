@@ -7,8 +7,8 @@ import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
@@ -75,14 +75,14 @@ public class WLabel extends WWidget {
 	}
 
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
-		ScreenDrawing.drawString(text, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+		ScreenDrawing.drawString(matrices, text, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
 
 		Text hoveredText = getTextAt(mouseX, mouseY);
 		if (hoveredText != null) {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
 			if (screen instanceof TextHoverRendererScreen) {
-				((TextHoverRendererScreen) screen).renderTextHover(hoveredText, x + mouseX, y + mouseY);
+				((TextHoverRendererScreen) screen).renderTextHover(matrices, hoveredText, x + mouseX, y + mouseY);
 			}
 		}
 	}

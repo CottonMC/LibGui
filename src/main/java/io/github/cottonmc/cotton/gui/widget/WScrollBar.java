@@ -3,23 +3,16 @@ package io.github.cottonmc.cotton.gui.widget;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
 
-public class WScrollBar extends WWidget {
-	protected Axis axis = Axis.HORIZONTAL;
-	protected int value;
-	protected int maxValue = 100;
+public class WScrollBar extends WAbstractSlider {
 	protected int window = 16;
-	
-	protected int anchor = -1;
-	protected int anchorValue = -1;
-	protected boolean sliding = false;
 
 	/**
 	 * Constructs a horizontal scroll bar.
 	 */
 	public WScrollBar() {
+		super(0, 100, Axis.HORIZONTAL);
 	}
 
 	/**
@@ -28,22 +21,38 @@ public class WScrollBar extends WWidget {
 	 * @param axis the axis
 	 */
 	public WScrollBar(Axis axis) {
-		this.axis = axis;
+		super(0, 100, axis);
+
+		if (axis == Axis.VERTICAL) {
+			setDirection(Direction.DOWN);
+		}
 	}
-	
+
 	@Override
-	public void paintBackground(int x, int y, int mouseX, int mouseY) {
+	protected int getThumbWidth() {
+		return Math.round(window * coordToValueRatio);
+	}
+
+	@Override
+	protected boolean isMouseInsideBounds(int x, int y) {
+		return axis == Axis.HORIZONTAL
+				? (x >= getHandlePosition() + 1 && x <= getHandlePosition() + getHandleSize())
+				: (y >= getHandlePosition() + 1 && y <= getHandlePosition() + getHandleSize());
+	}
+
+	@Override
+	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (LibGuiClient.config.darkMode) {
 			ScreenDrawing.drawBeveledPanel(x, y, width, height, 0xFF_212121, 0xFF_2F2F2F, 0xFF_5D5D5D);
 		} else {
 			ScreenDrawing.drawBeveledPanel(x, y, width, height, 0xFF_373737, 0xFF_8B8B8B, 0xFF_FFFFFF);
 		}
-		if (maxValue<=0) return;
+		if (getMaxValue()<=0) return;
 
 		// Handle colors
 		int top, middle, bottom;
 
-		if (sliding) {
+		if (dragging) {
 			if (LibGuiClient.config.darkMode) {
 				top = 0xFF_6C6C6C;
 				middle = 0xFF_2F2F2F;
@@ -77,16 +86,31 @@ public class WScrollBar extends WWidget {
 
 		if (axis==Axis.HORIZONTAL) {
 			ScreenDrawing.drawBeveledPanel(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, top, middle, bottom);
+
+			if (isFocused()) {
+				drawBeveledOutline(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, 0xFF_FFFFA7, 0xFF_C9CA71, 0xFF_8C8F39);
+			}
 		} else {
 			ScreenDrawing.drawBeveledPanel(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), top, middle, bottom);
+
+			if (isFocused()) {
+				drawBeveledOutline(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), 0xFF_FFFFA7, 0xFF_C9CA71, 0xFF_8C8F39);
+			}
 		}
+	}
+
+	private static void drawBeveledOutline(int x, int y, int width, int height, int topleft, int center, int bottomright) {
+		ScreenDrawing.coloredRect(x,             y,              width - 1, 1,          topleft); //Top shadow
+		ScreenDrawing.coloredRect(x,             y + 1,          1,         height - 2, topleft); //Left shadow
+		ScreenDrawing.coloredRect(x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
+		ScreenDrawing.coloredRect(x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
 	}
 	
 	/**
 	 * Gets the on-axis size of the scrollbar handle in gui pixels 
 	 */
 	public int getHandleSize() {
-		float percentage = (window>=maxValue) ? 1f : window / (float)maxValue;
+		float percentage = (window>=getMaxValue()) ? 1f : window / (float)getMaxValue();
 		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
 		int result = (int)(percentage*bar);
 		if (result<6) result = 6;
@@ -101,92 +125,13 @@ public class WScrollBar extends WWidget {
 		return bar-getHandleSize();
 	}
 	
-	public int pixelsToValues(int pixels) {
-		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
-		//int bar = getMovableDistance();
-		float percent = pixels / (float)bar;
-		return (int)(percent*(maxValue-window));
-	}
-	
 	public int getHandlePosition() {
-		float percent = value / (float)Math.max(maxValue-window, 1);
+		float percent = value / (float)Math.max(getMaxValue(), 1);
 		return (int)(percent * getMovableDistance());
 	}
-	
-	/**
-	 * Gets the maximum scroll value achievable; this will typically be the maximum value minus the
-	 * window size
-	 */
-	public int getMaxScrollValue() {
-		return maxValue - window;
-	}
-	
-	protected void adjustSlider(int x, int y) {
-		
-		int delta = 0;
-		if (axis==Axis.HORIZONTAL) {
-			delta = x-anchor;
-		} else {
-			delta = y-anchor;
-		}
-		
-		int valueDelta = pixelsToValues(delta);
-		int valueNew = anchorValue + valueDelta;
-		
-		if (valueNew>getMaxScrollValue()) valueNew = getMaxScrollValue();
-		if (valueNew<0) valueNew = 0;
-		this.value = valueNew;
-	}
-	
-	@Override
-	public WWidget onMouseDown(int x, int y, int button) {
-		//TODO: Clicking before or after the handle should jump instead of scrolling
-		
-		if (axis==Axis.HORIZONTAL) {
-			anchor = x;
-			anchorValue = value;
-		} else {
-			anchor = y;
-			anchorValue = value;
-		}
-		sliding = true;
-		return this;
-	}
 
-	@Environment(EnvType.CLIENT)
-	@Override
-	public void onMouseDrag(int x, int y, int button) {
-		adjustSlider(x, y);
-	}
-
-	@Environment(EnvType.CLIENT)
-	@Override
-	public WWidget onMouseUp(int x, int y, int button) {
-		//TODO: Clicking before or after the handle should jump instead of scrolling
-		anchor = -1;
-		anchorValue = -1;
-		sliding = false;
-		return this;
-	}
-	
-	public int getValue() {
-		return value;
-	}
-
-	public WScrollBar setValue(int value) {
-		this.value = value;
-		checkValue();
-		return this;
-	}
-
-	public int getMaxValue() {
-		return maxValue;
-	}
-
-	public WScrollBar setMaxValue(int max) {
-		this.maxValue = max;
-		checkValue();
-		return this;
+	public void setMaxValue(int max) {
+		super.setMaxValue(max - window);
 	}
 
 	public int getWindow() {
@@ -196,16 +141,5 @@ public class WScrollBar extends WWidget {
 	public WScrollBar setWindow(int window) {
 		this.window = window;
 		return this;
-	}
-
-	/**
-	 * Checks that the current value is in the correct range
-	 * and adjusts it if needed.
-	 */
-	protected void checkValue() {
-		if (this.value>maxValue-window) {
-			this.value = maxValue-window;
-		}
-		if (this.value<0) this.value = 0;
 	}
 }

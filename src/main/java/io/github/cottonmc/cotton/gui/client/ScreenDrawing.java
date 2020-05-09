@@ -9,7 +9,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
@@ -19,21 +18,7 @@ import net.minecraft.util.Identifier;
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.
  */
 public class ScreenDrawing {
-	// Internal MatrixStack for rendering strings.
-	// TODO (2.0): Remove
-	static MatrixStack matrices;
-
 	private ScreenDrawing() {}
-
-	/**
-	 * Gets the currently bound matrix stack.
-	 *
-	 * @return the matrix stack
-	 * @since 1.9.0
-	 */
-	public static MatrixStack getMatrices() {
-		return matrices;
-	}
 
 	/**
 	 * Draws a textured rectangle.
@@ -79,12 +64,11 @@ public class ScreenDrawing {
 		RenderSystem.enableBlend();
 		//GlStateManager.disableTexture2D();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		RenderSystem.color4f(r, g, b, 1.0f);
-		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(x,         y + height, 0).texture(u1, v2).next();
-		buffer.vertex(x + width, y + height, 0).texture(u2, v2).next();
-		buffer.vertex(x + width, y,          0).texture(u2, v1).next();
-		buffer.vertex(x,         y,          0).texture(u1, v1).next();
+		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR_TEXTURE); //I thought GL_QUADS was deprecated but okay, sure.
+		buffer.vertex(x,         y + height, 0).color(r, g, b, 1.0f).texture(u1, v2).next();
+		buffer.vertex(x + width, y + height, 0).color(r, g, b, 1.0f).texture(u2, v2).next();
+		buffer.vertex(x + width, y,          0).color(r, g, b, 1.0f).texture(u2, v1).next();
+		buffer.vertex(x,         y,          0).color(r, g, b, 1.0f).texture(u1, v1).next();
 		tessellator.draw();
 		//GlStateManager.enableTexture2D();
 		RenderSystem.disableBlend();
@@ -140,12 +124,11 @@ public class ScreenDrawing {
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		RenderSystem.color4f(r, g, b, a);
-		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(left,         top + height, 0.0D).next();
-		buffer.vertex(left + width, top + height, 0.0D).next();
-		buffer.vertex(left + width, top,          0.0D).next();
-		buffer.vertex(left,         top,          0.0D).next();
+		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR); //I thought GL_QUADS was deprecated but okay, sure.
+		buffer.vertex(left,         top + height, 0.0D).color(r, g, b, a).next();
+		buffer.vertex(left + width, top + height, 0.0D).color(r, g, b, a).next();
+		buffer.vertex(left + width, top,          0.0D).color(r, g, b, a).next();
+		buffer.vertex(left,         top,          0.0D).color(r, g, b, a).next();
 		tessellator.draw();
 		RenderSystem.enableTexture();
 		RenderSystem.disableBlend();
@@ -301,14 +284,15 @@ public class ScreenDrawing {
 	/**
 	 * Draws a string with a custom alignment.
 	 *
-	 * @param s     the string
-	 * @param align the alignment of the string
-	 * @param x     the X position
-	 * @param y     the Y position
-	 * @param width the width of the string, used for aligning
-	 * @param color the text color
+	 * @param matrices the rendering matrix stack
+	 * @param s        the string
+	 * @param align    the alignment of the string
+	 * @param x        the X position
+	 * @param y        the Y position
+	 * @param width    the width of the string, used for aligning
+	 * @param color    the text color
 	 */
-	public static void drawString(String s, Alignment align, int x, int y, int width, int color) {
+	public static void drawString(MatrixStack matrices, String s, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
 				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x, y, color);
@@ -332,15 +316,16 @@ public class ScreenDrawing {
 	/**
 	 * Draws a text component with a custom alignment.
 	 *
-	 * @param text  the text
-	 * @param align the alignment of the string
-	 * @param x     the X position
-	 * @param y     the Y position
-	 * @param width the width of the string, used for aligning
-	 * @param color the text color
+	 * @param matrices the rendering matrix stack
+	 * @param text     the text
+	 * @param align    the alignment of the string
+	 * @param x        the X position
+	 * @param y        the Y position
+	 * @param width    the width of the string, used for aligning
+	 * @param color    the text color
 	 * @since 1.9.0
 	 */
-	public static void drawString(Text text, Alignment align, int x, int y, int width, int color) {
+	public static void drawString(MatrixStack matrices, Text text, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
 				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
@@ -364,14 +349,15 @@ public class ScreenDrawing {
 	/**
 	 * Draws a shadowed string.
 	 *
-	 * @param s     the string
-	 * @param align the alignment of the string
-	 * @param x     the X position
-	 * @param y     the Y position
-	 * @param width the width of the string, used for aligning
-	 * @param color the text color
+	 * @param matrices the rendering matrix stack
+	 * @param s        the string
+	 * @param align    the alignment of the string
+	 * @param x        the X position
+	 * @param y        the Y position
+	 * @param width    the width of the string, used for aligning
+	 * @param color    the text color
 	 */
-	public static void drawStringWithShadow(String s, Alignment align, int x, int y, int width, int color) {
+	public static void drawStringWithShadow(MatrixStack matrices, String s, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
 				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x, y, color);
@@ -395,14 +381,15 @@ public class ScreenDrawing {
 	/**
 	 * Draws a shadowed text component.
 	 *
-	 * @param text  the text component
-	 * @param align the alignment of the string
-	 * @param x     the X position
-	 * @param y     the Y position
-	 * @param width the width of the string, used for aligning
-	 * @param color the text color
+	 * @param matrices the rendering matrix stack
+	 * @param text     the text component
+	 * @param align    the alignment of the string
+	 * @param x        the X position
+	 * @param y        the Y position
+	 * @param width    the width of the string, used for aligning
+	 * @param color    the text color
 	 */
-	public static void drawStringWithShadow(Text text, Alignment align, int x, int y, int width, int color) {
+	public static void drawStringWithShadow(MatrixStack matrices, Text text, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
 				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
@@ -426,34 +413,27 @@ public class ScreenDrawing {
 	/**
 	 * Draws a left-aligned string.
 	 *
-	 * @param s     the string
-	 * @param x     the X position
-	 * @param y     the Y position
-	 * @param color the text color
+	 * @param matrices the rendering matrix stack
+	 * @param s        the string
+	 * @param x        the X position
+	 * @param y        the Y position
+	 * @param color    the text color
 	 */
-	public static void drawString(String s, int x, int y, int color) {
+	public static void drawString(MatrixStack matrices, String s, int x, int y, int color) {
 		MinecraftClient.getInstance().textRenderer.draw(matrices, s, x, y, color);
 	}
 
 	/**
 	 * Draws a left-aligned text component.
 	 *
-	 * @param text  the text component
-	 * @param x     the X position
-	 * @param y     the Y position
-	 * @param color the text color
+	 * @param matrices the rendering matrix stack
+	 * @param text     the text component
+	 * @param x        the X position
+	 * @param y        the Y position
+	 * @param color    the text color
 	 */
-	public static void drawString(Text text, int x, int y, int color) {
+	public static void drawString(MatrixStack matrices, Text text, int x, int y, int color) {
 		MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
-	}
-
-	/**
-	 * @deprecated for removal; please use {@link #drawStringWithShadow(String, Alignment, int, int, int, int)}
-	 */
-	@Deprecated
-	public static void drawCenteredWithShadow(String s, int x, int y, int color) {
-		TextRenderer render = MinecraftClient.getInstance().textRenderer;
-		render.drawWithShadow(matrices, s, (float)(x - render.getStringWidth(s) / 2), (float)y, color);
 	}
 
 	public static int colorAtOpacity(int opaque, float opacity) {
