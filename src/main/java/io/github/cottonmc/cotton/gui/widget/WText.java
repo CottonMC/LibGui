@@ -65,7 +65,7 @@ public class WText extends WWidget {
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
 			Text line = wrappedLines.get(lineIndex);
-			return font.getTextHandler().trimToWidth(line, x);
+			return font.trimToWidth(line, x);
 		}
 
 		return null;
