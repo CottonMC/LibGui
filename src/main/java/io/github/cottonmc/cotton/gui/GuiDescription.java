@@ -8,6 +8,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.screen.PropertyDelegate;
 
+/**
+ * A GUI description represents a GUI without depending on screens.
+ *
+ * <p>GUI descriptions contain the root panel and the property delegate of the GUI.
+ * They also manage the focused widget.
+ *
+ * @see io.github.cottonmc.cotton.gui.client.LightweightGuiDescription
+ * @see CottonInventoryController
+ */
 public interface GuiDescription {
 	public WPanel getRootPanel();
 	public int getTitleColor();

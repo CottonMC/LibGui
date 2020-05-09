@@ -348,6 +348,16 @@ public abstract class WAbstractSlider extends WWidget {
 				: (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP);
 	}
 
+	/**
+	 * The direction enum represents all four directions a slider can face.
+	 *
+	 * <p>For example, a slider whose value grows towards the right faces right.
+	 *
+	 * <p>The default direction for vertical sliders is {@link #UP} and
+	 * the one for horizontal sliders is {@link #RIGHT}.
+	 *
+	 * @since 2.0.0
+	 */
 	public enum Direction {
 		UP(Axis.VERTICAL, false),
 		DOWN(Axis.VERTICAL, true),
@@ -362,10 +372,22 @@ public abstract class WAbstractSlider extends WWidget {
 			this.inverted = inverted;
 		}
 
+		/**
+		 * Gets the direction's axis.
+		 *
+		 * @return the axis
+		 */
 		public Axis getAxis() {
 			return axis;
 		}
 
+		/**
+		 * Returns whether this slider is inverted.
+		 *
+		 * <p>An inverted slider will have reversed keyboard control.
+		 *
+		 * @return whether this slider is inverted
+		 */
 		public boolean isInverted() {
 			return inverted;
 		}

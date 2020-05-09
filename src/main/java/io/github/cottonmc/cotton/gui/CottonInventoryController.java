@@ -22,6 +22,9 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.world.World;
 
+/**
+ * A screen handler-based GUI description for GUIs with slots.
+ */
 public class CottonInventoryController extends ScreenHandler implements GuiDescription {
 	
 	protected Inventory blockInventory;
