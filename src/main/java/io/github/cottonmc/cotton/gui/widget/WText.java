@@ -59,7 +59,7 @@ public class WText extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Nullable
-	protected Text getTextAt(int x, int y) {
+	public Text getTextAt(int x, int y) {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
 		int lineIndex = y / font.fontHeight;
 
