@@ -54,7 +54,7 @@ public class WText extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private void wrapLines() {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		wrappedLines = font.method_27527().method_27491(text, width, Style.field_24360, false);
+		wrappedLines = font.getTextHandler().wrapLines(text, width, Style.EMPTY);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -65,7 +65,7 @@ public class WText extends WWidget {
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
 			Text line = wrappedLines.get(lineIndex);
-			return font.method_27527().method_27489(line, x);
+			return font.getTextHandler().trimToWidth(line, x);
 		}
 
 		return null;

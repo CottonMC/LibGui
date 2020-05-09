@@ -198,7 +198,7 @@ public class CottonInventoryScreen<T extends CottonInventoryController> extends 
 		}
 		
 		if (getTitle() != null) {
-			textRenderer.method_27528(matrices, getTitle(), x, y, description.getTitleColor());
+			textRenderer.draw(matrices, getTitle(), x, y, description.getTitleColor());
 		}
 	}
 	
