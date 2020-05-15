@@ -103,7 +103,7 @@ public class WLabel extends WWidget {
 	@Nullable
 	private Text getTextAt(int x, int y) {
 		if (isWithinBounds(x, y)) {
-			return MinecraftClient.getInstance().textRenderer.method_27527().method_27489(text, x);
+			return MinecraftClient.getInstance().textRenderer.trimToWidth(text, x);
 		}
 		return null;
 	}

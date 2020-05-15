@@ -315,13 +315,13 @@ public class ScreenDrawing {
 			}
 			break;
 		case CENTER: {
-				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
 				int l = (width/2) - (wid/2);
 				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
-				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
 				int l = width - wid;
 				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x+l, y, color);
 			}
@@ -343,19 +343,19 @@ public class ScreenDrawing {
 	public static void drawString(Text text, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color);
 			}
 			break;
 		case CENTER: {
-				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
 				int l = (width/2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
-				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x+l, y, color);
 			}
 			break;
 		}
@@ -378,13 +378,13 @@ public class ScreenDrawing {
 			}
 			break;
 		case CENTER: {
-				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
 				int l = (width/2) - (wid/2);
 				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
-				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
 				int l = width - wid;
 				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x+l, y, color);
 			}
@@ -405,19 +405,19 @@ public class ScreenDrawing {
 	public static void drawStringWithShadow(Text text, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color);
 			}
 			break;
 		case CENTER: {
-				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
 				int l = (width/2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
-				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x+l, y, color);
 			}
 			break;
 		}
@@ -444,7 +444,7 @@ public class ScreenDrawing {
 	 * @param color the text color
 	 */
 	public static void drawString(Text text, int x, int y, int color) {
-		MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
+		MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color);
 	}
 
 	/**
@@ -453,7 +453,7 @@ public class ScreenDrawing {
 	@Deprecated
 	public static void drawCenteredWithShadow(String s, int x, int y, int color) {
 		TextRenderer render = MinecraftClient.getInstance().textRenderer;
-		render.drawWithShadow(matrices, s, (float)(x - render.getStringWidth(s) / 2), (float)y, color);
+		render.drawWithShadow(matrices, s, (float)(x - render.getWidth(s) / 2), (float)y, color);
 	}
 
 	public static int colorAtOpacity(int opaque, float opacity) {

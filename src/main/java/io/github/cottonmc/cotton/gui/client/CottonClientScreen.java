@@ -66,7 +66,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 		}
 		
 		if (getTitle() != null) {
-			textRenderer.method_27528(ScreenDrawing.matrices, getTitle(), left, top, description.getTitleColor());
+			textRenderer.draw(ScreenDrawing.matrices, getTitle(), left, top, description.getTitleColor());
 		}
 	}
 	

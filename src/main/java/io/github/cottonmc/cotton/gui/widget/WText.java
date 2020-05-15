@@ -9,8 +9,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.Texts;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
@@ -54,7 +52,7 @@ public class WText extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private void wrapLines() {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		wrappedLines = font.method_27527().method_27491(text, width, Style.field_24360, false);
+		wrappedLines = font.wrapLines(text, width);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -65,7 +63,7 @@ public class WText extends WWidget {
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
 			Text line = wrappedLines.get(lineIndex);
-			return font.method_27527().method_27489(line, x);
+			return font.getTextHandler().trimToWidth(line, x);
 		}
 
 		return null;
