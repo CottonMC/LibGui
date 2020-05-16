@@ -61,7 +61,14 @@ public class WItemSlot extends WWidget {
 		
 		return w;
 	}
-	
+
+	/**
+	 * Creates a 9x3 slot widget from the "main" part of a player inventory.
+	 *
+	 * @param inventory the player inventory
+	 * @return the created slot widget
+	 * @see WPlayerInvPanel
+	 */
 	public static WItemSlot ofPlayerStorage(Inventory inventory) {
 		WItemSlot w = new WItemSlot();
 		w.inventory = inventory;

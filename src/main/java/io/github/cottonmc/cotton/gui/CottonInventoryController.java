@@ -325,11 +325,31 @@ public class CottonInventoryController extends ScreenHandler implements GuiDescr
 		this.propertyDelegate = delegate;
 		return this;
 	}
-	
+
+	/**
+	 * Creates a player inventory widget from this panel's {@linkplain #playerInventory player inventory}.
+	 *
+	 * @return the created inventory widget
+	 */
 	public WPlayerInvPanel createPlayerInventoryPanel() {
 		return new WPlayerInvPanel(this.playerInventory);
 	}
-	
+
+	/**
+	 * Gets the block inventory at the context.
+	 *
+	 * <p>If no inventory is found, returns {@link EmptyInventory#INSTANCE}.
+	 *
+	 * <p>Searches for these implementations in the following order:
+	 * <ol>
+	 *     <li>Blocks implementing {@code InventoryProvider}</li>
+	 *     <li>Block entities implementing {@code InventoryProvider}</li>
+	 *     <li>Block entities implementing {@code Inventory}</li>
+	 * </ol>
+	 *
+	 * @param ctx the context
+	 * @return the found inventory
+	 */
 	public static Inventory getBlockInventory(ScreenHandlerContext ctx) {
 		return ctx.run((world, pos) -> {
 			BlockState state = world.getBlockState(pos);
@@ -357,7 +377,17 @@ public class CottonInventoryController extends ScreenHandler implements GuiDescr
 			return EmptyInventory.INSTANCE;
 		}).orElse(EmptyInventory.INSTANCE);
 	}
-	
+
+	/**
+	 * Gets the property delegate at the context.
+	 *
+	 * <p>If no property delegate is found, returns an empty property delegate with no properties.
+	 *
+	 * <p>Searches for blocks and block entities implementing {@link PropertyDelegateHolder}.
+	 *
+	 * @param ctx the context
+	 * @return the found property delegate
+	 */
 	public static PropertyDelegate getBlockPropertyDelegate(ScreenHandlerContext ctx) {
 		return ctx.run((world, pos) -> {
 			BlockState state = world.getBlockState(pos);
