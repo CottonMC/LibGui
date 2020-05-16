@@ -10,7 +10,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 
 /**
- * Panels are widgets tthat contain other widgets.
+ * Panels are widgets that contain other widgets.
  */
 public abstract class WPanel extends WWidget {
 	/**
