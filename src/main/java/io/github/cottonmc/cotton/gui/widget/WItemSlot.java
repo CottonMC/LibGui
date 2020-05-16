@@ -24,7 +24,7 @@ public class WItemSlot extends WWidget {
 	private boolean insertingAllowed = true;
 	private boolean takingAllowed = true;
 
-	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big, boolean ltr) {
+	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
 		this.inventory = inventory;
 		this.startIndex = startIndex;
 		this.slotsWide = slotsWide;
