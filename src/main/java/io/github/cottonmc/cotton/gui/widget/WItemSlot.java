@@ -20,8 +20,9 @@ public class WItemSlot extends WWidget {
 	private int slotsWide = 1;
 	private int slotsHigh = 1;
 	private boolean big = false;
-	private boolean modifiable = true;
-	
+	private boolean insertingAllowed = true;
+	private boolean takingAllowed = true;
+
 	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big, boolean ltr) {
 		this.inventory = inventory;
 		this.startIndex = startIndex;
@@ -88,17 +89,69 @@ public class WItemSlot extends WWidget {
 	/**
 	 * Returns true if the contents of this {@code WItemSlot} can be modified by players.
 	 *
-	 * @return true if this slot is modifiable
+	 * @return true if items can be inserted into or taken from this slot widget, false otherwise
 	 * @since 1.8.0
 	 */
 	public boolean isModifiable() {
-		return modifiable;
+		return takingAllowed || insertingAllowed;
 	}
 
 	public WItemSlot setModifiable(boolean modifiable) {
-		this.modifiable = modifiable;
+		this.insertingAllowed = modifiable;
+		this.takingAllowed = modifiable;
 		for (ValidatedSlot peer : peers) {
-			peer.setModifiable(modifiable);
+			peer.setInsertingAllowed(modifiable);
+			peer.setTakingAllowed(modifiable);
+		}
+		return this;
+	}
+
+	/**
+	 * Returns whether items can be inserted into this slot.
+	 *
+	 * @return true if items can be inserted, false otherwise
+	 * @since 1.10.0
+	 */
+	public boolean isInsertingAllowed() {
+		return insertingAllowed;
+	}
+
+	/**
+	 * Sets whether inserting items into this slot is allowed.
+	 *
+	 * @param insertingAllowed true if items can be inserted, false otherwise
+	 * @return this slot widget
+	 * @since 1.10.0
+	 */
+	public WItemSlot setInsertingAllowed(boolean insertingAllowed) {
+		this.insertingAllowed = insertingAllowed;
+		for (ValidatedSlot peer : peers) {
+			peer.setInsertingAllowed(insertingAllowed);
+		}
+		return this;
+	}
+
+	/**
+	 * Returns whether items can be taken from this slot.
+	 *
+	 * @return true if items can be taken, false otherwise
+	 * @since 1.10.0
+	 */
+	public boolean isTakingAllowed() {
+		return takingAllowed;
+	}
+
+	/**
+	 * Sets whether taking items from this slot is allowed.
+	 *
+	 * @param takingAllowed true if items can be taken, false otherwise
+	 * @return this slot widget
+	 * @since 1.10.0
+	 */
+	public WItemSlot setTakingAllowed(boolean takingAllowed) {
+		this.takingAllowed = takingAllowed;
+		for (ValidatedSlot peer : peers) {
+			peer.setTakingAllowed(takingAllowed);
 		}
 		return this;
 	}
@@ -112,7 +165,8 @@ public class WItemSlot extends WWidget {
 		for (int y = 0; y < slotsHigh; y++) {
 			for (int x = 0; x < slotsWide; x++) {
 				ValidatedSlot slot = createSlotPeer(inventory, index, this.getAbsoluteX() + (x * 18), this.getAbsoluteY() + (y * 18));
-				slot.setModifiable(modifiable);
+				slot.setInsertingAllowed(insertingAllowed);
+				slot.setTakingAllowed(takingAllowed);
 				peers.add(slot);
 				c.addSlotPeer(slot);
 				index++;
