@@ -7,8 +7,9 @@ import net.minecraft.item.ItemStack;
 
 public class ValidatedSlot extends Slot {
 	private final int slotNumber;
-	private boolean modifiable = true;
-	
+	private boolean insertingAllowed = true;
+	private boolean takingAllowed = true;
+
 	public ValidatedSlot(Inventory inventoryIn, int index, int xPosition, int yPosition) {
 		super(inventoryIn, index, xPosition, yPosition);
 		if (inventoryIn==null) throw new IllegalArgumentException("Can't make an itemslot from a null inventory!");
@@ -17,12 +18,12 @@ public class ValidatedSlot extends Slot {
 	
 	@Override
 	public boolean canInsert(ItemStack stack) {
-		return modifiable && inventory.isValidInvStack(slotNumber, stack);
+		return insertingAllowed && inventory.isValidInvStack(slotNumber, stack);
 	}
 	
 	@Override
 	public boolean canTakeItems(PlayerEntity player) {
-		return modifiable && inventory.canPlayerUseInv(player);
+		return takingAllowed && inventory.canPlayerUseInv(player);
 	}
 	
 	@Override
@@ -44,18 +45,65 @@ public class ValidatedSlot extends Slot {
 	/**
 	 * Returns true if the item in this slot can be modified by players.
 	 *
-	 * @return true if this slot is modifiable
+	 * @return true if items can be inserted into or taken from this slot widget, false otherwise
 	 * @since 1.8.0
+	 * @deprecated Replaced with {@link #isInsertingAllowed()} and {@link #isTakingAllowed()}.
 	 */
+	@Deprecated
 	public boolean isModifiable() {
-		return modifiable;
+		return insertingAllowed || takingAllowed;
 	}
 
+	/**
+	 * @deprecated Replaced with {@link #setInsertingAllowed(boolean)} and {@link #setTakingAllowed(boolean)}.
+	 */
+	@Deprecated
 	public void setModifiable(boolean modifiable) {
-		this.modifiable = modifiable;
+		this.insertingAllowed = modifiable;
+		this.takingAllowed = modifiable;
 	}
 
 	public int getInventoryIndex() {
 		return slotNumber;
+	}
+
+	/**
+	 * Returns whether items can be inserted into this slot.
+	 *
+	 * @return true if items can be inserted, false otherwise
+	 * @since 1.10.0
+	 */
+	public boolean isInsertingAllowed() {
+		return insertingAllowed;
+	}
+
+	/**
+	 * Sets whether inserting items into this slot is allowed.
+	 *
+	 * @param insertingAllowed true if items can be inserted, false otherwise
+	 * @since 1.10.0
+	 */
+	public void setInsertingAllowed(boolean insertingAllowed) {
+		this.insertingAllowed = insertingAllowed;
+	}
+
+	/**
+	 * Returns whether items can be taken from this slot.
+	 *
+	 * @return true if items can be taken, false otherwise
+	 * @since 1.10.0
+	 */
+	public boolean isTakingAllowed() {
+		return takingAllowed;
+	}
+
+	/**
+	 * Sets whether taking items from this slot is allowed.
+	 *
+	 * @param takingAllowed true if items can be taken, false otherwise
+	 * @since 1.10.0
+	 */
+	public void setTakingAllowed(boolean takingAllowed) {
+		this.takingAllowed = takingAllowed;
 	}
 }
