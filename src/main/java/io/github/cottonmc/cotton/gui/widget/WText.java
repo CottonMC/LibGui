@@ -10,7 +10,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
@@ -54,7 +53,7 @@ public class WText extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private void wrapLines() {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		wrappedLines = font.getTextHandler().wrapLines(text, width, Style.EMPTY);
+		wrappedLines = font.wrapLines(text, width);
 	}
 
 	@Environment(EnvType.CLIENT)
