@@ -1,8 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
@@ -14,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.inventory.Inventory;
 
 public class WItemSlot extends WWidget {
-	private final List<ValidatedSlot> peers = Lists.newArrayList();
+	private final List<ValidatedSlot> peers = new ArrayList<>();
 	private BackgroundPainter backgroundPainter;
 	private Inventory inventory;
 	private int startIndex = 0;

@@ -1,8 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
@@ -19,7 +18,7 @@ public abstract class WPanel extends WWidget {
 	 *
 	 * <p>The list is mutable.
 	 */
-	protected final List<WWidget> children = Lists.newArrayList();
+	protected final List<WWidget> children = new ArrayList<>();
 	@Environment(EnvType.CLIENT)
 	private BackgroundPainter backgroundPainter = null;
 	
