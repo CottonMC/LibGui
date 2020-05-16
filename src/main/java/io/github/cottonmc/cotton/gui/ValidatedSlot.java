@@ -42,27 +42,6 @@ public class ValidatedSlot extends Slot {
 		return result;
 	}
 
-	/**
-	 * Returns true if the item in this slot can be modified by players.
-	 *
-	 * @return true if items can be inserted into or taken from this slot widget, false otherwise
-	 * @since 1.8.0
-	 * @deprecated Replaced with {@link #isInsertingAllowed()} and {@link #isTakingAllowed()}.
-	 */
-	@Deprecated
-	public boolean isModifiable() {
-		return insertingAllowed || takingAllowed;
-	}
-
-	/**
-	 * @deprecated Replaced with {@link #setInsertingAllowed(boolean)} and {@link #setTakingAllowed(boolean)}.
-	 */
-	@Deprecated
-	public void setModifiable(boolean modifiable) {
-		this.insertingAllowed = modifiable;
-		this.takingAllowed = modifiable;
-	}
-
 	public int getInventoryIndex() {
 		return slotNumber;
 	}
