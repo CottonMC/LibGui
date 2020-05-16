@@ -111,13 +111,27 @@ public class WItemSlot extends WWidget {
 		
 		for (int y = 0; y < slotsHigh; y++) {
 			for (int x = 0; x < slotsWide; x++) {
-				ValidatedSlot slot = new ValidatedSlot(inventory, index, this.getAbsoluteX() + (x * 18), this.getAbsoluteY() + (y * 18));
+				ValidatedSlot slot = createSlotPeer(inventory, index, this.getAbsoluteX() + (x * 18), this.getAbsoluteY() + (y * 18));
 				slot.setModifiable(modifiable);
 				peers.add(slot);
 				c.addSlotPeer(slot);
 				index++;
 			}
 		}
+	}
+
+	/**
+	 * Creates a slot peer for this slot widget.
+	 *
+	 * @param inventory the slot inventory
+	 * @param index     the index in the inventory
+	 * @param x         the X coordinate
+	 * @param y         the Y coordinate
+	 * @return the created slot instance
+	 * @since 1.11.0
+	 */
+	protected ValidatedSlot createSlotPeer(Inventory inventory, int index, int x, int y) {
+		return new ValidatedSlot(inventory, index, x, y);
 	}
 	
 	@Environment(EnvType.CLIENT)
