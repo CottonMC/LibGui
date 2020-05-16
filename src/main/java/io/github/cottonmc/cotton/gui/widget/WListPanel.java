@@ -54,6 +54,13 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	protected WScrollBar scrollBar = new WScrollBar(Axis.VERTICAL);
 	private int lastScroll = -1;
 
+	/**
+	 * Constructs a list panel.
+	 *
+	 * @param data         the list data
+	 * @param supplier     the widget supplier that creates unconfigured widgets
+	 * @param configurator the widget configurator that configures widgets to display the passed data
+	 */
 	public WListPanel(List<D> data, Supplier<W> supplier, BiConsumer<D, W> configurator) {
 		this.data = data;
 		this.supplier = supplier;
