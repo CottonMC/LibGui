@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 
@@ -18,15 +19,22 @@ import javax.annotation.Nullable;
  * The base class for all widgets.
  */
 public class WWidget {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	/**
 	 * The containing panel of this widget.
 	 * Can be null if this widget is the root panel or a HUD widget.
 	 */
 	@Nullable
 	protected WPanel parent;
+
+	/** The X coordinate of this widget relative to its parent. */
 	protected int x = 0;
+	/** The Y coordinate of this widget relative to its parent. */
 	protected int y = 0;
+	/** The width of this widget, defaults to 18 pixels. */
 	protected int width = 18;
+	/** The height of this widget, defaults to 18 pixels. */
 	protected int height = 18;
 
 	/**
@@ -245,23 +253,44 @@ public class WWidget {
 	public void onFocusLost() {
 	}
 
+	/**
+	 * Tests whether this widget has focus.
+	 *
+	 * @return true if this widget widget has focus, false otherwise
+	 * @see GuiDescription#isFocused(WWidget)
+	 */
 	public boolean isFocused() {
 		if (host==null) return false;
 		return host.isFocused(this);
 	}
 
+	/**
+	 * If this widget has a host, requests the focus from the host.
+	 *
+	 * @see GuiDescription#requestFocus(WWidget)
+	 */
 	public void requestFocus() {
 		if (host!=null) {
 			host.requestFocus(this);
 		} else {
-			System.out.println("host is null");
+			LOGGER.warn("Requesting focus for {}, but the host is null", this);
 		}
 	}
 
+	/**
+	 * If this widget has a host, releases this widget's focus.
+	 *
+	 * @see GuiDescription#releaseFocus(WWidget)
+	 */
 	public void releaseFocus() {
 		if (host!=null) host.releaseFocus(this);
 	}
 
+	/**
+	 * Tests whether this widget can have the focus in the GUI.
+	 *
+	 * @return true if this widget can be focused, false otherwise
+	 */
 	public boolean canFocus() {
 		return false;
 	}

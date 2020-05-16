@@ -45,7 +45,7 @@ public interface GuiDescription {
 	@Nullable
 	public WWidget getFocus();
 	
-	/** Notifies this gui that the widget waants to acquire focus. */
+	/** Notifies this gui that the widget wants to acquire focus. */
 	public void requestFocus(WWidget widget);
 	
 	/** Notifies this gui that the widget wants to give up its hold over focus. */
