@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -107,7 +108,7 @@ public class WItem extends WWidget {
 		ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
 
 		for (ItemConvertible item : tag.values()) {
-			builder.add(item.asItem().getStackForRender());
+			builder.add(new ItemStack(item));
 		}
 
 		return builder.build();
