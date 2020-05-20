@@ -80,20 +80,30 @@ public class WScrollBar extends WWidget {
 			ScreenDrawing.drawBeveledPanel(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, top, middle, bottom);
 
 			if (isFocused()) {
-				drawBeveledOutline(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, 0xFF_FFFFA7, 0xFF_C9CA71, 0xFF_8C8F39);
+				drawBeveledOutline(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, 0xFF_FFFFA7, 0xFF_8C8F39);
 			}
 		} else {
 			ScreenDrawing.drawBeveledPanel(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), top, middle, bottom);
 
 			if (isFocused()) {
-				drawBeveledOutline(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), 0xFF_FFFFA7, 0xFF_C9CA71, 0xFF_8C8F39);
+				drawBeveledOutline(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), 0xFF_FFFFA7, 0xFF_8C8F39);
 			}
 		}
 	}
 
-	private static void drawBeveledOutline(int x, int y, int width, int height, int topleft, int center, int bottomright) {
-		ScreenDrawing.coloredRect(x,             y,              width - 1, 1,          topleft); //Top shadow
-		ScreenDrawing.coloredRect(x,             y + 1,          1,         height - 2, topleft); //Left shadow
+	@Override
+	public boolean canResize() {
+		return true;
+	}
+
+	@Override
+	public boolean canFocus() {
+		return true;
+	}
+
+	private static void drawBeveledOutline(int x, int y, int width, int height, int topleft, int bottomright) {
+		ScreenDrawing.coloredRect(x,             y,              width,     1,          topleft); //Top shadow
+		ScreenDrawing.coloredRect(x,             y + 1,          1,         height - 1, topleft); //Left shadow
 		ScreenDrawing.coloredRect(x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
 		ScreenDrawing.coloredRect(x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
 	}
@@ -157,6 +167,7 @@ public class WScrollBar extends WWidget {
 	@Override
 	public WWidget onMouseDown(int x, int y, int button) {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
+		requestFocus();
 
 		if (axis==Axis.HORIZONTAL) {
 			anchor = x;
@@ -183,6 +194,23 @@ public class WScrollBar extends WWidget {
 		anchorValue = -1;
 		sliding = false;
 		return this;
+	}
+
+	@Override
+	public void onKeyPressed(int ch, int key, int modifiers) {
+		WAbstractSlider.Direction direction = axis == Axis.HORIZONTAL
+				? WAbstractSlider.Direction.RIGHT
+				: WAbstractSlider.Direction.DOWN;
+
+		if (WAbstractSlider.isIncreasingKey(ch, direction)) {
+			if (value < getMaxScrollValue()) {
+				value++;
+			}
+		} else if (WAbstractSlider.isDecreasingKey(ch, direction)) {
+			if (value > 0) {
+				value--;
+			}
+		}
 	}
 
 	public int getValue() {
