@@ -14,8 +14,7 @@ public final class FocusHandler {
 		if (focus == null) {
 			result = cycleFocus(host, lookForwards, host.getRootPanel(), null);
 		} else {
-			WPanel parent = focus.getParent();
-			result = cycleFocus(host, lookForwards, parent != null ? parent : host.getRootPanel(), focus);
+			result = cycleFocus(host, lookForwards, focus, null);
 		}
 
 		if (!result) {
@@ -24,15 +23,18 @@ public final class FocusHandler {
 		}
 	}
 
-	private static boolean cycleFocus(GuiDescription host, boolean lookForwards, WPanel panel, WWidget pivot) {
-		WWidget next = panel.cycleFocus(lookForwards, pivot);
+	private static boolean cycleFocus(GuiDescription host, boolean lookForwards, WWidget widget, WWidget pivot) {
+		WWidget next = widget instanceof WPanel
+				? ((WPanel) widget).cycleFocus(lookForwards, pivot)
+				: widget.cycleFocus(lookForwards);
+
 		if (next != null) {
 			host.requestFocus(next);
 			return true;
 		} else {
-			WPanel parent = panel.getParent();
+			WPanel parent = widget.getParent();
 			if (parent != null) {
-				return cycleFocus(host, lookForwards, parent, panel);
+				return cycleFocus(host, lookForwards, parent, widget);
 			}
 		}
 

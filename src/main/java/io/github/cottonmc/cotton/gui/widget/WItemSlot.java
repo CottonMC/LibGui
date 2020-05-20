@@ -8,8 +8,11 @@ import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.SlotActionType;
 
 import javax.annotation.Nullable;
 
@@ -25,6 +28,7 @@ public class WItemSlot extends WWidget {
 	private boolean big = false;
 	private boolean insertingAllowed = true;
 	private boolean takingAllowed = true;
+	private int focusedSlot = -1;
 
 	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
 		this.inventory = inventory;
@@ -90,6 +94,11 @@ public class WItemSlot extends WWidget {
 	@Override
 	public int getHeight() {
 		return slotsHigh * 18;
+	}
+
+	@Override
+	public boolean canFocus() {
+		return true;
 	}
 
 	public boolean isBigSlot() {
@@ -166,6 +175,16 @@ public class WItemSlot extends WWidget {
 		return this;
 	}
 
+	/**
+	 * Gets the currently focused slot index.
+	 *
+	 * @return the currently focused slot, or -1 if this widget isn't focused
+	 * @since 2.0.0
+	 */
+	public int getFocusedSlot() {
+		return focusedSlot;
+	}
+
 	@Override
 	public void createPeers(GuiDescription c) {
 		super.createPeers(c);
@@ -182,6 +201,18 @@ public class WItemSlot extends WWidget {
 				c.addSlotPeer(slot);
 				index++;
 			}
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void onKeyPressed(int ch, int key, int modifiers) {
+		if (isActivationKey(ch) && host instanceof ScreenHandler && focusedSlot >= 0) {
+			ScreenHandler handler = (ScreenHandler) host;
+			MinecraftClient client = MinecraftClient.getInstance();
+
+			ValidatedSlot peer = peers.get(focusedSlot);
+			client.interactionManager.clickSlot(handler.syncId, peer.id, 0, SlotActionType.PICKUP, client.player);
 		}
 	}
 
@@ -226,6 +257,28 @@ public class WItemSlot extends WWidget {
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter!=null) {
 			backgroundPainter.paintBackground(x, y, this);
+		}
+	}
+
+	@Nullable
+	@Override
+	public WWidget cycleFocus(boolean lookForwards) {
+		if (focusedSlot < 0) {
+			focusedSlot = lookForwards ? 0 : (slotsWide * slotsHigh - 1);
+			return this;
+		}
+
+		if (lookForwards) {
+			focusedSlot++;
+			if (focusedSlot >= slotsWide * slotsHigh) {
+				focusedSlot = -1;
+				return null;
+			} else {
+				return this;
+			}
+		} else {
+			focusedSlot--;
+			return focusedSlot >= 0 ? this : null;
 		}
 	}
 }

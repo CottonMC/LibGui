@@ -199,6 +199,12 @@ public abstract class WPanel extends WWidget {
 		for(WWidget child : children) child.tick();
 	}
 
+	@Nullable
+	@Override
+	public WWidget cycleFocus(boolean lookForwards) {
+		return cycleFocus(lookForwards, null);
+	}
+
 	/**
 	 * Cycles the focus inside this panel.
 	 *
@@ -253,10 +259,8 @@ public abstract class WPanel extends WWidget {
 
 	@Nullable
 	private WWidget checkFocusCycling(boolean lookForwards, WWidget child) {
-		if (child.canFocus()) {
-			return child;
-		} else if (child instanceof WPanel) {
-			return ((WPanel) child).cycleFocus(lookForwards, null);
+		if (child.canFocus() || child instanceof WPanel) {
+			return child.cycleFocus(lookForwards);
 		}
 
 		return null;

@@ -47,6 +47,7 @@ public interface BackgroundPainter {
 			WItemSlot slot = (WItemSlot)panel;
 			for(int x = 0; x < slot.getWidth()/18; ++x) {
 				for(int y = 0; y < slot.getHeight()/18; ++y) {
+					int index = x + y * (slot.getWidth() / 18);
 					int lo = 0xB8000000;
 					int bg = 0x4C000000;
 					//this will cause a slightly discolored bottom border on vanilla backgrounds but it's necessary for color support, it shouldn't be *too* visible unless you're looking for it
@@ -54,9 +55,25 @@ public interface BackgroundPainter {
 					if (slot.isBigSlot()) {
 						ScreenDrawing.drawBeveledPanel((x * 18) + left - 3, (y * 18) + top - 3, 26, 26,
 								lo, bg, hi);
+						if (slot.getFocusedSlot() == index) {
+							int sx = (x * 18) + left - 3;
+							int sy = (y * 18) + top - 3;
+							ScreenDrawing.coloredRect(sx,          sy,          26,     1,      0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(sx,          sy + 1,      1,      26 - 1, 0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(sx + 26 - 1, sy + 1,      1,      26 - 1, 0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(sx + 1,      sy + 26 - 1, 26 - 1, 1,      0xFF_FFFFA0);
+						}
 					} else {
 						ScreenDrawing.drawBeveledPanel((x * 18) + left, (y * 18) + top, 16+2, 16+2,
 								lo, bg, hi);
+						if (slot.getFocusedSlot() == index) {
+							int sx = (x * 18) + left;
+							int sy = (y * 18) + top;
+							ScreenDrawing.coloredRect(sx,          sy,          18,     1,      0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(sx,          sy + 1,      1,      18 - 1, 0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(sx + 18 - 1, sy + 1,      1,      18 - 1, 0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(sx + 1,      sy + 18 - 1, 18 - 1, 1,      0xFF_FFFFA0);
+						}
 					}
 				}
 			}

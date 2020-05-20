@@ -387,6 +387,20 @@ public class WWidget {
 	public void tick() {}
 
 	/**
+	 * Cycles the focus inside this widget.
+	 *
+	 * <p>If this widget is not focusable, returns null.
+	 *
+	 * @param lookForwards whether this should cycle forwards (true) or backwards (false)
+	 * @return the next focused widget, or null if should exit to the parent panel
+	 * @since 2.0.0
+	 */
+	@Nullable
+	public WWidget cycleFocus(boolean lookForwards) {
+		return canFocus() ? (isFocused() ? null : this) : null;
+	}
+
+	/**
 	 * Tests if the provided key code is an activation key for widgets.
 	 *
 	 * <p>The activation keys are Enter, keypad Enter, and Space.
