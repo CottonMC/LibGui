@@ -89,6 +89,7 @@ public class WScrollPanel extends WClippedPanel {
 		horizontalScrollBar.setLocation(0, this.height - horizontalScrollBar.getHeight());
 		horizontalScrollBar.setSize(scrollingVertically ? (this.width - verticalScrollBar.getWidth()) : this.width, 8);
 
+		if (widget instanceof WPanel) ((WPanel) widget).layout();
 		children.add(widget);
 		int x = scrollingHorizontally ? -horizontalScrollBar.getValue() : 0;
 		int y = scrollingVertically ? -verticalScrollBar.getValue() : 0;
