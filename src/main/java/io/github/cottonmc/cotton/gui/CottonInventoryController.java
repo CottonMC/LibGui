@@ -336,6 +336,28 @@ public class CottonInventoryController extends ScreenHandler implements GuiDescr
 	}
 
 	/**
+	 * Creates a player inventory widget from this panel's {@linkplain #playerInventory player inventory}.
+	 *
+	 * @param hasTitle whether the "Inventory" title should be displayed
+	 * @return the created inventory widget
+	 * @since 2.0.0
+	 */
+	public WPlayerInvPanel createPlayerInventoryPanel(boolean hasTitle) {
+		return new WPlayerInvPanel(this.playerInventory, hasTitle);
+	}
+
+	/**
+	 * Creates a player inventory widget from this panel's {@linkplain #playerInventory player inventory}.
+	 *
+	 * @param title the inventory title widget
+	 * @return the created inventory widget
+	 * @since 2.0.0
+	 */
+	public WPlayerInvPanel createPlayerInventoryPanel(WWidget title) {
+		return new WPlayerInvPanel(this.playerInventory, title);
+	}
+
+	/**
 	 * Gets the block inventory at the context.
 	 *
 	 * <p>If no inventory is found, returns {@link EmptyInventory#INSTANCE}.

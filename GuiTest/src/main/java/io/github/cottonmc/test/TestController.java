@@ -22,7 +22,7 @@ public class TestController extends CottonInventoryController {
 		root.add(button, 0, 3, 5, 1);
 		
 		
-		root.add(new WPlayerInvPanel(playerInventory), 0, 5);
+		root.add(createPlayerInventoryPanel(), 0, 5);
 		
 		
 		this.getRootPanel().validate(this);
