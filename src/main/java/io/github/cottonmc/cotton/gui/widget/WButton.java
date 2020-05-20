@@ -11,6 +11,7 @@ import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
+import org.lwjgl.glfw.GLFW;
 
 public class WButton extends WWidget {
 	private Text label;
@@ -33,13 +34,18 @@ public class WButton extends WWidget {
 	public boolean canResize() {
 		return true;
 	}
-	
+
+	@Override
+	public boolean canFocus() {
+		return true;
+	}
+
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		boolean hovered = (mouseX>=0 && mouseY>=0 && mouseX<getWidth() && mouseY<getHeight());
 		int state = 1; //1=regular. 2=hovered. 0=disabled.
 		if (!enabled) state = 0;
-		else if (hovered) state = 2;
+		else if (hovered || isFocused()) state = 2;
 		
 		float px = 1/256f;
 		float buttonLeft = 0 * px;
@@ -80,6 +86,14 @@ public class WButton extends WWidget {
 			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
 			if (onClick!=null) onClick.run();
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void onKeyPressed(int ch, int key, int modifiers) {
+		if (ch == GLFW.GLFW_KEY_SPACE || ch == GLFW.GLFW_KEY_ENTER || ch == GLFW.GLFW_KEY_KP_ENTER) {
+			onClick(0, 0, 0);
 		}
 	}
 
