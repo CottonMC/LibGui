@@ -304,18 +304,18 @@ public abstract class WAbstractSlider extends WWidget {
 	public void onKeyPressed(int ch, int key, int modifiers) {
 		boolean valueChanged = false;
 		if (modifiers == 0) {
-			if (isDecreasingKey(ch) && value > min) {
+			if (isDecreasingKey(ch, direction) && value > min) {
 				value--;
 				valueChanged = true;
-			} else if (isIncreasingKey(ch) && value < max) {
+			} else if (isIncreasingKey(ch, direction) && value < max) {
 				value++;
 				valueChanged = true;
 			}
 		} else if (modifiers == GLFW.GLFW_MOD_CONTROL) {
-			if (isDecreasingKey(ch) && value != min) {
+			if (isDecreasingKey(ch, direction) && value != min) {
 				value = min;
 				valueChanged = true;
-			} else if (isIncreasingKey(ch) && value != max) {
+			} else if (isIncreasingKey(ch, direction) && value != max) {
 				value = max;
 				valueChanged = true;
 			}
@@ -330,19 +330,35 @@ public abstract class WAbstractSlider extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyReleased(int ch, int key, int modifiers) {
-		if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch) || isIncreasingKey(ch))) {
+		if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch, direction) || isIncreasingKey(ch, direction))) {
 			if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
 			pendingDraggingFinishedFromKeyboard = false;
 		}
 	}
 
-	private boolean isDecreasingKey(int ch) {
+	/**
+	 * Tests if the key should decrease sliders with the specified direction.
+	 *
+	 * @param ch        the key code
+	 * @param direction the direction
+	 * @return true if the key should decrease sliders with the direction, false otherwise
+	 * @since 2.0.0
+	 */
+	public static boolean isDecreasingKey(int ch, Direction direction) {
 		return direction.isInverted()
 				? (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP)
 				: (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN);
 	}
 
-	private boolean isIncreasingKey(int ch) {
+	/**
+	 * Tests if the key should increase sliders with the specified direction.
+	 *
+	 * @param ch        the key code
+	 * @param direction the direction
+	 * @return true if the key should increase sliders with the direction, false otherwise
+	 * @since 2.0.0
+	 */
+	public static boolean isIncreasingKey(int ch, Direction direction) {
 		return direction.isInverted()
 				? (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN)
 				: (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP);
