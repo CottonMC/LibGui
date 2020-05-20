@@ -405,18 +405,13 @@ public class CottonInventoryController extends ScreenHandler implements GuiDescr
 	 *
 	 * <p>If no property delegate is found, returns an empty property delegate with no properties.
 	 *
-	 * <p>Searches for blocks and block entities implementing {@link PropertyDelegateHolder}.
+	 * <p>Searches for block entities implementing {@link PropertyDelegateHolder}.
 	 *
 	 * @param ctx the context
 	 * @return the found property delegate
 	 */
 	public static PropertyDelegate getBlockPropertyDelegate(ScreenHandlerContext ctx) {
 		return ctx.run((world, pos) -> {
-			BlockState state = world.getBlockState(pos);
-			Block block = state.getBlock();
-			if (block instanceof PropertyDelegateHolder) {
-				return ((PropertyDelegateHolder)block).getPropertyDelegate();
-			}
 			BlockEntity be = world.getBlockEntity(pos);
 			if (be!=null && be instanceof PropertyDelegateHolder) {
 				return ((PropertyDelegateHolder)be).getPropertyDelegate();
