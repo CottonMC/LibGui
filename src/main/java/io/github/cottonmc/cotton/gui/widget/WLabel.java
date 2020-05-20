@@ -116,7 +116,7 @@ public class WLabel extends WWidget {
 	
 	@Override
 	public void setSize(int x, int y) {
-		super.setSize(x, 20);
+		super.setSize(x, Math.max(8, y));
 	}
 	
 	public WLabel setDarkmodeColor(int color) {
