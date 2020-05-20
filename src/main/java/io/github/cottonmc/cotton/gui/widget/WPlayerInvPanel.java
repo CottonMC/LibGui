@@ -45,7 +45,7 @@ public class WPlayerInvPanel extends WPlainPanel {
 		int y = 0;
 
 		if (label != null) {
-			this.add(label, 0, 0);
+			this.add(label, 0, 0, label.getWidth(), label.getHeight());
 			y += label.getHeight();
 		}
 
