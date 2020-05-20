@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
@@ -10,10 +11,11 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
  * @since 2.0.0
  */
 public class WScrollPanel extends WClippedPanel {
+	private static final int SCROLL_BAR_SIZE = 8;
 	private final WWidget widget;
 
-	private boolean scrollingHorizontally = false;
-	private boolean scrollingVertically = true;
+	private TriState scrollingHorizontally = TriState.DEFAULT;
+	private TriState scrollingVertically = TriState.DEFAULT;
 
 	/**
 	 * The horizontal scroll bar of this panel.
@@ -45,15 +47,17 @@ public class WScrollPanel extends WClippedPanel {
 	}
 
 	/**
-	 * Returns whether this scroll panels has a horizontal scroll bar.
+	 * Returns whether this scroll panel has a horizontal scroll bar.
 	 *
-	 * @return true if there is a horizontal scroll bar, false otherwise
+	 * @return true if there is a horizontal scroll bar,
+	 *         default if a scroll bar should be added if needed,
+	 *         and false otherwise
 	 */
-	public boolean isScrollingHorizontally() {
+	public TriState isScrollingHorizontally() {
 		return scrollingHorizontally;
 	}
 
-	public WScrollPanel setScrollingHorizontally(boolean scrollingHorizontally) {
+	public WScrollPanel setScrollingHorizontally(TriState scrollingHorizontally) {
 		if (scrollingHorizontally != this.scrollingHorizontally) {
 			this.scrollingHorizontally = scrollingHorizontally;
 			layout();
@@ -63,15 +67,17 @@ public class WScrollPanel extends WClippedPanel {
 	}
 
 	/**
-	 * Returns whether this scroll panels has a vertical scroll bar.
+	 * Returns whether this scroll panel has a vertical scroll bar.
 	 *
-	 * @return true if there is a vertical scroll bar, false otherwise
+	 * @return true if there is a vertical scroll bar,
+	 * 	 *         default if a scroll bar should be added if needed,
+	 * 	 *         and false otherwise
 	 */
-	public boolean isScrollingVertically() {
+	public TriState isScrollingVertically() {
 		return scrollingVertically;
 	}
 
-	public WScrollPanel setScrollingVertically(boolean scrollingVertically) {
+	public WScrollPanel setScrollingVertically(TriState scrollingVertically) {
 		if (scrollingVertically != this.scrollingVertically) {
 			this.scrollingVertically = scrollingVertically;
 			layout();
@@ -94,23 +100,32 @@ public class WScrollPanel extends WClippedPanel {
 	@Override
 	public void layout() {
 		children.clear();
+
+		boolean horizontal = (scrollingHorizontally == TriState.DEFAULT)
+				? (widget.width > this.width - SCROLL_BAR_SIZE)
+				: scrollingHorizontally.get();
+		boolean vertical = (scrollingVertically == TriState.DEFAULT)
+				? (widget.height > this.height - SCROLL_BAR_SIZE)
+				: scrollingVertically.get();
+
+		int offset = (horizontal && vertical) ? SCROLL_BAR_SIZE : 0;
+		verticalScrollBar.setSize(SCROLL_BAR_SIZE, this.height - offset);
 		verticalScrollBar.setLocation(this.width - verticalScrollBar.getWidth(), 0);
-		verticalScrollBar.setSize(8, this.height);
+		horizontalScrollBar.setSize(this.width - offset, SCROLL_BAR_SIZE);
 		horizontalScrollBar.setLocation(0, this.height - horizontalScrollBar.getHeight());
-		horizontalScrollBar.setSize(scrollingVertically ? (this.width - verticalScrollBar.getWidth()) : this.width, 8);
 
 		if (widget instanceof WPanel) ((WPanel) widget).layout();
 		children.add(widget);
-		int x = scrollingHorizontally ? -horizontalScrollBar.getValue() : 0;
-		int y = scrollingVertically ? -verticalScrollBar.getValue() : 0;
+		int x = horizontal ? -horizontalScrollBar.getValue() : 0;
+		int y = vertical ? -verticalScrollBar.getValue() : 0;
 		widget.setLocation(x, y);
 
-		verticalScrollBar.setWindow(this.height);
-		verticalScrollBar.setMaxValue(widget.getHeight() + 1);
-		horizontalScrollBar.setWindow(this.width);
-		horizontalScrollBar.setMaxValue(widget.getWidth() + 1);
+		verticalScrollBar.setWindow(this.height - (horizontal ? SCROLL_BAR_SIZE : 0));
+		verticalScrollBar.setMaxValue(widget.getHeight());
+		horizontalScrollBar.setWindow(this.width - (vertical ? SCROLL_BAR_SIZE : 0));
+		horizontalScrollBar.setMaxValue(widget.getWidth());
 
-		if (scrollingVertically) children.add(verticalScrollBar);
-		if (scrollingHorizontally) children.add(horizontalScrollBar);
+		if (vertical) children.add(verticalScrollBar);
+		if (horizontal) children.add(horizontalScrollBar);
 	}
 }
