@@ -9,6 +9,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 
+import javax.annotation.Nullable;
+
 /**
  * Panels are widgets that contain other widgets.
  */
@@ -21,7 +23,7 @@ public abstract class WPanel extends WWidget {
 	protected final List<WWidget> children = new ArrayList<>();
 	@Environment(EnvType.CLIENT)
 	private BackgroundPainter backgroundPainter = null;
-	
+
 	@Override
 	public void createPeers(GuiDescription c) {
 		super.createPeers(c);
@@ -38,7 +40,7 @@ public abstract class WPanel extends WWidget {
 	public void remove(WWidget w) {
 		children.remove(w);
 	}
-	
+
 	@Override
 	public boolean canResize() {
 		return true;
@@ -65,7 +67,7 @@ public abstract class WPanel extends WWidget {
 	public BackgroundPainter getBackgroundPainter() {
 		return this.backgroundPainter;
 	}
-	
+
 	/**
 	 * Uses this Panel's layout rules to reposition and resize components to fit nicely in the panel.
 	 */
@@ -150,7 +152,7 @@ public abstract class WPanel extends WWidget {
 			}
 		}
 	}*/
-	
+
 	/**
 	 * Finds the most specific child node at this location.
 	 */
@@ -168,7 +170,7 @@ public abstract class WPanel extends WWidget {
 		}
 		return this;
 	}
-	
+
 	@Override
 	public void validate(GuiDescription c) {
 		layout();
@@ -177,12 +179,12 @@ public abstract class WPanel extends WWidget {
 		}
 		if (c!=null) createPeers(c);
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter!=null) backgroundPainter.paintBackground(x, y, this);
-		
+
 		for(WWidget child : children) {
 			child.paint(matrices, x + child.getX(), y + child.getY(), mouseX-child.getX(), mouseY-child.getY());
 		}
@@ -195,5 +197,68 @@ public abstract class WPanel extends WWidget {
 	@Override
 	public void tick() {
 		for(WWidget child : children) child.tick();
+	}
+
+	/**
+	 * Cycles the focus inside this panel.
+	 *
+	 * @param lookForwards whether this should cycle forwards (true) or backwards (false)
+	 * @param pivot        the widget that should be cycled around (can be null for beginning / end)
+	 * @return the next focused widget, or null if should exit to the parent panel
+	 * @since 2.0.0
+	 */
+	@Nullable
+	public WWidget cycleFocus(boolean lookForwards, @Nullable WWidget pivot) {
+		if (pivot == null) {
+			if (lookForwards) {
+				for (WWidget child : children) {
+					WWidget result = checkFocusCycling(lookForwards, child);
+					if (result != null) return result;
+				}
+			} else if (!children.isEmpty()) {
+				for (int i = children.size() - 1; i >= 0; i--) {
+					WWidget child = children.get(i);
+					WWidget result = checkFocusCycling(lookForwards, child);
+					if (result != null) return result;
+				}
+			}
+		} else {
+			int currentIndex = children.indexOf(pivot);
+
+			if (currentIndex == -1) { // outside widget
+				currentIndex = lookForwards ? 0 : children.size() - 1;
+			}
+
+			if (lookForwards) {
+				if (currentIndex < children.size() - 1) {
+					for (int i = currentIndex + 1; i < children.size(); i++) {
+						WWidget child = children.get(i);
+						WWidget result = checkFocusCycling(lookForwards, child);
+						if (result != null) return result;
+					}
+				}
+			} else { // look forwards = false
+				if (currentIndex > 0) {
+					for (int i = currentIndex - 1; i >= 0; i--) {
+						WWidget child = children.get(i);
+						WWidget result = checkFocusCycling(lookForwards, child);
+						if (result != null) return result;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	@Nullable
+	private WWidget checkFocusCycling(boolean lookForwards, WWidget child) {
+		if (child.canFocus()) {
+			return child;
+		} else if (child instanceof WPanel) {
+			return ((WPanel) child).cycleFocus(lookForwards, null);
+		}
+
+		return null;
 	}
 }

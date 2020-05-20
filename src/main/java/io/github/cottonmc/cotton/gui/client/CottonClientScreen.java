@@ -224,4 +224,13 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	public void renderTextHover(MatrixStack matrices, Text text, int x, int y) {
 		renderTextHoverEffect(matrices, text, x, y);
 	}
+
+	@Override
+	public boolean changeFocus(boolean lookForwards) {
+		if (description != null) {
+			description.cycleFocus(lookForwards);
+		}
+
+		return true;
+	}
 }

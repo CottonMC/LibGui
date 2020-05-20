@@ -87,6 +87,9 @@ public class CottonInventoryScreen<T extends CottonInventoryController> extends 
 		if (ch==GLFW.GLFW_KEY_ESCAPE) {
 			this.client.player.closeHandledScreen();
 			return true;
+		} else if (ch==GLFW.GLFW_KEY_TAB) {
+			changeFocus(!hasShiftDown());
+			return true;
 		} else {
 			//if (super.keyPressed(ch, keyCode, modifiers)) return true;
 			if (description.getFocus()==null) {
@@ -235,5 +238,14 @@ public class CottonInventoryScreen<T extends CottonInventoryController> extends 
 	@Override
 	public void renderTextHover(MatrixStack matrices, Text text, int x, int y) {
 		renderTextHoverEffect(matrices, text, x, y);
+	}
+
+	@Override
+	public boolean changeFocus(boolean lookForwards) {
+		if (description != null) {
+			description.cycleFocus(lookForwards);
+		}
+
+		return true;
 	}
 }
