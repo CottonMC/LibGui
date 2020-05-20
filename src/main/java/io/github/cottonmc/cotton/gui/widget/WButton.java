@@ -92,7 +92,7 @@ public class WButton extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyPressed(int ch, int key, int modifiers) {
-		if (ch == GLFW.GLFW_KEY_SPACE || ch == GLFW.GLFW_KEY_ENTER || ch == GLFW.GLFW_KEY_KP_ENTER) {
+		if (isActivationKey(ch)) {
 			onClick(0, 0, 0);
 		}
 	}

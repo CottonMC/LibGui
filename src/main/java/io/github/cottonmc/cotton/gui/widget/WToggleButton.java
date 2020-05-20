@@ -19,9 +19,11 @@ public class WToggleButton extends WWidget {
 	// Default on/off images
 	protected final static Identifier DEFAULT_OFF_IMAGE = new Identifier("libgui:textures/widget/toggle_off.png");
 	protected final static Identifier DEFAULT_ON_IMAGE  = new Identifier("libgui:textures/widget/toggle_on.png");
+	protected final static Identifier DEFAULT_FOCUS_IMAGE = new Identifier("libgui:textures/widget/toggle_focus.png");
 
 	protected Identifier onImage;
 	protected Identifier offImage;
+	protected Identifier focusImage = DEFAULT_FOCUS_IMAGE;
 
 	@Nullable protected Text label = null;
 
@@ -59,7 +61,10 @@ public class WToggleButton extends WWidget {
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		ScreenDrawing.texturedRect(x, y, 18, 18, isOn ? onImage : offImage, 0xFFFFFFFF);
-		
+		if (isFocused()) {
+			ScreenDrawing.texturedRect(x, y, 18, 18, focusImage, 0xFFFFFFFF);
+		}
+
 		if (label!=null) {
 			ScreenDrawing.drawString(matrices, label, x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
@@ -67,6 +72,11 @@ public class WToggleButton extends WWidget {
 	
 	@Override
 	public boolean canResize() {
+		return true;
+	}
+
+	@Override
+	public boolean canFocus() {
 		return true;
 	}
 
@@ -80,7 +90,14 @@ public class WToggleButton extends WWidget {
 		this.isOn = !this.isOn;
 		onToggle(this.isOn);
 	}
-	
+
+	@Override
+	public void onKeyPressed(int ch, int key, int modifiers) {
+		if (isActivationKey(ch)) {
+			onClick(0, 0, 0);
+		}
+	}
+
 	protected void onToggle(boolean on) {
 		if (this.onToggle != null) {
 			this.onToggle.accept(on);
@@ -114,6 +131,33 @@ public class WToggleButton extends WWidget {
 		this.color = light;
 		this.darkmodeColor = dark;
 
+		return this;
+	}
+
+	public Identifier getOnImage() {
+		return onImage;
+	}
+
+	public WToggleButton setOnImage(Identifier onImage) {
+		this.onImage = onImage;
+		return this;
+	}
+
+	public Identifier getOffImage() {
+		return offImage;
+	}
+
+	public WToggleButton setOffImage(Identifier offImage) {
+		this.offImage = offImage;
+		return this;
+	}
+
+	public Identifier getFocusImage() {
+		return focusImage;
+	}
+
+	public WToggleButton setFocusImage(Identifier focusImage) {
+		this.focusImage = focusImage;
 		return this;
 	}
 }

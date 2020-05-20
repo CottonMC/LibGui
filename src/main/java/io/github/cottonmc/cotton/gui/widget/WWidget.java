@@ -12,6 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 
@@ -384,4 +385,18 @@ public class WWidget {
 	 */
 	@Environment(EnvType.CLIENT)
 	public void tick() {}
+
+	/**
+	 * Tests if the provided key code is an activation key for widgets.
+	 *
+	 * <p>The activation keys are Enter, keypad Enter, and Space.
+	 *
+	 * @param ch the key code
+	 * @return whether the key is an activation key
+	 * @since 2.0.0
+	 */
+	@Environment(EnvType.CLIENT)
+	public static boolean isActivationKey(int ch) {
+		return ch == GLFW.GLFW_KEY_ENTER || ch == GLFW.GLFW_KEY_KP_ENTER || ch == GLFW.GLFW_KEY_SPACE;
+	}
 }
