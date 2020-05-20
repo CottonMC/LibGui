@@ -6,7 +6,15 @@ import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 
+/**
+ * A scroll bar.
+ *
+ * <p>Since LibGui 2.0.0, this widget is also a {@link WAbstractSlider}.
+ */
 public class WScrollBar extends WAbstractSlider {
+	/**
+	 * The range of values that is shown at a time.
+	 */
 	protected int window = 16;
 
 	/**

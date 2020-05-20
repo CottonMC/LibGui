@@ -44,6 +44,11 @@ public class WScrollPanel extends WClippedPanel {
 		children.add(verticalScrollBar); // Only vertical scroll bar
 	}
 
+	/**
+	 * Returns whether this scroll panels has a horizontal scroll bar.
+	 *
+	 * @return true if there is a horizontal scroll bar, false otherwise
+	 */
 	public boolean isScrollingHorizontally() {
 		return scrollingHorizontally;
 	}
@@ -57,6 +62,11 @@ public class WScrollPanel extends WClippedPanel {
 		return this;
 	}
 
+	/**
+	 * Returns whether this scroll panels has a vertical scroll bar.
+	 *
+	 * @return true if there is a vertical scroll bar, false otherwise
+	 */
 	public boolean isScrollingVertically() {
 		return scrollingVertically;
 	}
