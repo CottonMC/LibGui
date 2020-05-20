@@ -38,7 +38,7 @@ public class WTextField extends WWidget {
 	protected int uneditableColor = 0x707070;
 	
 	@Nullable
-	protected String suggestion = null;
+	protected Text suggestion = null;
 	
 	protected int cursor = 0;
 	/**
@@ -62,7 +62,7 @@ public class WTextField extends WWidget {
 	}
 	
 	public WTextField(Text suggestion) {
-		this.suggestion = suggestion.asString();
+		this.suggestion = suggestion;
 	}
 	
 	public void setText(String s) {
@@ -449,14 +449,14 @@ public class WTextField extends WWidget {
 		this.editable = editable;
 		return this;
 	}
-	
-	public WTextField setSuggestion(@Nullable String suggestion) {
-		this.suggestion = suggestion;
-		return this;
+
+	@Nullable
+	public Text getSuggestion() {
+		return suggestion;
 	}
-	
+
 	public WTextField setSuggestion(@Nullable Text suggestion) {
-		this.suggestion = suggestion.asString();
+		this.suggestion = suggestion;
 		return this;
 	}
 	
