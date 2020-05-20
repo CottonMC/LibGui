@@ -131,6 +131,17 @@ public class WWidget {
 	}
 
 	/**
+	 * Gets the parent panel of this widget.
+	 *
+	 * @return the parent, or null if this widget has no parent
+	 * @since 2.0.0
+	 */
+	@Nullable
+	public WPanel getParent() {
+		return parent;
+	}
+
+	/**
 	 * Sets the parent panel of this widget.
 	 *
 	 * @param parent the new parent
