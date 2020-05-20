@@ -6,15 +6,18 @@ import java.util.List;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.inventory.Inventory;
 
+import javax.annotation.Nullable;
+
 public class WItemSlot extends WWidget {
 	private final List<ValidatedSlot> peers = new ArrayList<>();
-	private BackgroundPainter backgroundPainter;
+	@Nullable
+	@Environment(EnvType.CLIENT)
+	private BackgroundPainter backgroundPainter = BackgroundPainter.SLOT;
 	private Inventory inventory;
 	private int startIndex = 0;
 	private int slotsWide = 1;
@@ -171,7 +174,8 @@ public class WItemSlot extends WWidget {
 		
 		for (int y = 0; y < slotsHigh; y++) {
 			for (int x = 0; x < slotsWide; x++) {
-				ValidatedSlot slot = createSlotPeer(inventory, index, this.getAbsoluteX() + (x * 18), this.getAbsoluteY() + (y * 18));
+				// The Slot object is offset +1 because it's the inner area of the slot.
+				ValidatedSlot slot = createSlotPeer(inventory, index, this.getAbsoluteX() + (x * 18) + 1, this.getAbsoluteY() + (y * 18) + 1);
 				slot.setInsertingAllowed(insertingAllowed);
 				slot.setTakingAllowed(takingAllowed);
 				peers.add(slot);
@@ -194,9 +198,26 @@ public class WItemSlot extends WWidget {
 	protected ValidatedSlot createSlotPeer(Inventory inventory, int index, int x, int y) {
 		return new ValidatedSlot(inventory, index, x, y);
 	}
-	
+
+	/**
+	 * Gets this slot widget's background painter.
+	 *
+	 * @return the background painter
+	 * @since 2.0.0
+	 */
+	@Nullable
 	@Environment(EnvType.CLIENT)
-	public void setBackgroundPainter(BackgroundPainter painter) {
+	public BackgroundPainter getBackgroundPainter() {
+		return backgroundPainter;
+	}
+
+	/**
+	 * Sets this item slot's background painter.
+	 *
+	 * @param painter the new painter
+	 */
+	@Environment(EnvType.CLIENT)
+	public void setBackgroundPainter(@Nullable BackgroundPainter painter) {
 		this.backgroundPainter = painter;
 	}
 	
@@ -205,21 +226,6 @@ public class WItemSlot extends WWidget {
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter!=null) {
 			backgroundPainter.paintBackground(x, y, this);
-		} else {
-			for(int ix = 0; ix < getWidth()/18; ++ix) {
-				for(int iy = 0; iy < getHeight()/18; ++iy) {
-					int lo = 0xB8000000;
-					int bg = 0x4C000000;
-					int hi = 0xB8FFFFFF;
-					if (isBigSlot()) {
-						ScreenDrawing.drawBeveledPanel((ix * 18) + x - 4, (iy * 18) + y - 4, 24, 24,
-								lo, bg, hi);
-					} else {
-						ScreenDrawing.drawBeveledPanel((ix * 18) + x - 1, (iy * 18) + y - 1, 18, 18,
-								lo, bg, hi);
-					}
-				}
-			}
 		}
 	}
 }

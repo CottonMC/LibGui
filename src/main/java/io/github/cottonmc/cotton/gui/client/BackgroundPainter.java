@@ -52,10 +52,10 @@ public interface BackgroundPainter {
 					//this will cause a slightly discolored bottom border on vanilla backgrounds but it's necessary for color support, it shouldn't be *too* visible unless you're looking for it
 					int hi = 0xB8FFFFFF;
 					if (slot.isBigSlot()) {
-						ScreenDrawing.drawBeveledPanel((x * 18) + left - 4, (y * 18) + top - 4, 16+8, 16+8,
+						ScreenDrawing.drawBeveledPanel((x * 18) + left - 3, (y * 18) + top - 3, 26, 26,
 								lo, bg, hi);
 					} else {
-						ScreenDrawing.drawBeveledPanel((x * 18) + left - 1, (y * 18) + top - 1, 16+2, 16+2,
+						ScreenDrawing.drawBeveledPanel((x * 18) + left, (y * 18) + top, 16+2, 16+2,
 								lo, bg, hi);
 					}
 				}
