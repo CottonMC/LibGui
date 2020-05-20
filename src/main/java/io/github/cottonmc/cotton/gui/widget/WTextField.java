@@ -11,6 +11,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
@@ -453,6 +454,11 @@ public class WTextField extends WWidget {
 	@Nullable
 	public Text getSuggestion() {
 		return suggestion;
+	}
+
+	public WTextField setSuggestion(@Nullable String suggestion) {
+		this.suggestion = suggestion != null ? new LiteralText(suggestion) : null;
+		return this;
 	}
 
 	public WTextField setSuggestion(@Nullable Text suggestion) {
