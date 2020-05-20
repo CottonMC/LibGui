@@ -1,29 +1,29 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import com.google.common.collect.Lists;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.inventory.Inventory;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-
-import java.util.List;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.inventory.Inventory;
 
 public class WItemSlot extends WWidget {
-	private final List<ValidatedSlot> peers = Lists.newArrayList();
+	private final List<ValidatedSlot> peers = new ArrayList<>();
 	private BackgroundPainter backgroundPainter;
 	private Inventory inventory;
 	private int startIndex = 0;
 	private int slotsWide = 1;
 	private int slotsHigh = 1;
 	private boolean big = false;
-	private boolean modifiable = true;
-	
-	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big, boolean ltr) {
+	private boolean insertingAllowed = true;
+	private boolean takingAllowed = true;
+
+	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
 		this.inventory = inventory;
 		this.startIndex = startIndex;
 		this.slotsWide = slotsWide;
@@ -60,7 +60,14 @@ public class WItemSlot extends WWidget {
 		
 		return w;
 	}
-	
+
+	/**
+	 * Creates a 9x3 slot widget from the "main" part of a player inventory.
+	 *
+	 * @param inventory the player inventory
+	 * @return the created slot widget
+	 * @see WPlayerInvPanel
+	 */
 	public static WItemSlot ofPlayerStorage(Inventory inventory) {
 		WItemSlot w = new WItemSlot();
 		w.inventory = inventory;
@@ -89,17 +96,69 @@ public class WItemSlot extends WWidget {
 	/**
 	 * Returns true if the contents of this {@code WItemSlot} can be modified by players.
 	 *
-	 * @return true if this slot is modifiable
+	 * @return true if items can be inserted into or taken from this slot widget, false otherwise
 	 * @since 1.8.0
 	 */
 	public boolean isModifiable() {
-		return modifiable;
+		return takingAllowed || insertingAllowed;
 	}
 
 	public WItemSlot setModifiable(boolean modifiable) {
-		this.modifiable = modifiable;
+		this.insertingAllowed = modifiable;
+		this.takingAllowed = modifiable;
 		for (ValidatedSlot peer : peers) {
-			peer.setModifiable(modifiable);
+			peer.setInsertingAllowed(modifiable);
+			peer.setTakingAllowed(modifiable);
+		}
+		return this;
+	}
+
+	/**
+	 * Returns whether items can be inserted into this slot.
+	 *
+	 * @return true if items can be inserted, false otherwise
+	 * @since 1.10.0
+	 */
+	public boolean isInsertingAllowed() {
+		return insertingAllowed;
+	}
+
+	/**
+	 * Sets whether inserting items into this slot is allowed.
+	 *
+	 * @param insertingAllowed true if items can be inserted, false otherwise
+	 * @return this slot widget
+	 * @since 1.10.0
+	 */
+	public WItemSlot setInsertingAllowed(boolean insertingAllowed) {
+		this.insertingAllowed = insertingAllowed;
+		for (ValidatedSlot peer : peers) {
+			peer.setInsertingAllowed(insertingAllowed);
+		}
+		return this;
+	}
+
+	/**
+	 * Returns whether items can be taken from this slot.
+	 *
+	 * @return true if items can be taken, false otherwise
+	 * @since 1.10.0
+	 */
+	public boolean isTakingAllowed() {
+		return takingAllowed;
+	}
+
+	/**
+	 * Sets whether taking items from this slot is allowed.
+	 *
+	 * @param takingAllowed true if items can be taken, false otherwise
+	 * @return this slot widget
+	 * @since 1.10.0
+	 */
+	public WItemSlot setTakingAllowed(boolean takingAllowed) {
+		this.takingAllowed = takingAllowed;
+		for (ValidatedSlot peer : peers) {
+			peer.setTakingAllowed(takingAllowed);
 		}
 		return this;
 	}
@@ -112,13 +171,28 @@ public class WItemSlot extends WWidget {
 		
 		for (int y = 0; y < slotsHigh; y++) {
 			for (int x = 0; x < slotsWide; x++) {
-				ValidatedSlot slot = new ValidatedSlot(inventory, index, this.getAbsoluteX() + (x * 18), this.getAbsoluteY() + (y * 18));
-				slot.setModifiable(modifiable);
+				ValidatedSlot slot = createSlotPeer(inventory, index, this.getAbsoluteX() + (x * 18), this.getAbsoluteY() + (y * 18));
+				slot.setInsertingAllowed(insertingAllowed);
+				slot.setTakingAllowed(takingAllowed);
 				peers.add(slot);
 				c.addSlotPeer(slot);
 				index++;
 			}
 		}
+	}
+
+	/**
+	 * Creates a slot peer for this slot widget.
+	 *
+	 * @param inventory the slot inventory
+	 * @param index     the index in the inventory
+	 * @param x         the X coordinate
+	 * @param y         the Y coordinate
+	 * @return the created slot instance
+	 * @since 1.11.0
+	 */
+	protected ValidatedSlot createSlotPeer(Inventory inventory, int index, int x, int y) {
+		return new ValidatedSlot(inventory, index, x, y);
 	}
 	
 	@Environment(EnvType.CLIENT)

@@ -4,6 +4,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 
+/**
+ * An empty inventory that cannot hold any items.
+ */
 public class EmptyInventory implements Inventory {
 	public static final EmptyInventory INSTANCE = new EmptyInventory();
 	

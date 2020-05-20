@@ -320,7 +320,7 @@ public class WTextField extends WWidget {
 		int textColor = this.editable ? this.enabledColor : this.uneditableColor;
 		
 		//TODO: Scroll offset
-		String trimText = font.method_27523(this.text, this.width-OFFSET_X_TEXT);
+		String trimText = font.trimToWidth(this.text, this.width-OFFSET_X_TEXT);
 		
 		boolean selection = (select!=-1);
 		boolean focused = this.isFocused(); //this.isFocused() && this.focusedTicks / 6 % 2 == 0 && boolean_1; //Blinks the cursor
@@ -675,7 +675,7 @@ public class WTextField extends WWidget {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
 		int lastAdvance = 0;
 		for(int i=0; i<s.length()-1; i++) {
-			int advance = font.getStringWidth(s.substring(0,i+1));
+			int advance = font.getWidth(s.substring(0,i+1));
 			int charAdvance = advance-lastAdvance;
 			if (x<advance + (charAdvance/2)) return i+1;
 			
@@ -696,7 +696,7 @@ public class WTextField extends WWidget {
 		if (pos==0) return 0;//-1;
 		
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		int ofs = font.getStringWidth(s.substring(0, pos))+1;		
+		int ofs = font.getWidth(s.substring(0, pos))+1;
 		return ofs; //(font.isRightToLeft()) ? -ofs : ofs;
 	}
 }

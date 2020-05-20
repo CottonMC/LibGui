@@ -1,5 +1,12 @@
 package io.github.cottonmc.cotton.gui;
 
+import java.util.ArrayList;
+
+import javax.annotation.Nullable;
+
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
+import io.github.cottonmc.cotton.gui.widget.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -10,25 +17,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ArrayPropertyDelegate;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.world.World;
 
-import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.LibGuiClient;
-import io.github.cottonmc.cotton.gui.widget.WGridPanel;
-import io.github.cottonmc.cotton.gui.widget.WLabel;
-import io.github.cottonmc.cotton.gui.widget.WPanel;
-import io.github.cottonmc.cotton.gui.widget.WPlayerInvPanel;
-import io.github.cottonmc.cotton.gui.widget.WWidget;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-
+/**
+ * A screen handler-based GUI description for GUIs with slots.
+ */
 public class CottonInventoryController extends ScreenHandler implements GuiDescription {
 	
 	protected Inventory blockInventory;
@@ -329,11 +325,31 @@ public class CottonInventoryController extends ScreenHandler implements GuiDescr
 		this.propertyDelegate = delegate;
 		return this;
 	}
-	
+
+	/**
+	 * Creates a player inventory widget from this panel's {@linkplain #playerInventory player inventory}.
+	 *
+	 * @return the created inventory widget
+	 */
 	public WPlayerInvPanel createPlayerInventoryPanel() {
 		return new WPlayerInvPanel(this.playerInventory);
 	}
-	
+
+	/**
+	 * Gets the block inventory at the context.
+	 *
+	 * <p>If no inventory is found, returns {@link EmptyInventory#INSTANCE}.
+	 *
+	 * <p>Searches for these implementations in the following order:
+	 * <ol>
+	 *     <li>Blocks implementing {@code InventoryProvider}</li>
+	 *     <li>Block entities implementing {@code InventoryProvider}</li>
+	 *     <li>Block entities implementing {@code Inventory}</li>
+	 * </ol>
+	 *
+	 * @param ctx the context
+	 * @return the found inventory
+	 */
 	public static Inventory getBlockInventory(ScreenHandlerContext ctx) {
 		return ctx.run((world, pos) -> {
 			BlockState state = world.getBlockState(pos);
@@ -361,7 +377,17 @@ public class CottonInventoryController extends ScreenHandler implements GuiDescr
 			return EmptyInventory.INSTANCE;
 		}).orElse(EmptyInventory.INSTANCE);
 	}
-	
+
+	/**
+	 * Gets the property delegate at the context.
+	 *
+	 * <p>If no property delegate is found, returns an empty property delegate with no properties.
+	 *
+	 * <p>Searches for blocks and block entities implementing {@link PropertyDelegateHolder}.
+	 *
+	 * @param ctx the context
+	 * @return the found property delegate
+	 */
 	public static PropertyDelegate getBlockPropertyDelegate(ScreenHandlerContext ctx) {
 		return ctx.run((world, pos) -> {
 			BlockState state = world.getBlockState(pos);

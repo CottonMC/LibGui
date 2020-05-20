@@ -298,13 +298,13 @@ public class ScreenDrawing {
 			}
 			break;
 		case CENTER: {
-				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
 				int l = (width/2) - (wid/2);
 				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
-				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
 				int l = width - wid;
 				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x+l, y, color);
 			}
@@ -327,19 +327,19 @@ public class ScreenDrawing {
 	public static void drawString(MatrixStack matrices, Text text, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color);
 			}
 			break;
 		case CENTER: {
-				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
 				int l = (width/2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
-				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x+l, y, color);
 			}
 			break;
 		}
@@ -363,13 +363,13 @@ public class ScreenDrawing {
 			}
 			break;
 		case CENTER: {
-				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
 				int l = (width/2) - (wid/2);
 				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
-				int wid = MinecraftClient.getInstance().textRenderer.getStringWidth(s);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
 				int l = width - wid;
 				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x+l, y, color);
 			}
@@ -391,19 +391,19 @@ public class ScreenDrawing {
 	public static void drawStringWithShadow(MatrixStack matrices, Text text, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x, y, color);
 			}
 			break;
 		case CENTER: {
-				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
 				int l = (width/2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x+l, y, color);
 			}
 			break;
 		case RIGHT: {
-				int wid = MinecraftClient.getInstance().textRenderer.method_27525(text);
+				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x+l, y, color);
 			}
 			break;
 		}
@@ -432,7 +432,7 @@ public class ScreenDrawing {
 	 * @param color    the text color
 	 */
 	public static void drawString(MatrixStack matrices, Text text, int x, int y, int color) {
-		MinecraftClient.getInstance().textRenderer.method_27528(matrices, text, x, y, color);
+		MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color);
 	}
 
 	public static int colorAtOpacity(int opaque, float opacity) {

@@ -6,7 +6,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
@@ -55,18 +54,18 @@ public class WText extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private void wrapLines() {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		wrappedLines = font.method_27527().method_27491(text, width, Style.field_24360, false);
+		wrappedLines = font.wrapLines(text, width);
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Nullable
-	protected Text getTextAt(int x, int y) {
+	public Text getTextAt(int x, int y) {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
 		int lineIndex = y / font.fontHeight;
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
 			Text line = wrappedLines.get(lineIndex);
-			return font.method_27527().method_27489(line, x);
+			return font.trimToWidth(line, x);
 		}
 
 		return null;

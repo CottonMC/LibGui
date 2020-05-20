@@ -4,58 +4,88 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ValidatedSlot extends Slot {
+	private static final Logger LOGGER = LogManager.getLogger();
 	private final int slotNumber;
-	private boolean modifiable = true;
-	
-	public ValidatedSlot(Inventory inventoryIn, int index, int xPosition, int yPosition) {
-		super(inventoryIn, index, xPosition, yPosition);
-		if (inventoryIn==null) throw new IllegalArgumentException("Can't make an itemslot from a null inventory!");
+	private boolean insertingAllowed = true;
+	private boolean takingAllowed = true;
+
+	public ValidatedSlot(Inventory inventory, int index, int x, int y) {
+		super(inventory, index, x, y);
+		if (inventory==null) throw new IllegalArgumentException("Can't make an itemslot from a null inventory!");
 		this.slotNumber = index;
 	}
 	
 	@Override
 	public boolean canInsert(ItemStack stack) {
-		return modifiable && inventory.isValid(slotNumber, stack);
+		return insertingAllowed && inventory.isValid(slotNumber, stack);
 	}
 	
 	@Override
 	public boolean canTakeItems(PlayerEntity player) {
-		return modifiable && inventory.canPlayerUse(player);
+		return takingAllowed && inventory.canPlayerUse(player);
 	}
 	
 	@Override
 	public ItemStack getStack() {
 		if (inventory==null) {
-			System.out.println("Prevented null-inventory from WItemSlot with slot #: "+slotNumber);
+			LOGGER.warn("Prevented null-inventory from WItemSlot with slot #: {}", slotNumber);
 			return ItemStack.EMPTY;
 		}
 		
 		ItemStack result = super.getStack();
 		if (result==null) {
-			System.out.println("Prevented null-itemstack crash from: "+inventory.getClass().getCanonicalName());
+			LOGGER.warn("Prevented null-itemstack crash from: {}", inventory.getClass().getCanonicalName());
 			return ItemStack.EMPTY;
 		}
 		
 		return result;
 	}
 
-	/**
-	 * Returns true if the item in this slot can be modified by players.
-	 *
-	 * @return true if this slot is modifiable
-	 * @since 1.8.0
-	 */
-	public boolean isModifiable() {
-		return modifiable;
-	}
-
-	public void setModifiable(boolean modifiable) {
-		this.modifiable = modifiable;
-	}
-
 	public int getInventoryIndex() {
 		return slotNumber;
+	}
+
+	/**
+	 * Returns whether items can be inserted into this slot.
+	 *
+	 * @return true if items can be inserted, false otherwise
+	 * @since 1.10.0
+	 */
+	public boolean isInsertingAllowed() {
+		return insertingAllowed;
+	}
+
+	/**
+	 * Sets whether inserting items into this slot is allowed.
+	 *
+	 * @param insertingAllowed true if items can be inserted, false otherwise
+	 * @since 1.10.0
+	 */
+	public void setInsertingAllowed(boolean insertingAllowed) {
+		this.insertingAllowed = insertingAllowed;
+	}
+
+	/**
+	 * Returns whether items can be taken from this slot.
+	 *
+	 * @return true if items can be taken, false otherwise
+	 * @since 1.10.0
+	 */
+	public boolean isTakingAllowed() {
+		return takingAllowed;
+	}
+
+	/**
+	 * Sets whether taking items from this slot is allowed.
+	 *
+	 * @param takingAllowed true if items can be taken, false otherwise
+	 * @since 1.10.0
+	 */
+	public void setTakingAllowed(boolean takingAllowed) {
+		this.takingAllowed = takingAllowed;
 	}
 }
