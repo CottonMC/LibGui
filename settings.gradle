@@ -8,3 +8,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+rootProject.name = 'LibGui'
+
+include ':GuiTest'

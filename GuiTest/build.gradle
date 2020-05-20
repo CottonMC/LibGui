@@ -1,23 +1,17 @@
-buildscript {
-	repositories {
-		jcenter()
-	}
-}
-
 plugins {
-	id 'fabric-loom' version '0.2.7-SNAPSHOT'
+	id 'fabric-loom'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 if(rootProject.file('private.gradle').exists()) { //Publishing details
-	apply from: 'private.gradle'
+	apply from: rootProject.file('private.gradle')
 }
 
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
+archivesBaseName = "LibGuiTest"
+version = rootProject.version
+group = rootProject.group
 
 minecraft {
 }
@@ -32,21 +26,15 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-	modApi "net.fabricmc:fabric-loader:${project.loader_version}"
-	modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modApi "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
-	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
+	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+	mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}"
+	modApi "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+	modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
 
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
-
-	//modApi ("io.github.prospector:modmenu:1.7.10-unstable.19w35a+build.2")// { transitive = false }
-	modCompileOnly "io.github.prospector:modmenu:1.7.10-unstable.19w35a+build.2"
-	//modApi ("io.github.cottonmc:LibGui:1.3.1-SNAPSHOT") { changing = true }
-	compile (project(":LibGUI")) { transitive = false };
-	runtime (project(":LibGUI")) { transitive = false };
+	implementation project(':')
+	modRuntime "io.github.prospector:modmenu:$rootProject.modmenu_version" // for testing
 }
 
 processResources {

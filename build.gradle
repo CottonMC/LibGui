@@ -1,33 +1,8 @@
-buildscript {
-	repositories {
-		jcenter()
-		maven {
-			name = 'Modmuss'
-			url = 'https://maven.modmuss50.me/'
-		}
-		maven {
-			name = 'Fabric'
-			url = 'https://maven.fabricmc.net/'
-		}
-	}
-	
-	dependencies {
-		System.out.println(rootProject.name);
-		if (rootProject.name.equalsIgnoreCase("LibGUI")) {
-			System.out.println("Added libgui to classpath");
-			classpath 'fabric-loom:fabric-loom.gradle.plugin:0.2.7-SNAPSHOT'
-		}
-	}
-}
-
 plugins {
-	//id 'fabric-loom' version '0.2.4-SNAPSHOT'
+	id 'fabric-loom' version '0.2.7-SNAPSHOT'
 	id 'maven-publish'
 	id "com.jfrog.artifactory" version "4.9.0"
 }
-
-
-apply plugin: "fabric-loom";
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -59,9 +34,8 @@ dependencies {
 
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
-	def modmenu = "1.11.0+build.2"
-	modCompileOnly "io.github.prospector:modmenu:$modmenu"
-	modRuntime "io.github.prospector:modmenu:$modmenu" // for testing
+	modCompileOnly "io.github.prospector:modmenu:$project.modmenu_version"
+	modRuntime "io.github.prospector:modmenu:$project.modmenu_version" // for testing
 }
 
 processResources {
