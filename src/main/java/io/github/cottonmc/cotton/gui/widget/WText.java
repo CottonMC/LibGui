@@ -2,11 +2,12 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.Style;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -23,18 +24,18 @@ import java.util.Objects;
  * @since 1.8.0
  */
 public class WText extends WWidget {
-	protected Text text;
+	protected class_5348 text;
 	protected int color;
 	protected int darkmodeColor;
 	protected Alignment alignment = Alignment.LEFT;
-	private List<Text> wrappedLines;
+	private List<class_5348> wrappedLines;
 	private boolean wrappingScheduled = false;
 
-	public WText(Text text) {
+	public WText(class_5348 text) {
 		this(text, WLabel.DEFAULT_TEXT_COLOR);
 	}
 
-	public WText(Text text, int color) {
+	public WText(class_5348 text, int color) {
 		this.text = Objects.requireNonNull(text, "text must not be null");
 		this.color = color;
 		this.darkmodeColor = (color == WLabel.DEFAULT_TEXT_COLOR) ? WLabel.DEFAULT_DARKMODE_TEXT_COLOR : color;
@@ -59,13 +60,13 @@ public class WText extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Nullable
-	public Text getTextAt(int x, int y) {
+	public Style getTextStyleAt(int x, int y) {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
 		int lineIndex = y / font.fontHeight;
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
-			Text line = wrappedLines.get(lineIndex);
-			return font.trimToWidth(line, x);
+			class_5348 line = wrappedLines.get(lineIndex);
+			return font.getTextHandler().trimToWidth(line, x);
 		}
 
 		return null;
@@ -81,17 +82,17 @@ public class WText extends WWidget {
 
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
 		for (int i = 0; i < wrappedLines.size(); i++) {
-			Text line = wrappedLines.get(i);
+			class_5348 line = wrappedLines.get(i);
 			int c = LibGuiClient.config.darkMode ? darkmodeColor : color;
 
 			ScreenDrawing.drawString(matrices, line, alignment, x, y + i * font.fontHeight, width, c);
 		}
 
-		Text hoveredText = getTextAt(mouseX, mouseY);
-		if (hoveredText != null) {
+		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
+		if (hoveredTextStyle != null) {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
 			if (screen instanceof TextHoverRendererScreen) {
-				((TextHoverRendererScreen) screen).renderTextHover(matrices, hoveredText, x + mouseX, y + mouseY);
+				((TextHoverRendererScreen) screen).renderTextHover(matrices, hoveredTextStyle, x + mouseX, y + mouseY);
 			}
 		}
 	}
@@ -101,17 +102,17 @@ public class WText extends WWidget {
 	public void onClick(int x, int y, int button) {
 		if (button != 0) return; // only left clicks
 
-		Text hoveredText = getTextAt(x, y);
-		if (hoveredText != null) {
-			MinecraftClient.getInstance().currentScreen.handleTextClick(hoveredText);
+		Style hoveredTextStyle = getTextStyleAt(x, y);
+		if (hoveredTextStyle != null) {
+			MinecraftClient.getInstance().currentScreen.handleTextClick(hoveredTextStyle);
 		}
 	}
 
-	public Text getText() {
+	public class_5348 getText() {
 		return text;
 	}
 
-	public WText setText(Text text) {
+	public WText setText(class_5348 text) {
 		Objects.requireNonNull(text, "text is null");
 		this.text = text;
 		wrappingScheduled = true;

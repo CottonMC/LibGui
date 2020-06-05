@@ -23,7 +23,7 @@ public class TestController extends CottonInventoryController {
 		root.add(new WTextField(new LiteralText("Type something...")), 0, 7, 5, 1);
 
 		root.add(createPlayerInventoryPanel(), 0, 9);
-		
+		System.out.println(root.toString());
 
 		this.getRootPanel().validate(this);
 	}

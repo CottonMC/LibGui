@@ -2,12 +2,12 @@ package io.github.cottonmc.cotton.gui.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
 
@@ -324,7 +324,7 @@ public class ScreenDrawing {
 	 * @param color    the text color
 	 * @since 1.9.0
 	 */
-	public static void drawString(MatrixStack matrices, Text text, Alignment align, int x, int y, int width, int color) {
+	public static void drawString(MatrixStack matrices, class_5348 text, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
 				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color);
@@ -388,7 +388,7 @@ public class ScreenDrawing {
 	 * @param width    the width of the string, used for aligning
 	 * @param color    the text color
 	 */
-	public static void drawStringWithShadow(MatrixStack matrices, Text text, Alignment align, int x, int y, int width, int color) {
+	public static void drawStringWithShadow(MatrixStack matrices, class_5348 text, Alignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
 				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x, y, color);
@@ -431,7 +431,7 @@ public class ScreenDrawing {
 	 * @param y        the Y position
 	 * @param color    the text color
 	 */
-	public static void drawString(MatrixStack matrices, Text text, int x, int y, int color) {
+	public static void drawString(MatrixStack matrices, class_5348 text, int x, int y, int color) {
 		MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color);
 	}
 

@@ -2,11 +2,12 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.text.Style;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -19,7 +20,7 @@ import javax.annotation.Nullable;
  * A single-line label widget.
  */
 public class WLabel extends WWidget {
-	protected Text text;
+	protected class_5348 text;
 	protected Alignment alignment = Alignment.LEFT;
 	protected int color;
 	protected int darkmodeColor;
@@ -50,7 +51,7 @@ public class WLabel extends WWidget {
 	 * @param text the text of the label
 	 * @param color the color of the label
 	 */
-	public WLabel(Text text, int color) {
+	public WLabel(class_5348 text, int color) {
 		this.text = text;
 		this.color = color;
 		this.darkmodeColor = (color==DEFAULT_TEXT_COLOR) ? DEFAULT_DARKMODE_TEXT_COLOR : color;
@@ -71,7 +72,7 @@ public class WLabel extends WWidget {
 	 * @param text the text of the label
 	 * @since 1.8.0
 	 */
-	public WLabel(Text text) {
+	public WLabel(class_5348 text) {
 		this(text, DEFAULT_TEXT_COLOR);
 	}
 
@@ -79,11 +80,11 @@ public class WLabel extends WWidget {
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		ScreenDrawing.drawString(matrices, text, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
 
-		Text hoveredText = getTextAt(mouseX, mouseY);
-		if (hoveredText != null) {
+		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
+		if (hoveredTextStyle != null) {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
 			if (screen instanceof TextHoverRendererScreen) {
-				((TextHoverRendererScreen) screen).renderTextHover(matrices, hoveredText, x + mouseX, y + mouseY);
+				((TextHoverRendererScreen) screen).renderTextHover(matrices, hoveredTextStyle, x + mouseX, y + mouseY);
 			}
 		}
 	}
@@ -91,20 +92,20 @@ public class WLabel extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onClick(int x, int y, int button) {
-		Text hoveredText = getTextAt(x, y);
-		if (hoveredText != null) {
+		Style hoveredTextStyle = getTextStyleAt(x, y);
+		if (hoveredTextStyle != null) {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
 			if (screen != null) {
-				screen.handleTextClick(hoveredText);
+				screen.handleTextClick(hoveredTextStyle);
 			}
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Nullable
-	public Text getTextAt(int x, int y) {
+	public Style getTextStyleAt(int x, int y) {
 		if (isWithinBounds(x, y)) {
-			return MinecraftClient.getInstance().textRenderer.trimToWidth(text, x);
+			return MinecraftClient.getInstance().textRenderer.getTextHandler().trimToWidth(text, x);
 		}
 		return null;
 	}
@@ -118,7 +119,11 @@ public class WLabel extends WWidget {
 	public void setSize(int x, int y) {
 		super.setSize(x, Math.max(8, y));
 	}
-	
+
+	public int getDarkmodeColor() {
+		return darkmodeColor;
+	}
+
 	public WLabel setDarkmodeColor(int color) {
 		darkmodeColor = color;
 		return this;
@@ -128,18 +133,35 @@ public class WLabel extends WWidget {
 		this.darkmodeColor = this.color;
 		return this;
 	}
-	
+
+	public int getColor() {
+		return color;
+	}
+
+	public WLabel setColor(int color) {
+		this.color = color;
+		return this;
+	}
+
 	public WLabel setColor(int color, int darkmodeColor) {
 		this.color = color;
 		this.darkmodeColor = darkmodeColor;
 		return this;
 	}
-	
-	public WLabel setText(Text text) {
+
+	public class_5348 getText() {
+		return text;
+	}
+
+	public WLabel setText(class_5348 text) {
 		this.text = text;
 		return this;
 	}
-	
+
+	public Alignment getAlignment() {
+		return alignment;
+	}
+
 	public WLabel setAlignment(Alignment align) {
 		this.alignment = align;
 		return this;

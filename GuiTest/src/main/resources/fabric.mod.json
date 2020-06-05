@@ -23,7 +23,7 @@
   "depends": {
     "fabricloader": ">=0.4.0",
     "libgui": "*",
-    "jankson": "2.x.x",
+    "jankson": "*",
     "fabric": "*"
   }
 }

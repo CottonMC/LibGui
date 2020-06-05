@@ -6,7 +6,7 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.text.Style;
 import org.lwjgl.glfw.GLFW;
 
 import io.github.cottonmc.cotton.gui.CottonInventoryController;
@@ -199,10 +199,6 @@ public class CottonInventoryScreen<T extends CottonInventoryController> extends 
 				root.paint(matrices, x, y, mouseX-x, mouseY-y);
 			}
 		}
-		
-		if (getTitle() != null) {
-			textRenderer.draw(matrices, getTitle(), x, y, description.getTitleColor());
-		}
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -223,7 +219,16 @@ public class CottonInventoryScreen<T extends CottonInventoryController> extends 
 		
 		drawMouseoverTooltip(matrices, mouseX, mouseY); //Draws the itemstack tooltips
 	}
-	
+
+	@Override
+	protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+		if (description != null) {
+			this.textRenderer.draw(matrices, this.title, (float) this.field_25267, (float) this.field_25268, description.getTitleColor());
+		}
+
+		// Don't draw the player inventory label as it's drawn by the widget itself
+	}
+
 	@Override
 	public void tick() {
 		super.tick();
@@ -236,8 +241,8 @@ public class CottonInventoryScreen<T extends CottonInventoryController> extends 
 	}
 
 	@Override
-	public void renderTextHover(MatrixStack matrices, Text text, int x, int y) {
-		renderTextHoverEffect(matrices, text, x, y);
+	public void renderTextHover(MatrixStack matrices, Style textStyle, int x, int y) {
+		renderTextHoverEffect(matrices, textStyle, x, y);
 	}
 
 	@Override

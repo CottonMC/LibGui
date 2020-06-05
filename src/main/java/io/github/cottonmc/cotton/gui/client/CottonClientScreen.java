@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
@@ -221,8 +222,8 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	//}
 
 	@Override
-	public void renderTextHover(MatrixStack matrices, Text text, int x, int y) {
-		renderTextHoverEffect(matrices, text, x, y);
+	public void renderTextHover(MatrixStack matrices, Style textStyle, int x, int y) {
+		renderTextHoverEffect(matrices, textStyle, x, y);
 	}
 
 	@Override

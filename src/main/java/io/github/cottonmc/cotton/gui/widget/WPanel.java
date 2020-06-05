@@ -2,6 +2,9 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
@@ -264,5 +267,10 @@ public abstract class WPanel extends WWidget {
 		}
 
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "WPanel{ children: [\n" + children.stream().map(Objects::toString).flatMap(x -> Stream.of(x.split("\n")).map(y -> "\t" + y)).collect(Collectors.joining(",\n")) + "] }";
 	}
 }
