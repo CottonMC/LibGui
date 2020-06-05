@@ -25,7 +25,7 @@ import net.minecraft.world.World;
 /**
  * A screen handler-based GUI description for GUIs with slots.
  */
-public class CottonInventoryController extends ScreenHandler implements GuiDescription {
+public class SyncedGuiDescription extends ScreenHandler implements GuiDescription {
 	
 	protected Inventory blockInventory;
 	protected PlayerInventory playerInventory;
@@ -38,7 +38,7 @@ public class CottonInventoryController extends ScreenHandler implements GuiDescr
 	
 	protected WWidget focus;
 	
-	public CottonInventoryController(int syncId, PlayerInventory playerInventory) {
+	public SyncedGuiDescription(int syncId, PlayerInventory playerInventory) {
 		super(null, syncId);
 		this.blockInventory = null;
 		this.playerInventory = playerInventory;
@@ -46,7 +46,7 @@ public class CottonInventoryController extends ScreenHandler implements GuiDescr
 		this.propertyDelegate = null;//new ArrayPropertyDelegate(1);
 	}
 	
-	public CottonInventoryController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, PropertyDelegate propertyDelegate) {
+	public SyncedGuiDescription(int syncId, PlayerInventory playerInventory, Inventory blockInventory, PropertyDelegate propertyDelegate) {
 		super(null, syncId);
 		this.blockInventory = blockInventory;
 		this.playerInventory = playerInventory;
@@ -63,12 +63,12 @@ public class CottonInventoryController extends ScreenHandler implements GuiDescr
 		return LibGuiClient.config.darkMode ? darkTitleColor : titleColor;
 	}
 	
-	public CottonInventoryController setRootPanel(WPanel panel) {
+	public SyncedGuiDescription setRootPanel(WPanel panel) {
 		this.rootPanel = panel;
 		return this;
 	}
 	
-	public CottonInventoryController setTitleColor(int color) {
+	public SyncedGuiDescription setTitleColor(int color) {
 		this.titleColor = color;
 		return this;
 	}

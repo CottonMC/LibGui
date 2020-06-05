@@ -1,15 +1,14 @@
 package io.github.cottonmc.test;
 
-import io.github.cottonmc.cotton.gui.CottonInventoryController;
+import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.*;
-import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.LiteralText;
 
-public class TestController extends CottonInventoryController {
+public class TestDescription extends SyncedGuiDescription {
 	
-	public TestController(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
+	public TestDescription(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
 		super(syncId, playerInventory, getBlockInventory(context), null);
 		
 		WGridPanel root = (WGridPanel)this.getRootPanel();

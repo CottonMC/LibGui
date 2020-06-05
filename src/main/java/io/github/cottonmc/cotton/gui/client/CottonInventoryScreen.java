@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
@@ -10,17 +11,16 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
-import io.github.cottonmc.cotton.gui.CottonInventoryController;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
 /**
- * A screen for a {@link CottonInventoryController}.
+ * A screen for a {@link SyncedGuiDescription}.
  *
- * @param <T> the controller type
+ * @param <T> the description type
  */
-public class CottonInventoryScreen<T extends CottonInventoryController> extends HandledScreen<T> implements TextHoverRendererScreen {
-	protected CottonInventoryController description;
+public class CottonInventoryScreen<T extends SyncedGuiDescription> extends HandledScreen<T> implements TextHoverRendererScreen {
+	protected SyncedGuiDescription description;
 	protected WWidget lastResponder = null;
 
 	/**

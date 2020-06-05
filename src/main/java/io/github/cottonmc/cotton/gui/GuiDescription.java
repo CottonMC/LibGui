@@ -16,7 +16,7 @@ import net.minecraft.screen.PropertyDelegate;
  * They also manage the focused widget.
  *
  * @see io.github.cottonmc.cotton.gui.client.LightweightGuiDescription
- * @see CottonInventoryController
+ * @see SyncedGuiDescription
  */
 public interface GuiDescription {
 	public WPanel getRootPanel();

@@ -38,7 +38,7 @@ public class LibGuiTest implements ModInitializer {
 		
 		
 		ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MODID, "gui"), (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf)->{
-			return new TestController(syncId, player.inventory, ScreenHandlerContext.create(player.getEntityWorld(), buf.readBlockPos()));
+			return new TestDescription(syncId, player.inventory, ScreenHandlerContext.create(player.getEntityWorld(), buf.readBlockPos()));
 		});
 		
 		Optional<ModContainer> containerOpt = FabricLoader.getInstance().getModContainer("jankson");
