@@ -7,21 +7,42 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import io.github.cottonmc.cotton.gui.CottonInventoryController;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
+/**
+ * A screen for a {@link CottonInventoryController}.
+ *
+ * @param <T> the controller type
+ */
 public class CottonInventoryScreen<T extends CottonInventoryController> extends HandledScreen<T> implements TextHoverRendererScreen {
 	protected CottonInventoryController description;
-	public static final int PADDING = 8;
 	protected WWidget lastResponder = null;
-	protected WWidget focus = null;
-	
-	public CottonInventoryScreen(T container, PlayerEntity player) {
-		super(container, player.inventory, new LiteralText(""));
-		this.description = container;
+
+	/**
+	 * Constructs a new screen without a title.
+	 *
+	 * @param description the GUI description
+	 * @param player     the player
+	 */
+	public CottonInventoryScreen(T description, PlayerEntity player) {
+		this(description, player, new LiteralText(""));
+	}
+
+	/**
+	 * Constructs a new screen.
+	 *
+	 * @param description the GUI description
+	 * @param player      the player
+	 * @param title       the screen title
+	 */
+	public CottonInventoryScreen(T description, PlayerEntity player, Text title) {
+		super(description, player.inventory, title);
+		this.description = description;
 		width = 18*9;
 		height = 18*9;
 		this.backgroundWidth = 18*9;
