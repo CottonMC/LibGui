@@ -101,6 +101,13 @@ public class WLabel extends WWidget {
 		}
 	}
 
+	/**
+	 * Gets the text style at the specific widget-space coordinates.
+	 *
+	 * @param x the X coordinate in widget space
+	 * @param y the Y coordinate in widget space
+	 * @return the text style at the position, or null if not found
+	 */
 	@Environment(EnvType.CLIENT)
 	@Nullable
 	public Style getTextStyleAt(int x, int y) {
@@ -120,48 +127,106 @@ public class WLabel extends WWidget {
 		super.setSize(x, Math.max(8, y));
 	}
 
+	/**
+	 * Gets the dark mode color of this label.
+	 *
+	 * @return the color
+	 * @since 2.0.0
+	 */
 	public int getDarkmodeColor() {
 		return darkmodeColor;
 	}
 
+	/**
+	 * Sets the dark mode color of this label.
+	 *
+	 * @param color the new color
+	 * @return this label
+	 */
 	public WLabel setDarkmodeColor(int color) {
 		darkmodeColor = color;
 		return this;
 	}
-	
+
+	/**
+	 * Disables separate dark mode coloring by copying the dark color to be the light color.
+	 *
+	 * @return this label
+	 */
 	public WLabel disableDarkmode() {
 		this.darkmodeColor = this.color;
 		return this;
 	}
 
+	/**
+	 * Gets the light mode color of this label.
+	 *
+	 * @return the color
+	 */
 	public int getColor() {
 		return color;
 	}
 
+	/**
+	 * Sets the light mode color of this label.
+	 *
+	 * @param color the new color
+	 * @return this label
+	 */
 	public WLabel setColor(int color) {
 		this.color = color;
 		return this;
 	}
 
+	/**
+	 * Sets the light and dark mode colors of this label.
+	 *
+	 * @param color         the new light color
+	 * @param darkmodeColor the new dark color
+	 * @return this label
+	 */
 	public WLabel setColor(int color, int darkmodeColor) {
 		this.color = color;
 		this.darkmodeColor = darkmodeColor;
 		return this;
 	}
 
+	/**
+	 * Gets the text of this label.
+	 *
+	 * @return the text
+	 */
 	public class_5348 getText() {
 		return text;
 	}
 
+	/**
+	 * Sets the text of this label.
+	 *
+	 * @param text the new text
+	 * @return this label
+	 */
 	public WLabel setText(class_5348 text) {
 		this.text = text;
 		return this;
 	}
 
+	/**
+	 * Gets the text alignment of this label.
+	 *
+	 * @return the alignment
+	 * @since 2.0.0
+	 */
 	public Alignment getAlignment() {
 		return alignment;
 	}
 
+	/**
+	 * Sets the text alignment of this label.
+	 *
+	 * @param align the new text alignment
+	 * @return this label
+	 */
 	public WLabel setAlignment(Alignment align) {
 		this.alignment = align;
 		return this;

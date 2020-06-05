@@ -58,6 +58,13 @@ public class WText extends WWidget {
 		wrappedLines = font.wrapLines(text, width);
 	}
 
+	/**
+	 * Gets the text style at the specific widget-space coordinates.
+	 *
+	 * @param x the X coordinate in widget space
+	 * @param y the Y coordinate in widget space
+	 * @return the text style at the position, or null if not found
+	 */
 	@Environment(EnvType.CLIENT)
 	@Nullable
 	public Style getTextStyleAt(int x, int y) {
@@ -108,10 +115,21 @@ public class WText extends WWidget {
 		}
 	}
 
+	/**
+	 * Gets the text of this label.
+	 *
+	 * @return the text
+	 */
 	public class_5348 getText() {
 		return text;
 	}
 
+	/**
+	 * Sets the text of this label.
+	 *
+	 * @param text the new text
+	 * @return this label
+	 */
 	public WText setText(class_5348 text) {
 		Objects.requireNonNull(text, "text is null");
 		this.text = text;
@@ -120,26 +138,65 @@ public class WText extends WWidget {
 		return this;
 	}
 
+	/**
+	 * Gets the light mode color of this label.
+	 *
+	 * @return the color
+	 */
 	public int getColor() {
 		return color;
 	}
 
+	/**
+	 * Sets the light mode color of this label.
+	 *
+	 * @param color the new color
+	 * @return this text widget
+	 */
 	public WText setColor(int color) {
 		this.color = color;
 		return this;
 	}
 
+	/**
+	 * Gets the dark mode color of this label.
+	 *
+	 * @return the color
+	 * @since 2.0.0
+	 */
+	public int getDarkmodeColor() {
+		return darkmodeColor;
+	}
+
+	/**
+	 * Sets the dark mode color of this label.
+	 *
+	 * @param darkmodeColor the new color
+	 * @return this text widget
+	 */
 	public WText setDarkmodeColor(int darkmodeColor) {
 		this.darkmodeColor = darkmodeColor;
 		return this;
 	}
 
+	/**
+	 * Sets the light and dark mode colors of this label.
+	 *
+	 * @param color         the new light color
+	 * @param darkmodeColor the new dark color
+	 * @return this text widget
+	 */
 	public WText setColor(int color, int darkmodeColor) {
 		setColor(color);
 		setDarkmodeColor(darkmodeColor);
 		return this;
 	}
 
+	/**
+	 * Disables separate dark mode coloring by copying the dark color to be the light color.
+	 *
+	 * @return this text widget
+	 */
 	public WText disableDarkmode() {
 		this.darkmodeColor = this.color;
 		return this;
