@@ -13,6 +13,7 @@ import org.lwjgl.glfw.GLFW;
 
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import org.lwjgl.opengl.GL11;
 
 /**
  * A screen for a {@link SyncedGuiDescription}.
@@ -222,7 +223,10 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
+				GL11.glEnable(GL11.GL_SCISSOR_TEST);
 				root.paint(matrices, x, y, mouseX-x, mouseY-y);
+				GL11.glDisable(GL11.GL_SCISSOR_TEST);
+				Scissors.checkStackIsEmpty();
 			}
 		}
 	}

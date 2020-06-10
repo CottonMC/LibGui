@@ -10,6 +10,7 @@ import net.minecraft.text.Text;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import org.lwjgl.opengl.GL11;
 
 public class CottonClientScreen extends Screen implements TextHoverRendererScreen {
 	protected GuiDescription description;
@@ -31,7 +32,6 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	public GuiDescription getDescription() {
 		return description;
 	}
-
 	
 	@Override
 	public void init(MinecraftClient client, int screenWidth, int screenHeight) {
@@ -64,7 +64,10 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
+				GL11.glEnable(GL11.GL_SCISSOR_TEST);
 				root.paint(matrices, left, top, mouseX-left, mouseY-top);
+				GL11.glDisable(GL11.GL_SCISSOR_TEST);
+				Scissors.checkStackIsEmpty();
 			}
 		}
 		
