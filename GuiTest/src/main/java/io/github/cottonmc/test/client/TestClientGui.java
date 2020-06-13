@@ -1,20 +1,15 @@
 package io.github.cottonmc.test.client;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
-import io.github.cottonmc.cotton.gui.widget.WListPanel;
-import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.WSlider;
-import io.github.cottonmc.cotton.gui.widget.WSprite;
 import io.github.cottonmc.cotton.gui.widget.WTextField;
+import io.github.cottonmc.cotton.gui.widget.WTiledSprite;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color;
@@ -42,13 +37,20 @@ public class TestClientGui extends LightweightGuiDescription {
 	public TestClientGui() {
 		WGridPanel root = new WGridPanel(22);
 		this.setRootPanel(root);
-		
 		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
 			@Override
 			public void addTooltip(List<Text> tooltip) {
 				tooltip.add(new LiteralText("Radical!"));
 			}
 		};
+		WTiledSprite wood = new WTiledSprite(
+			8, 8, // tile width and height
+			500, // animation speed
+			new Identifier("minecraft:textures/block/birch_planks.png"),
+			new Identifier("minecraft:textures/block/dark_oak_planks.png"),
+			new Identifier("minecraft:textures/block/jungle_planks.png")
+		);
+		root.add(wood, 3, 3, 2, 2);
 		root.add(title, 0, 0);
 		
 		WTextField text = new WTextField();
@@ -149,4 +151,3 @@ public class TestClientGui extends LightweightGuiDescription {
 		}
 	}
 }
-
