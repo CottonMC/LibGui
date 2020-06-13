@@ -48,7 +48,7 @@ public class TestClientGui extends LightweightGuiDescription {
 			500, // animation speed
 			new Identifier("minecraft:textures/block/birch_planks.png"),
 			new Identifier("minecraft:textures/block/dark_oak_planks.png"),
-			new Identifier("minecraft:textures/block/jungle_plan.png")
+			new Identifier("minecraft:textures/block/jungle_planks.png")
 		);
 		root.add(wood, 3, 3, 2, 2);
 		root.add(title, 0, 0);
@@ -151,4 +151,3 @@ public class TestClientGui extends LightweightGuiDescription {
 		}
 	}
 }
-
