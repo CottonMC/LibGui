@@ -123,7 +123,7 @@ public class WSprite extends WWidget {
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (singleImage) {
-			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), frames[0], u1, v1, u2, v2, tint);
+			paintFrame(x, y, frames[0]);
 		} else {
 			//grab the system time at the very start of the frame.
 			long now = System.nanoTime() / 1_000_000L;
@@ -133,7 +133,7 @@ public class WSprite extends WWidget {
 			if (!inBounds) currentFrame = 0;
 			//assemble and draw the frame calculated last iteration.
 			Identifier currentFrameTex = frames[currentFrame];
-			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), currentFrameTex, u1, v1, u2, v2, tint);
+			paintFrame(x, y, currentFrameTex);
 
 			//calculate how much time has elapsed since the last animation change, and change the frame if necessary.
 			long elapsed = now - lastFrame;
@@ -150,5 +150,9 @@ public class WSprite extends WWidget {
 			//frame is over; this frame is becoming the last frame so write the time to lastFrame
 			this.lastFrame = now;
 		}
+	}
+
+	public void paintFrame(int x, int y, Identifier texture) {
+		ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), texture, u1, v1, u2, v2, tint);
 	}
 }
