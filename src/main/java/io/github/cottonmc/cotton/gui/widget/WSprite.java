@@ -152,6 +152,7 @@ public class WSprite extends WWidget {
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	public void paintFrame(int x, int y, Identifier texture) {
 		ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), texture, u1, v1, u2, v2, tint);
 	}

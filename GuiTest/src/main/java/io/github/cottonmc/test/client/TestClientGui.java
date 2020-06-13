@@ -43,7 +43,13 @@ public class TestClientGui extends LightweightGuiDescription {
 				tooltip.add(new LiteralText("Radical!"));
 			}
 		};
-		WTiledSprite wood = new WTiledSprite(new Identifier("minecraft:textures/block/birch_planks.png"), 8, 8);
+		WTiledSprite wood = new WTiledSprite(
+			8, 8, // tile width and height
+			500, // animation speed
+			new Identifier("minecraft:textures/block/birch_planks.png"),
+			new Identifier("minecraft:textures/block/dark_oak_planks.png"),
+			new Identifier("minecraft:textures/block/jungle_plan.png")
+		);
 		root.add(wood, 3, 3, 2, 2);
 		root.add(title, 0, 0);
 		
