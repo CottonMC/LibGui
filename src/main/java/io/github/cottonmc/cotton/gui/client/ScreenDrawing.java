@@ -30,7 +30,26 @@ public class ScreenDrawing {
 	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
 	 */
 	public static void texturedRect(int x, int y, int width, int height, Identifier texture, int color) {
-		texturedRect(x, y, width, height, texture, 0, 0, 1, 1, color);
+		texturedRect(x, y, width, height, texture, 0, 0, 1, 1, color, 1.0f);
+	}
+
+	/**
+	 * Draws a textured rectangle.
+	 *
+	 * @param x         the x coordinate of the box on-screen
+	 * @param y         the y coordinate of the box on-screen
+	 * @param width     the width of the box on-screen
+	 * @param height    the height of the box on-screen
+	 * @param texture   the Identifier for the texture
+	 * @param u1        the left edge of the texture
+	 * @param v1        the top edge of the texture
+	 * @param u2        the right edge of the texture
+	 * @param v2        the bottom edge of the texture
+	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
+	 * @param opacity   opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
+	 */
+	public static void texturedRect(int x, int y, int width, int height, Identifier texture, int color, float opacity) {
+		texturedRect(x, y, width, height, texture, 0, 0, 1, 1, color, opacity);
 	}
 
 	/**
@@ -48,6 +67,25 @@ public class ScreenDrawing {
 	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
 	 */
 	public static void texturedRect(int x, int y, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color) {
+		texturedRect(x, y, width, height, texture, u1, v1, u2, v2, color, 1.0f);
+	}
+
+	/**
+	 * Draws a textured rectangle.
+	 *
+	 * @param x         the x coordinate of the box on-screen
+	 * @param y         the y coordinate of the box on-screen
+	 * @param width     the width of the box on-screen
+	 * @param height    the height of the box on-screen
+	 * @param texture   the Identifier for the texture
+	 * @param u1        the left edge of the texture
+	 * @param v1        the top edge of the texture
+	 * @param u2        the right edge of the texture
+	 * @param v2        the bottom edge of the texture
+	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
+	 * @param opacity   opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
+	 */
+	public static void texturedRect(int x, int y, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color, float opacity) {
 		MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
 
 		//float scale = 0.00390625F;
@@ -64,10 +102,10 @@ public class ScreenDrawing {
 		//GlStateManager.disableTexture2D();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
 		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR_TEXTURE); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(x,         y + height, 0).color(r, g, b, 1.0f).texture(u1, v2).next();
-		buffer.vertex(x + width, y + height, 0).color(r, g, b, 1.0f).texture(u2, v2).next();
-		buffer.vertex(x + width, y,          0).color(r, g, b, 1.0f).texture(u2, v1).next();
-		buffer.vertex(x,         y,          0).color(r, g, b, 1.0f).texture(u1, v1).next();
+		buffer.vertex(x,         y + height, 0).color(r, g, b, opacity).texture(u1, v2).next();
+		buffer.vertex(x + width, y + height, 0).color(r, g, b, opacity).texture(u2, v2).next();
+		buffer.vertex(x + width, y,          0).color(r, g, b, opacity).texture(u2, v1).next();
+		buffer.vertex(x,         y,          0).color(r, g, b, opacity).texture(u1, v1).next();
 		tessellator.draw();
 		//GlStateManager.enableTexture2D();
 		RenderSystem.disableBlend();
