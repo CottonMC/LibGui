@@ -63,6 +63,19 @@ public interface Color {
 				((g & 0xFF) <<  8) |
 				 (b & 0xFF);
 		}
+	
+		/**
+		 * Constructs an RGB object with 100% alpha value (no transparency)
+		 * 
+		 * @since 2.0.0
+		 */
+		public RGB(int r, int g, int b) {
+			value =
+				(0xFF << 24) |
+				((r & 0xFF) << 16) |
+				((g & 0xFF) <<  8) |
+				 (b & 0xFF);
+		}
 		
 		@Override
 		public int toRgb() {
