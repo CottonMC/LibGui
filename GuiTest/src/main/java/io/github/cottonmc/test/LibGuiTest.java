@@ -6,16 +6,16 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -25,6 +25,8 @@ public class LibGuiTest implements ModInitializer {
 	public static GuiBlock GUI_BLOCK;
 	public static BlockItem GUI_BLOCK_ITEM;
 	public static BlockEntityType<GuiBlockEntity> GUI_BLOCKENTITY_TYPE;
+	public static ScreenHandlerType<TestDescription> GUI_SCREEN_HANDLER_TYPE;
+
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.ITEM, new Identifier(MODID, "client_gui"), new GuiItem());
@@ -36,11 +38,10 @@ public class LibGuiTest implements ModInitializer {
 		GUI_BLOCKENTITY_TYPE = BlockEntityType.Builder.create(GuiBlockEntity::new, GUI_BLOCK).build(null);
 		Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "gui"), GUI_BLOCKENTITY_TYPE);
 		
-		
-		ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MODID, "gui"), (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf)->{
-			return new TestDescription(syncId, player.inventory, ScreenHandlerContext.create(player.getEntityWorld(), buf.readBlockPos()));
+		GUI_SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerSimple(new Identifier(MODID, "gui"), (int syncId, PlayerInventory inventory) -> {
+			return new TestDescription(GUI_SCREEN_HANDLER_TYPE, syncId, inventory, ScreenHandlerContext.EMPTY);
 		});
-		
+
 		Optional<ModContainer> containerOpt = FabricLoader.getInstance().getModContainer("jankson");
 		if (containerOpt.isPresent()) {
 			ModContainer jankson = containerOpt.get();

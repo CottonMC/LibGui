@@ -2,11 +2,11 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
@@ -25,7 +25,7 @@ public class WToggleButton extends WWidget {
 	protected Identifier offImage;
 	protected Identifier focusImage = DEFAULT_FOCUS_IMAGE;
 
-	@Nullable protected class_5348 label = null;
+	@Nullable protected StringRenderable label = null;
 
 	protected boolean isOn = false;
 	@Nullable protected Consumer<Boolean> onToggle = null;
@@ -39,7 +39,7 @@ public class WToggleButton extends WWidget {
 	}
 
 	/** Defaults with text */
-	public WToggleButton(class_5348 text) {
+	public WToggleButton(StringRenderable text) {
 		this(DEFAULT_ON_IMAGE, DEFAULT_OFF_IMAGE);
 		this.label = text;
 	}
@@ -51,7 +51,7 @@ public class WToggleButton extends WWidget {
 	}
 
 	/** Custom images,  with default sizes and a label */
-	public WToggleButton(Identifier onImage, Identifier offImage, class_5348 label) {
+	public WToggleButton(Identifier onImage, Identifier offImage, StringRenderable label) {
 		this.onImage = onImage;
 		this.offImage = offImage;
 		this.label = label;
@@ -118,11 +118,11 @@ public class WToggleButton extends WWidget {
 	}
 
 	@Nullable
-	public class_5348 getLabel() {
+	public StringRenderable getLabel() {
 		return label;
 	}
 
-	public WToggleButton setLabel(@Nullable class_5348 label) {
+	public WToggleButton setLabel(@Nullable StringRenderable label) {
 		this.label = label;
 		return this;
 	}

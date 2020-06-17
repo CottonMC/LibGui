@@ -2,11 +2,11 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Style;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  * A single-line label widget.
  */
 public class WLabel extends WWidget {
-	protected class_5348 text;
+	protected StringRenderable text;
 	protected Alignment alignment = Alignment.LEFT;
 	protected int color;
 	protected int darkmodeColor;
@@ -51,7 +51,7 @@ public class WLabel extends WWidget {
 	 * @param text the text of the label
 	 * @param color the color of the label
 	 */
-	public WLabel(class_5348 text, int color) {
+	public WLabel(StringRenderable text, int color) {
 		this.text = text;
 		this.color = color;
 		this.darkmodeColor = (color==DEFAULT_TEXT_COLOR) ? DEFAULT_DARKMODE_TEXT_COLOR : color;
@@ -72,7 +72,7 @@ public class WLabel extends WWidget {
 	 * @param text the text of the label
 	 * @since 1.8.0
 	 */
-	public WLabel(class_5348 text) {
+	public WLabel(StringRenderable text) {
 		this(text, DEFAULT_TEXT_COLOR);
 	}
 
@@ -196,7 +196,7 @@ public class WLabel extends WWidget {
 	 *
 	 * @return the text
 	 */
-	public class_5348 getText() {
+	public StringRenderable getText() {
 		return text;
 	}
 
@@ -206,7 +206,7 @@ public class WLabel extends WWidget {
 	 * @param text the new text
 	 * @return this label
 	 */
-	public WLabel setText(class_5348 text) {
+	public WLabel setText(StringRenderable text) {
 		this.text = text;
 		return this;
 	}

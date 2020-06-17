@@ -2,11 +2,11 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Style;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
@@ -24,18 +24,18 @@ import java.util.Objects;
  * @since 1.8.0
  */
 public class WText extends WWidget {
-	protected class_5348 text;
+	protected StringRenderable text;
 	protected int color;
 	protected int darkmodeColor;
 	protected Alignment alignment = Alignment.LEFT;
-	private List<class_5348> wrappedLines;
+	private List<StringRenderable> wrappedLines;
 	private boolean wrappingScheduled = false;
 
-	public WText(class_5348 text) {
+	public WText(StringRenderable text) {
 		this(text, WLabel.DEFAULT_TEXT_COLOR);
 	}
 
-	public WText(class_5348 text, int color) {
+	public WText(StringRenderable text, int color) {
 		this.text = Objects.requireNonNull(text, "text must not be null");
 		this.color = color;
 		this.darkmodeColor = (color == WLabel.DEFAULT_TEXT_COLOR) ? WLabel.DEFAULT_DARKMODE_TEXT_COLOR : color;
@@ -72,7 +72,7 @@ public class WText extends WWidget {
 		int lineIndex = y / font.fontHeight;
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
-			class_5348 line = wrappedLines.get(lineIndex);
+			StringRenderable line = wrappedLines.get(lineIndex);
 			return font.getTextHandler().trimToWidth(line, x);
 		}
 
@@ -89,7 +89,7 @@ public class WText extends WWidget {
 
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
 		for (int i = 0; i < wrappedLines.size(); i++) {
-			class_5348 line = wrappedLines.get(i);
+			StringRenderable line = wrappedLines.get(i);
 			int c = LibGuiClient.config.darkMode ? darkmodeColor : color;
 
 			ScreenDrawing.drawString(matrices, line, alignment, x, y + i * font.fontHeight, width, c);
@@ -120,7 +120,7 @@ public class WText extends WWidget {
 	 *
 	 * @return the text
 	 */
-	public class_5348 getText() {
+	public StringRenderable getText() {
 		return text;
 	}
 
@@ -130,7 +130,7 @@ public class WText extends WWidget {
 	 * @param text the new text
 	 * @return this label
 	 */
-	public WText setText(class_5348 text) {
+	public WText setText(StringRenderable text) {
 		Objects.requireNonNull(text, "text is null");
 		this.text = text;
 		wrappingScheduled = true;

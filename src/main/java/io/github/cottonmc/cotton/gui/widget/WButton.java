@@ -2,18 +2,18 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.StringRenderable;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 
 public class WButton extends WWidget {
-	private class_5348 label;
+	private StringRenderable label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
 	private boolean enabled = true;
@@ -25,7 +25,7 @@ public class WButton extends WWidget {
 		
 	}
 	
-	public WButton(class_5348 text) {
+	public WButton(StringRenderable text) {
 		this.label = text;
 	}
 	
@@ -110,11 +110,11 @@ public class WButton extends WWidget {
 		return this;
 	}
 
-	public class_5348 getLabel() {
+	public StringRenderable getLabel() {
 		return label;
 	}
 
-	public WButton setLabel(class_5348 label) {
+	public WButton setLabel(StringRenderable label) {
 		this.label = label;
 		return this;
 	}

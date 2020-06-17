@@ -249,7 +249,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	@Override
 	protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
 		if (description != null) {
-			this.textRenderer.draw(matrices, this.title, (float) this.field_25267, (float) this.field_25268, description.getTitleColor());
+			this.textRenderer.draw(matrices, this.title, (float) this.titleX, (float) this.titleY, description.getTitleColor());
 		}
 
 		// Don't draw the player inventory label as it's drawn by the widget itself

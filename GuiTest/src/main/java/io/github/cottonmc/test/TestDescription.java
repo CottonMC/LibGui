@@ -4,12 +4,13 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.*;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.LiteralText;
 
 public class TestDescription extends SyncedGuiDescription {
 	
-	public TestDescription(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
-		super(syncId, playerInventory, getBlockInventory(context), null);
+	public TestDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
+		super(type, syncId, playerInventory, getBlockInventory(context), null);
 		
 		WGridPanel root = (WGridPanel)this.getRootPanel();
 		

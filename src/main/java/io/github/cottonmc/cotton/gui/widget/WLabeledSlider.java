@@ -2,10 +2,10 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.class_5348;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.util.math.Quaternion;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 public class WLabeledSlider extends WAbstractSlider {
 	private static final Quaternion ROTATION_Z_270 = Vector3f.POSITIVE_X.getDegreesQuaternion(270);
 
-	@Nullable private class_5348 label = null;
+	@Nullable private StringRenderable label = null;
 	@Nullable private LabelUpdater labelUpdater = null;
 	private Alignment labelAlignment = Alignment.CENTER;
 
@@ -59,7 +59,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 * @param axis the slider axis
 	 * @param label the slider label (can be null)
 	 */
-	public WLabeledSlider(int min, int max, Axis axis, @Nullable class_5348 label) {
+	public WLabeledSlider(int min, int max, Axis axis, @Nullable StringRenderable label) {
 		this(min, max, axis);
 		this.label = label;
 	}
@@ -71,7 +71,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 * @param max the maximum value
 	 * @param label the slider label (can be null)
 	 */
-	public WLabeledSlider(int min, int max, @Nullable class_5348 label) {
+	public WLabeledSlider(int min, int max, @Nullable StringRenderable label) {
 		this(min, max);
 		this.label = label;
 	}
@@ -91,7 +91,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 * @return the label
 	 */
 	@Nullable
-	public class_5348 getLabel() {
+	public StringRenderable getLabel() {
 		return label;
 	}
 
@@ -100,7 +100,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 *
 	 * @param label the new label
 	 */
-	public void setLabel(@Nullable class_5348 label) {
+	public void setLabel(@Nullable StringRenderable label) {
 		this.label = label;
 	}
 
@@ -228,6 +228,6 @@ public class WLabeledSlider extends WAbstractSlider {
 		 * @param value the slider value
 		 * @return the label
 		 */
-		class_5348 updateLabel(int value);
+		StringRenderable updateLabel(int value);
 	}
 }
