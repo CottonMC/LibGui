@@ -47,6 +47,7 @@ public class ScreenDrawing {
 	 * @param v2        the bottom edge of the texture
 	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
 	 * @param opacity   opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
+	 * @since 2.0.0
 	 */
 	public static void texturedRect(int x, int y, int width, int height, Identifier texture, int color, float opacity) {
 		texturedRect(x, y, width, height, texture, 0, 0, 1, 1, color, opacity);
@@ -84,6 +85,7 @@ public class ScreenDrawing {
 	 * @param v2        the bottom edge of the texture
 	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
 	 * @param opacity   opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
+	 * @since 2.0.0
 	 */
 	public static void texturedRect(int x, int y, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color, float opacity) {
 		MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
