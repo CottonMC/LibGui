@@ -35,6 +35,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	protected WPanel rootPanel = new WGridPanel();
 	protected int titleColor = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkTitleColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
+	protected boolean fullscreen = false;
 	
 	protected WWidget focus;
 
@@ -75,7 +76,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	
 	@Environment(EnvType.CLIENT)
 	public void addPainters() {
-		if (this.rootPanel!=null) {
+		if (this.rootPanel!=null && !fullscreen) {
 			this.rootPanel.setBackgroundPainter(BackgroundPainter.VANILLA);
 		}
 	}
@@ -454,5 +455,15 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			focus = null;
 			widget.onFocusLost();
 		}
+	}
+
+	@Override
+	public boolean isFullscreen() {
+		return fullscreen;
+	}
+
+	@Override
+	public void setFullscreen(boolean fullscreen) {
+		this.fullscreen = fullscreen;
 	}
 }

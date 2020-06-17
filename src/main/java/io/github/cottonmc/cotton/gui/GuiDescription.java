@@ -61,4 +61,23 @@ public interface GuiDescription {
 	default void cycleFocus(boolean lookForwards) {
 		FocusHandler.cycleFocus(this, lookForwards);
 	}
+
+	/**
+	 * Gets whether this GUI is fullscreen.
+	 *
+	 * <p>Fullscreen GUIs have no default background painter and
+	 * have the root panel stretched to fit the entire screen on the client.
+	 *
+	 * @return true if this GUI is fullscreen, false otherwise
+	 * @since 2.0.0
+	 */
+	boolean isFullscreen();
+
+	/**
+	 * Sets whether this GUI is fullscreen.
+	 *
+	 * @param fullscreen true if this GUI is fullscreen, false otherwise
+	 * @since 2.0.0
+	 */
+	void setFullscreen(boolean fullscreen);
 }

@@ -15,9 +15,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	protected GuiDescription description;
 	protected int left = 0;
 	protected int top = 0;
-	protected int containerWidth = 0;
-	protected int containerHeight = 0;
-	
+
 	protected WWidget lastResponder = null;
 	
 	public CottonClientScreen(GuiDescription description) {
@@ -44,20 +42,23 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 		reposition(screenWidth, screenHeight);
 	}
 	
-	public void reposition(int screenWidth, int screenHeight) {
+	private void reposition(int screenWidth, int screenHeight) {
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				this.containerWidth = root.getWidth();
-				this.containerHeight = root.getHeight();
-				
-				this.left = (screenWidth - root.getWidth()) / 2;
-				this.top = (screenHeight - root.getHeight()) / 2;
+				if (!description.isFullscreen()) {
+					this.left = (screenWidth - root.getWidth()) / 2;
+					this.top = (screenHeight - root.getHeight()) / 2;
+				} else {
+					this.left = 0;
+					this.top = 0;
+					root.setSize(screenWidth, screenHeight);
+				}
 			}
 		}
 	}
 	
-	public void paint(MatrixStack matrices, int mouseX, int mouseY) {
+	private void paint(MatrixStack matrices, int mouseX, int mouseY) {
 		super.renderBackground(matrices);
 		
 		if (description!=null) {

@@ -65,10 +65,10 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		
 		description.addPainters();
 		
-		reposition();
+		reposition(screenWidth, screenHeight);
 	}
 	
-	public void reposition() {
+	private void reposition(int screenWidth, int screenHeight) {
 		WPanel basePanel = description.getRootPanel();
 		if (basePanel!=null) {
 			basePanel.validate(description);
@@ -80,13 +80,18 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 			if (backgroundWidth<16) backgroundWidth=300;
 			if (backgroundHeight<16) backgroundHeight=300;
 		}
-		x = (width / 2) - (backgroundWidth / 2);
-		y =  (height / 2) - (backgroundHeight / 2);
-	}
-	
-	@Override
-	public void onClose() {
-		super.onClose();
+
+		if (!description.isFullscreen()) {
+			x = (width / 2) - (backgroundWidth / 2);
+			y = (height / 2) - (backgroundHeight / 2);
+		} else {
+			x = 0;
+			y = 0;
+
+			if (basePanel != null) {
+				basePanel.setSize(screenWidth, screenHeight);
+			}
+		}
 	}
 	
 	@Override
@@ -211,7 +216,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	@Override
 	protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
-	public void paint(MatrixStack matrices, int mouseX, int mouseY) {
+	private void paint(MatrixStack matrices, int mouseX, int mouseY) {
 		super.renderBackground(matrices);
 		
 		if (description!=null) {
