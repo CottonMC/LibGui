@@ -37,17 +37,17 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	protected int darkTitleColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 	
 	protected WWidget focus;
-	
-	public SyncedGuiDescription(int syncId, PlayerInventory playerInventory) {
-		super(null, syncId);
+
+	public SyncedGuiDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory) {
+		super(type, syncId);
 		this.blockInventory = null;
 		this.playerInventory = playerInventory;
 		this.world = playerInventory.player.world;
 		this.propertyDelegate = null;//new ArrayPropertyDelegate(1);
 	}
 	
-	public SyncedGuiDescription(int syncId, PlayerInventory playerInventory, Inventory blockInventory, PropertyDelegate propertyDelegate) {
-		super(null, syncId);
+	public SyncedGuiDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory blockInventory, PropertyDelegate propertyDelegate) {
+		super(type, syncId);
 		this.blockInventory = blockInventory;
 		this.playerInventory = playerInventory;
 		this.world = playerInventory.player.world;
