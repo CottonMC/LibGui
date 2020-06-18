@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -13,6 +14,8 @@ import javax.annotation.Nullable;
 public class WPlayerInvPanel extends WPlainPanel {
 	private final WItemSlot inv;
 	private final WItemSlot hotbar;
+	@Nullable
+	private final WWidget label;
 
 	/**
 	 * Constructs a player inventory panel with a label.
@@ -44,6 +47,7 @@ public class WPlayerInvPanel extends WPlainPanel {
 	public WPlayerInvPanel(PlayerInventory playerInventory, @Nullable WWidget label) {
 		int y = 0;
 
+		this.label = label;
 		if (label != null) {
 			this.add(label, 0, 0, label.getWidth(), label.getHeight());
 			y += label.getHeight();
@@ -74,6 +78,13 @@ public class WPlayerInvPanel extends WPlainPanel {
 		inv.setBackgroundPainter(painter);
 		hotbar.setBackgroundPainter(painter);
 		return this;
+	}
+
+	@Override
+	public void validate(GuiDescription c) {
+		if (c != null && label instanceof WLabel) {
+			((WLabel) label).setColor(c.getTitleColor());
+		}
 	}
 }
 
