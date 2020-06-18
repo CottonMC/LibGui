@@ -9,7 +9,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.StringRenderable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -348,7 +348,7 @@ public class WWidget {
 	 */
 	@Environment(EnvType.CLIENT)
 	public void renderTooltip(MatrixStack matrices, int x, int y, int tX, int tY) {
-		List<Text> info = new ArrayList<>();
+		List<StringRenderable> info = new ArrayList<>();
 		addTooltip(info);
 
 		if (info.size() == 0)
@@ -370,7 +370,7 @@ public class WWidget {
 	 * Adds lines to this widget's tooltip. If the lines remain empty after this call, no tooltip will be drawn.
 	 * @param tooltip List containing all previous tooltip data.
 	 */
-	public void addTooltip(List<Text> tooltip) {
+	public void addTooltip(List<StringRenderable> tooltip) {
 	}
 
 	/**

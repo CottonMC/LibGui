@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -162,7 +163,7 @@ public class WBar extends WWidget {
 	}
 
 	@Override
-	public void addTooltip(List<Text> information) {
+	public void addTooltip(List<StringRenderable> information) {
 		if (tooltipLabel!=null) {
 			int value = (field>=0) ? properties.get(field) : 0;
 			int valMax = (max>=0) ? properties.get(max) : maxValue;

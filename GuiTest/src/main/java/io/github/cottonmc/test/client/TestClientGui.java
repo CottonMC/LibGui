@@ -17,7 +17,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.util.Identifier;
 
 public class TestClientGui extends LightweightGuiDescription {
@@ -39,7 +39,7 @@ public class TestClientGui extends LightweightGuiDescription {
 		this.setRootPanel(root);
 		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
 			@Override
-			public void addTooltip(List<Text> tooltip) {
+			public void addTooltip(List<StringRenderable> tooltip) {
 				tooltip.add(new LiteralText("Radical!"));
 			}
 		};
