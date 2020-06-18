@@ -68,8 +68,14 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		
 		reposition(screenWidth, screenHeight);
 	}
-	
-	private void reposition(int screenWidth, int screenHeight) {
+
+	/**
+	 * Repositions the root panel.
+	 *
+	 * @param screenWidth  the width of the screen
+	 * @param screenHeight the height of the screen
+	 */
+	protected void reposition(int screenWidth, int screenHeight) {
 		WPanel basePanel = description.getRootPanel();
 		if (basePanel!=null) {
 			basePanel.validate(description);
@@ -85,9 +91,15 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		if (!description.isFullscreen()) {
 			x = (width / 2) - (backgroundWidth / 2);
 			y = (height / 2) - (backgroundHeight / 2);
+			titleX = x;
+			titleY = y;
 		} else {
 			x = 0;
 			y = 0;
+
+			// Offset the title coordinates a little from the edge
+			titleX = 10;
+			titleY = 10;
 
 			if (basePanel != null) {
 				basePanel.setSize(screenWidth, screenHeight);

@@ -17,6 +17,20 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	protected int left = 0;
 	protected int top = 0;
 
+	/**
+	 * The X coordinate of the screen title.
+	 *
+	 * @since 2.0.0
+	 */
+	protected int titleX;
+
+	/**
+	 * The Y coordinate of the screen title.
+	 *
+	 * @since 2.0.0
+	 */
+	protected int titleY;
+
 	protected WWidget lastResponder = null;
 	
 	public CottonClientScreen(GuiDescription description) {
@@ -41,17 +55,30 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 		description.addPainters();
 		reposition(screenWidth, screenHeight);
 	}
-	
-	private void reposition(int screenWidth, int screenHeight) {
+
+	/**
+	 * Repositions the root panel.
+	 *
+	 * @param screenWidth  the width of the screen
+	 * @param screenHeight the height of the screen
+	 */
+	protected void reposition(int screenWidth, int screenHeight) {
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				if (!description.isFullscreen()) {
 					this.left = (screenWidth - root.getWidth()) / 2;
 					this.top = (screenHeight - root.getHeight()) / 2;
+					this.titleX = this.left;
+					this.titleY = this.top;
 				} else {
 					this.left = 0;
 					this.top = 0;
+
+					// Offset the title coordinates a little from the edge
+					this.titleX = 10;
+					this.titleY = 10;
+
 					root.setSize(screenWidth, screenHeight);
 				}
 			}
@@ -73,7 +100,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 		}
 		
 		if (getTitle() != null) {
-			textRenderer.draw(matrices, getTitle(), left, top, description.getTitleColor());
+			textRenderer.draw(matrices, getTitle(), titleX, titleY, description.getTitleColor());
 		}
 	}
 	
