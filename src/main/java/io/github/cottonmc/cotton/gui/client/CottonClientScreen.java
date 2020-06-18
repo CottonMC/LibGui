@@ -69,8 +69,8 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 				if (!description.isFullscreen()) {
 					this.left = (screenWidth - root.getWidth()) / 2;
 					this.top = (screenHeight - root.getHeight()) / 2;
-					this.titleX = this.left;
-					this.titleY = this.top;
+					this.titleX = 0;
+					this.titleY = 0;
 				} else {
 					this.left = 0;
 					this.top = 0;
@@ -97,10 +97,10 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				Scissors.checkStackIsEmpty();
 			}
-		}
-		
-		if (getTitle() != null) {
-			textRenderer.draw(matrices, getTitle(), titleX, titleY, description.getTitleColor());
+
+			if (getTitle() != null && description.isTitleVisible()) {
+				textRenderer.draw(matrices, getTitle(), left + titleX, top + titleY, description.getTitleColor());
+			}
 		}
 	}
 	

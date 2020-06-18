@@ -36,7 +36,8 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	protected int titleColor = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkTitleColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 	protected boolean fullscreen = false;
-	
+	protected boolean titleVisible = true;
+
 	protected WWidget focus;
 
 	public SyncedGuiDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory) {
@@ -465,5 +466,15 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	@Override
 	public void setFullscreen(boolean fullscreen) {
 		this.fullscreen = fullscreen;
+	}
+
+	@Override
+	public boolean isTitleVisible() {
+		return titleVisible;
+	}
+
+	@Override
+	public void setTitleVisible(boolean titleVisible) {
+		this.titleVisible = titleVisible;
 	}
 }

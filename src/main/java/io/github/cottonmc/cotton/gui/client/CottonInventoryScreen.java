@@ -91,8 +91,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		if (!description.isFullscreen()) {
 			x = (width / 2) - (backgroundWidth / 2);
 			y = (height / 2) - (backgroundHeight / 2);
-			titleX = x;
-			titleY = y;
+			titleX = 0;
+			titleY = 0;
 		} else {
 			x = 0;
 			y = 0;
@@ -265,8 +265,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 
 	@Override
 	protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-		if (description != null) {
-			this.textRenderer.draw(matrices, this.title, (float) this.titleX, (float) this.titleY, description.getTitleColor());
+		if (description != null && description.isTitleVisible()) {
+			this.textRenderer.draw(matrices, this.title, titleX, titleY, description.getTitleColor());
 		}
 
 		// Don't draw the player inventory label as it's drawn by the widget itself

@@ -80,4 +80,22 @@ public interface GuiDescription {
 	 * @since 2.0.0
 	 */
 	void setFullscreen(boolean fullscreen);
+
+	/**
+	 * Gets whether the title of this GUI should be rendered by the screen.
+	 *
+	 * <p>Modders can disable this to render the title themselves with a widget.
+	 *
+	 * @return true if the title is visible, false otherwise
+	 * @since 2.0.0
+	 */
+	boolean isTitleVisible();
+
+	/**
+	 * Sets whether the title of this GUI should be rendered by the screen.
+	 *
+	 * @param titleVisible true if the title is visible, false otherwise
+	 * @since 2.0.0
+	 */
+	void setTitleVisible(boolean titleVisible);
 }
