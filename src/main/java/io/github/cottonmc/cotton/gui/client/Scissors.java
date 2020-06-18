@@ -51,7 +51,7 @@ public final class Scissors {
 		refreshScissors();
 	}
 
-	private static void refreshScissors() {
+	static void refreshScissors() {
 		MinecraftClient mc = MinecraftClient.getInstance();
 
 		if (STACK.isEmpty()) {

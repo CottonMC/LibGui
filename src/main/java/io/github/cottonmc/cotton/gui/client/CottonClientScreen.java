@@ -65,6 +65,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
+				Scissors.refreshScissors();
 				root.paint(matrices, left, top, mouseX-left, mouseY-top);
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				Scissors.checkStackIsEmpty();

@@ -224,6 +224,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
+				Scissors.refreshScissors();
 				root.paint(matrices, x, y, mouseX-x, mouseY-y);
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				Scissors.checkStackIsEmpty();
