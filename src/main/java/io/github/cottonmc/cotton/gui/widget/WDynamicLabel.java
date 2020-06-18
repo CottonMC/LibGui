@@ -4,7 +4,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.widget.data.Alignment;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 
 import java.util.function.Supplier;
 
@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  */
 public class WDynamicLabel extends WWidget {
 	protected Supplier<String> text;
-	protected Alignment alignment = Alignment.LEFT;
+	protected HorizontalAlignment alignment = HorizontalAlignment.LEFT;
 	protected int color;
 	protected int darkmodeColor;
 
@@ -71,7 +71,7 @@ public class WDynamicLabel extends WWidget {
 		return this;
 	}
 	
-	public WDynamicLabel setAlignment(Alignment align) {
+	public WDynamicLabel setAlignment(HorizontalAlignment align) {
 		this.alignment = align;
 		return this;
 	}

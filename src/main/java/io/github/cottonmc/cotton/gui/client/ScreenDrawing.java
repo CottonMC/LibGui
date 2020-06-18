@@ -11,7 +11,7 @@ import net.minecraft.text.StringRenderable;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
 
-import io.github.cottonmc.cotton.gui.widget.data.Alignment;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 
 /**
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.
@@ -331,7 +331,7 @@ public class ScreenDrawing {
 	 * @param width    the width of the string, used for aligning
 	 * @param color    the text color
 	 */
-	public static void drawString(MatrixStack matrices, String s, Alignment align, int x, int y, int width, int color) {
+	public static void drawString(MatrixStack matrices, String s, HorizontalAlignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
 				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x, y, color);
@@ -364,7 +364,7 @@ public class ScreenDrawing {
 	 * @param color    the text color
 	 * @since 1.9.0
 	 */
-	public static void drawString(MatrixStack matrices, StringRenderable text, Alignment align, int x, int y, int width, int color) {
+	public static void drawString(MatrixStack matrices, StringRenderable text, HorizontalAlignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
 				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color);
@@ -396,7 +396,7 @@ public class ScreenDrawing {
 	 * @param width    the width of the string, used for aligning
 	 * @param color    the text color
 	 */
-	public static void drawStringWithShadow(MatrixStack matrices, String s, Alignment align, int x, int y, int width, int color) {
+	public static void drawStringWithShadow(MatrixStack matrices, String s, HorizontalAlignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
 				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x, y, color);
@@ -428,7 +428,7 @@ public class ScreenDrawing {
 	 * @param width    the width of the string, used for aligning
 	 * @param color    the text color
 	 */
-	public static void drawStringWithShadow(MatrixStack matrices, StringRenderable text, Alignment align, int x, int y, int width, int color) {
+	public static void drawStringWithShadow(MatrixStack matrices, StringRenderable text, HorizontalAlignment align, int x, int y, int width, int color) {
 		switch(align) {
 		case LEFT: {
 				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x, y, color);

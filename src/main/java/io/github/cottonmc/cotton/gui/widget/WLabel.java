@@ -1,8 +1,10 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -12,7 +14,7 @@ import net.minecraft.text.Style;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.client.TextHoverRendererScreen;
-import io.github.cottonmc.cotton.gui.widget.data.Alignment;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 
 import javax.annotation.Nullable;
 
@@ -21,7 +23,8 @@ import javax.annotation.Nullable;
  */
 public class WLabel extends WWidget {
 	protected StringRenderable text;
-	protected Alignment alignment = Alignment.LEFT;
+	protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
+	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 	protected int color;
 	protected int darkmodeColor;
 
@@ -78,7 +81,24 @@ public class WLabel extends WWidget {
 
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		ScreenDrawing.drawString(matrices, text, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
+		MinecraftClient mc = MinecraftClient.getInstance();
+		TextRenderer renderer = mc.textRenderer;
+		int yOffset;
+
+		switch (verticalAlignment) {
+			case CENTER:
+				yOffset = height / 2 - renderer.fontHeight / 2;
+				break;
+			case BOTTOM:
+				yOffset = height - renderer.fontHeight;
+				break;
+			case TOP:
+			default:
+				yOffset = 0;
+				break;
+		}
+
+		ScreenDrawing.drawString(matrices, text, horizontalAlignment, x, y + yOffset, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
 
 		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
 		if (hoveredTextStyle != null) {
@@ -212,23 +232,44 @@ public class WLabel extends WWidget {
 	}
 
 	/**
-	 * Gets the text alignment of this label.
+	 * Gets the horizontal text alignment of this label.
 	 *
 	 * @return the alignment
 	 * @since 2.0.0
 	 */
-	public Alignment getAlignment() {
-		return alignment;
+	public HorizontalAlignment getHorizontalAlignment() {
+		return horizontalAlignment;
 	}
 
 	/**
-	 * Sets the text alignment of this label.
+	 * Sets the horizontal text alignment of this label.
 	 *
 	 * @param align the new text alignment
 	 * @return this label
 	 */
-	public WLabel setAlignment(Alignment align) {
-		this.alignment = align;
+	public WLabel setHorizontalAlignment(HorizontalAlignment align) {
+		this.horizontalAlignment = align;
+		return this;
+	}
+
+	/**
+	 * Gets the vertical text alignment of this label.
+	 *
+	 * @return the alignment
+	 * @since 2.0.0
+	 */
+	public VerticalAlignment getVerticalAlignment() {
+		return verticalAlignment;
+	}
+
+	/**
+	 * Sets the vertical text alignment of this label.
+	 *
+	 * @param align the new text alignment
+	 * @return this label
+	 */
+	public WLabel setVerticalAlignment(VerticalAlignment align) {
+		this.verticalAlignment = align;
 		return this;
 	}
 }

@@ -9,7 +9,7 @@ import net.minecraft.text.StringRenderable;
 import net.minecraft.util.math.Quaternion;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.widget.data.Alignment;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 
 import javax.annotation.Nullable;
@@ -28,7 +28,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
 	@Nullable private StringRenderable label = null;
 	@Nullable private LabelUpdater labelUpdater = null;
-	private Alignment labelAlignment = Alignment.CENTER;
+	private HorizontalAlignment labelAlignment = HorizontalAlignment.CENTER;
 
 	/**
 	 * Constructs a horizontal slider with no default label.
@@ -117,7 +117,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 *
 	 * @return the alignment
 	 */
-	public Alignment getLabelAlignment() {
+	public HorizontalAlignment getLabelAlignment() {
 		return labelAlignment;
 	}
 
@@ -126,7 +126,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 *
 	 * @param labelAlignment the new alignment
 	 */
-	public void setLabelAlignment(Alignment labelAlignment) {
+	public void setLabelAlignment(HorizontalAlignment labelAlignment) {
 		this.labelAlignment = labelAlignment;
 	}
 

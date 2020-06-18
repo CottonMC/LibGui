@@ -12,7 +12,7 @@ import net.minecraft.text.Style;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.client.TextHoverRendererScreen;
-import io.github.cottonmc.cotton.gui.widget.data.Alignment;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -27,7 +27,7 @@ public class WText extends WWidget {
 	protected StringRenderable text;
 	protected int color;
 	protected int darkmodeColor;
-	protected Alignment alignment = Alignment.LEFT;
+	protected HorizontalAlignment alignment = HorizontalAlignment.LEFT;
 	private List<StringRenderable> wrappedLines;
 	private boolean wrappingScheduled = false;
 
@@ -208,7 +208,7 @@ public class WText extends WWidget {
 	 * @return the alignment
 	 * @since 1.9.0
 	 */
-	public Alignment getAlignment() {
+	public HorizontalAlignment getAlignment() {
 		return alignment;
 	}
 
@@ -219,7 +219,7 @@ public class WText extends WWidget {
 	 * @return this widget
 	 * @since 1.9.0
 	 */
-	public WText setAlignment(Alignment alignment) {
+	public WText setAlignment(HorizontalAlignment alignment) {
 		this.alignment = alignment;
 		return this;
 	}

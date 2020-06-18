@@ -10,14 +10,14 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.StringRenderable;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.widget.data.Alignment;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 
 public class WButton extends WWidget {
 	private StringRenderable label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
 	private boolean enabled = true;
-	protected Alignment alignment = Alignment.CENTER;
+	protected HorizontalAlignment alignment = HorizontalAlignment.CENTER;
 	
 	private Runnable onClick;
 	
@@ -119,11 +119,11 @@ public class WButton extends WWidget {
 		return this;
 	}
 
-	public Alignment getAlignment() {
+	public HorizontalAlignment getAlignment() {
 		return alignment;
 	}
 
-	public WButton setAlignment(Alignment alignment) {
+	public WButton setAlignment(HorizontalAlignment alignment) {
 		this.alignment = alignment;
 		return this;
 	}

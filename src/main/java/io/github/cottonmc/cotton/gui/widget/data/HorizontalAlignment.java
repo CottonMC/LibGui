@@ -1,6 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget.data;
 
-public enum Alignment {
+public enum HorizontalAlignment {
 	LEFT,
 	CENTER,
 	RIGHT;
