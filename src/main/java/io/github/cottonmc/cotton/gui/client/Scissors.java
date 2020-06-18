@@ -62,8 +62,8 @@ public final class Scissors {
 
 		int x = Integer.MIN_VALUE;
 		int y = Integer.MIN_VALUE;
-		int width = Integer.MAX_VALUE;
-		int height = Integer.MAX_VALUE;
+		int width = -1;
+		int height = -1;
 
 		for (Frame frame : STACK) {
 			if (x < frame.x) {
@@ -72,10 +72,10 @@ public final class Scissors {
 			if (y < frame.y) {
 				y = frame.y;
 			}
-			if (x + width > frame.x + frame.width) {
+			if (width == -1 || x + width > frame.x + frame.width) {
 				width = frame.width - (x - frame.x);
 			}
-			if (y + height > frame.y + frame.height) {
+			if (height == -1 || y + height > frame.y + frame.height) {
 				height = frame.height - (y - frame.y);
 			}
 		}
@@ -108,6 +108,9 @@ public final class Scissors {
 		private final int height;
 
 		private Frame(int x, int y, int width, int height) {
+			if (width < 0) throw new IllegalArgumentException("Negative width for a stack frame");
+			if (height < 0) throw new IllegalArgumentException("Negative height for a stack frame");
+
 			this.x = x;
 			this.y = y;
 			this.width = width;
