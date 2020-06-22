@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui;
 
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -16,6 +17,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
@@ -375,17 +377,43 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	 * @return the found inventory
 	 */
 	public static Inventory getBlockInventory(ScreenHandlerContext ctx) {
+		return getBlockInventory(ctx, () -> EmptyInventory.INSTANCE);
+	}
+
+	/**
+	 * Gets the block inventory at the context.
+	 *
+	 * <p>If no inventory is found, returns a simple mutable inventory
+	 * with the specified number of slots.
+	 *
+	 * <p>Searches for these implementations in the following order:
+	 * <ol>
+	 *     <li>Blocks implementing {@code InventoryProvider}</li>
+	 *     <li>Block entities implementing {@code InventoryProvider}</li>
+	 *     <li>Block entities implementing {@code Inventory}</li>
+	 * </ol>
+	 *
+	 * @param ctx  the context
+	 * @param size the fallback inventory size
+	 * @return the found inventory
+	 * @since 2.0.0
+	 */
+	public static Inventory getBlockInventory(ScreenHandlerContext ctx, int size) {
+		return getBlockInventory(ctx, () -> new SimpleInventory(size));
+	}
+
+	private static Inventory getBlockInventory(ScreenHandlerContext ctx, Supplier<Inventory> fallback) {
 		return ctx.run((world, pos) -> {
 			BlockState state = world.getBlockState(pos);
 			Block b = state.getBlock();
-			
+
 			if (b instanceof InventoryProvider) {
 				Inventory inventory = ((InventoryProvider)b).getInventory(state, world, pos);
 				if (inventory != null) {
 					return inventory;
 				}
 			}
-			
+
 			BlockEntity be = world.getBlockEntity(pos);
 			if (be!=null) {
 				if (be instanceof InventoryProvider) {
@@ -397,9 +425,9 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 					return (Inventory)be;
 				}
 			}
-			
-			return EmptyInventory.INSTANCE;
-		}).orElse(EmptyInventory.INSTANCE);
+
+			return fallback.get();
+		}).orElseGet(fallback);
 	}
 
 	/**
@@ -421,6 +449,30 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			
 			return new ArrayPropertyDelegate(0);
 		}).orElse(new ArrayPropertyDelegate(0));
+	}
+
+	/**
+	 * Gets the property delegate at the context.
+	 *
+	 * <p>If no property delegate is found, returns an array property delegate
+	 * with the specified number of properties.
+	 *
+	 * <p>Searches for block entities implementing {@link PropertyDelegateHolder}.
+	 *
+	 * @param ctx  the context
+	 * @param size the number of properties
+	 * @return the found property delegate
+	 * @since 2.0.0
+	 */
+	public static PropertyDelegate getBlockPropertyDelegate(ScreenHandlerContext ctx, int size) {
+		return ctx.run((world, pos) -> {
+			BlockEntity be = world.getBlockEntity(pos);
+			if (be!=null && be instanceof PropertyDelegateHolder) {
+				return ((PropertyDelegateHolder)be).getPropertyDelegate();
+			}
+
+			return new ArrayPropertyDelegate(size);
+		}).orElse(new ArrayPropertyDelegate(size));
 	}
 	
 	//extends ScreenHandler {
