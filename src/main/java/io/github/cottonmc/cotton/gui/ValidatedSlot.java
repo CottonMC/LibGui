@@ -7,11 +7,14 @@ import net.minecraft.screen.slot.Slot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.function.Predicate;
+
 public class ValidatedSlot extends Slot {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final int slotNumber;
 	private boolean insertingAllowed = true;
 	private boolean takingAllowed = true;
+	private Predicate<ItemStack> filter;
 
 	public ValidatedSlot(Inventory inventory, int index, int x, int y) {
 		super(inventory, index, x, y);
@@ -21,7 +24,7 @@ public class ValidatedSlot extends Slot {
 	
 	@Override
 	public boolean canInsert(ItemStack stack) {
-		return insertingAllowed && inventory.isValid(slotNumber, stack);
+		return insertingAllowed && inventory.isValid(slotNumber, stack) && filter.test(stack);
 	}
 	
 	@Override
@@ -87,5 +90,25 @@ public class ValidatedSlot extends Slot {
 	 */
 	public void setTakingAllowed(boolean takingAllowed) {
 		this.takingAllowed = takingAllowed;
+	}
+
+	/**
+	 * Gets the item stack filter of this slot.
+	 *
+	 * @return the item filter
+	 * @since 2.0.0
+	 */
+	public Predicate<ItemStack> getFilter() {
+		return filter;
+	}
+
+	/**
+	 * Sets the item stack filter of this slot.
+	 *
+	 * @param filter the new item filter
+	 * @since 2.0.0
+	 */
+	public void setFilter(Predicate<ItemStack> filter) {
+		this.filter = filter;
 	}
 }

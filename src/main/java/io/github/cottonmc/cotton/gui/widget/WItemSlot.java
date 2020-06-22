@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
@@ -11,12 +12,14 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 
 import javax.annotation.Nullable;
 
 public class WItemSlot extends WWidget {
+	private static final Predicate<ItemStack> DEFAULT_FILTER = stack -> true;
 	private final List<ValidatedSlot> peers = new ArrayList<>();
 	@Nullable
 	@Environment(EnvType.CLIENT)
@@ -29,6 +32,7 @@ public class WItemSlot extends WWidget {
 	private boolean insertingAllowed = true;
 	private boolean takingAllowed = true;
 	private int focusedSlot = -1;
+	private Predicate<ItemStack> filter = DEFAULT_FILTER;
 
 	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
 		this.inventory = inventory;
@@ -197,6 +201,7 @@ public class WItemSlot extends WWidget {
 				ValidatedSlot slot = createSlotPeer(inventory, index, this.getAbsoluteX() + (x * 18) + 1, this.getAbsoluteY() + (y * 18) + 1);
 				slot.setInsertingAllowed(insertingAllowed);
 				slot.setTakingAllowed(takingAllowed);
+				slot.setFilter(filter);
 				peers.add(slot);
 				c.addSlotPeer(slot);
 				index++;
@@ -251,7 +256,32 @@ public class WItemSlot extends WWidget {
 	public void setBackgroundPainter(@Nullable BackgroundPainter painter) {
 		this.backgroundPainter = painter;
 	}
-	
+
+	/**
+	 * Gets the item filter of this item slot.
+	 *
+	 * @return the item filter
+	 * @since 2.0.0
+	 */
+	public Predicate<ItemStack> getFilter() {
+		return filter;
+	}
+
+	/**
+	 * Sets the item filter of this item slot.
+	 *
+	 * @param filter the new item filter
+	 * @return this item slot
+	 * @since 2.0.0
+	 */
+	public WItemSlot setFilter(Predicate<ItemStack> filter) {
+		this.filter = filter;
+		for (ValidatedSlot peer : peers) {
+			peer.setFilter(filter);
+		}
+		return this;
+	}
+
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
