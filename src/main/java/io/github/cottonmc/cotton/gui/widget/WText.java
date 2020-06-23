@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -27,7 +28,8 @@ public class WText extends WWidget {
 	protected StringRenderable text;
 	protected int color;
 	protected int darkmodeColor;
-	protected HorizontalAlignment alignment = HorizontalAlignment.LEFT;
+	protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
+	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 	private List<StringRenderable> wrappedLines;
 	private boolean wrappingScheduled = false;
 
@@ -88,11 +90,26 @@ public class WText extends WWidget {
 		}
 
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
+
+		int yOffset;
+		switch (verticalAlignment) {
+			case CENTER:
+				yOffset = height / 2 - font.fontHeight * wrappedLines.size() / 2;
+				break;
+			case BOTTOM:
+				yOffset = height - font.fontHeight * wrappedLines.size();
+				break;
+			case TOP:
+			default:
+				yOffset = 0;
+				break;
+		}
+
 		for (int i = 0; i < wrappedLines.size(); i++) {
 			StringRenderable line = wrappedLines.get(i);
 			int c = LibGuiClient.config.darkMode ? darkmodeColor : color;
 
-			ScreenDrawing.drawString(matrices, line, alignment, x, y + i * font.fontHeight, width, c);
+			ScreenDrawing.drawString(matrices, line, horizontalAlignment, x, y + yOffset + i * font.fontHeight, width, c);
 		}
 
 		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
@@ -203,24 +220,46 @@ public class WText extends WWidget {
 	}
 
 	/**
-	 * Gets the alignment of this text widget.
+	 * Gets the horizontal alignment of this text widget.
 	 *
 	 * @return the alignment
 	 * @since 1.9.0
 	 */
-	public HorizontalAlignment getAlignment() {
-		return alignment;
+	public HorizontalAlignment getHorizontalAlignment() {
+		return horizontalAlignment;
 	}
 
 	/**
-	 * Sets the alignment of this text widget.
+	 * Sets the horizontal alignment of this text widget.
 	 *
-	 * @param alignment the new alignment
+	 * @param horizontalAlignment the new alignment
 	 * @return this widget
 	 * @since 1.9.0
 	 */
-	public WText setAlignment(HorizontalAlignment alignment) {
-		this.alignment = alignment;
+	public WText setHorizontalAlignment(HorizontalAlignment horizontalAlignment) {
+		this.horizontalAlignment = horizontalAlignment;
+		return this;
+	}
+
+	/**
+	 * Gets the vertical alignment of this text widget.
+	 *
+	 * @return the alignment
+	 * @since 2.0.0
+	 */
+	public VerticalAlignment getVerticalAlignment() {
+		return verticalAlignment;
+	}
+
+	/**
+	 * Sets the vertical alignment of this text widget.
+	 *
+	 * @param verticalAlignment the new alignment
+	 * @return this widget
+	 * @since 2.0.0
+	 */
+	public WText setVerticalAlignment(VerticalAlignment verticalAlignment) {
+		this.verticalAlignment = verticalAlignment;
 		return this;
 	}
 }
