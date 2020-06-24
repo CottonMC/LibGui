@@ -23,7 +23,8 @@ public class WItemSlot extends WWidget {
 	private final List<ValidatedSlot> peers = new ArrayList<>();
 	@Nullable
 	@Environment(EnvType.CLIENT)
-	private BackgroundPainter backgroundPainter = BackgroundPainter.SLOT;
+	// TODO: Set the background painter to SLOT in a new method that sets a widget's default painter.
+	private BackgroundPainter backgroundPainter = null;
 	private Inventory inventory;
 	private int startIndex = 0;
 	private int slotsWide = 1;
@@ -285,9 +286,7 @@ public class WItemSlot extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		if (backgroundPainter!=null) {
-			backgroundPainter.paintBackground(x, y, this);
-		}
+		(backgroundPainter != null ? backgroundPainter : BackgroundPainter.SLOT).paintBackground(x, y, this);
 	}
 
 	@Nullable
