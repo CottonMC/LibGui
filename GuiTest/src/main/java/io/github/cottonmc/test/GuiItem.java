@@ -2,6 +2,8 @@ package io.github.cottonmc.test;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.test.client.TestClientGui;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -21,10 +23,15 @@ public class GuiItem extends Item {
 	
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		if (world.isClient) { 
-			MinecraftClient.getInstance().openScreen(new CottonClientScreen(new TestClientGui()));
+		if (world.isClient) {
+			openScreen(); // In its own method to prevent class loading issues
 		}
 		
 		return new TypedActionResult<ItemStack>(ActionResult.SUCCESS, (hand==Hand.MAIN_HAND) ? player.getMainHandStack() : player.getOffHandStack());
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void openScreen() {
+		MinecraftClient.getInstance().openScreen(new CottonClientScreen(new TestClientGui()));
 	}
 }
