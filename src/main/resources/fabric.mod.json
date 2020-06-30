@@ -6,7 +6,8 @@
 	"name": "LibGui",
 	"description": "Easy grid-based GUIs for Fabric",
 	"authors": [
-		"Falkreon"
+		"Falkreon",
+		"Juuz"
 	],
 	"contact": {
 		"sources": "https://github.com/CottonMC/LibGUI"
