@@ -22,9 +22,10 @@
 		"modmenu": ["io.github.cottonmc.cotton.gui.client.modmenu.ModMenuSupport"]
 	},
 	"depends": {
-		"fabricloader": ">=0.4.0",
+		"fabricloader": ">=0.8.8",
 		"fabric": "*",
-		"minecraft": ">=1.16-"
+		"minecraft": ">=1.16.1",
+		"jankson": "^3.0.0"
 	},
 	"suggests": {
 		"flamingo": "*"
