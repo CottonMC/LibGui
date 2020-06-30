@@ -310,9 +310,10 @@ public class WWidget {
 	/**
 	 * Creates "heavyweight" component peers
 	 * @param c the top-level Container that will hold the peers
+	 * @deprecated All widget peers should be added in {@link #validate(GuiDescription)}.
 	 */
+	@Deprecated
 	public void createPeers(GuiDescription c) {
-		host=c;
 	}
 
 	/**
@@ -363,7 +364,7 @@ public class WWidget {
 	 * The host container must clear any heavyweight peers from its records before this method is called.
 	 */
 	public void validate(GuiDescription host) {
-		//valid = true;
+		this.host = host;
 	}
 
 	/**

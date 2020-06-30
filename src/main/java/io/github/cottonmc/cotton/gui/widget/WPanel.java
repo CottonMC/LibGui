@@ -27,6 +27,7 @@ public abstract class WPanel extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private BackgroundPainter backgroundPainter = null;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void createPeers(GuiDescription c) {
 		super.createPeers(c);
@@ -176,6 +177,7 @@ public abstract class WPanel extends WWidget {
 
 	@Override
 	public void validate(GuiDescription c) {
+		super.validate(c);
 		layout();
 		for (WWidget child : children) {
 			child.validate(c);

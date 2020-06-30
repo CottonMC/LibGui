@@ -191,8 +191,8 @@ public class WItemSlot extends WWidget {
 	}
 
 	@Override
-	public void createPeers(GuiDescription c) {
-		super.createPeers(c);
+	public void validate(GuiDescription host) {
+		super.validate(host);
 		peers.clear();
 		int index = startIndex;
 		
@@ -204,7 +204,7 @@ public class WItemSlot extends WWidget {
 				slot.setTakingAllowed(takingAllowed);
 				slot.setFilter(filter);
 				peers.add(slot);
-				c.addSlotPeer(slot);
+				host.addSlotPeer(slot);
 				index++;
 			}
 		}

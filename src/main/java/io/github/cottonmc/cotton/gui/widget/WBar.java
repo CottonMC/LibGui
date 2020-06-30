@@ -185,8 +185,9 @@ public class WBar extends WWidget {
 	}
 	
 	@Override
-	public void createPeers(GuiDescription c) {
-		if (properties==null) properties = c.getPropertyDelegate();
+	public void validate(GuiDescription host) {
+		super.validate(host);
+		if (properties==null) properties = host.getPropertyDelegate();
 	}
 
 	/**
