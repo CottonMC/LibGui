@@ -21,6 +21,13 @@ public class WBox extends WPanel {
 	protected Axis axis;
 
 	/**
+	 * The alignment for this box's children.
+	 *
+	 * @since 2.1.0
+	 */
+	protected Alignment alignment = Alignment.START;
+
+	/**
 	 * Constructs a box.
 	 *
 	 * @param axis the box axis
@@ -62,10 +69,41 @@ public class WBox extends WPanel {
 
 		for (int i = 0; i < children.size(); i++) {
 			WWidget child = children.get(i);
+
 			if (axis == Axis.HORIZONTAL) {
-				child.setLocation(dimension, 0);
+				int y;
+
+				switch (alignment) {
+					case START:
+					default:
+						y = 0;
+						break;
+					case CENTER:
+						y = (getHeight() - child.getHeight()) / 2;
+						break;
+					case END:
+						y = getHeight() - child.getHeight();
+						break;
+				}
+
+				child.setLocation(dimension, y);
 			} else {
-				child.setLocation(0, dimension);
+				int x;
+
+				switch (alignment) {
+					case START:
+					default:
+						x = 0;
+						break;
+					case CENTER:
+						x = (getWidth() - child.getWidth()) / 2;
+						break;
+					case END:
+						x = getWidth() - child.getWidth();
+						break;
+				}
+
+				child.setLocation(x, dimension);
 			}
 
 			if (child instanceof WPanel) ((WPanel) child).layout();
@@ -119,5 +157,42 @@ public class WBox extends WPanel {
 	public WBox setAxis(Axis axis) {
 		this.axis = Objects.requireNonNull(axis, "axis");
 		return this;
+	}
+
+	/**
+	 * Gets the alignment of this box.
+	 *
+	 * @return the alignment
+	 * @since 2.1.0
+	 */
+	public Alignment getAlignment() {
+		return alignment;
+	}
+
+	/**
+	 * Sets the alignment of this box.
+	 *
+	 * @param alignment the new alignment
+	 * @return this box
+	 * @throws NullPointerException if the alignment is null
+	 * @since 2.1.0
+	 */
+	public WBox setAlignment(Alignment alignment) {
+		this.alignment = Objects.requireNonNull(alignment, "alignment");
+		return this;
+	}
+
+	/**
+	 * All possible alignments for children in a {@link WBox}.
+	 *
+	 * @since 2.1.0
+	 */
+	public enum Alignment {
+		/** Aligned on the start of the axis, i.e. left or up. This is the default. */
+		START,
+		/** Centered on the axis. */
+		CENTER,
+		/** Aligned on the end of the axis, i.e. right or down. */
+		END;
 	}
 }
