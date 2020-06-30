@@ -1,6 +1,8 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 
 import java.util.Objects;
 
@@ -21,11 +23,18 @@ public class WBox extends WPanel {
 	protected Axis axis;
 
 	/**
-	 * The alignment for this box's children.
+	 * The horizontal alignment for this box's children.
 	 *
 	 * @since 2.1.0
 	 */
-	protected Alignment alignment = Alignment.START;
+	protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
+
+	/**
+	 * The vertical alignment for this box's children.
+	 *
+	 * @since 2.1.0
+	 */
+	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 
 	/**
 	 * Constructs a box.
@@ -67,21 +76,46 @@ public class WBox extends WPanel {
 	public void layout() {
 		int dimension = 0;
 
+		// Set position offset from alignment along the box axis
+		if (axis == Axis.HORIZONTAL && horizontalAlignment != HorizontalAlignment.LEFT) {
+			int widgetWidth = spacing * (children.size() - 1);
+			for (WWidget child : children) {
+				widgetWidth += child.getWidth();
+			}
+
+			if (horizontalAlignment == HorizontalAlignment.CENTER) {
+				dimension = (getWidth() - widgetWidth) / 2;
+			} else { // right
+				dimension = getWidth() - widgetWidth;
+			}
+		} else if (verticalAlignment != VerticalAlignment.TOP) {
+			int widgetHeight = spacing * (children.size() - 1);
+			for (WWidget child : children) {
+				widgetHeight += child.getHeight();
+			}
+
+			if (verticalAlignment == VerticalAlignment.CENTER) {
+				dimension = (getHeight() - widgetHeight) / 2;
+			} else { // bottom
+				dimension = getHeight() - widgetHeight;
+			}
+		}
+
 		for (int i = 0; i < children.size(); i++) {
 			WWidget child = children.get(i);
 
 			if (axis == Axis.HORIZONTAL) {
 				int y;
 
-				switch (alignment) {
-					case START:
+				switch (verticalAlignment) {
+					case TOP:
 					default:
 						y = 0;
 						break;
 					case CENTER:
 						y = (getHeight() - child.getHeight()) / 2;
 						break;
-					case END:
+					case BOTTOM:
 						y = getHeight() - child.getHeight();
 						break;
 				}
@@ -90,15 +124,15 @@ public class WBox extends WPanel {
 			} else {
 				int x;
 
-				switch (alignment) {
-					case START:
+				switch (horizontalAlignment) {
+					case LEFT:
 					default:
 						x = 0;
 						break;
 					case CENTER:
 						x = (getWidth() - child.getWidth()) / 2;
 						break;
-					case END:
+					case RIGHT:
 						x = getWidth() - child.getWidth();
 						break;
 				}
@@ -160,39 +194,48 @@ public class WBox extends WPanel {
 	}
 
 	/**
-	 * Gets the alignment of this box.
+	 * Gets the horizontal alignment of this box.
 	 *
 	 * @return the alignment
 	 * @since 2.1.0
 	 */
-	public Alignment getAlignment() {
-		return alignment;
+	public HorizontalAlignment getHorizontalAlignment() {
+		return horizontalAlignment;
 	}
 
 	/**
-	 * Sets the alignment of this box.
+	 * Sets the horizontal alignment of this box.
 	 *
 	 * @param alignment the new alignment
 	 * @return this box
 	 * @throws NullPointerException if the alignment is null
 	 * @since 2.1.0
 	 */
-	public WBox setAlignment(Alignment alignment) {
-		this.alignment = Objects.requireNonNull(alignment, "alignment");
+	public WBox setHorizontalAlignment(HorizontalAlignment alignment) {
+		this.horizontalAlignment = Objects.requireNonNull(alignment, "alignment");
 		return this;
 	}
 
 	/**
-	 * All possible alignments for children in a {@link WBox}.
+	 * Gets the vertical alignment of this box.
 	 *
+	 * @return the alignment
 	 * @since 2.1.0
 	 */
-	public enum Alignment {
-		/** Aligned on the start of the axis, i.e. left or up. This is the default. */
-		START,
-		/** Centered on the axis. */
-		CENTER,
-		/** Aligned on the end of the axis, i.e. right or down. */
-		END;
+	public VerticalAlignment getVerticalAlignment() {
+		return verticalAlignment;
+	}
+
+	/**
+	 * Sets the vertical alignment of this box.
+	 *
+	 * @param alignment the new alignment
+	 * @return this box
+	 * @throws NullPointerException if the alignment is null
+	 * @since 2.1.0
+	 */
+	public WBox setVerticalAlignment(VerticalAlignment alignment) {
+		this.verticalAlignment = Objects.requireNonNull(alignment, "alignment");
+		return this;
 	}
 }
