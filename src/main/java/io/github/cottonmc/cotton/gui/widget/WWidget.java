@@ -368,6 +368,29 @@ public class WWidget {
 	}
 
 	/**
+	 * Gets the host of this widget.
+	 *
+	 * @return the host
+	 * @see #host
+	 * @since 2.1.0
+	 */
+	@Nullable
+	public final GuiDescription getHost() {
+		return host;
+	}
+
+	/**
+	 * Sets the host of this widget without creating peers.
+	 *
+	 * @param host the new host
+	 * @see #host
+	 * @since 2.1.0
+	 */
+	public void setHost(@Nullable GuiDescription host) {
+		this.host = host;
+	}
+
+	/**
 	 * Adds lines to this widget's tooltip. If the lines remain empty after this call, no tooltip will be drawn.
 	 * @param tooltip List containing all previous tooltip data.
 	 */

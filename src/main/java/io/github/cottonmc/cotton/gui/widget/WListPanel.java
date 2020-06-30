@@ -97,8 +97,9 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		child.setParent(this);
 		// Set up the widget's host
 		if (host != null) {
-			child.validate(host);
-			child.createPeers(host);
+			// setHost instead of validate since we cannot have independent validations
+			// TODO: System for independently validating widgets?
+			child.setHost(host);
 		}
 		return child;
 	}
