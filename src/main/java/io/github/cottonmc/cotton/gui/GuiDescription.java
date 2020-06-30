@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import io.github.cottonmc.cotton.gui.impl.FocusHandler;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.screen.PropertyDelegate;
@@ -23,8 +24,30 @@ public interface GuiDescription {
 	public int getTitleColor();
 	
 	public GuiDescription setRootPanel(WPanel panel);
+
+	/**
+	 * Sets the title color of this GUI.
+	 *
+	 * <p>The dark-mode title color will also be set by this method.
+	 * If the specified color is {@link io.github.cottonmc.cotton.gui.widget.WLabel#DEFAULT_TEXT_COLOR},
+	 * the dark-mode color will be {@link io.github.cottonmc.cotton.gui.widget.WLabel#DEFAULT_DARKMODE_TEXT_COLOR};
+	 * otherwise it will be the specified color.
+	 *
+	 * @param color the new title color
+	 * @return this GUI
+	 */
 	public GuiDescription setTitleColor(int color);
-	
+
+	/**
+	 * Sets the light and dark title colors of this GUI.
+	 *
+	 * @param lightColor the light-mode color
+	 * @param darkColor  the dark-mode color
+	 * @return this GUI
+	 * @since 2.1.0
+	 */
+	GuiDescription setTitleColor(int lightColor, int darkColor);
+
 	/** Sets the object which manages the integer properties used by WBars */
 	public GuiDescription setPropertyDelegate(PropertyDelegate delegate);
 	
@@ -98,4 +121,20 @@ public interface GuiDescription {
 	 * @since 2.0.0
 	 */
 	void setTitleVisible(boolean titleVisible);
+
+	/**
+	 * Gets the horizontal alignment of the GUI title.
+	 *
+	 * @return the alignment
+	 * @since 2.1.0
+	 */
+	HorizontalAlignment getTitleAlignment();
+
+	/**
+	 * Sets the horizontal alignment of the GUI title.
+	 *
+	 * @param alignment the new alignment
+	 * @since 2.1.0
+	 */
+	void setTitleAlignment(HorizontalAlignment alignment);
 }

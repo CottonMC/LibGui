@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.widget.*;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -39,6 +40,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	protected int darkTitleColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 	protected boolean fullscreen = false;
 	protected boolean titleVisible = true;
+	protected HorizontalAlignment titleAlignment = HorizontalAlignment.LEFT;
 
 	protected WWidget focus;
 
@@ -71,9 +73,18 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		this.rootPanel = panel;
 		return this;
 	}
-	
+
+	@Override
 	public SyncedGuiDescription setTitleColor(int color) {
 		this.titleColor = color;
+		this.darkTitleColor = (color == WLabel.DEFAULT_TEXT_COLOR) ? WLabel.DEFAULT_DARKMODE_TEXT_COLOR : color;
+		return this;
+	}
+
+	@Override
+	public SyncedGuiDescription setTitleColor(int lightColor, int darkColor) {
+		this.titleColor = lightColor;
+		this.darkTitleColor = darkColor;
 		return this;
 	}
 	
@@ -528,5 +539,15 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	@Override
 	public void setTitleVisible(boolean titleVisible) {
 		this.titleVisible = titleVisible;
+	}
+
+	@Override
+	public HorizontalAlignment getTitleAlignment() {
+		return titleAlignment;
+	}
+
+	@Override
+	public void setTitleAlignment(HorizontalAlignment titleAlignment) {
+		this.titleAlignment = titleAlignment;
 	}
 }

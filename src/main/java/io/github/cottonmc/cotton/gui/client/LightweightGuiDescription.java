@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.minecraft.screen.PropertyDelegate;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
@@ -16,12 +17,14 @@ import javax.annotation.Nullable;
  */
 public class LightweightGuiDescription implements GuiDescription {
 	protected WPanel rootPanel = new WGridPanel();
+	protected PropertyDelegate propertyDelegate;
+	protected WWidget focus;
+
 	protected int titleColor = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeTitleColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 	protected boolean fullscreen = false;
 	protected boolean titleVisible = true;
-	protected PropertyDelegate propertyDelegate;
-	protected WWidget focus;
+	protected HorizontalAlignment titleAlignment = HorizontalAlignment.LEFT;
 	
 	@Override
 	public WPanel getRootPanel() {
@@ -42,6 +45,14 @@ public class LightweightGuiDescription implements GuiDescription {
 	@Override
 	public GuiDescription setTitleColor(int color) {
 		this.titleColor = color;
+		this.darkmodeTitleColor = (color == WLabel.DEFAULT_TEXT_COLOR) ? WLabel.DEFAULT_DARKMODE_TEXT_COLOR : color;
+		return this;
+	}
+
+	@Override
+	public GuiDescription setTitleColor(int lightColor, int darkColor) {
+		this.titleColor = lightColor;
+		this.darkmodeTitleColor = darkColor;
 		return this;
 	}
 
@@ -115,5 +126,15 @@ public class LightweightGuiDescription implements GuiDescription {
 	@Override
 	public void setTitleVisible(boolean titleVisible) {
 		this.titleVisible = titleVisible;
+	}
+
+	@Override
+	public HorizontalAlignment getTitleAlignment() {
+		return titleAlignment;
+	}
+
+	@Override
+	public void setTitleAlignment(HorizontalAlignment titleAlignment) {
+		this.titleAlignment = titleAlignment;
 	}
 }
