@@ -70,6 +70,13 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	}
 
 	/**
+	 * Clears the heavyweight peers of this screen's GUI description.
+	 */
+	private void clearPeers() {
+		description.slots.clear();
+	}
+
+	/**
 	 * Repositions the root panel.
 	 *
 	 * @param screenWidth  the width of the screen
@@ -78,6 +85,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	protected void reposition(int screenWidth, int screenHeight) {
 		WPanel basePanel = description.getRootPanel();
 		if (basePanel!=null) {
+			clearPeers();
 			basePanel.validate(description);
 
 			backgroundWidth = basePanel.getWidth();
