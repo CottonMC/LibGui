@@ -362,6 +362,8 @@ public class WWidget {
 	/**
 	 * Creates component peers, lays out children, and initializes animation data for this Widget and all its children.
 	 * The host container must clear any heavyweight peers from its records before this method is called.
+	 *
+	 * @param host the host GUI description
 	 */
 	public void validate(GuiDescription host) {
 		this.host = host;

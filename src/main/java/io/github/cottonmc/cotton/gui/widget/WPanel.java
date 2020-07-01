@@ -175,6 +175,13 @@ public abstract class WPanel extends WWidget {
 		return this;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>Subclasses should call {@code super.validate(c)} to ensure that children are validated.
+	 *
+	 * @param c the host GUI description
+	 */
 	@Override
 	public void validate(GuiDescription c) {
 		super.validate(c);
