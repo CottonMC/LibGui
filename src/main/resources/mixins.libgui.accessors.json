@@ -1,0 +1,14 @@
+{
+	"compatibilityLevel": "JAVA_8",
+	"minVersion": "0.7.11",
+	"package": "io.github.cottonmc.cotton.gui.impl.access",
+	"required": true,
+
+	"mixins": [
+		"SlotAccessor"
+	],
+
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

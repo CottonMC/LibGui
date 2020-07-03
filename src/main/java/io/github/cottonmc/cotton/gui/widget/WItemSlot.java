@@ -370,6 +370,20 @@ public class WItemSlot extends WWidget {
 		}
 	}
 
+	@Override
+	public void onShown() {
+		for (ValidatedSlot peer : peers) {
+			peer.setVisible(true);
+		}
+	}
+
+	@Override
+	public void onHidden() {
+		for (ValidatedSlot peer : peers) {
+			peer.setVisible(false);
+		}
+	}
+
 	/**
 	 * A listener for changes in an item slot.
 	 *

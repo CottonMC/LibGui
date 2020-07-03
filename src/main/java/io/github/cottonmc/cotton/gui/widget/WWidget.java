@@ -3,6 +3,7 @@ package io.github.cottonmc.cotton.gui.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.annotations.Beta;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -432,6 +433,26 @@ public class WWidget {
 	@Nullable
 	public WWidget cycleFocus(boolean lookForwards) {
 		return canFocus() ? (isFocused() ? null : this) : null;
+	}
+
+	/**
+	 * Notifies this widget that it is visible and
+	 * shows any hidden peers of itself and its children.
+	 *
+	 * @since 2.2.0
+	 */
+	@Beta
+	public void onShown() {
+	}
+
+	/**
+	 * Notifies this widget that it won't be drawn and
+	 * hides any visible peers of itself and its children.
+	 *
+	 * @since 2.2.0
+	 */
+	@Beta
+	public void onHidden() {
 	}
 
 	/**

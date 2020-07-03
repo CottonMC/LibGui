@@ -279,6 +279,20 @@ public abstract class WPanel extends WWidget {
 	}
 
 	@Override
+	public void onShown() {
+		for (WWidget child : children) {
+			child.onShown();
+		}
+	}
+
+	@Override
+	public void onHidden() {
+		for (WWidget child : children) {
+			child.onHidden();
+		}
+	}
+
+	@Override
 	public String toString() {
 		return "WPanel{ children: [\n" + children.stream().map(Objects::toString).flatMap(x -> Stream.of(x.split("\n")).map(y -> "\t" + y)).collect(Collectors.joining(",\n")) + "] }";
 	}
