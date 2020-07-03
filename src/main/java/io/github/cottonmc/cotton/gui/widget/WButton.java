@@ -13,6 +13,8 @@ import net.minecraft.text.StringRenderable;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 
+import javax.annotation.Nullable;
+
 public class WButton extends WWidget {
 	private StringRenderable label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
@@ -20,8 +22,8 @@ public class WButton extends WWidget {
 	private boolean enabled = true;
 	protected HorizontalAlignment alignment = HorizontalAlignment.CENTER;
 	
-	private Runnable onClick;
-	private Icon icon = null;
+	@Nullable private Runnable onClick;
+	@Nullable private Icon icon = null;
 
 	/**
 	 * Constructs a button with no label and no icon.
@@ -132,8 +134,25 @@ public class WButton extends WWidget {
 		}
 	}
 
-	public WButton setOnClick(Runnable r) {
-		this.onClick = r;
+	/**
+	 * Gets the click handler of this button.
+	 *
+	 * @return the click handler
+	 * @since 2.2.0
+	 */
+	@Nullable
+	public Runnable getOnClick() {
+		return onClick;
+	}
+
+	/**
+	 * Sets the click handler of this button.
+	 *
+	 * @param onClick the new click handler
+	 * @return this button
+	 */
+	public WButton setOnClick(@Nullable Runnable onClick) {
+		this.onClick = onClick;
 		return this;
 	}
 
@@ -170,6 +189,7 @@ public class WButton extends WWidget {
 	 * @return the icon
 	 * @since 2.2.0
 	 */
+	@Nullable
 	public Icon getIcon() {
 		return icon;
 	}
@@ -181,7 +201,7 @@ public class WButton extends WWidget {
 	 * @return this button
 	 * @since 2.2.0
 	 */
-	public WButton setIcon(Icon icon) {
+	public WButton setIcon(@Nullable Icon icon) {
 		this.icon = icon;
 		return this;
 	}
