@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -20,13 +21,43 @@ public class WButton extends WWidget {
 	protected HorizontalAlignment alignment = HorizontalAlignment.CENTER;
 	
 	private Runnable onClick;
-	
+	private Icon icon = null;
+
+	/**
+	 * Constructs a button with no label and no icon.
+	 */
 	public WButton() {
 		
 	}
-	
-	public WButton(StringRenderable text) {
-		this.label = text;
+
+	/**
+	 * Constructs a button with an icon.
+	 *
+	 * @param icon the icon
+	 * @since 2.2.0
+	 */
+	public WButton(Icon icon) {
+		this.icon = icon;
+	}
+
+	/**
+	 * Constructs a button with a label.
+	 *
+	 * @param label the label
+	 */
+	public WButton(StringRenderable label) {
+		this.label = label;
+	}
+
+	/**
+	 * Constructs a button with an icon and a label.
+	 *
+	 * @param icon  the icon
+	 * @param label the label
+	 */
+	public WButton(Icon icon, StringRenderable label) {
+		this.icon = icon;
+		this.label = label;
 	}
 	
 	@Override
@@ -58,6 +89,10 @@ public class WButton extends WWidget {
 		
 		ScreenDrawing.texturedRect(x, y, getWidth()/2, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFFFFFF);
 		ScreenDrawing.texturedRect(x+(getWidth()/2), y, getWidth()/2, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
+
+		if (icon != null) {
+			icon.paint(matrices, x + 2, y + 2, 16);
+		}
 		
 		if (label!=null) {
 			int color = 0xE0E0E0;
@@ -66,8 +101,9 @@ public class WButton extends WWidget {
 			} /*else if (hovered) {
 				color = 0xFFFFA0;
 			}*/
-			
-			ScreenDrawing.drawStringWithShadow(matrices, label, alignment, x, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
+
+			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? 18 : 0;
+			ScreenDrawing.drawStringWithShadow(matrices, label, alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	
@@ -125,6 +161,28 @@ public class WButton extends WWidget {
 
 	public WButton setAlignment(HorizontalAlignment alignment) {
 		this.alignment = alignment;
+		return this;
+	}
+
+	/**
+	 * Gets the icon of this button.
+	 *
+	 * @return the icon
+	 * @since 2.2.0
+	 */
+	public Icon getIcon() {
+		return icon;
+	}
+
+	/**
+	 * Sets the icon of this button.
+	 *
+	 * @param icon the new icon
+	 * @return this button
+	 * @since 2.2.0
+	 */
+	public WButton setIcon(Icon icon) {
+		this.icon = icon;
 		return this;
 	}
 }
