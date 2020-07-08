@@ -52,6 +52,14 @@ public class WTiledSprite extends WSprite {
 		tileHeight = height;
 	}
 
+	public int getTileWidth() {
+		return tileWidth;
+	}
+
+	public int getTileHeight() {
+		return tileHeight;
+	}
+
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paintFrame(int x, int y, Identifier texture) {
@@ -65,7 +73,7 @@ public class WTiledSprite extends WSprite {
 						x + tileXOffset, y + tileYOffset,
 						// but using the set tileWidth and tileHeight instead of the full height and
 						// width
-						tileWidth, tileHeight,
+						getTileWidth(), getTileHeight(),
 						// render the current texture
 						texture,
 						// clips the texture if wanted
