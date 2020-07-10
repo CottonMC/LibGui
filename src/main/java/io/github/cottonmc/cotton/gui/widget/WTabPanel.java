@@ -165,6 +165,9 @@ public class WTabPanel extends WPanel {
 			tooltip.addAll(this.tooltip);
 		}
 
+		/**
+		 * A builder for tab data.
+		 */
 		public static final class Builder {
 			@Nullable
 			private StringRenderable title;
@@ -173,20 +176,47 @@ public class WTabPanel extends WPanel {
 			private final WWidget widget;
 			private final List<StringRenderable> tooltip = new ArrayList<>();
 
-			private Builder(WWidget widget) {
+			/**
+			 * Constructs a new tab data builder.
+			 *
+			 * @param widget the contained widget
+			 * @throws NullPointerException if the widget is null
+			 */
+			public Builder(WWidget widget) {
 				this.widget = Objects.requireNonNull(widget, "widget");
 			}
 
+			/**
+			 * Sets the tab title.
+			 *
+			 * @param title the new title
+			 * @return this builder
+			 * @throws NullPointerException if the title is null
+			 */
 			public Builder title(StringRenderable title) {
 				this.title = Objects.requireNonNull(title, "title");
 				return this;
 			}
 
+			/**
+			 * Sets the tab icon.
+			 *
+			 * @param icon the new icon
+			 * @return this builder
+			 * @throws NullPointerException if the icon is null
+			 */
 			public Builder icon(Icon icon) {
 				this.icon = Objects.requireNonNull(icon, "icon");
 				return this;
 			}
 
+			/**
+			 * Adds lines to the tab's tooltip.
+			 *
+			 * @param lines the added lines
+			 * @return this builder
+			 * @throws NullPointerException if the line array is null
+			 */
 			public Builder tooltip(StringRenderable... lines) {
 				Objects.requireNonNull(lines, "lines");
 
@@ -197,12 +227,25 @@ public class WTabPanel extends WPanel {
 				return this;
 			}
 
+			/**
+			 * Adds lines to the tab's tooltip.
+			 *
+			 * @param lines the added lines
+			 * @return this builder
+			 * @throws NullPointerException if the line collection is null
+			 */
 			public Builder tooltip(Collection<? extends StringRenderable> lines) {
 				Objects.requireNonNull(lines, "lines");
 				tooltip.addAll(lines);
 				return this;
 			}
 
+			/**
+			 * Builds a tab from this builder.
+			 *
+			 * @return the built tab
+			 * @see Tab#Tab(StringRenderable, Icon, WWidget, List)
+			 */
 			public Tab build() {
 				return new Tab(title, icon, widget, tooltip);
 			}
