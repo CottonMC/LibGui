@@ -77,38 +77,30 @@ public class WBox extends WPanel {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void layout() {
-		int size = 0;
-		int fillers = 0;
-		int totalWidth = 0;
-		int totalHeight = 0;
-
-		for (WWidget child : children) {
-			if (child instanceof WFiller) {
-				fillers++;
-			} else {
-				totalWidth += child.getWidth();
-				totalHeight += child.getHeight();
-			}
-		}
-
-		if (axis == Axis.HORIZONTAL) {
-			totalWidth += spacing * (children.size() - fillers - 1);
-		} else {
-			totalHeight += spacing * (children.size() - fillers - 1);
-		}
+		int dimension = 0;
 
 		// Set position offset from alignment along the box axis
 		if (axis == Axis.HORIZONTAL && horizontalAlignment != HorizontalAlignment.LEFT) {
+			int widgetWidth = spacing * (children.size() - 1);
+			for (WWidget child : children) {
+				widgetWidth += child.getWidth();
+			}
+
 			if (horizontalAlignment == HorizontalAlignment.CENTER) {
-				size = (getWidth() - totalWidth) / 2;
+				dimension = (getWidth() - widgetWidth) / 2;
 			} else { // right
-				size = getWidth() - totalWidth;
+				dimension = getWidth() - widgetWidth;
 			}
 		} else if (verticalAlignment != VerticalAlignment.TOP) {
+			int widgetHeight = spacing * (children.size() - 1);
+			for (WWidget child : children) {
+				widgetHeight += child.getHeight();
+			}
+
 			if (verticalAlignment == VerticalAlignment.CENTER) {
-				size = (getHeight() - totalHeight) / 2;
+				dimension = (getHeight() - widgetHeight) / 2;
 			} else { // bottom
-				size = getHeight() - totalHeight;
+				dimension = getHeight() - widgetHeight;
 			}
 		}
 
@@ -131,7 +123,7 @@ public class WBox extends WPanel {
 						break;
 				}
 
-				child.setLocation(size, y);
+				child.setLocation(dimension, y);
 			} else {
 				int x;
 
@@ -148,25 +140,17 @@ public class WBox extends WPanel {
 						break;
 				}
 
-				child.setLocation(x, size);
+				child.setLocation(x, dimension);
 			}
 
 			if (child instanceof WPanel) ((WPanel) child).layout();
 			expandToFit(child);
 
-			if (i != children.size() - 1 && !(child instanceof WFiller)) {
-				size += spacing;
+			if (i != children.size() - 1) {
+				dimension += spacing;
 			}
 
-			if (child instanceof WFiller) {
-				if (axis == Axis.HORIZONTAL) {
-					child.setSize((getWidth() - totalWidth) / fillers, getHeight());
-				} else {
-					child.setSize(getWidth(), (getHeight() - totalHeight) / fillers);
-				}
-			}
-
-			size += axis == Axis.HORIZONTAL ? child.getWidth() : child.getHeight();
+			dimension += axis == Axis.HORIZONTAL ? child.getWidth() : child.getHeight();
 		}
 	}
 
@@ -256,21 +240,5 @@ public class WBox extends WPanel {
 	public WBox setVerticalAlignment(VerticalAlignment alignment) {
 		this.verticalAlignment = Objects.requireNonNull(alignment, "alignment");
 		return this;
-	}
-
-	/**
-	 * Adds a stretching filler widget that takes up all available space on the box axis.
-	 *
-	 * @since 2.3.0
-	 */
-	public void addFiller() {
-		add(new WFiller());
-	}
-
-	private static class WFiller extends WWidget {
-		@Override
-		public boolean canResize() {
-			return true;
-		}
 	}
 }
