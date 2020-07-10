@@ -1,6 +1,8 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,6 +162,28 @@ public class WCardPanel extends WPanel {
 			throw new IllegalStateException("No children in card panel");
 		}
 
-		super.validate(c);
+		layout();
+		for (WWidget card : cards) {
+			card.validate(c);
+			if (getSelectedCard() != card) card.onHidden();
+		}
+
+		if (c != null) createPeers(c);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void createPeers(GuiDescription c) {
+		for (WWidget card : cards) {
+			card.createPeers(c);
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void addPainters() {
+		for (WWidget card : cards) {
+			card.addPainters();
+		}
 	}
 }
