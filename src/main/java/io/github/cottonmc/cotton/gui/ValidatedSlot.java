@@ -174,8 +174,8 @@ public class ValidatedSlot extends Slot {
 				accessor.setX(originalX);
 				accessor.setY(originalY);
 			} else {
-				accessor.setX(-100);
-				accessor.setY(-100);
+				accessor.setX(-100000);
+				accessor.setY(-100000);
 			}
 		}
 	}
