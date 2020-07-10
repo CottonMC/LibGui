@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class WTabPanel extends WPanel {
+	private static final int TAB_PADDING = 4;
 	private static final Padding DEFAULT_PADDING = new Padding(0);
 	private static final Padding PANEL_PADDING = new Padding(8);
 	private final WBox tabRibbon = new WBox(Axis.HORIZONTAL).setSpacing(0);
@@ -44,10 +45,11 @@ public class WTabPanel extends WPanel {
 		}
 
 		tabWidgets.add(tabWidget);
-		tabRibbon.add(tabWidget, 28, 30 + 2);
+		tabRibbon.add(tabWidget, 28, 30 + TAB_PADDING);
 		mainPanel.add(tab.getWidget());
 	}
 
+	// TODO: There must be a better way than *this*
 	protected Padding getPadding(WWidget widget) {
 		return widget instanceof WPanel ? PANEL_PADDING : DEFAULT_PADDING;
 	}
@@ -60,10 +62,14 @@ public class WTabPanel extends WPanel {
 
 	@Override
 	public void layout() {
-		super.layout();
+		// Layout child panels
+		for (WWidget child : children) {
+			if (child instanceof WPanel) ((WPanel) child).layout();
+		}
+
 		Padding padding = getPadding(mainPanel.getSelectedCard());
 		mainPanel.setLocation(padding.left, 30 + padding.top);
-		mainPanel.setSize(x - padding.left - padding.right, y - 30 - padding.top - padding.bottom);
+		setSize(mainPanel.getWidth() + padding.left + padding.right, mainPanel.getHeight() + 30 + padding.top + padding.bottom);
 	}
 
 	public static class Tab {
@@ -130,7 +136,7 @@ public class WTabPanel extends WPanel {
 				BackgroundPainter.UNSELECTED_TAB.paintBackground(x, y, this);
 			}
 
-			data.getIcon().paint(matrices, x + (width - 16) / 2, y + (height - 16) / 2, 16);
+			data.getIcon().paint(matrices, x + (width - 16) / 2, y + (height - TAB_PADDING - 16) / 2, 16);
 		}
 
 		@Override
