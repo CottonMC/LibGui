@@ -3,7 +3,6 @@ package io.github.cottonmc.cotton.gui.widget;
 import com.google.common.collect.ImmutableList;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
-import io.github.cottonmc.cotton.gui.widget.data.Padding;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,17 +16,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A panel that contains creative inventory-style tabs on the top.
+ *
+ * @since 2.3.0
+ */
 public class WTabPanel extends WPanel {
 	private static final int TAB_PADDING = 4;
-	private static final Padding DEFAULT_PADDING = new Padding(0);
-	private static final Padding PANEL_PADDING = new Padding(8);
+	private static final int TAB_WIDTH = 28;
+	private static final int TAB_HEIGHT = 30;
+	private static final int PANEL_PADDING = 8; // The padding of BackgroundPainter.VANILLA
+	private static final int ICON_SIZE = 16;
 	private final WBox tabRibbon = new WBox(Axis.HORIZONTAL).setSpacing(0);
 	private final List<WTab> tabWidgets = new ArrayList<>();
 	private final WCardPanel mainPanel = new WCardPanel();
 
+	/**
+	 * Constructs a new tab panel.
+	 */
 	public WTabPanel() {
 		add(tabRibbon, 0, 0);
-		add(mainPanel, 0, 30);
+		add(mainPanel, PANEL_PADDING, TAB_HEIGHT + PANEL_PADDING);
 	}
 
 	private void add(WWidget widget, int x, int y) {
@@ -37,6 +46,11 @@ public class WTabPanel extends WPanel {
 		expandToFit(widget);
 	}
 
+	/**
+	 * Adds a tab to this panel.
+	 *
+	 * @param tab the added tab
+	 */
 	public void add(Tab tab) {
 		WTab tabWidget = new WTab(tab);
 
@@ -45,64 +59,98 @@ public class WTabPanel extends WPanel {
 		}
 
 		tabWidgets.add(tabWidget);
-		tabRibbon.add(tabWidget, 28, 30 + TAB_PADDING);
+		tabRibbon.add(tabWidget, TAB_WIDTH, TAB_HEIGHT + TAB_PADDING);
 		mainPanel.add(tab.getWidget());
 	}
 
+	/**
+	 * Adds a {@linkplain WBox#addFiller() filler} to the tab ribbon.
+	 */
 	public void addTabRibbonFiller() {
 		tabRibbon.addFiller();
-	}
-
-	// TODO: There must be a better way than *this*
-	protected Padding getPadding(WWidget widget) {
-		return widget instanceof WPanel ? PANEL_PADDING : DEFAULT_PADDING;
 	}
 
 	@Override
 	public void setSize(int x, int y) {
 		super.setSize(x, y);
-		tabRibbon.setSize(x, 30);
+		tabRibbon.setSize(x, TAB_HEIGHT);
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
-	public void layout() {
-		// Layout child panels
-		for (WWidget child : children) {
-			if (child instanceof WPanel) ((WPanel) child).layout();
-		}
-
-		Padding padding = mainPanel.getCards().stream().map(this::getPadding).reduce(Padding::max).get();
-		mainPanel.setLocation(padding.left, 30 + padding.top);
-		setSize(mainPanel.getWidth() + padding.left + padding.right, mainPanel.getHeight() + 30 + padding.top + padding.bottom);
+	public void addPainters() {
+		super.addPainters();
+		mainPanel.setBackgroundPainter(BackgroundPainter.VANILLA);
 	}
 
+	/**
+	 * The data of a tab.
+	 */
 	public static class Tab {
 		private final Icon icon;
 		private final WWidget widget;
 		private final List<StringRenderable> tooltip;
 
+		/**
+		 * Constructs a tab with no tooltip.
+		 *
+		 * @param icon   the tab icon
+		 * @param widget the widget contained in the tab
+		 * @throws NullPointerException if any parameter is null
+		 */
 		public Tab(Icon icon, WWidget widget) {
 			this(icon, widget, ImmutableList.of());
 		}
 
+		/**
+		 * Constructs a tab.
+		 *
+		 * @param icon    the tab icon
+		 * @param widget  the widget contained in the tab
+		 * @param tooltip the tab tooltip
+		 * @throws NullPointerException if any parameter is null
+		 */
 		public Tab(Icon icon, WWidget widget, StringRenderable tooltip) {
 			this(icon, widget, ImmutableList.of(Objects.requireNonNull(tooltip, "tooltip")));
 		}
 
+		/**
+		 * Constructs a tab.
+		 *
+		 * @param icon    the tab icon
+		 * @param widget  the widget contained in the tab
+		 * @param tooltip the tab tooltip lines
+		 * @throws NullPointerException if any parameter is null
+		 */
 		public Tab(Icon icon, WWidget widget, List<StringRenderable> tooltip) {
 			this.icon = Objects.requireNonNull(icon, "icon");
 			this.widget = Objects.requireNonNull(widget, "widget");
 			this.tooltip = ImmutableList.copyOf(Objects.requireNonNull(tooltip, "tooltip"));
 		}
 
+		/**
+		 * Gets the icon of this tab.
+		 *
+		 * @return the icon
+		 */
 		public Icon getIcon() {
 			return icon;
 		}
 
+		/**
+		 * Gets the contained widget of this tab.
+		 *
+		 * @return the contained widget
+		 */
 		public WWidget getWidget() {
 			return widget;
 		}
 
+		/**
+		 * Adds this widget's tooltip to the {@code tooltip} list.
+		 *
+		 * @param tooltip the tooltip line list
+		 */
 		public void addTooltip(List<StringRenderable> tooltip) {
 			tooltip.addAll(this.tooltip);
 		}
@@ -140,7 +188,7 @@ public class WTabPanel extends WPanel {
 				BackgroundPainter.UNSELECTED_TAB.paintBackground(x, y, this);
 			}
 
-			data.getIcon().paint(matrices, x + (width - 16) / 2, y + (height - TAB_PADDING - 16) / 2, 16);
+			data.getIcon().paint(matrices, x + (width - ICON_SIZE) / 2, y + (height - TAB_PADDING - ICON_SIZE) / 2, ICON_SIZE);
 		}
 
 		@Override

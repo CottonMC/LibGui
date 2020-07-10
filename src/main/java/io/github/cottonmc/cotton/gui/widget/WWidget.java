@@ -456,6 +456,17 @@ public class WWidget {
 	}
 
 	/**
+	 * Adds the default background painters to this widget and all children.
+	 *
+	 * <p>Always called before {@link GuiDescription#addPainters()} to allow users to modify painters.
+	 *
+	 * @since 2.3.0
+	 */
+	@Environment(EnvType.CLIENT)
+	public void addPainters() {
+	}
+
+	/**
 	 * Tests if the provided key code is an activation key for widgets.
 	 *
 	 * <p>The activation keys are Enter, keypad Enter, and Space.

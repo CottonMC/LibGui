@@ -52,6 +52,8 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 		super.init(client, screenWidth, screenHeight);
 		client.keyboard.enableRepeatEvents(true);
 		
+		WPanel root = description.getRootPanel();
+		if (root != null) root.addPainters();
 		description.addPainters();
 		reposition(screenWidth, screenHeight);
 	}

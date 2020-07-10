@@ -292,6 +292,21 @@ public abstract class WPanel extends WWidget {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>Subclasses should call {@code super.addPainters()} to ensure that children have proper default painters.
+	 *
+	 * @since 2.3.0
+	 */
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void addPainters() {
+		for (WWidget child : children) {
+			child.addPainters();
+		}
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " {\n" + children.stream().map(Object::toString).map(x -> x + ",").flatMap(x -> Stream.of(x.split("\n")).filter(y -> !y.isEmpty()).map(y -> "\t" + y)).collect(Collectors.joining("\n")) + "\n}";

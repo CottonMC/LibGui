@@ -3,7 +3,6 @@ package io.github.cottonmc.cotton.gui.widget;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -120,15 +119,20 @@ public class WCardPanel extends WPanel {
 	}
 
 	@Override
+	public void setSize(int x, int y) {
+		super.setSize(x, y);
+		for (WWidget card : cards) {
+			card.setSize(x, y);
+		}
+	}
+
+	@Override
 	public void layout() {
 		children.clear();
-		children.addAll(cards);
-
-		// Layout children
-		super.layout();
 
 		for (WWidget child : cards) {
-			child.setSize(getWidth(), getHeight());
+			if (child instanceof WPanel) ((WPanel) child).layout();
+			expandToFit(child);
 
 			if (child == getSelectedCard()) {
 				child.onShown();
@@ -137,13 +141,11 @@ public class WCardPanel extends WPanel {
 			}
 		}
 
-		children.clear();
-		children.add(getSelectedCard());
-	}
+		for (WWidget child : cards) {
+			child.setSize(getWidth(), getHeight());
+		}
 
-	// TODO: doc
-	public List<WWidget> getCards() {
-		return Collections.unmodifiableList(cards);
+		children.add(getSelectedCard());
 	}
 
 	/**
