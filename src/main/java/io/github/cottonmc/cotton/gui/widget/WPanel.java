@@ -294,6 +294,6 @@ public abstract class WPanel extends WWidget {
 
 	@Override
 	public String toString() {
-		return "WPanel{ children: [\n" + children.stream().map(Objects::toString).flatMap(x -> Stream.of(x.split("\n")).map(y -> "\t" + y)).collect(Collectors.joining(",\n")) + "] }";
+		return getClass().getSimpleName() + " {\n" + children.stream().map(Objects::toString).map(x -> x + ",").flatMap(x -> Stream.of(x.split("\n")).filter(y -> !y.isEmpty()).map(y -> "\t" + y)).collect(Collectors.joining("\n")) + "\n}";
 	}
 }
