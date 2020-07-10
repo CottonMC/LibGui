@@ -3,7 +3,6 @@ package io.github.cottonmc.cotton.gui.client.modmenu;
 
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
