@@ -63,13 +63,6 @@ public class WTabPanel extends WPanel {
 		mainPanel.add(tab.getWidget());
 	}
 
-	/**
-	 * Adds a {@linkplain WBox#addFiller() filler} to the tab ribbon.
-	 */
-	public void addTabRibbonFiller() {
-		tabRibbon.addFiller();
-	}
-
 	@Override
 	public void setSize(int x, int y) {
 		super.setSize(x, y);
