@@ -80,6 +80,9 @@ public interface BackgroundPainter {
 		}
 	};
 
+	public static BackgroundPainter SELECTED_TAB = createNinePatch(new Identifier("libgui", "textures/widget/tab/selected.png"));
+	public static BackgroundPainter UNSELECTED_TAB = createNinePatch(new Identifier("libgui", "textures/widget/tab/unselected.png"));
+
 	/**
 	 * Creates a colorful gui panel painter. This painter paints the panel using the specified color.
 	 *

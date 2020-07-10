@@ -86,7 +86,11 @@ public class WCardPanel extends WPanel {
 			throw new IndexOutOfBoundsException("Card index " + selectedIndex + " out of bounds: 0 <= index <" + cards.size());
 		}
 
-		this.selectedIndex = selectedIndex;
+		if (this.selectedIndex != selectedIndex) {
+			this.selectedIndex = selectedIndex;
+			layout();
+		}
+
 		return this;
 	}
 
@@ -124,10 +128,16 @@ public class WCardPanel extends WPanel {
 
 		for (WWidget child : cards) {
 			child.setSize(getWidth(), getHeight());
+
+			if (child == getSelectedCard()) {
+				child.onShown();
+			} else {
+				child.onHidden();
+			}
 		}
 
 		children.clear();
-		children.add(cards.get(getSelectedIndex()));
+		children.add(getSelectedCard());
 	}
 
 	/**
