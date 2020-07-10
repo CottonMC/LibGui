@@ -27,7 +27,7 @@ public class WTabPanel extends WPanel {
 	private static final int TAB_HEIGHT = 30;
 	private static final int PANEL_PADDING = 8; // The padding of BackgroundPainter.VANILLA
 	private static final int ICON_SIZE = 16;
-	private final WBox tabRibbon = new WBox(Axis.HORIZONTAL).setSpacing(0);
+	private final WBox tabRibbon = new WBox(Axis.HORIZONTAL).setSpacing(1);
 	private final List<WTab> tabWidgets = new ArrayList<>();
 	private final WCardPanel mainPanel = new WCardPanel();
 

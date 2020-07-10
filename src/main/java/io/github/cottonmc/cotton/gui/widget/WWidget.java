@@ -373,7 +373,11 @@ public class WWidget {
 	 * @param host the host GUI description
 	 */
 	public void validate(GuiDescription host) {
-		this.host = host;
+		if (host != null) {
+			this.host = host;
+		} else {
+			LOGGER.warn("Validating {} with a null host", this);
+		}
 	}
 
 	/**

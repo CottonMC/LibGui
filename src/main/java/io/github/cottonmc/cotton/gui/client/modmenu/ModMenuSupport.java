@@ -22,11 +22,6 @@ public class ModMenuSupport implements ModMenuApi {
 			public void onClose() {
 				this.client.openScreen(screen);
 			}
-			
-			protected void init() {
-				super.init();
-				this.description.getRootPanel().validate(null);
-			};
 		};
 	}
 }

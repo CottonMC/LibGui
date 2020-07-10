@@ -80,10 +80,21 @@ public interface BackgroundPainter {
 		}
 	};
 
+	/**
+	 * The background painter for selected tabs in tab panels.
+	 *
+	 * @since 2.3.0
+	 */
 	public static BackgroundPainter SELECTED_TAB = createLightDarkVariants(
-			createNinePatch(new Identifier("libgui", "textures/widget/tab/selected_light.png")),
-			createNinePatch(new Identifier("libgui", "textures/widget/tab/selected_dark.png"))
+			createNinePatch(new Identifier("libgui", "textures/widget/tab/selected_light.png")).setTopPadding(2),
+			createNinePatch(new Identifier("libgui", "textures/widget/tab/selected_dark.png")).setTopPadding(2)
 	);
+
+	/**
+	 * The background painter for unselected tabs in tab panels.
+	 *
+	 * @since 2.3.0
+	 */
 	public static BackgroundPainter UNSELECTED_TAB = createLightDarkVariants(
 			createNinePatch(new Identifier("libgui", "textures/widget/tab/unselected_light.png")),
 			createNinePatch(new Identifier("libgui", "textures/widget/tab/unselected_dark.png"))
