@@ -52,12 +52,48 @@ public class WTiledSprite extends WSprite {
 		tileHeight = height;
 	}
 
+	/**
+	 * Gets the tile width of this sprite.
+	 *
+	 * @return the tile width
+	 * @since 2.2.0
+	 */
 	public int getTileWidth() {
 		return tileWidth;
 	}
 
+	/**
+	 * Gets the tile height of this sprite.
+	 *
+	 * @return the tile height
+	 * @since 2.2.0
+	 */
 	public int getTileHeight() {
 		return tileHeight;
+	}
+
+	/**
+	 * Sets the tile width of this sprite.
+	 *
+	 * @param tileWidth the new tile width
+	 * @return this sprite
+	 * @since 2.2.0
+	 */
+	public WTiledSprite setTileWidth(int tileWidth) {
+		this.tileWidth = tileWidth;
+		return this;
+	}
+
+	/**
+	 * Sets the tile height of this sprite.
+	 *
+	 * @param tileHeight the new tile height
+	 * @return this sprite
+	 * @since 2.2.0
+	 */
+	public WTiledSprite setTileHeight(int tileHeight) {
+		this.tileHeight = tileHeight;
+		return this;
 	}
 
 	@Environment(EnvType.CLIENT)
