@@ -3,13 +3,14 @@ package io.github.cottonmc.cotton.gui.widget;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
  * Similar to the CardLayout in AWT, this panel displays one widget at a time from a list of widgets.
  *
- * @since 2.2.0
+ * @since 2.3.0
  */
 public class WCardPanel extends WPanel {
 	private final List<WWidget> cards = new ArrayList<>();
@@ -138,6 +139,11 @@ public class WCardPanel extends WPanel {
 
 		children.clear();
 		children.add(getSelectedCard());
+	}
+
+	// TODO: doc
+	public List<WWidget> getCards() {
+		return Collections.unmodifiableList(cards);
 	}
 
 	/**

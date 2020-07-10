@@ -38,4 +38,8 @@ public final class Padding {
 	public int hashCode() {
 		return Objects.hash(top, left, bottom, right);
 	}
+
+	public static Padding max(Padding a, Padding b) {
+		return new Padding(Math.max(a.top, b.top), Math.max(a.left, b.left), Math.max(a.bottom, b.bottom), Math.max(a.right, b.right));
+	}
 }

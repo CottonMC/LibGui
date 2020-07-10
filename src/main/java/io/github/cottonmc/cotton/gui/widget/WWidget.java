@@ -439,7 +439,7 @@ public class WWidget {
 	 * Notifies this widget that it is visible and
 	 * shows any hidden peers of itself and its children.
 	 *
-	 * @since 2.2.0
+	 * @since 2.3.0
 	 */
 	@Beta
 	public void onShown() {
@@ -449,7 +449,7 @@ public class WWidget {
 	 * Notifies this widget that it won't be drawn and
 	 * hides any visible peers of itself and its children.
 	 *
-	 * @since 2.2.0
+	 * @since 2.3.0
 	 */
 	@Beta
 	public void onHidden() {

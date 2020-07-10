@@ -49,6 +49,10 @@ public class WTabPanel extends WPanel {
 		mainPanel.add(tab.getWidget());
 	}
 
+	public void addTabRibbonFiller() {
+		tabRibbon.addFiller();
+	}
+
 	// TODO: There must be a better way than *this*
 	protected Padding getPadding(WWidget widget) {
 		return widget instanceof WPanel ? PANEL_PADDING : DEFAULT_PADDING;
@@ -67,7 +71,7 @@ public class WTabPanel extends WPanel {
 			if (child instanceof WPanel) ((WPanel) child).layout();
 		}
 
-		Padding padding = getPadding(mainPanel.getSelectedCard());
+		Padding padding = mainPanel.getCards().stream().map(this::getPadding).reduce(Padding::max).get();
 		mainPanel.setLocation(padding.left, 30 + padding.top);
 		setSize(mainPanel.getWidth() + padding.left + padding.right, mainPanel.getHeight() + 30 + padding.top + padding.bottom);
 	}

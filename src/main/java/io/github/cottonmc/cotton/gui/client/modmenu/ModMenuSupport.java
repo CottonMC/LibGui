@@ -3,6 +3,7 @@ package io.github.cottonmc.cotton.gui.client.modmenu;
 
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
@@ -17,7 +18,7 @@ public class ModMenuSupport implements ModMenuApi {
 	
 	@Override
 	public ConfigScreenFactory<?> getModConfigScreenFactory() {
-		return screen -> new CottonClientScreen(new TranslatableText("options.libgui.libgui_settings"), new ConfigGui(screen)) {
+		return screen -> new CottonClientScreen(new LiteralText(""), new ConfigGui(screen)) {
 			public void onClose() {
 				this.client.openScreen(screen);
 			}
