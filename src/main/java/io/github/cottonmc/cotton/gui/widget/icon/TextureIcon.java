@@ -8,6 +8,8 @@ import net.minecraft.util.Identifier;
 
 /**
  * An icon that draws a texture.
+ *
+ * @since 2.2.0
  */
 public class TextureIcon implements Icon {
 	private final Identifier texture;

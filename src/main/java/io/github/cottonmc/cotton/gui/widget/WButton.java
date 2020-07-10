@@ -56,6 +56,7 @@ public class WButton extends WWidget {
 	 *
 	 * @param icon  the icon
 	 * @param label the label
+	 * @since 2.2.0
 	 */
 	public WButton(Icon icon, StringRenderable label) {
 		this.icon = icon;
