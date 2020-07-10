@@ -41,10 +41,6 @@ public class ScreenDrawing {
 	 * @param width     the width of the box on-screen
 	 * @param height    the height of the box on-screen
 	 * @param texture   the Identifier for the texture
-	 * @param u1        the left edge of the texture
-	 * @param v1        the top edge of the texture
-	 * @param u2        the right edge of the texture
-	 * @param v2        the bottom edge of the texture
 	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
 	 * @param opacity   opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
 	 * @since 2.0.0
