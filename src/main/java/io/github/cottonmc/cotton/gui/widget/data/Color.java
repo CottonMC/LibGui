@@ -163,6 +163,23 @@ public interface Color {
 			float c = getChroma()/255f;
 			return c / (1 - Math.abs(2*l - 1));
 		}
+
+		/**
+		 * Calculates an interpolated value along the fraction t between 0.0 and 1.0. When t = 1.0, endVal is returned.
+		 * Eg.: If this color is black, your endColor is white and t = 0.5 you get gray.
+		 *
+		 * @param endColor a Color to interpolate with
+		 * @param t fraction between 0.0 and 1.0
+		 *
+		 * @since 2.0.0
+		 */
+		public RGB interpolate(RGB endColor, double t){
+			double a = (endColor.getA() - this.getA()) * t + this.getA();
+			double r = (endColor.getR() - this.getR()) * t + this.getR();
+			double g = (endColor.getG() - this.getG()) * t + this.getG();
+			double b = (endColor.getB() - this.getB()) * t + this.getB();
+			return new RGB((int)a, (int)r, (int)g, (int)b);
+		}
 	}
 	
 	public static class HSL implements Color {
