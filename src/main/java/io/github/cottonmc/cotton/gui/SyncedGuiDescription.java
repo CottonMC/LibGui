@@ -152,14 +152,15 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		ItemStack curSlotStack = slot.getStack();
 		if (!curSlotStack.isEmpty() && canStacksCombine(toInsert, curSlotStack) && slot.canTakeItems(player)) {
 			int combinedAmount = curSlotStack.getCount() + toInsert.getCount();
-			if (combinedAmount <= toInsert.getMaxCount()) {
+			int maxAmount = Math.min(toInsert.getMaxCount(), slot.getMaxStackAmount());
+			if (combinedAmount <= maxAmount) {
 				toInsert.setCount(0);
 				curSlotStack.setCount(combinedAmount);
 				slot.markDirty();
 				return true;
-			} else if (curSlotStack.getCount() < toInsert.getMaxCount()) {
-				toInsert.decrement(toInsert.getMaxCount() - curSlotStack.getCount());
-				curSlotStack.setCount(toInsert.getMaxCount());
+			} else if (curSlotStack.getCount() < maxAmount) {
+				toInsert.decrement(maxAmount - curSlotStack.getCount());
+				curSlotStack.setCount(maxAmount);
 				slot.markDirty();
 				return true;
 			}
