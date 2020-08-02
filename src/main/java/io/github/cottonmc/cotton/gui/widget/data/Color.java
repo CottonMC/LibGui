@@ -184,7 +184,7 @@ public interface Color {
 		 * @param endColor a Color to interpolate with
 		 * @param t fraction between 0.0 and 1.0
 		 *
-		 * @since 2.0.0
+		 * @since 2.3.0
 		 */
 		public RGB interpolate(RGB endColor, double t){
 			double a = (endColor.getA() - this.getA()) * t + this.getA();
