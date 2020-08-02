@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -17,13 +18,13 @@ import java.util.function.Consumer;
 
 public class WToggleButton extends WWidget {
 	// Default on/off images
-	protected final static Identifier DEFAULT_OFF_IMAGE = new Identifier("libgui:textures/widget/toggle_off.png");
-	protected final static Identifier DEFAULT_ON_IMAGE  = new Identifier("libgui:textures/widget/toggle_on.png");
-	protected final static Identifier DEFAULT_FOCUS_IMAGE = new Identifier("libgui:textures/widget/toggle_focus.png");
+	protected static final Texture DEFAULT_OFF_IMAGE = new Texture(new Identifier("libgui:textures/widget/toggle_off.png"));
+	protected static final Texture DEFAULT_ON_IMAGE  = new Texture(new Identifier("libgui:textures/widget/toggle_on.png"));
+	protected static final Texture DEFAULT_FOCUS_IMAGE = new Texture(new Identifier("libgui:textures/widget/toggle_focus.png"));
 
-	protected Identifier onImage;
-	protected Identifier offImage;
-	protected Identifier focusImage = DEFAULT_FOCUS_IMAGE;
+	protected Texture onImage;
+	protected Texture offImage;
+	protected Texture focusImage = DEFAULT_FOCUS_IMAGE;
 
 	@Nullable protected Text label = null;
 
@@ -57,8 +58,7 @@ public class WToggleButton extends WWidget {
 	 * @param offImage the toggled off image
 	 */
 	public WToggleButton(Identifier onImage, Identifier offImage) {
-		this.onImage = onImage;
-		this.offImage = offImage;
+		this(new Texture(onImage), new Texture(offImage));
 	}
 
 	/**
@@ -69,6 +69,30 @@ public class WToggleButton extends WWidget {
 	 * @param label    the button label
 	 */
 	public WToggleButton(Identifier onImage, Identifier offImage, Text label) {
+		this(new Texture(onImage), new Texture(offImage), label);
+	}
+
+	/**
+	 * Constructs a toggle button with custom images and no label.
+	 *
+	 * @param onImage  the toggled on image
+	 * @param offImage the toggled off image
+	 * @since 3.0.0
+	 */
+	public WToggleButton(Texture onImage, Texture offImage) {
+		this.onImage = onImage;
+		this.offImage = offImage;
+	}
+
+	/**
+	 * Constructs a toggle button with custom images.
+	 *
+	 * @param onImage  the toggled on image
+	 * @param offImage the toggled off image
+	 * @param label    the button label
+	 * @since 3.0.0
+	 */
+	public WToggleButton(Texture onImage, Texture offImage, Text label) {
 		this.onImage = onImage;
 		this.offImage = offImage;
 		this.label = label;
@@ -151,29 +175,29 @@ public class WToggleButton extends WWidget {
 		return this;
 	}
 
-	public Identifier getOnImage() {
+	public Texture getOnImage() {
 		return onImage;
 	}
 
-	public WToggleButton setOnImage(Identifier onImage) {
+	public WToggleButton setOnImage(Texture onImage) {
 		this.onImage = onImage;
 		return this;
 	}
 
-	public Identifier getOffImage() {
+	public Texture getOffImage() {
 		return offImage;
 	}
 
-	public WToggleButton setOffImage(Identifier offImage) {
+	public WToggleButton setOffImage(Texture offImage) {
 		this.offImage = offImage;
 		return this;
 	}
 
-	public Identifier getFocusImage() {
+	public Texture getFocusImage() {
 		return focusImage;
 	}
 
-	public WToggleButton setFocusImage(Identifier focusImage) {
+	public WToggleButton setFocusImage(Texture focusImage) {
 		this.focusImage = focusImage;
 		return this;
 	}

@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget.icon;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -12,7 +13,7 @@ import net.minecraft.util.Identifier;
  * @since 2.2.0
  */
 public class TextureIcon implements Icon {
-	private final Identifier texture;
+	private final Texture texture;
 	private float opacity = 1f;
 	private int color = 0xFF_FFFFFF;
 
@@ -22,6 +23,16 @@ public class TextureIcon implements Icon {
 	 * @param texture the identifier of the icon texture
 	 */
 	public TextureIcon(Identifier texture) {
+		this(new Texture(texture));
+	}
+
+	/**
+	 * Constructs a new texture icon.
+	 *
+	 * @param texture the identifier of the icon texture
+	 * @since 3.0.0
+	 */
+	public TextureIcon(Texture texture) {
 		this.texture = texture;
 	}
 

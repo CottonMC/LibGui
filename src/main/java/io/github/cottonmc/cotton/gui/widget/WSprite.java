@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -10,28 +11,28 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 public class WSprite extends WWidget {
 	protected int currentFrame= 0;
 	protected long currentFrameTime = 0;
-	protected Identifier[] frames;
+	protected Texture[] frames;
 	protected int frameTime;
 	protected long lastFrame;
 	protected boolean singleImage = false;
 	protected int tint = 0xFFFFFFFF;
 
-	/** The left edge of the texture as a fraction. */
-	protected float u1 = 0;
-	/** The top edge of the texture as a fraction. */
-	protected float v1 = 0;
-	/** The right edge of the texture as a fraction. */
-	protected float u2 = 1;
-	/** The bottom edge of the texture as a fraction. */
-	protected float v2 = 1;
+	/**
+	 * Create a new sprite with a single image.
+	 * @param texture The image texture to display.
+	 * @since 3.0.0
+	 */
+	public WSprite(Texture texture) {
+		this.frames = new Texture[]{texture};
+		this.singleImage = true;
+	}
 
 	/**
 	 * Create a new sprite with a single image.
 	 * @param image The location of the image to display.
 	 */
 	public WSprite(Identifier image) {
-		this.frames = new Identifier[]{image};
-		this.singleImage = true;
+		this(new Texture(image));
 	}
 
 	/**
@@ -44,11 +45,7 @@ public class WSprite extends WWidget {
 	 * @param v2 the bottom edge of the texture
 	 */
 	public WSprite(Identifier image, float u1, float v1, float u2, float v2) {
-		this(image);
-		this.u1 = u1;
-		this.v1 = v1;
-		this.u2 = u2;
-		this.v2 = v2;
+		this(new Texture(image, u1, v1, u2, v2));
 	}
 
 	/**
@@ -58,19 +55,74 @@ public class WSprite extends WWidget {
 	 */
 	public WSprite(int frameTime, Identifier... frames) {
 		this.frameTime = frameTime;
+		this.frames = new Texture[frames.length];
+
+		for (int i = 0; i < frames.length; i++) {
+			this.frames[i] = new Texture(frames[i]);
+		}
+
+		if (frames.length==1) this.singleImage = true;
+	}
+
+	/**
+	 * Create a new animated sprite.
+	 * @param frameTime How long in milliseconds to display for. (1 tick = 50 ms)
+	 * @param frames The locations of the frames of the animation.
+	 * @since 3.0.0
+	 */
+	public WSprite(int frameTime, Texture... frames) {
+		this.frameTime = frameTime;
 		this.frames = frames;
 		if (frames.length==1) this.singleImage = true;
 	}
 
+	/**
+	 * Sets the image of this sprite.
+	 *
+	 * @param image the new image
+	 * @return this sprite
+	 */
 	public WSprite setImage(Identifier image) {
-		this.frames = new Identifier[]{image};
+		return setImage(new Texture(image));
+	}
+
+	/**
+	 * Sets the animation frames of this sprite.
+	 *
+	 * @param frames the frames
+	 * @return this sprite
+	 */
+	public WSprite setFrames(Identifier... frames) {
+		Texture[] textures = new Texture[frames.length];
+		for (int i = 0; i < frames.length; i++) {
+			textures[i] = new Texture(frames[i]);
+		}
+		return setFrames(textures);
+	}
+
+	/**
+	 * Sets the image of this sprite.
+	 *
+	 * @param image the new image
+	 * @return this sprite
+	 * @since 3.0.0
+	 */
+	public WSprite setImage(Texture image) {
+		this.frames = new Texture[]{image};
 		this.singleImage = true;
 		this.currentFrame = 0;
 		this.currentFrameTime = 0;
 		return this;
 	}
 
-	public WSprite setFrames(Identifier... frames) {
+	/**
+	 * Sets the animation frames of this sprite.
+	 *
+	 * @param frames the frames
+	 * @return this sprite
+	 * @since 3.0.0
+	 */
+	public WSprite setFrames(Texture... frames) {
 		this.frames = frames;
 		if (frames.length==1) singleImage = true;
 		if (currentFrame>=frames.length) {
@@ -83,12 +135,21 @@ public class WSprite extends WWidget {
 	/**
 	 * Sets the tint for this sprite to the following color-with-alpha. If you don't want to specify
 	 * alpha, use {@link #setOpaqueTint(int)} instead.
+	 *
+	 * @param tint the new tint
+	 * @return this sprite
 	 */
 	public WSprite setTint(int tint) {
 		this.tint = tint;
 		return this;
 	}
 
+	/**
+	 * Sets the tint for this sprite to the following opaque color.
+	 *
+	 * @param tint the new tint
+	 * @return this sprite
+	 */
 	public WSprite setOpaqueTint(int tint) {
 		this.tint = tint | 0xFF000000;
 		return this;
@@ -106,12 +167,12 @@ public class WSprite extends WWidget {
 	 * @since 1.8.0
 	 */
 	public WSprite setUv(float u1, float v1, float u2, float v2) {
-		this.u1 = u1;
-		this.v1 = v1;
-		this.u2 = u2;
-		this.v2 = v2;
+		Texture[] newFrames = new Texture[frames.length];
+		for (int i = 0; i < frames.length; i++) {
+			newFrames[i] = frames[i].withUv(u1, v1, u2, v2);
+		}
 
-		return this;
+		return setFrames(newFrames);
 	}
 
 	@Override
@@ -132,7 +193,7 @@ public class WSprite extends WWidget {
 			boolean inBounds = (currentFrame >= 0) && (currentFrame < frames.length);
 			if (!inBounds) currentFrame = 0;
 			//assemble and draw the frame calculated last iteration.
-			Identifier currentFrameTex = frames[currentFrame];
+			Texture currentFrameTex = frames[currentFrame];
 			paintFrame(x, y, currentFrameTex);
 
 			//calculate how much time has elapsed since the last animation change, and change the frame if necessary.
@@ -152,8 +213,15 @@ public class WSprite extends WWidget {
 		}
 	}
 
+	/**
+	 * Paints a single frame for this sprite.
+	 *
+	 * @param x       the X coordinate to draw it at
+	 * @param y       the Y coordinate to draw it at
+	 * @param texture the texture to draw
+	 */
 	@Environment(EnvType.CLIENT)
-	public void paintFrame(int x, int y, Identifier texture) {
-		ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), texture, u1, v1, u2, v2, tint);
+	protected void paintFrame(int x, int y, Texture texture) {
+		ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), texture, tint);
 	}
 }

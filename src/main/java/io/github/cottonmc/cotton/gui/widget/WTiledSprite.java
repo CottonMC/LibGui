@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
@@ -36,6 +37,35 @@ public class WTiledSprite extends WSprite {
 	 * @param frames     The locations of the frames of the animation.
 	 */
 	public WTiledSprite(int tileWidth, int tileHeight, int frameTime, Identifier... frames) {
+		super(frameTime, frames);
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight;
+	}
+
+	/**
+	 * Create a tiled sprite.
+	 *
+	 * @param tileWidth  The width a tile
+	 * @param tileHeight The height of a tile
+	 * @param image      The image to tile
+	 * @since 3.0.0
+	 */
+	public WTiledSprite(int tileWidth, int tileHeight, Texture image) {
+		super(image);
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight;
+	}
+
+	/**
+	 * Create a new animated tiled sprite.
+	 *
+	 * @param tileWidth  The width a tile
+	 * @param tileHeight The height of a tile
+	 * @param frameTime  How long in milliseconds to display for. (1 tick = 50 ms)
+	 * @param frames     The locations of the frames of the animation.
+	 * @since 3.0.0
+	 */
+	public WTiledSprite(int tileWidth, int tileHeight, int frameTime, Texture... frames) {
 		super(frameTime, frames);
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -98,7 +128,7 @@ public class WTiledSprite extends WSprite {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintFrame(int x, int y, Identifier texture) {
+	public void paintFrame(int x, int y, Texture texture) {
 		// Y Direction (down)
 		for (int tileYOffset = 0; tileYOffset < height; tileYOffset += tileHeight) {
 			// X Direction (right)
@@ -112,8 +142,7 @@ public class WTiledSprite extends WSprite {
 						getTileWidth(), getTileHeight(),
 						// render the current texture
 						texture,
-						// clips the texture if wanted
-						u1, v1, u2, v2, tint);
+						tint);
 			}
 		}
 	}

@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
@@ -65,6 +66,37 @@ public class ScreenDrawing {
 	 */
 	public static void texturedRect(int x, int y, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color) {
 		texturedRect(x, y, width, height, texture, u1, v1, u2, v2, color, 1.0f);
+	}
+
+	/**
+	 * Draws a textured rectangle.
+	 *
+	 * @param x         the x coordinate of the box on-screen
+	 * @param y         the y coordinate of the box on-screen
+	 * @param width     the width of the box on-screen
+	 * @param height    the height of the box on-screen
+	 * @param texture   the texture
+	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
+	 * @since 3.0.0
+	 */
+	public static void texturedRect(int x, int y, int width, int height, Texture texture, int color) {
+		texturedRect(x, y, width, height, texture, color, 1.0f);
+	}
+
+	/**
+	 * Draws a textured rectangle.
+	 *
+	 * @param x         the x coordinate of the box on-screen
+	 * @param y         the y coordinate of the box on-screen
+	 * @param width     the width of the box on-screen
+	 * @param height    the height of the box on-screen
+	 * @param texture   the texture
+	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
+	 * @param opacity   opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
+	 * @since 3.0.0
+	 */
+	public static void texturedRect(int x, int y, int width, int height, Texture texture, int color, float opacity) {
+		texturedRect(x, y, width, height, texture.image, texture.u1, texture.v1, texture.u2, texture.v2, color, opacity);
 	}
 
 	/**
