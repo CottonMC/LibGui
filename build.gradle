@@ -34,8 +34,9 @@ dependencies {
 
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
-	modCompileOnly "io.github.prospector:modmenu:$project.modmenu_version"
-	modRuntime "io.github.prospector:modmenu:$project.modmenu_version" // for testing
+	modRuntime(modCompileOnly("io.github.prospector:modmenu:$project.modmenu_version") {
+		exclude group: 'net.fabricmc.fabric-api'
+	})
 }
 
 processResources {

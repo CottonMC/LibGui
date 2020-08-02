@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -14,7 +13,6 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * A bar that displays int values from a {@link PropertyDelegate}.
@@ -162,8 +160,9 @@ public class WBar extends WWidget {
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
-	public void addTooltip(List<StringRenderable> information) {
+	public void addTooltip(TooltipBuilder information) {
 		if (tooltipLabel!=null) {
 			int value = (field>=0) ? properties.get(field) : 0;
 			int valMax = (max>=0) ? properties.get(max) : maxValue;

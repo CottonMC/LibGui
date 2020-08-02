@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Quaternion;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 public class WLabeledSlider extends WAbstractSlider {
 	private static final Quaternion ROTATION_Z_270 = Vector3f.POSITIVE_X.getDegreesQuaternion(270);
 
-	@Nullable private StringRenderable label = null;
+	@Nullable private Text label = null;
 	@Nullable private LabelUpdater labelUpdater = null;
 	private HorizontalAlignment labelAlignment = HorizontalAlignment.CENTER;
 
@@ -59,7 +59,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 * @param axis the slider axis
 	 * @param label the slider label (can be null)
 	 */
-	public WLabeledSlider(int min, int max, Axis axis, @Nullable StringRenderable label) {
+	public WLabeledSlider(int min, int max, Axis axis, @Nullable Text label) {
 		this(min, max, axis);
 		this.label = label;
 	}
@@ -71,7 +71,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 * @param max the maximum value
 	 * @param label the slider label (can be null)
 	 */
-	public WLabeledSlider(int min, int max, @Nullable StringRenderable label) {
+	public WLabeledSlider(int min, int max, @Nullable Text label) {
 		this(min, max);
 		this.label = label;
 	}
@@ -91,7 +91,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 * @return the label
 	 */
 	@Nullable
-	public StringRenderable getLabel() {
+	public Text getLabel() {
 		return label;
 	}
 
@@ -100,7 +100,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 *
 	 * @param label the new label
 	 */
-	public void setLabel(@Nullable StringRenderable label) {
+	public void setLabel(@Nullable Text label) {
 		this.label = label;
 	}
 
@@ -194,7 +194,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
 		if (label != null) {
 			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
-			ScreenDrawing.drawStringWithShadow(matrices, label, labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
+			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
 		matrices.pop();
 	}
@@ -228,6 +228,6 @@ public class WLabeledSlider extends WAbstractSlider {
 		 * @param value the slider value
 		 * @return the label
 		 */
-		StringRenderable updateLabel(int value);
+		Text updateLabel(int value);
 	}
 }

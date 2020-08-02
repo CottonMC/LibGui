@@ -8,15 +8,15 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.StringRenderable;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
 
 public class WButton extends WWidget {
-	private StringRenderable label;
+	private Text label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
 	private boolean enabled = true;
@@ -47,7 +47,7 @@ public class WButton extends WWidget {
 	 *
 	 * @param label the label
 	 */
-	public WButton(StringRenderable label) {
+	public WButton(Text label) {
 		this.label = label;
 	}
 
@@ -58,7 +58,7 @@ public class WButton extends WWidget {
 	 * @param label the label
 	 * @since 2.2.0
 	 */
-	public WButton(Icon icon, StringRenderable label) {
+	public WButton(Icon icon, Text label) {
 		this.icon = icon;
 		this.label = label;
 	}
@@ -106,7 +106,7 @@ public class WButton extends WWidget {
 			}*/
 
 			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? 18 : 0;
-			ScreenDrawing.drawStringWithShadow(matrices, label, alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	
@@ -166,11 +166,11 @@ public class WButton extends WWidget {
 		return this;
 	}
 
-	public StringRenderable getLabel() {
+	public Text getLabel() {
 		return label;
 	}
 
-	public WButton setLabel(StringRenderable label) {
+	public WButton setLabel(Text label) {
 		this.label = label;
 		return this;
 	}

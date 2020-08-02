@@ -10,7 +10,7 @@ import net.minecraft.text.LiteralText;
 public class TestDescription extends SyncedGuiDescription {
 	
 	public TestDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
-		super(type, syncId, playerInventory, getBlockInventory(context), null);
+		super(type, syncId, playerInventory, getBlockInventory(context, GuiBlockEntity.INVENTORY_SIZE), null);
 		
 		WGridPanel root = (WGridPanel)this.getRootPanel();
 		

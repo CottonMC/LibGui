@@ -100,7 +100,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 
 			if (getTitle() != null && description.isTitleVisible()) {
 				int width = description.getRootPanel().getWidth();
-				ScreenDrawing.drawString(matrices, getTitle(), description.getTitleAlignment(), left + titleX, top + titleY, width, description.getTitleColor());
+				ScreenDrawing.drawString(matrices, getTitle().asOrderedText(), description.getTitleAlignment(), left + titleX, top + titleY, width, description.getTitleColor());
 			}
 		}
 	}

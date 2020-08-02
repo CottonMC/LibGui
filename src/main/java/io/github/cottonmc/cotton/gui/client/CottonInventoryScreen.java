@@ -275,7 +275,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
 		if (description != null && description.isTitleVisible()) {
 			int width = description.getRootPanel().getWidth();
-			ScreenDrawing.drawString(matrices, getTitle(), description.getTitleAlignment(), titleX, titleY, width, description.getTitleColor());
+			ScreenDrawing.drawString(matrices, getTitle().asOrderedText(), description.getTitleAlignment(), titleX, titleY, width, description.getTitleColor());
 		}
 
 		// Don't draw the player inventory label as it's drawn by the widget itself

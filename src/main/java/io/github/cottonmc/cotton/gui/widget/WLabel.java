@@ -8,13 +8,13 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Style;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.client.TextHoverRendererScreen;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
 
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * A single-line label widget.
  */
 public class WLabel extends WWidget {
-	protected StringRenderable text;
+	protected Text text;
 	protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
 	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 	protected int color;
@@ -54,7 +54,7 @@ public class WLabel extends WWidget {
 	 * @param text the text of the label
 	 * @param color the color of the label
 	 */
-	public WLabel(StringRenderable text, int color) {
+	public WLabel(Text text, int color) {
 		this.text = text;
 		this.color = color;
 		this.darkmodeColor = (color==DEFAULT_TEXT_COLOR) ? DEFAULT_DARKMODE_TEXT_COLOR : color;
@@ -75,7 +75,7 @@ public class WLabel extends WWidget {
 	 * @param text the text of the label
 	 * @since 1.8.0
 	 */
-	public WLabel(StringRenderable text) {
+	public WLabel(Text text) {
 		this(text, DEFAULT_TEXT_COLOR);
 	}
 
@@ -98,7 +98,7 @@ public class WLabel extends WWidget {
 				break;
 		}
 
-		ScreenDrawing.drawString(matrices, text, horizontalAlignment, x, y + yOffset, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
+		ScreenDrawing.drawString(matrices, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
 
 		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
 		if (hoveredTextStyle != null) {
@@ -216,7 +216,7 @@ public class WLabel extends WWidget {
 	 *
 	 * @return the text
 	 */
-	public StringRenderable getText() {
+	public Text getText() {
 		return text;
 	}
 
@@ -226,7 +226,7 @@ public class WLabel extends WWidget {
 	 * @param text the new text
 	 * @return this label
 	 */
-	public WLabel setText(StringRenderable text) {
+	public WLabel setText(Text text) {
 		this.text = text;
 		return this;
 	}

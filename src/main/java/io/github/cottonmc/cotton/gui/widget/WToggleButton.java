@@ -6,7 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
@@ -25,7 +25,7 @@ public class WToggleButton extends WWidget {
 	protected Identifier offImage;
 	protected Identifier focusImage = DEFAULT_FOCUS_IMAGE;
 
-	@Nullable protected StringRenderable label = null;
+	@Nullable protected Text label = null;
 
 	protected boolean isOn = false;
 	@Nullable protected Consumer<Boolean> onToggle = null;
@@ -33,25 +33,42 @@ public class WToggleButton extends WWidget {
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 
-	/** All default values, no text */
+	/**
+	 * Constructs a toggle button with default images and no label.
+	 */
 	public WToggleButton() {
 		this(DEFAULT_ON_IMAGE, DEFAULT_OFF_IMAGE);
 	}
 
-	/** Defaults with text */
-	public WToggleButton(StringRenderable text) {
+	/**
+	 * Constructs a toggle button with default images.
+	 *
+	 * @param label the button label
+	 */
+	public WToggleButton(Text label) {
 		this(DEFAULT_ON_IMAGE, DEFAULT_OFF_IMAGE);
-		this.label = text;
+		this.label = label;
 	}
 
-	/** Custom images */
+	/**
+	 * Constructs a toggle button with custom images and no label.
+	 *
+	 * @param onImage  the toggled on image
+	 * @param offImage the toggled off image
+	 */
 	public WToggleButton(Identifier onImage, Identifier offImage) {
 		this.onImage = onImage;
 		this.offImage = offImage;
 	}
 
-	/** Custom images,  with default sizes and a label */
-	public WToggleButton(Identifier onImage, Identifier offImage, StringRenderable label) {
+	/**
+	 * Constructs a toggle button with custom images.
+	 *
+	 * @param onImage  the toggled on image
+	 * @param offImage the toggled off image
+	 * @param label    the button label
+	 */
+	public WToggleButton(Identifier onImage, Identifier offImage, Text label) {
 		this.onImage = onImage;
 		this.offImage = offImage;
 		this.label = label;
@@ -66,7 +83,7 @@ public class WToggleButton extends WWidget {
 		}
 
 		if (label!=null) {
-			ScreenDrawing.drawString(matrices, label, x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawString(matrices, label.asOrderedText(), x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	
@@ -118,11 +135,11 @@ public class WToggleButton extends WWidget {
 	}
 
 	@Nullable
-	public StringRenderable getLabel() {
+	public Text getLabel() {
 		return label;
 	}
 
-	public WToggleButton setLabel(@Nullable StringRenderable label) {
+	public WToggleButton setLabel(@Nullable Text label) {
 		this.label = label;
 		return this;
 	}

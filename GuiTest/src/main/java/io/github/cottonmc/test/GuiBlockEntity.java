@@ -14,8 +14,9 @@ import net.minecraft.util.collection.DefaultedList;
 import javax.annotation.Nullable;
 
 public class GuiBlockEntity extends BlockEntity implements ImplementedInventory, NamedScreenHandlerFactory {
+	static final int INVENTORY_SIZE = 8;
 	
-	DefaultedList<ItemStack> items =  DefaultedList.ofSize(8, ItemStack.EMPTY);
+	DefaultedList<ItemStack> items =  DefaultedList.ofSize(INVENTORY_SIZE, ItemStack.EMPTY);
 	
 	public GuiBlockEntity() {
 		super(LibGuiTest.GUI_BLOCKENTITY_TYPE);

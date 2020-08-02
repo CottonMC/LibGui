@@ -34,7 +34,6 @@ dependencies {
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
 	implementation project(':')
-	modRuntime "io.github.prospector:modmenu:$rootProject.modmenu_version" // for testing
 }
 
 processResources {

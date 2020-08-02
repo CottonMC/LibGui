@@ -1,10 +1,9 @@
 package io.github.cottonmc.test.client;
 
-import java.util.List;
-
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WSlider;
@@ -17,7 +16,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
 import net.minecraft.util.Identifier;
 
 public class TestClientGui extends LightweightGuiDescription {
@@ -38,8 +36,9 @@ public class TestClientGui extends LightweightGuiDescription {
 		WGridPanel root = new WGridPanel(22);
 		this.setRootPanel(root);
 		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
+			@Environment(EnvType.CLIENT)
 			@Override
-			public void addTooltip(List<StringRenderable> tooltip) {
+			public void addTooltip(TooltipBuilder tooltip) {
 				tooltip.add(new LiteralText("Radical!"));
 			}
 		};

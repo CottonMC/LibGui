@@ -9,7 +9,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -344,19 +345,24 @@ public class WWidget {
 	}
 
 	/**
-	 * Internal method to render tooltip data. This requires an overriden {@link #addTooltip(List)
+	 * Internal method to render tooltip data. This requires an overriden {@link #addTooltip(TooltipBuilder)
 	 * addTooltip} method to insert data into the tooltip - without this, the method returns early, because no work
+	 *
+	 * @param x  the X coordinate of this widget on screen
+	 * @param y  the Y coordinate of this widget on screen
+	 * @param tX the X coordinate of the tooltip
+	 * @param tY the Y coordinate of the tooltip
 	 */
 	@Environment(EnvType.CLIENT)
 	public void renderTooltip(MatrixStack matrices, int x, int y, int tX, int tY) {
-		List<StringRenderable> info = new ArrayList<>();
-		addTooltip(info);
+		TooltipBuilder builder = new TooltipBuilder();
+		addTooltip(builder);
 
-		if (info.size() == 0)
+		if (builder.size() == 0)
 			return;
 
 		Screen screen = MinecraftClient.getInstance().currentScreen;
-		screen.renderTooltip(matrices, info, tX+x, tY+y);
+		screen.renderTooltip(matrices, builder.lines, tX+x, tY+y);
 	}
 
 	/**
@@ -394,9 +400,11 @@ public class WWidget {
 
 	/**
 	 * Adds lines to this widget's tooltip. If the lines remain empty after this call, no tooltip will be drawn.
-	 * @param tooltip List containing all previous tooltip data.
+	 *
+	 * @param tooltip the builder to add tooltip lines to
 	 */
-	public void addTooltip(List<StringRenderable> tooltip) {
+	@Environment(EnvType.CLIENT)
+	public void addTooltip(TooltipBuilder tooltip) {
 	}
 
 	/**
