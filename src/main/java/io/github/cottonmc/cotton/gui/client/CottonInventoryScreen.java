@@ -61,12 +61,19 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	 */
 	
 	@Override
-	public void init(MinecraftClient minecraftClient_1, int screenWidth, int screenHeight) {
-		super.init(minecraftClient_1, screenWidth, screenHeight);
+	public void init(MinecraftClient client, int screenWidth, int screenHeight) {
+		super.init(client, screenWidth, screenHeight);
+		client.keyboard.enableRepeatEvents(true);
 		
 		description.addPainters();
 		
 		reposition(screenWidth, screenHeight);
+	}
+
+	@Override
+	public void removed() {
+		super.removed();
+		this.client.keyboard.enableRepeatEvents(false);
 	}
 
 	/**
