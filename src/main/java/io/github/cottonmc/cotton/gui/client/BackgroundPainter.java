@@ -53,7 +53,7 @@ public interface BackgroundPainter {
 					//this will cause a slightly discolored bottom border on vanilla backgrounds but it's necessary for color support, it shouldn't be *too* visible unless you're looking for it
 					int hi = 0xB8FFFFFF;
 					if (slot.isBigSlot()) {
-						ScreenDrawing.drawBeveledPanel((x * 18) + left - 3, (y * 18) + top - 3, 26, 26,
+						ScreenDrawing.drawBeveledPanel((x * 18) + left - 4, (y * 18) + top - 4, 26, 26,
 								lo, bg, hi);
 						if (slot.getFocusedSlot() == index) {
 							int sx = (x * 18) + left - 3;

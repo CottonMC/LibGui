@@ -94,7 +94,7 @@ public class WButton extends WWidget {
 		ScreenDrawing.texturedRect(x+(getWidth()/2), y, getWidth()/2, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
 
 		if (icon != null) {
-			icon.paint(matrices, x + 2, y + 2, 16);
+			icon.paint(matrices, x + 1, y + 1, 16);
 		}
 		
 		if (label!=null) {
