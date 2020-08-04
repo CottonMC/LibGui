@@ -299,7 +299,7 @@ public abstract class WPanel extends WWidget {
 	 *
 	 * <p>Subclasses should call {@code super.addPainters()} to ensure that children have proper default painters.
 	 *
-	 * @since 2.3.0
+	 * @since TAB_VERSION
 	 */
 	@Environment(EnvType.CLIENT)
 	@Override

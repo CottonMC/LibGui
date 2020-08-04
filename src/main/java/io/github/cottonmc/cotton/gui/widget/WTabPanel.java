@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 /**
  * A panel that contains creative inventory-style tabs on the top.
  *
- * @since 2.3.0
+ * @since TAB_VERSION
  */
 public class WTabPanel extends WPanel {
 	private static final int TAB_PADDING = 4;

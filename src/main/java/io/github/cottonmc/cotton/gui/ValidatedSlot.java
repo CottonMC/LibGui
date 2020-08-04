@@ -153,7 +153,7 @@ public class ValidatedSlot extends Slot {
 	 * Tests whether this slot is visible.
 	 *
 	 * @return true if this slot is visible, false otherwise
-	 * @since 2.3.0
+	 * @since TAB_VERSION
 	 */
 	public boolean isVisible() {
 		return visible;
@@ -163,7 +163,7 @@ public class ValidatedSlot extends Slot {
 	 * Sets whether this slot is visible.
 	 *
 	 * @param visible true if this slot if visible, false otherwise
-	 * @since 2.3.0
+	 * @since TAB_VERSION
 	 */
 	public void setVisible(boolean visible) {
 		if (this.visible != visible) {

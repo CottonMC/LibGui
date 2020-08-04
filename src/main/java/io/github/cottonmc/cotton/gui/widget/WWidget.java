@@ -443,7 +443,7 @@ public class WWidget {
 	 * Notifies this widget that it is visible and
 	 * shows any hidden peers of itself and its children.
 	 *
-	 * @since 2.3.0
+	 * @since TAB_VERSION
 	 */
 	@Beta
 	public void onShown() {
@@ -457,7 +457,7 @@ public class WWidget {
 	 * focus if it is focused. Overriding implementations
 	 * might want to do this as well.
 	 *
-	 * @since 2.3.0
+	 * @since TAB_VERSION
 	 */
 	@Beta
 	public void onHidden() {
@@ -469,7 +469,7 @@ public class WWidget {
 	 *
 	 * <p>Always called before {@link GuiDescription#addPainters()} to allow users to modify painters.
 	 *
-	 * @since 2.3.0
+	 * @since TAB_VERSION
 	 */
 	@Environment(EnvType.CLIENT)
 	public void addPainters() {
