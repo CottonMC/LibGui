@@ -79,7 +79,6 @@ public class WLabel extends WWidget {
 		this(text, DEFAULT_TEXT_COLOR);
 	}
 
-	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		MinecraftClient mc = MinecraftClient.getInstance();

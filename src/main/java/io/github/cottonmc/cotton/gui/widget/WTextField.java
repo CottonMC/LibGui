@@ -513,8 +513,7 @@ public class WTextField extends WWidget {
 	@Override
 	public void onFocusGained() {
 	}
-
-	@Environment(EnvType.CLIENT)
+	
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		

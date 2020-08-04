@@ -1,7 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
@@ -36,7 +34,6 @@ public class WDynamicLabel extends WWidget {
 		this(text, DEFAULT_TEXT_COLOR);
 	}
 
-	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		String tr = text.get();

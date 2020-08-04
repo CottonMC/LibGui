@@ -1,7 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -31,7 +29,6 @@ public class WScrollPanel extends WClippedPanel {
 
 	private int lastHorizontalScroll = -1;
 	private int lastVerticalScroll = -1;
-	private boolean needsLayout = false;
 
 	/**
 	 * Creates a vertically scrolling panel.
@@ -63,7 +60,7 @@ public class WScrollPanel extends WClippedPanel {
 	public WScrollPanel setScrollingHorizontally(TriState scrollingHorizontally) {
 		if (scrollingHorizontally != this.scrollingHorizontally) {
 			this.scrollingHorizontally = scrollingHorizontally;
-			needsLayout = true;
+			layout();
 		}
 
 		return this;
@@ -83,7 +80,7 @@ public class WScrollPanel extends WClippedPanel {
 	public WScrollPanel setScrollingVertically(TriState scrollingVertically) {
 		if (scrollingVertically != this.scrollingVertically) {
 			this.scrollingVertically = scrollingVertically;
-			needsLayout = true;
+			layout();
 		}
 
 		return this;
@@ -91,17 +88,15 @@ public class WScrollPanel extends WClippedPanel {
 
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		if (needsLayout || verticalScrollBar.getValue() != lastVerticalScroll || horizontalScrollBar.getValue() != lastHorizontalScroll) {
+		if (verticalScrollBar.getValue() != lastVerticalScroll || horizontalScrollBar.getValue() != lastHorizontalScroll) {
 			layout();
 			lastHorizontalScroll = horizontalScrollBar.getValue();
 			lastVerticalScroll = verticalScrollBar.getValue();
-			needsLayout = false;
 		}
 
 		super.paint(matrices, x, y, mouseX, mouseY);
 	}
 
-	@Environment(EnvType.CLIENT)
 	@Override
 	public void layout() {
 		children.clear();

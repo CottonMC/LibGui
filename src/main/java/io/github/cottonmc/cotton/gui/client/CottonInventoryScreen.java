@@ -120,10 +120,6 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 				basePanel.setSize(screenWidth, screenHeight);
 			}
 		}
-
-		if (basePanel != null) {
-			basePanel.layout();
-		}
 	}
 	
 	@Override

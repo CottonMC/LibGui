@@ -75,7 +75,6 @@ public abstract class WPanel extends WWidget {
 	/**
 	 * Uses this Panel's layout rules to reposition and resize components to fit nicely in the panel.
 	 */
-	@Environment(EnvType.CLIENT)
 	public void layout() {
 		for(WWidget child : children) {
 			if (child instanceof WPanel) ((WPanel) child).layout();
@@ -186,6 +185,7 @@ public abstract class WPanel extends WWidget {
 	@Override
 	public void validate(GuiDescription c) {
 		super.validate(c);
+		layout();
 		for (WWidget child : children) {
 			child.validate(c);
 		}
