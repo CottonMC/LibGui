@@ -32,6 +32,7 @@ public class WScrollBar extends WWidget {
 		this.axis = axis;
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (LibGuiClient.config.darkMode) {
