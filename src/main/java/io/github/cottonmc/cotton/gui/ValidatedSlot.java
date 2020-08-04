@@ -1,5 +1,8 @@
 package io.github.cottonmc.cotton.gui;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -7,6 +10,7 @@ import net.minecraft.screen.slot.Slot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ValidatedSlot extends Slot {
@@ -15,6 +19,7 @@ public class ValidatedSlot extends Slot {
 	private boolean insertingAllowed = true;
 	private boolean takingAllowed = true;
 	private Predicate<ItemStack> filter;
+	protected final Multimap<WItemSlot, WItemSlot.ChangeListener> listeners = HashMultimap.create();
 
 	public ValidatedSlot(Inventory inventory, int index, int x, int y) {
 		super(inventory, index, x, y);
@@ -48,6 +53,17 @@ public class ValidatedSlot extends Slot {
 		return result;
 	}
 
+	@Override
+	public void markDirty() {
+		listeners.forEach((slot, listener) -> listener.onStackChanged(slot, inventory, getInventoryIndex(), getStack()));
+		super.markDirty();
+	}
+
+	/**
+	 * Gets the index of this slot in its inventory.
+	 *
+	 * @return the inventory index
+	 */
 	public int getInventoryIndex() {
 		return slotNumber;
 	}
@@ -110,5 +126,20 @@ public class ValidatedSlot extends Slot {
 	 */
 	public void setFilter(Predicate<ItemStack> filter) {
 		this.filter = filter;
+	}
+
+	/**
+	 * Adds a change listener to this slot.
+	 * Does nothing if the listener is already registered.
+	 *
+	 * @param owner    the owner of this slot
+	 * @param listener the listener
+	 * @throws NullPointerException if either parameter is null
+	 * @since 3.0.0
+	 */
+	public void addChangeListener(WItemSlot owner, WItemSlot.ChangeListener listener) {
+		Objects.requireNonNull(owner, "owner");
+		Objects.requireNonNull(listener, "listener");
+		listeners.put(owner, listener);
 	}
 }

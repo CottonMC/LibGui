@@ -1,7 +1,10 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
@@ -18,6 +21,41 @@ import net.minecraft.screen.slot.SlotActionType;
 
 import javax.annotation.Nullable;
 
+/**
+ * A widget that displays an item that can be interacted with.
+ *
+ * <p>Item slot widgets can contain multiple visual slots themselves.
+ * For example, a slot widget might be 5x3 with 15 visual slots in total.
+ *
+ * <p>Item slots are handled with so-called peers in the background.
+ * They are instances of {@link ValidatedSlot} that handle the interactions
+ * between the player and the widget.
+ *
+ * <h2>Filters</h2>
+ * Item slots can have filters that check whether a player is allowed to insert an item or not.
+ * The filter can be set with {@link #setFilter(Predicate)}. For example:
+ *
+ * <pre>
+ * {@code
+ * // Only sand in this slot!
+ * slot.setFilter(stack -> stack.getItem() == Items.SAND);
+ * }
+ * </pre>
+ *
+ * <h2>Listeners</h2>
+ * Slot change listeners are instances of {@link WItemSlot.ChangeListener} that can handle changes
+ * to item stacks in slots. For example:
+ *
+ * <pre>
+ * {@code
+ * slot.addChangeListener((slot, inventory, index, stack) -> {
+ *     if (stack.isEmpty() || stack.getCount() < stack.getMaxCount()) {
+ *         System.out.println("I'm not full yet!");
+ *     }
+ * });
+ * }
+ * </pre>
+ */
 public class WItemSlot extends WWidget {
 	private static final Predicate<ItemStack> DEFAULT_FILTER = stack -> true;
 	private final List<ValidatedSlot> peers = new ArrayList<>();
@@ -34,6 +72,7 @@ public class WItemSlot extends WWidget {
 	private boolean takingAllowed = true;
 	private int focusedSlot = -1;
 	private Predicate<ItemStack> filter = DEFAULT_FILTER;
+	private final Set<ChangeListener> listeners = new HashSet<>();
 
 	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
 		this.inventory = inventory;
@@ -203,6 +242,9 @@ public class WItemSlot extends WWidget {
 				slot.setInsertingAllowed(insertingAllowed);
 				slot.setTakingAllowed(takingAllowed);
 				slot.setFilter(filter);
+				for (ChangeListener listener : listeners) {
+					slot.addChangeListener(this, listener);
+				}
 				peers.add(slot);
 				host.addSlotPeer(slot);
 				index++;
@@ -309,5 +351,40 @@ public class WItemSlot extends WWidget {
 			focusedSlot--;
 			return focusedSlot >= 0 ? this : null;
 		}
+	}
+
+	/**
+	 * Adds a change listener to this slot.
+	 * Does nothing if the listener is already registered.
+	 *
+	 * @param listener the added listener
+	 * @throws NullPointerException if the listener is null
+	 * @since 3.0.0
+	 */
+	public void addChangeListener(ChangeListener listener) {
+		Objects.requireNonNull(listener, "listener");
+		listeners.add(listener);
+
+		for (ValidatedSlot peer : peers) {
+			peer.addChangeListener(this, listener);
+		}
+	}
+
+	/**
+	 * A listener for changes in an item slot.
+	 *
+	 * @since 3.0.0
+	 */
+	@FunctionalInterface
+	public interface ChangeListener {
+		/**
+		 * Handles a changed item stack in an item slot.
+		 *
+		 * @param slot      the item slot widget
+		 * @param inventory the item inventory of the slot
+		 * @param index     the index of the slot in the inventory
+		 * @param stack     the changed item stack
+		 */
+		void onStackChanged(WItemSlot slot, Inventory inventory, int index, ItemStack stack);
 	}
 }
