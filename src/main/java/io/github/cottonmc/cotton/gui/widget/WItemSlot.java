@@ -380,6 +380,8 @@ public class WItemSlot extends WWidget {
 
 	@Override
 	public void onHidden() {
+		super.onHidden();
+
 		for (ValidatedSlot peer : peers) {
 			peer.setVisible(false);
 		}

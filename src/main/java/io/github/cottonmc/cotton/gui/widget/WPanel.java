@@ -287,6 +287,8 @@ public abstract class WPanel extends WWidget {
 
 	@Override
 	public void onHidden() {
+		super.onHidden();
+
 		for (WWidget child : children) {
 			child.onHidden();
 		}

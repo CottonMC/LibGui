@@ -453,10 +453,15 @@ public class WWidget {
 	 * Notifies this widget that it won't be drawn and
 	 * hides any visible peers of itself and its children.
 	 *
+	 * <p>The default implementation releases this widget's
+	 * focus if it is focused. Overriding implementations
+	 * might want to do this as well.
+	 *
 	 * @since 2.3.0
 	 */
 	@Beta
 	public void onHidden() {
+		releaseFocus();
 	}
 
 	/**
