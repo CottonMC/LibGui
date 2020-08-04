@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import com.google.common.collect.ImmutableList;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -14,7 +13,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -100,11 +99,11 @@ public class WTabPanel extends WPanel {
 	 */
 	public static class Tab {
 		@Nullable
-		private final StringRenderable title;
+		private final Text title;
 		@Nullable
 		private final Icon icon;
 		private final WWidget widget;
-		private final List<StringRenderable> tooltip;
+		private final Consumer<TooltipBuilder> tooltip;
 
 		/**
 		 * Constructs a tab.
@@ -112,11 +111,11 @@ public class WTabPanel extends WPanel {
 		 * @param title   the tab title
 		 * @param icon    the tab icon
 		 * @param widget  the widget contained in the tab
-		 * @param tooltip the tab tooltip lines
+		 * @param tooltip the tab tooltip
 		 * @throws IllegalArgumentException if both the title and the icon are null
-		 * @throws NullPointerException     if the widget or the tooltip list are null
+		 * @throws NullPointerException     if either the widget or the tooltip is null
 		 */
-		public Tab(@Nullable StringRenderable title, @Nullable Icon icon, WWidget widget, List<StringRenderable> tooltip) {
+		public Tab(@Nullable Text title, @Nullable Icon icon, WWidget widget, Consumer<TooltipBuilder> tooltip) {
 			if (title == null && icon == null) {
 				throw new IllegalArgumentException("A tab must have a title or an icon");
 			}
@@ -124,7 +123,7 @@ public class WTabPanel extends WPanel {
 			this.title = title;
 			this.icon = icon;
 			this.widget = Objects.requireNonNull(widget, "widget");
-			this.tooltip = ImmutableList.copyOf(Objects.requireNonNull(tooltip, "tooltip"));
+			this.tooltip = Objects.requireNonNull(tooltip, "tooltip");
 		}
 
 		/**
@@ -133,7 +132,7 @@ public class WTabPanel extends WPanel {
 		 * @return the title, or null if there's no title
 		 */
 		@Nullable
-		public StringRenderable getTitle() {
+		public Text getTitle() {
 			return title;
 		}
 
@@ -157,12 +156,12 @@ public class WTabPanel extends WPanel {
 		}
 
 		/**
-		 * Adds this widget's tooltip to the {@code tooltip} list.
+		 * Adds this widget's tooltip to the {@code tooltip} builder.
 		 *
-		 * @param tooltip the tooltip line list
+		 * @param tooltip the tooltip builder
 		 */
-		public void addTooltip(List<StringRenderable> tooltip) {
-			tooltip.addAll(this.tooltip);
+		public void addTooltip(TooltipBuilder tooltip) {
+			this.tooltip.accept(tooltip);
 		}
 
 		/**
@@ -170,11 +169,12 @@ public class WTabPanel extends WPanel {
 		 */
 		public static final class Builder {
 			@Nullable
-			private StringRenderable title;
+			private Text title;
 			@Nullable
 			private Icon icon;
 			private final WWidget widget;
-			private final List<StringRenderable> tooltip = new ArrayList<>();
+			private final List<Consumer<TooltipBuilder>> tooltip = new ArrayList<>();
+			private static final Consumer<TooltipBuilder> DEFAULT_TOOLTIP = builder -> {};
 
 			/**
 			 * Constructs a new tab data builder.
@@ -193,7 +193,7 @@ public class WTabPanel extends WPanel {
 			 * @return this builder
 			 * @throws NullPointerException if the title is null
 			 */
-			public Builder title(StringRenderable title) {
+			public Builder title(Text title) {
 				this.title = Objects.requireNonNull(title, "title");
 				return this;
 			}
@@ -217,12 +217,9 @@ public class WTabPanel extends WPanel {
 			 * @return this builder
 			 * @throws NullPointerException if the line array is null
 			 */
-			public Builder tooltip(StringRenderable... lines) {
+			public Builder tooltip(Text... lines) {
 				Objects.requireNonNull(lines, "lines");
-
-				for (StringRenderable line : lines) {
-					tooltip.add(line);
-				}
+				tooltip.add(builder -> builder.add(lines));
 
 				return this;
 			}
@@ -234,9 +231,9 @@ public class WTabPanel extends WPanel {
 			 * @return this builder
 			 * @throws NullPointerException if the line collection is null
 			 */
-			public Builder tooltip(Collection<? extends StringRenderable> lines) {
+			public Builder tooltip(Collection<? extends Text> lines) {
 				Objects.requireNonNull(lines, "lines");
-				tooltip.addAll(lines);
+				tooltip.add(builder -> builder.add(lines.toArray(new Text[0])));
 				return this;
 			}
 
@@ -244,9 +241,19 @@ public class WTabPanel extends WPanel {
 			 * Builds a tab from this builder.
 			 *
 			 * @return the built tab
-			 * @see Tab#Tab(StringRenderable, Icon, WWidget, List)
+			 * @see Tab#Tab(Text, Icon, WWidget, Consumer)
 			 */
 			public Tab build() {
+				Consumer<TooltipBuilder> tooltip = DEFAULT_TOOLTIP;
+
+				if (!this.tooltip.isEmpty()) {
+					tooltip = builder -> {
+						for (Consumer<TooltipBuilder> entry : this.tooltip) {
+							entry.accept(builder);
+						}
+					};
+				}
+
 				return new Tab(title, icon, widget, tooltip);
 			}
 		}
@@ -279,7 +286,7 @@ public class WTabPanel extends WPanel {
 		@Override
 		public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 			TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
-			StringRenderable title = data.getTitle();
+			Text title = data.getTitle();
 			Icon icon = data.getIcon();
 
 			if (title != null) {
@@ -313,7 +320,7 @@ public class WTabPanel extends WPanel {
 					color = selected ? WLabel.DEFAULT_TEXT_COLOR : 0xEEEEEE;
 				}
 
-				ScreenDrawing.drawString(matrices, title, align, x + titleX, y + titleY, width, color);
+				ScreenDrawing.drawString(matrices, title.asOrderedText(), align, x + titleX, y + titleY, width, color);
 			}
 
 			if (icon != null) {
@@ -322,7 +329,7 @@ public class WTabPanel extends WPanel {
 		}
 
 		@Override
-		public void addTooltip(List<StringRenderable> tooltip) {
+		public void addTooltip(TooltipBuilder tooltip) {
 			data.addTooltip(tooltip);
 		}
 	}
