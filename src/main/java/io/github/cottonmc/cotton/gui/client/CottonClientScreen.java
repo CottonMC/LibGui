@@ -87,6 +87,8 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 
 					root.setSize(screenWidth, screenHeight);
 				}
+
+				root.layout();
 			}
 		}
 	}

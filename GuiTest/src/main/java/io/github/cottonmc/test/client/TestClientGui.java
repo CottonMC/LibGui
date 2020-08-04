@@ -143,7 +143,8 @@ public class TestClientGui extends LightweightGuiDescription {
 		public void setColor(int col) {
 			this.color = col;
 		}
-		
+
+		@Environment(EnvType.CLIENT)
 		@Override
 		public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 			ScreenDrawing.coloredRect(x, y, this.getWidth(), this.getHeight(), color);
