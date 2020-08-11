@@ -63,7 +63,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	@Override
 	public void init(MinecraftClient client, int screenWidth, int screenHeight) {
 		super.init(client, screenWidth, screenHeight);
-		client.keyboard.enableRepeatEvents(true);
+		client.keyboard.setRepeatEvents(true);
 		
 		description.addPainters();
 		
@@ -73,7 +73,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	@Override
 	public void removed() {
 		super.removed();
-		this.client.keyboard.enableRepeatEvents(false);
+		this.client.keyboard.setRepeatEvents(false);
 	}
 
 	/**

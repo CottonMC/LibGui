@@ -362,7 +362,7 @@ public class WWidget {
 			return;
 
 		Screen screen = MinecraftClient.getInstance().currentScreen;
-		screen.renderTooltip(matrices, builder.lines, tX+x, tY+y);
+		screen.renderOrderedTooltip(matrices, builder.lines, tX+x, tY+y);
 	}
 
 	/**

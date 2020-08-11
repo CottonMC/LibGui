@@ -77,7 +77,7 @@ public class WText extends WWidget {
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
 			OrderedText line = wrappedLines.get(lineIndex);
-			return font.getTextHandler().method_30876(line, x);
+			return font.getTextHandler().getStyleAt(line, x);
 		}
 
 		return null;
