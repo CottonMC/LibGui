@@ -107,7 +107,6 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		return child;
 	}
 
-	@Environment(EnvType.CLIENT)
 	@Override
 	public void layout() {
 		

@@ -63,7 +63,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	@Override
 	public void init(MinecraftClient client, int screenWidth, int screenHeight) {
 		super.init(client, screenWidth, screenHeight);
-		client.keyboard.enableRepeatEvents(true);
+		client.keyboard.setRepeatEvents(true);
 		
 		WPanel root = description.getRootPanel();
 		if (root != null) root.addPainters();
@@ -75,7 +75,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	@Override
 	public void removed() {
 		super.removed();
-		this.client.keyboard.enableRepeatEvents(false);
+		this.client.keyboard.setRepeatEvents(false);
 	}
 
 	/**
@@ -121,10 +121,6 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 			if (basePanel != null) {
 				basePanel.setSize(screenWidth, screenHeight);
 			}
-		}
-
-		if (basePanel != null) {
-			basePanel.layout();
 		}
 	}
 	

@@ -1,12 +1,11 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Quaternion;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -24,8 +23,6 @@ import javax.annotation.Nullable;
  * @see WAbstractSlider for more information about listeners
  */
 public class WLabeledSlider extends WAbstractSlider {
-	private static final Quaternion ROTATION_Z_270 = Vector3f.POSITIVE_X.getDegreesQuaternion(270);
-
 	@Nullable private Text label = null;
 	@Nullable private LabelUpdater labelUpdater = null;
 	private HorizontalAlignment labelAlignment = HorizontalAlignment.CENTER;
@@ -159,6 +156,7 @@ public class WLabeledSlider extends WAbstractSlider {
 		return x >= 0 && x <= width && y >= 0 && y <= height;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
@@ -169,11 +167,11 @@ public class WLabeledSlider extends WAbstractSlider {
 				: (direction == Direction.UP ? height - mouseY : mouseY);
 		int rotMouseY = axis == Axis.HORIZONTAL ? mouseY : mouseX;
 
-		matrices.push();
+		RenderSystem.pushMatrix();
 		matrices.translate(x, y, 0);
 		if (axis == Axis.VERTICAL) {
-			matrices.translate(0, height, 0);
-			matrices.multiply(ROTATION_Z_270);
+			RenderSystem.translatef(0, height, 0);
+			RenderSystem.rotatef(270, 0, 0, 1);
 		}
 		drawButton(0, 0, 0, aWidth);
 
@@ -196,7 +194,7 @@ public class WLabeledSlider extends WAbstractSlider {
 			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
 			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
-		matrices.pop();
+		RenderSystem.popMatrix();
 	}
 
 	// state = 1: regular, 2: hovered, 0: disabled/dragging

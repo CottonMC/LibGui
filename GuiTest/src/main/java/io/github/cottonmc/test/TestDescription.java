@@ -22,7 +22,10 @@ public class TestDescription extends SyncedGuiDescription {
 		root.add(new WButton(new LiteralText("Button D")), 5, 5, 4, 1);
 		root.add(new WTextField(new LiteralText("Type something...")), 0, 7, 5, 1);
 
-		root.add(createPlayerInventoryPanel(), 0, 9);
+		root.add(new WLabel(new LiteralText("Large slot:")), 0, 9);
+		root.add(WItemSlot.outputOf(blockInventory, 0), 4, 9);
+
+		root.add(createPlayerInventoryPanel(), 0, 11);
 		System.out.println(root.toString());
 
 		this.getRootPanel().validate(this);

@@ -3,8 +3,6 @@ package io.github.cottonmc.cotton.gui.widget;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.Objects;
 
@@ -74,7 +72,6 @@ public class WBox extends WPanel {
 		add(widget, 18, 18);
 	}
 
-	@Environment(EnvType.CLIENT)
 	@Override
 	public void layout() {
 		int dimension = 0;
