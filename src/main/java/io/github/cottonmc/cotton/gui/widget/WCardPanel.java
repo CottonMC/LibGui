@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 /**
  * Similar to the CardLayout in AWT, this panel displays one widget at a time from a list of widgets.
  *
- * @since TAB_VERSION
+ * @since 3.0.0
  */
 public class WCardPanel extends WPanel {
 	private final List<WWidget> cards = new ArrayList<>();

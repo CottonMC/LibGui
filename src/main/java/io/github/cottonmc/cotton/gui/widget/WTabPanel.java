@@ -22,10 +22,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+// TODO: Different tab positions
+
 /**
  * A panel that contains creative inventory-style tabs on the top.
  *
- * @since TAB_VERSION
+ * @since 3.0.0
  */
 public class WTabPanel extends WPanel {
 	private static final int TAB_PADDING = 4;
