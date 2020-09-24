@@ -14,6 +14,7 @@ import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -269,6 +270,11 @@ public class WTabPanel extends WPanel {
 			this.data = data;
 		}
 
+		@Override
+		public boolean canFocus() {
+			return true;
+		}
+
 		@Environment(EnvType.CLIENT)
 		@Override
 		public void onClick(int x, int y, int button) {
@@ -282,6 +288,14 @@ public class WTabPanel extends WPanel {
 
 			mainPanel.setSelectedCard(data.getWidget());
 			WTabPanel.this.layout();
+		}
+
+		@Environment(EnvType.CLIENT)
+		@Override
+		public void onKeyPressed(int ch, int key, int modifiers) {
+			if (isActivationKey(ch)) {
+				onClick(0, 0, 0);
+			}
 		}
 
 		@Environment(EnvType.CLIENT)
@@ -301,10 +315,9 @@ public class WTabPanel extends WPanel {
 				}
 			}
 
-			if (selected) {
-				BackgroundPainter.SELECTED_TAB.paintBackground(x, y, this);
-			} else {
-				BackgroundPainter.UNSELECTED_TAB.paintBackground(x, y, this);
+			(selected ? Painters.SELECTED_TAB : Painters.UNSELECTED_TAB).paintBackground(x, y, this);
+			if (isFocused()) {
+				(selected ? Painters.SELECTED_TAB_FOCUS_BORDER : Painters.UNSELECTED_TAB_FOCUS_BORDER).paintBackground(x, y, this);
 			}
 
 			int iconX = 6;
@@ -334,5 +347,24 @@ public class WTabPanel extends WPanel {
 		public void addTooltip(TooltipBuilder tooltip) {
 			data.addTooltip(tooltip);
 		}
+	}
+
+	/**
+	 * Internal background painter instances for tabs.
+	 */
+	@Environment(EnvType.CLIENT)
+	final static class Painters {
+		static final BackgroundPainter SELECTED_TAB = BackgroundPainter.createLightDarkVariants(
+				BackgroundPainter.createNinePatch(new Identifier("libgui", "textures/widget/tab/selected_light.png")).setTopPadding(2),
+				BackgroundPainter.createNinePatch(new Identifier("libgui", "textures/widget/tab/selected_dark.png")).setTopPadding(2)
+		);
+
+		static final BackgroundPainter UNSELECTED_TAB = BackgroundPainter.createLightDarkVariants(
+				BackgroundPainter.createNinePatch(new Identifier("libgui", "textures/widget/tab/unselected_light.png")),
+				BackgroundPainter.createNinePatch(new Identifier("libgui", "textures/widget/tab/unselected_dark.png"))
+		);
+
+		static final BackgroundPainter SELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(new Identifier("libgui", "textures/widget/tab/focus.png")).setTopPadding(2);
+		static final BackgroundPainter UNSELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(new Identifier("libgui", "textures/widget/tab/focus.png"));
 	}
 }
