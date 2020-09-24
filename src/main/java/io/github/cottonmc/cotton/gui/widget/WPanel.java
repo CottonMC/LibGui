@@ -279,7 +279,38 @@ public abstract class WPanel extends WWidget {
 	}
 
 	@Override
+	public void onShown() {
+		for (WWidget child : children) {
+			child.onShown();
+		}
+	}
+
+	@Override
+	public void onHidden() {
+		super.onHidden();
+
+		for (WWidget child : children) {
+			child.onHidden();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>Subclasses should call {@code super.addPainters()} to ensure that children have proper default painters.
+	 *
+	 * @since 3.0.0
+	 */
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void addPainters() {
+		for (WWidget child : children) {
+			child.addPainters();
+		}
+	}
+
+	@Override
 	public String toString() {
-		return "WPanel{ children: [\n" + children.stream().map(Objects::toString).flatMap(x -> Stream.of(x.split("\n")).map(y -> "\t" + y)).collect(Collectors.joining(",\n")) + "] }";
+		return getClass().getSimpleName() + " {\n" + children.stream().map(Object::toString).map(x -> x + ",").flatMap(x -> Stream.of(x.split("\n")).filter(y -> !y.isEmpty()).map(y -> "\t" + y)).collect(Collectors.joining("\n")) + "\n}";
 	}
 }

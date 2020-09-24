@@ -17,7 +17,7 @@ public class ConfigGui extends LightweightGuiDescription {
 	public ConfigGui(Screen previous) {
 		WGridPanel root = new WGridPanel();
 		setRootPanel(root);
-		
+
 		WToggleButton darkmodeButton = new WToggleButton(new TranslatableText("option.libgui.darkmode")) {
 			@Override
 			public void onToggle(boolean on) {

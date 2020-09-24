@@ -65,6 +65,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		super.init(client, screenWidth, screenHeight);
 		client.keyboard.setRepeatEvents(true);
 		
+		WPanel root = description.getRootPanel();
+		if (root != null) root.addPainters();
 		description.addPainters();
 		
 		reposition(screenWidth, screenHeight);

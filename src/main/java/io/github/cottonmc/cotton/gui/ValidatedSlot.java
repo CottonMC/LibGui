@@ -3,6 +3,7 @@ package io.github.cottonmc.cotton.gui;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
+import io.github.cottonmc.cotton.gui.impl.access.SlotAccessor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -16,15 +17,20 @@ import java.util.function.Predicate;
 public class ValidatedSlot extends Slot {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final int slotNumber;
+	// Original positions that will be restored when this slot is reshown
+	private final int originalX, originalY;
 	private boolean insertingAllowed = true;
 	private boolean takingAllowed = true;
 	private Predicate<ItemStack> filter;
 	protected final Multimap<WItemSlot, WItemSlot.ChangeListener> listeners = HashMultimap.create();
+	private boolean visible = true;
 
 	public ValidatedSlot(Inventory inventory, int index, int x, int y) {
 		super(inventory, index, x, y);
 		if (inventory==null) throw new IllegalArgumentException("Can't make an itemslot from a null inventory!");
 		this.slotNumber = index;
+		this.originalX = x;
+		this.originalY = y;
 	}
 	
 	@Override
@@ -141,5 +147,36 @@ public class ValidatedSlot extends Slot {
 		Objects.requireNonNull(owner, "owner");
 		Objects.requireNonNull(listener, "listener");
 		listeners.put(owner, listener);
+	}
+
+	/**
+	 * Tests whether this slot is visible.
+	 *
+	 * @return true if this slot is visible, false otherwise
+	 * @since 3.0.0
+	 */
+	public boolean isVisible() {
+		return visible;
+	}
+
+	/**
+	 * Sets whether this slot is visible.
+	 *
+	 * @param visible true if this slot if visible, false otherwise
+	 * @since 3.0.0
+	 */
+	public void setVisible(boolean visible) {
+		if (this.visible != visible) {
+			this.visible = visible;
+
+			SlotAccessor accessor = (SlotAccessor) this;
+			if (visible) {
+				accessor.setX(originalX);
+				accessor.setY(originalY);
+			} else {
+				accessor.setX(-100000);
+				accessor.setY(-100000);
+			}
+		}
 	}
 }
