@@ -34,7 +34,7 @@ public class WPlayerInvPanel extends WPlainPanel {
 	 * @since 2.0.0
 	 */
 	public WPlayerInvPanel(PlayerInventory playerInventory, boolean hasLabel) {
-		this(playerInventory, hasLabel ? createDefaultLabel(playerInventory) : null);
+		this(playerInventory, hasLabel ? createInventoryLabel(playerInventory) : null);
 	}
 
 	/**
@@ -59,7 +59,14 @@ public class WPlayerInvPanel extends WPlainPanel {
 		this.add(hotbar, 0, y + 58);
 	}
 
-	private static WLabel createDefaultLabel(PlayerInventory playerInventory) {
+	/**
+	 * Creates a vanilla-style inventory label for a player inventory.
+	 *
+	 * @param playerInventory the player inventory
+	 * @return the created label
+	 * @since 3.1.0
+	 */
+	public static WLabel createInventoryLabel(PlayerInventory playerInventory) {
 		WLabel label = new WLabel(playerInventory.getDisplayName());
 		label.setSize(9*18, 11);
 		return label;
