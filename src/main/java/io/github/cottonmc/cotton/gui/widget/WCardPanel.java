@@ -120,6 +120,16 @@ public class WCardPanel extends WPanel {
 		return setSelectedIndex(cards.indexOf(selectedCard));
 	}
 
+	/**
+	 * Gets the number of cards in this panel.
+	 *
+	 * @return the card count
+	 * @since 3.1.0
+	 */
+	public int getCardCount() {
+		return cards.size();
+	}
+
 	@Override
 	public void setSize(int x, int y) {
 		super.setSize(x, y);
