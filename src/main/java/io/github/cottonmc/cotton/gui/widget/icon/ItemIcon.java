@@ -37,7 +37,7 @@ public class ItemIcon implements Icon {
 	 * @since 3.2.0
 	 */
 	public ItemIcon(Item item) {
-		this(Objects.requireNonNull(item, "item").getStackForRender());
+		this(Objects.requireNonNull(item, "item").getDefaultStack());
 	}
 
 	@Environment(EnvType.CLIENT)
