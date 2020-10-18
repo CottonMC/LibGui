@@ -19,6 +19,7 @@ import net.minecraft.util.Identifier;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -106,6 +107,7 @@ public class WTabPanel extends WPanel {
 		@Nullable
 		private final Icon icon;
 		private final WWidget widget;
+		@Nullable
 		private final Consumer<TooltipBuilder> tooltip;
 
 		/**
@@ -116,9 +118,11 @@ public class WTabPanel extends WPanel {
 		 * @param widget  the widget contained in the tab
 		 * @param tooltip the tab tooltip
 		 * @throws IllegalArgumentException if both the title and the icon are null
-		 * @throws NullPointerException     if either the widget or the tooltip is null
+		 * @throws NullPointerException     if the widget is null
+		 * @deprecated Use {@link Builder} instead.
 		 */
-		public Tab(@Nullable Text title, @Nullable Icon icon, WWidget widget, Consumer<TooltipBuilder> tooltip) {
+		@Deprecated
+		public Tab(@Nullable Text title, @Nullable Icon icon, WWidget widget, @Nullable Consumer<TooltipBuilder> tooltip) {
 			if (title == null && icon == null) {
 				throw new IllegalArgumentException("A tab must have a title or an icon");
 			}
@@ -126,7 +130,7 @@ public class WTabPanel extends WPanel {
 			this.title = title;
 			this.icon = icon;
 			this.widget = Objects.requireNonNull(widget, "widget");
-			this.tooltip = Objects.requireNonNull(tooltip, "tooltip");
+			this.tooltip = tooltip;
 		}
 
 		/**
@@ -163,8 +167,11 @@ public class WTabPanel extends WPanel {
 		 *
 		 * @param tooltip the tooltip builder
 		 */
+		@Environment(EnvType.CLIENT)
 		public void addTooltip(TooltipBuilder tooltip) {
-			this.tooltip.accept(tooltip);
+			if (this.tooltip != null) {
+				this.tooltip.accept(tooltip);
+			}
 		}
 
 		/**
@@ -176,8 +183,7 @@ public class WTabPanel extends WPanel {
 			@Nullable
 			private Icon icon;
 			private final WWidget widget;
-			private final List<Consumer<TooltipBuilder>> tooltip = new ArrayList<>();
-			private static final Consumer<TooltipBuilder> DEFAULT_TOOLTIP = builder -> {};
+			private final List<Text> tooltip = new ArrayList<>();
 
 			/**
 			 * Constructs a new tab data builder.
@@ -222,7 +228,7 @@ public class WTabPanel extends WPanel {
 			 */
 			public Builder tooltip(Text... lines) {
 				Objects.requireNonNull(lines, "lines");
-				tooltip.add(builder -> builder.add(lines));
+				Collections.addAll(tooltip, lines);
 
 				return this;
 			}
@@ -236,7 +242,7 @@ public class WTabPanel extends WPanel {
 			 */
 			public Builder tooltip(Collection<? extends Text> lines) {
 				Objects.requireNonNull(lines, "lines");
-				tooltip.add(builder -> builder.add(lines.toArray(new Text[0])));
+				tooltip.addAll(lines);
 				return this;
 			}
 
@@ -244,15 +250,17 @@ public class WTabPanel extends WPanel {
 			 * Builds a tab from this builder.
 			 *
 			 * @return the built tab
-			 * @see Tab#Tab(Text, Icon, WWidget, Consumer)
 			 */
 			public Tab build() {
-				Consumer<TooltipBuilder> tooltip = DEFAULT_TOOLTIP;
+				Consumer<TooltipBuilder> tooltip = null;
 
 				if (!this.tooltip.isEmpty()) {
-					tooltip = builder -> {
-						for (Consumer<TooltipBuilder> entry : this.tooltip) {
-							entry.accept(builder);
+					//noinspection Convert2Lambda
+					tooltip = new Consumer<TooltipBuilder>() {
+						@Environment(EnvType.CLIENT)
+						@Override
+						public void accept(TooltipBuilder builder) {
+							builder.add(Tab.Builder.this.tooltip.toArray(new Text[0]));
 						}
 					};
 				}
