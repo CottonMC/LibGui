@@ -6,7 +6,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import java.util.Objects;
 
 /**
  * An icon that draws an item stack.
@@ -20,9 +23,21 @@ public class ItemIcon implements Icon {
 	 * Constructs an item icon.
 	 *
 	 * @param stack the drawn item stack
+	 * @throws NullPointerException if the stack is null
 	 */
 	public ItemIcon(ItemStack stack) {
-		this.stack = stack;
+		this.stack = Objects.requireNonNull(stack, "stack");
+	}
+
+	/**
+	 * Constructs an item icon with the item's default stack.
+	 *
+	 * @param item the drawn item
+	 * @throws NullPointerException if the item is null
+	 * @since 3.2.0
+	 */
+	public ItemIcon(Item item) {
+		this(Objects.requireNonNull(item, "item").getStackForRender());
 	}
 
 	@Environment(EnvType.CLIENT)
