@@ -3,6 +3,7 @@ package io.github.cottonmc.cotton.gui.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayDeque;

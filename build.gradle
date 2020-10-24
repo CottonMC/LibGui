@@ -2,6 +2,7 @@ plugins {
 	id 'fabric-loom' version '0.5-SNAPSHOT'
 	id 'maven-publish'
 	id "com.jfrog.artifactory" version "4.9.0"
+	id 'checkstyle'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -67,6 +68,11 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
 	from "LICENSE"
+}
+
+checkstyle {
+	configFile = file('checkstyle.xml')
+	toolVersion = '8.36.2'
 }
 
 // configure the maven publication

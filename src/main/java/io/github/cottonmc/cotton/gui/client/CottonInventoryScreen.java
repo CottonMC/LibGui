@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
@@ -9,10 +8,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
 
+import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 /**

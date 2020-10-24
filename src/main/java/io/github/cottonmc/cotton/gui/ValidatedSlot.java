@@ -1,13 +1,14 @@
 package io.github.cottonmc.cotton.gui;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import io.github.cottonmc.cotton.gui.widget.WItemSlot;
-import io.github.cottonmc.cotton.gui.impl.access.SlotAccessor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import io.github.cottonmc.cotton.gui.impl.access.SlotAccessor;
+import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

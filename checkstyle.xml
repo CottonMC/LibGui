@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+<module name="Checker">
+	<property name="localeLanguage" value="en"/>
+	<property name="tabWidth" value="4"/>
+
+	<module name="NewlineAtEndOfFile"/>
+	<module name="JavadocPackage"/>
+
+	<module name="SuppressionSingleFilter">
+		<property name="checks" value="LeftCurly"/>
+		<property name="message" value="line.break.after"/>
+	</module>
+
+	<module name="TreeWalker">
+		<!-- Code format -->
+		<module name="AnnotationLocation"/>
+		<module name="LeftCurly"/>
+		<module name="RightCurly"/>
+		<module name="GenericWhitespace"/>
+		<module name="NeedBraces">
+			<property name="allowSingleLineStatement" value="true"/>
+		</module>
+		<module name="RegexpSinglelineJava">
+			<property name="format" value="^\t* {4,}"/>
+			<property name="message" value="Indent must use tab characters"/>
+			<property name="ignoreComments" value="true"/>
+		</module>
+
+		<!-- Imports -->
+		<module name="AvoidStarImport">
+			<property name="allowStaticMemberImports" value="true"/>
+		</module>
+		<module name="IllegalImport">
+			<!-- Prevent internal, AWT/Swing and JFX classes -->
+			<property name="illegalPkgs" value="sun, java.awt, javax.swing, javafx"/>
+		</module>
+		<module name="ImportOrder">
+			<property name="groups" value="/(com.mojang|net.fabricmc|net.minecraft)\..+/,*,/javax?\..+/"/>
+			<property name="separated" value="true"/>
+			<property name="useContainerOrderingForStatic" value="true"/>
+		</module>
+		<module name="RedundantImport"/>
+		<module name="UnusedImports"/>
+	</module>
+</module>

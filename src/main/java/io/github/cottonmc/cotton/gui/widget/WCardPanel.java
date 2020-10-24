@@ -1,8 +1,9 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.GuiDescription;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
+import io.github.cottonmc.cotton.gui.GuiDescription;
 
 import java.util.ArrayList;
 import java.util.List;

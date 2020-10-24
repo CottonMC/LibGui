@@ -65,8 +65,7 @@ public abstract class WAbstractSlider extends WWidget {
 	@Nullable private IntConsumer draggingFinishedListener = null;
 
 	protected WAbstractSlider(int min, int max, Axis axis) {
-		if (max <= min)
-			throw new IllegalArgumentException("Minimum value must be smaller than the maximum!");
+		if (max <= min) throw new IllegalArgumentException("Minimum value must be smaller than the maximum!");
 
 		this.min = min;
 		this.max = max;

@@ -354,8 +354,7 @@ public class WWidget {
 		TooltipBuilder builder = new TooltipBuilder();
 		addTooltip(builder);
 
-		if (builder.size() == 0)
-			return;
+		if (builder.size() == 0) return;
 
 		Screen screen = MinecraftClient.getInstance().currentScreen;
 		screen.renderOrderedTooltip(matrices, builder.lines, tX+x, tY+y);

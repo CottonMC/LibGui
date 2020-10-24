@@ -2,7 +2,6 @@ package io.github.cottonmc.cotton.gui.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
@@ -10,9 +9,10 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.util.Identifier;
-import org.lwjgl.opengl.GL11;
 
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
+import org.lwjgl.opengl.GL11;
 
 /**
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.

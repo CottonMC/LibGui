@@ -77,8 +77,11 @@ public class WButton extends WWidget {
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		boolean hovered = (mouseX>=0 && mouseY>=0 && mouseX<getWidth() && mouseY<getHeight());
 		int state = 1; //1=regular. 2=hovered. 0=disabled.
-		if (!enabled) state = 0;
-		else if (hovered || isFocused()) state = 2;
+		if (!enabled) {
+			state = 0;
+		} else if (hovered || isFocused()) {
+			state = 2;
+		}
 		
 		float px = 1/256f;
 		float buttonLeft = 0 * px;

@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.impl.access;
 
 import net.minecraft.screen.slot.Slot;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
