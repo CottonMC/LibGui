@@ -1,5 +1,6 @@
 package io.github.cottonmc.test.client;
 
+import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen;
 import io.github.cottonmc.test.LibGuiTest;
 import io.github.cottonmc.test.TestDescription;
@@ -14,6 +15,8 @@ public class LibGuiTestClient implements ClientModInitializer {
 				LibGuiTest.GUI_SCREEN_HANDLER_TYPE,
 				(desc, inventory, title) -> new CottonInventoryScreen<>(desc, inventory.player, title)
 		);
+
+		CottonHud.INSTANCE.add(new WHudTest(), 10, -20, 10, 10);
 	}
 
 }

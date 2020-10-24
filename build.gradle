@@ -32,6 +32,7 @@ dependencies {
 	modImplementation "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 
+	// TODO: When updating to Loom 0.5, swap this for Jetbrains annotations
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
 	modRuntime(modCompileOnly("io.github.prospector:modmenu:$project.modmenu_version") {
