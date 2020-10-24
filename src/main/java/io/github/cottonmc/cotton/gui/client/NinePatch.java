@@ -11,8 +11,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.profiler.Profiler;
 
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;

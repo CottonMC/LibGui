@@ -1,22 +1,17 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.common.annotations.Beta;
-import io.github.cottonmc.cotton.gui.GuiDescription;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
+
+import com.google.common.annotations.Beta;
+import io.github.cottonmc.cotton.gui.GuiDescription;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-
-import javax.annotation.Nullable;
 
 /**
  * The base class for all widgets.

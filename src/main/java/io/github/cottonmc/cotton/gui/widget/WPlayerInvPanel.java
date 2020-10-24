@@ -1,12 +1,12 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerInventory;
 
-import javax.annotation.Nullable;
+import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A player inventory widget that has a visually separate hotbar.

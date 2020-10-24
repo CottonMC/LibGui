@@ -8,10 +8,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
-
-import javax.annotation.Nullable;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A vanilla-style labeled slider widget.

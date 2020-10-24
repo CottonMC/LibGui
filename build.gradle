@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.4-SNAPSHOT'
+	id 'fabric-loom' version '0.5-SNAPSHOT'
 	id 'maven-publish'
 	id "com.jfrog.artifactory" version "4.9.0"
 }
@@ -31,9 +31,6 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
-
-	// TODO: When updating to Loom 0.5, swap this for Jetbrains annotations
-	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
 	modRuntime(modCompileOnly("io.github.prospector:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'

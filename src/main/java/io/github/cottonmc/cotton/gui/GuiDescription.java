@@ -1,14 +1,14 @@
 package io.github.cottonmc.cotton.gui;
 
-import javax.annotation.Nullable;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.screen.PropertyDelegate;
 
 import io.github.cottonmc.cotton.gui.impl.FocusHandler;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.screen.PropertyDelegate;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A GUI description represents a GUI without depending on screens.

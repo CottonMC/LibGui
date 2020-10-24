@@ -14,13 +14,13 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 

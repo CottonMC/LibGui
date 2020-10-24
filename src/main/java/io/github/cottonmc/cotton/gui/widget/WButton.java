@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -8,12 +7,12 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
-import net.minecraft.text.Text;
-
-import javax.annotation.Nullable;
+import io.github.cottonmc.cotton.gui.widget.icon.Icon;
+import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
 	private Text label;

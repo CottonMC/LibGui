@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -9,12 +8,12 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import net.minecraft.util.math.MathHelper;
-
-import javax.annotation.Nullable;
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A bar that displays int values from a {@link PropertyDelegate}.

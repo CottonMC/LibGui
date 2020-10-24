@@ -1,15 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Predicate;
-
-import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.ValidatedSlot;
-import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -19,7 +9,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 
-import javax.annotation.Nullable;
+import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.ValidatedSlot;
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * A widget that displays an item that can be interacted with.
