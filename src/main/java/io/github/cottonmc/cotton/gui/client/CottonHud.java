@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
@@ -19,10 +20,15 @@ import java.util.Set;
  */
 @Environment(EnvType.CLIENT)
 public enum CottonHud implements HudRenderCallback {
-	INSTANCE;
+	INSTANCE; // TODO (4.0): Migrate from singleton to static methods
 
 	static {
 		HudRenderCallback.EVENT.register(INSTANCE);
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			for (WWidget widget : INSTANCE.widgets) {
+				widget.tick();
+			}
+		});
 	}
 
 	private final Set<WWidget> widgets = new HashSet<>();
