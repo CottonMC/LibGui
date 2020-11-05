@@ -130,8 +130,7 @@ public class WScrollBar extends WWidget {
 	}
 	
 	public int pixelsToValues(int pixels) {
-		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
-		//int bar = getMovableDistance();
+		int bar = getMovableDistance();
 		float percent = pixels / (float)bar;
 		return (int)(percent*(maxValue-window));
 	}
