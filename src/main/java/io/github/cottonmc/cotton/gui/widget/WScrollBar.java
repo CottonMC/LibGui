@@ -214,6 +214,12 @@ public class WScrollBar extends WWidget {
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void onMouseScroll(int x, int y, double amount) {
+		setValue(getValue() + (int) -amount);
+	}
+
 	public int getValue() {
 		return value;
 	}
