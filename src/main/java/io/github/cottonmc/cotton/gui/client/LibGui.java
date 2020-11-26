@@ -12,6 +12,8 @@ import io.github.cottonmc.cotton.gui.impl.client.LibGuiClient;
  */
 @Environment(EnvType.CLIENT)
 public final class LibGui {
+	private LibGui() {}
+
 	public static boolean isDarkMode() {
 		return LibGuiClient.config.darkMode;
 	}
