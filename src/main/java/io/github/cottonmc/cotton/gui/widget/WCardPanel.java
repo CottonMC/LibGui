@@ -178,16 +178,6 @@ public class WCardPanel extends WPanel {
 			card.validate(c);
 			if (getSelectedCard() != card) card.onHidden();
 		}
-
-		if (c != null) createPeers(c);
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void createPeers(GuiDescription c) {
-		for (WWidget card : cards) {
-			card.createPeers(c);
-		}
 	}
 
 	@Environment(EnvType.CLIENT)

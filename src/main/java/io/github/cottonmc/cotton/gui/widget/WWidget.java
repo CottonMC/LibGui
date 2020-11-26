@@ -305,15 +305,6 @@ public class WWidget {
 	}
 
 	/**
-	 * Creates "heavyweight" component peers
-	 * @param c the top-level Container that will hold the peers
-	 * @deprecated All widget peers should be added in {@link #validate(GuiDescription)}.
-	 */
-	@Deprecated
-	public void createPeers(GuiDescription c) {
-	}
-
-	/**
 	 * Paints this widget.
 	 *
 	 * @param matrices the rendering matrix stack

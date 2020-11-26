@@ -120,10 +120,8 @@ public class WTabPanel extends WPanel {
 		 * @param tooltip the tab tooltip
 		 * @throws IllegalArgumentException if both the title and the icon are null
 		 * @throws NullPointerException     if the widget is null
-		 * @deprecated Use {@link Builder} instead.
 		 */
-		@Deprecated
-		public Tab(@Nullable Text title, @Nullable Icon icon, WWidget widget, @Nullable Consumer<TooltipBuilder> tooltip) {
+		private Tab(@Nullable Text title, @Nullable Icon icon, WWidget widget, @Nullable Consumer<TooltipBuilder> tooltip) {
 			if (title == null && icon == null) {
 				throw new IllegalArgumentException("A tab must have a title or an icon");
 			}
