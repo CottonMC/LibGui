@@ -2,11 +2,11 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,10 +16,10 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public final class TooltipBuilder {
-	final List<OrderedText> lines = new ArrayList<>();
+	final List<TooltipComponent> components = new ArrayList<>();
 
 	int size() {
-		return lines.size();
+		return components.size();
 	}
 
 	/**
@@ -30,7 +30,7 @@ public final class TooltipBuilder {
 	 */
 	public TooltipBuilder add(Text... lines) {
 		for (Text line : lines) {
-			this.lines.add(line.asOrderedText());
+			components.add(TooltipComponent.createOrderedTextTooltipComponent(line.asOrderedText()));
 		}
 
 		return this;
@@ -43,7 +43,9 @@ public final class TooltipBuilder {
 	 * @return this builder
 	 */
 	public TooltipBuilder add(OrderedText... lines) {
-		Collections.addAll(this.lines, lines);
+		for (OrderedText line : lines) {
+			components.add(TooltipComponent.createOrderedTextTooltipComponent(line));
+		}
 
 		return this;
 	}

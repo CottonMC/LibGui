@@ -8,6 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 import com.google.common.annotations.Beta;
 import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.impl.access.ScreenAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -356,8 +357,8 @@ public class WWidget {
 
 		if (builder.size() == 0) return;
 
-		Screen screen = MinecraftClient.getInstance().currentScreen;
-		screen.renderOrderedTooltip(matrices, builder.lines, tX+x, tY+y);
+		ScreenAccessor screen = (ScreenAccessor) MinecraftClient.getInstance().currentScreen;
+		screen.callRenderTooltipFromComponents(matrices, builder.components, tX+x, tY+y);
 	}
 
 	/**
@@ -370,7 +371,7 @@ public class WWidget {
 		if (host != null) {
 			this.host = host;
 		} else {
-			LOGGER.warn("Validating {} with a null host", this);
+			LOGGER.warn("Validating {} with a null host", this);
 		}
 	}
 
