@@ -31,8 +31,6 @@ dependencies {
 	modApi "net.fabricmc:fabric-loader:${rootProject.loader_version}"
 	modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
 
-	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
-
 	implementation project(':')
 }
 
