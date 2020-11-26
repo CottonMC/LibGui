@@ -10,7 +10,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
-import io.github.cottonmc.cotton.gui.client.LibGuiClient;
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.client.TextHoverRendererScreen;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -33,7 +33,7 @@ public class WLabel extends WWidget {
 	public static final int DEFAULT_TEXT_COLOR = 0x404040;
 
 	/**
-	 * The default text color for {@linkplain io.github.cottonmc.cotton.gui.client.LibGuiConfig#darkMode dark mode} labels.
+	 * The default text color for {@linkplain LibGui#isDarkMode() dark mode} labels.
 	 */
 	public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
 
@@ -98,7 +98,7 @@ public class WLabel extends WWidget {
 				break;
 		}
 
-		ScreenDrawing.drawString(matrices, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
+		ScreenDrawing.drawString(matrices, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), LibGui.isDarkMode() ? darkmodeColor : color);
 
 		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
 		if (hoveredTextStyle != null) {

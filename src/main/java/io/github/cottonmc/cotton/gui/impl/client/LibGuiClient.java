@@ -1,4 +1,4 @@
-package io.github.cottonmc.cotton.gui.client;
+package io.github.cottonmc.cotton.gui.impl.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -11,6 +11,7 @@ import blue.endless.jankson.JsonObject;
 import io.github.cottonmc.jankson.JanksonFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,7 +28,7 @@ public class LibGuiClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		config = loadConfig();
 
-		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NinePatch.MetadataLoader.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NinePatchInternals.MetadataLoader.INSTANCE);
 	}
 
 	public static LibGuiConfig loadConfig() {

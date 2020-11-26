@@ -6,7 +6,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.LibGuiClient;
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +57,7 @@ public class WSlider extends WAbstractSlider {
 			int thumbX, thumbY;
 			// thumbXOffset: thumb texture x offset in pixels
 			int thumbXOffset;
-			Identifier texture = LibGuiClient.config.darkMode ? DARK_TEXTURE : LIGHT_TEXTURE;
+			Identifier texture = LibGui.isDarkMode() ? DARK_TEXTURE : LIGHT_TEXTURE;
 
 			if (axis == Axis.VERTICAL) {
 				int trackX = x + width / 2 - TRACK_WIDTH / 2;

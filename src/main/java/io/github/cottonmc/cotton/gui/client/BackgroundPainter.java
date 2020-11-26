@@ -147,7 +147,7 @@ public interface BackgroundPainter {
 	 */
 	public static BackgroundPainter createLightDarkVariants(BackgroundPainter light, BackgroundPainter dark) {
 		return (left, top, panel) -> {
-			if (LibGuiClient.config.darkMode) dark.paintBackground(left, top, panel);
+			if (LibGui.isDarkMode()) dark.paintBackground(left, top, panel);
 			else light.paintBackground(left, top, panel);
 		};
 	}

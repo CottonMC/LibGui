@@ -18,8 +18,8 @@
 
 	"environment": "*",
 	"entrypoints": {
-		"client": ["io.github.cottonmc.cotton.gui.client.LibGuiClient"],
-		"modmenu": ["io.github.cottonmc.cotton.gui.client.modmenu.ModMenuSupport"]
+		"client": ["io.github.cottonmc.cotton.gui.impl.client.LibGuiClient"],
+		"modmenu": ["io.github.cottonmc.cotton.gui.impl.client.modmenu.ModMenuSupport"]
 	},
 	"mixins": [
 		"mixins.libgui.accessors.json"

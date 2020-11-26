@@ -1,4 +1,4 @@
-package io.github.cottonmc.cotton.gui.client;
+package io.github.cottonmc.cotton.gui.impl.client;
 
 import blue.endless.jankson.Comment;
 
