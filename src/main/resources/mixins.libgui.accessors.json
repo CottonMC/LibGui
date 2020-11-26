@@ -5,6 +5,7 @@
 	"required": true,
 
 	"mixins": [
+		"ScreenAccessor",
 		"SlotAccessor"
 	],
 

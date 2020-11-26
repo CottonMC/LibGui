@@ -7,6 +7,7 @@ import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WSlider;
+import io.github.cottonmc.cotton.gui.widget.WSprite;
 import io.github.cottonmc.cotton.gui.widget.WTextField;
 import io.github.cottonmc.cotton.gui.widget.WTiledSprite;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
@@ -19,12 +20,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 public class TestClientGui extends LightweightGuiDescription {
-
-	@Environment(EnvType.CLIENT)
-	public static final BackgroundPainter PANEL = (x, y, panel)->{
-		ScreenDrawing.drawBeveledPanel(x-1, y-1, panel.getWidth()+2, panel.getHeight()+2);
-	};
-	
 	//private static final Identifier PORTAL1 = new Identifier("libgui-test:portal.png");
 	//private static final Identifier PORTAL2 = new Identifier("libgui-test:portal2.png");
 	
@@ -36,10 +31,13 @@ public class TestClientGui extends LightweightGuiDescription {
 		WGridPanel root = new WGridPanel(22);
 		this.setRootPanel(root);
 		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
+			private final WWidget tooltipWidget = new WSprite(new Identifier("minecraft", "textures/block/cobblestone.png"));
+
 			@Environment(EnvType.CLIENT)
 			@Override
 			public void addTooltip(TooltipBuilder tooltip) {
 				tooltip.add(new LiteralText("Radical!"));
+				tooltip.add(tooltipWidget);
 			}
 		};
 		WTiledSprite wood = new WTiledSprite(

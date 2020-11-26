@@ -1,5 +1,6 @@
 package io.github.cottonmc.test;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -10,6 +11,7 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 
@@ -18,8 +20,8 @@ public class GuiBlockEntity extends BlockEntity implements ImplementedInventory,
 	
 	DefaultedList<ItemStack> items =  DefaultedList.ofSize(INVENTORY_SIZE, ItemStack.EMPTY);
 	
-	public GuiBlockEntity() {
-		super(LibGuiTest.GUI_BLOCKENTITY_TYPE);
+	public GuiBlockEntity(BlockPos pos, BlockState state) {
+		super(LibGuiTest.GUI_BLOCKENTITY_TYPE, pos, state);
 	}
 
 	@Override

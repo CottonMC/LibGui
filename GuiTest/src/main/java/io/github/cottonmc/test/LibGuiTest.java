@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -35,7 +36,7 @@ public class LibGuiTest implements ModInitializer {
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "gui"), GUI_BLOCK);
 		GUI_BLOCK_ITEM = new BlockItem(GUI_BLOCK, new Item.Settings().group(ItemGroup.MISC));
 		Registry.register(Registry.ITEM, new Identifier(MODID, "gui"), GUI_BLOCK_ITEM);
-		GUI_BLOCKENTITY_TYPE = BlockEntityType.Builder.create(GuiBlockEntity::new, GUI_BLOCK).build(null);
+		GUI_BLOCKENTITY_TYPE = FabricBlockEntityTypeBuilder.create(GuiBlockEntity::new, GUI_BLOCK).build(null);
 		Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "gui"), GUI_BLOCKENTITY_TYPE);
 		
 		GUI_SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerSimple(new Identifier(MODID, "gui"), (int syncId, PlayerInventory inventory) -> {

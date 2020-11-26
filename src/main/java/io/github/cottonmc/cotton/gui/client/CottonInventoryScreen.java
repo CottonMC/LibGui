@@ -42,7 +42,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	 * @param title       the screen title
 	 */
 	public CottonInventoryScreen(T description, PlayerEntity player, Text title) {
-		super(description, player.inventory, title);
+		super(description, player.getInventory(), title);
 		this.description = description;
 		width = 18*9;
 		height = 18*9;

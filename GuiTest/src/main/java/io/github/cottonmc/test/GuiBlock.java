@@ -8,7 +8,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class GuiBlock extends BlockWithEntity {
@@ -24,8 +23,8 @@ public class GuiBlock extends BlockWithEntity {
 	}
 
 	@Override
-	public BlockEntity createBlockEntity(BlockView var1) {
-		return new GuiBlockEntity();
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return new GuiBlockEntity(pos, state);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -407,7 +408,7 @@ public class WTextField extends WWidget {
 		RenderSystem.disableTexture();
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-		bufferBuilder_1.begin(GL11.GL_QUADS, VertexFormats.POSITION);
+		bufferBuilder_1.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
 		bufferBuilder_1.vertex(x,       y+height, 0.0D).next();
 		bufferBuilder_1.vertex(x+width, y+height, 0.0D).next();
 		bufferBuilder_1.vertex(x+width, y,        0.0D).next();

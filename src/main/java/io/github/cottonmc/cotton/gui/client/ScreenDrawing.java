@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
@@ -131,7 +132,7 @@ public class ScreenDrawing {
 		RenderSystem.enableBlend();
 		//GlStateManager.disableTexture2D();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR_TEXTURE); //I thought GL_QUADS was deprecated but okay, sure.
+		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE); //I thought GL_QUADS was deprecated but okay, sure.
 		buffer.vertex(x,         y + height, 0).color(r, g, b, opacity).texture(u1, v2).next();
 		buffer.vertex(x + width, y + height, 0).color(r, g, b, opacity).texture(u2, v2).next();
 		buffer.vertex(x + width, y,          0).color(r, g, b, opacity).texture(u2, v1).next();
@@ -191,7 +192,7 @@ public class ScreenDrawing {
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR); //I thought GL_QUADS was deprecated but okay, sure.
+		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR); //I thought GL_QUADS was deprecated but okay, sure.
 		buffer.vertex(left,         top + height, 0.0D).color(r, g, b, a).next();
 		buffer.vertex(left + width, top + height, 0.0D).color(r, g, b, a).next();
 		buffer.vertex(left + width, top,          0.0D).color(r, g, b, a).next();
