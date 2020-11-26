@@ -166,7 +166,8 @@ public class WLabeledSlider extends WAbstractSlider {
 				: (direction == Direction.UP ? height - mouseY : mouseY);
 		int rotMouseY = axis == Axis.HORIZONTAL ? mouseY : mouseX;
 
-		RenderSystem.pushMatrix();
+		RenderSystem.pushMatrix(); // TODO: Get rid of this eventually
+		matrices.push();
 		matrices.translate(x, y, 0);
 		if (axis == Axis.VERTICAL) {
 			RenderSystem.translatef(0, height, 0);
@@ -193,6 +194,7 @@ public class WLabeledSlider extends WAbstractSlider {
 			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
 			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
+		matrices.pop();
 		RenderSystem.popMatrix();
 	}
 
