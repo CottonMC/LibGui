@@ -1,23 +1,15 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -86,78 +78,6 @@ public class WTextField extends WWidget {
 	public void setSize(int x, int y) {
 		super.setSize(x, 20);
 	}
-	
-	/*
-	public String getSelectedText() {
-		int start = this.cursorMax < this.cursorMin ? this.cursorMax : this.cursorMin;
-		int end = this.cursorMax < this.cursorMin ? this.cursorMin : this.cursorMax;
-		return this.text.substring(start, end);
-	}*/
-
-	/*
-	//This would seem to insert or paste text in the vanilla control
-	public void addText(String string_1) {
-		String string_2 = "";
-		String string_3 = SharedConstants.stripInvalidChars(string_1);
-		int int_1 = this.cursorMax < this.cursorMin ? this.cursorMax : this.cursorMin;
-		int int_2 = this.cursorMax < this.cursorMin ? this.cursorMin : this.cursorMax;
-		int int_3 = this.maxLength - this.text.length() - (int_1 - int_2);
-		if (!this.text.isEmpty()) {
-			string_2 = string_2 + this.text.substring(0, int_1);
-		}
-
-		int int_5;
-		if (int_3 < string_3.length()) {
-			string_2 = string_2 + string_3.substring(0, int_3);
-			int_5 = int_3;
-		} else {
-			string_2 = string_2 + string_3;
-			int_5 = string_3.length();
-		}
-
-		if (!this.text.isEmpty() && int_2 < this.text.length()) {
-			string_2 = string_2 + this.text.substring(int_2);
-		}
-
-		if (this.textPredicate.test(string_2)) {
-			this.text = string_2;
-			this.setCursor(int_1 + int_5);
-			this.method_1884(this.cursorMax);
-			this.onChanged(this.text);
-		}
-	}*/
-	
-	/*
-
-	//this would seem to delete text. if int_1 is negative, deletes from the end?
-	public void method_1878(int int_1) {
-		if (!this.text.isEmpty()) {
-			if (this.cursorMin != this.cursorMax) {
-				this.addText("");
-			} else {
-				boolean boolean_1 = int_1 < 0;
-				int int_2 = boolean_1 ? this.cursorMax + int_1 : this.cursorMax;
-				int int_3 = boolean_1 ? this.cursorMax : this.cursorMax + int_1;
-				String string_1 = "";
-				if (int_2 >= 0) {
-					string_1 = this.text.substring(0, int_2);
-				}
-
-				if (int_3 < this.text.length()) {
-					string_1 = string_1 + this.text.substring(int_3);
-				}
-
-				if (this.textPredicate.test(string_1)) {
-					this.text = string_1;
-					if (boolean_1) {
-						this.moveCursor(int_1);
-					}
-
-					this.onChanged(this.text);
-				}
-			}
-		}
-	}*/
 
 	public void setCursorPos(int location) {
 		this.cursor = MathHelper.clamp(location, 0, this.text.length());
@@ -190,124 +110,6 @@ public class WTextField extends WWidget {
 	public boolean isEditable() {
 		return this.editable;
 	}
-	
-	/*
-	public boolean keyPressed(int int_1, int int_2, int int_3) {
-		if (!this.method_20315()) {
-			return false;
-		} else {
-			this.field_17037 = Screen.hasShiftDown();
-			if (Screen.isSelectAll(int_1)) {
-				this.method_1872();
-				this.method_1884(0);
-				return true;
-			} else if (Screen.isCopy(int_1)) {
-				MinecraftClient.getInstance().keyboard.setClipboard(this.getSelectedText());
-				return true;
-			} else if (Screen.isPaste(int_1)) {
-				if (this.editable) {
-					this.addText(MinecraftClient.getInstance().keyboard.getClipboard());
-				}
-
-				return true;
-			} else if (Screen.isCut(int_1)) {
-				MinecraftClient.getInstance().keyboard.setClipboard(this.getSelectedText());
-				if (this.editable) {
-					this.addText("");
-				}
-
-				return true;
-			} else {
-				switch(int_1) {
-				case 259:
-					if (this.editable) {
-						this.method_16873(-1);
-					}
-
-					return true;
-				case 260:
-				case 264:
-				case 265:
-				case 266:
-				case 267:
-				default:
-					return false;
-				case 261:
-					if (this.editable) {
-						this.method_16873(1);
-					}
-
-					return true;
-				case 262:
-					if (Screen.hasControlDown()) {
-						this.method_1883(this.method_1853(1));
-					} else {
-						this.moveCursor(1);
-					}
-
-					return true;
-				case 263:
-					if (Screen.hasControlDown()) {
-						this.method_1883(this.method_1853(-1));
-					} else {
-						this.moveCursor(-1);
-					}
-
-					return true;
-				case 268:
-					this.method_1870();
-					return true;
-				case 269:
-					this.method_1872();
-					return true;
-				}
-			}
-		}
-	}*/
-	
-	/*
-	public boolean charTyped(char char_1, int int_1) {
-		if (!this.method_20315()) {
-			return false;
-		} else if (SharedConstants.isValidChar(char_1)) {
-			if (this.editable) {
-				this.addText(Character.toString(char_1));
-			}
-
-			return true;
-		} else {
-			return false;
-		}
-	}*/
-	/*
-	@Override
-	public void onClick(int x, int y, int button) {
-		
-	}
-	
-	public boolean mouseClicked(double double_1, double double_2, int int_1) {
-		if (!this.isVisible()) {
-			return false;
-		} else {
-			boolean boolean_1 = double_1 >= (double)this.x && double_1 < (double)(this.x + this.width) && double_2 >= (double)this.y && double_2 < (double)(this.y + this.height);
-			if (this.field_2096) {
-				this.method_1876(boolean_1);
-			}
-
-			if (this.isFocused() && boolean_1 && int_1 == 0) {
-				int int_2 = MathHelper.floor(double_1) - this.x;
-				if (this.focused) {
-					int_2 -= 4;
-				}
-
-				String string_1 = this.textRenderer.trimToWidth(this.text.substring(this.field_2103), this.method_1859());
-				this.method_1883(this.textRenderer.trimToWidth(string_1, int_2).length() + this.field_2103);
-				return true;
-			} else {
-				return false;
-			}
-		}
-	}*/
 
 	@Environment(EnvType.CLIENT)
 	protected void renderTextField(MatrixStack matrices, int x, int y) {
