@@ -457,6 +457,7 @@ public class WTextField extends WWidget {
 			}
 		} else {
 			if (modifiers==GLFW.GLFW_MOD_SHIFT) {
+				// TODO: Add Ctrl word selection support
 				if (ch==GLFW.GLFW_KEY_LEFT) {
 					if (select==-1) select = cursor;
 					if (cursor>0) cursor--;
