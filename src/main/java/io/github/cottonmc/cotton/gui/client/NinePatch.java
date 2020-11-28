@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -156,7 +157,7 @@ public class NinePatch implements BackgroundPainter {
 	}
 
 	@Override
-	public void paintBackground(int left, int top, WWidget panel) {
+	public void paintBackground(MatrixStack matrices, int left, int top, WWidget panel) {
 		int width = panel.getWidth() + leftPadding + rightPadding;
 		int height = panel.getHeight() + topPadding + bottomPadding;
 		left = left - leftPadding;
@@ -169,10 +170,10 @@ public class NinePatch implements BackgroundPainter {
 		float uv2 = 1.0f - cornerUv;
 		Mode mode = this.mode != null ? this.mode : NinePatchInternals.MetadataLoader.INSTANCE.getProperties(texture).getMode();
 
-		ScreenDrawing.texturedRect(left, top, cornerSize, cornerSize, texture, 0, 0, uv1, uv1, 0xFF_FFFFFF);
-		ScreenDrawing.texturedRect(x2, top, cornerSize, cornerSize, texture, uv2, 0, 1, uv1, 0xFF_FFFFFF);
-		ScreenDrawing.texturedRect(left, y2, cornerSize, cornerSize, texture, 0, uv2, uv1, 1, 0xFF_FFFFFF);
-		ScreenDrawing.texturedRect(x2, y2, cornerSize, cornerSize, texture, uv2, uv2, 1, 1, 0xFF_FFFFFF);
+		ScreenDrawing.texturedRect(matrices, left, top, cornerSize, cornerSize, texture, 0, 0, uv1, uv1, 0xFF_FFFFFF);
+		ScreenDrawing.texturedRect(matrices, x2, top, cornerSize, cornerSize, texture, uv2, 0, 1, uv1, 0xFF_FFFFFF);
+		ScreenDrawing.texturedRect(matrices, left, y2, cornerSize, cornerSize, texture, 0, uv2, uv1, 1, 0xFF_FFFFFF);
+		ScreenDrawing.texturedRect(matrices, x2, y2, cornerSize, cornerSize, texture, uv2, uv2, 1, 1, 0xFF_FFFFFF);
 
 		if (mode == Mode.TILING) {
 			int tileSize = (int) (cornerSize / cornerUv - 2 * cornerSize);
@@ -185,8 +186,8 @@ public class NinePatch implements BackgroundPainter {
 				int tileWidth = Math.min(widthLeft, tileSize);
 				float uo = (tileSize - tileWidth) * px; // Used to remove unnecessary pixels on the X axis
 
-				ScreenDrawing.texturedRect(x1 + i * tileSize, top, tileWidth, cornerSize, texture, uv1, 0, uv2 - uo, uv1, 0xFF_FFFFFF);
-				ScreenDrawing.texturedRect(x1 + i * tileSize, y2, tileWidth, cornerSize, texture, uv1, uv2, uv2 - uo, 1, 0xFF_FFFFFF);
+				ScreenDrawing.texturedRect(matrices, x1 + i * tileSize, top, tileWidth, cornerSize, texture, uv1, 0, uv2 - uo, uv1, 0xFF_FFFFFF);
+				ScreenDrawing.texturedRect(matrices, x1 + i * tileSize, y2, tileWidth, cornerSize, texture, uv1, uv2, uv2 - uo, 1, 0xFF_FFFFFF);
 
 				// Reset the height left each time the Y is looped
 				heightLeft = height - 2 * cornerSize;
@@ -195,21 +196,21 @@ public class NinePatch implements BackgroundPainter {
 					int tileHeight = Math.min(heightLeft, tileSize);
 					float vo = (tileSize - tileHeight) * px; // Used to remove unnecessary pixels on the Y axis
 
-					ScreenDrawing.texturedRect(left, y1 + j * tileSize, cornerSize, tileHeight, texture, 0, uv1, uv1, uv2 - vo, 0xFF_FFFFFF);
-					ScreenDrawing.texturedRect(x2, y1 + j * tileSize, cornerSize, tileHeight, texture, uv2, uv1, 1, uv2 - vo, 0xFF_FFFFFF);
+					ScreenDrawing.texturedRect(matrices, left, y1 + j * tileSize, cornerSize, tileHeight, texture, 0, uv1, uv1, uv2 - vo, 0xFF_FFFFFF);
+					ScreenDrawing.texturedRect(matrices, x2, y1 + j * tileSize, cornerSize, tileHeight, texture, uv2, uv1, 1, uv2 - vo, 0xFF_FFFFFF);
 
-					ScreenDrawing.texturedRect(x1 + i * tileSize, y1 + j * tileSize, tileWidth, tileHeight, texture, uv1, uv1, uv2 - uo, uv2 - vo, 0xFF_FFFFFF);
+					ScreenDrawing.texturedRect(matrices, x1 + i * tileSize, y1 + j * tileSize, tileWidth, tileHeight, texture, uv1, uv1, uv2 - uo, uv2 - vo, 0xFF_FFFFFF);
 					heightLeft -= tileSize;
 				}
 				widthLeft -= tileSize;
 			}
 		} else {
-			ScreenDrawing.texturedRect(x1, top, width - 2 * cornerSize, cornerSize, texture, uv1, 0, uv2, uv1, 0xFF_FFFFFF);
-			ScreenDrawing.texturedRect(left, y1, cornerSize, height - 2 * cornerSize, texture, 0, uv1, uv1, uv2, 0xFF_FFFFFF);
-			ScreenDrawing.texturedRect(x1, y2, width - 2 * cornerSize, cornerSize, texture, uv1, uv2, uv2, 1, 0xFF_FFFFFF);
-			ScreenDrawing.texturedRect(x2, y1, cornerSize, height - 2 * cornerSize, texture, uv2, uv1, 1, uv2, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(matrices, x1, top, width - 2 * cornerSize, cornerSize, texture, uv1, 0, uv2, uv1, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(matrices, left, y1, cornerSize, height - 2 * cornerSize, texture, 0, uv1, uv1, uv2, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(matrices, x1, y2, width - 2 * cornerSize, cornerSize, texture, uv1, uv2, uv2, 1, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(matrices, x2, y1, cornerSize, height - 2 * cornerSize, texture, uv2, uv1, 1, uv2, 0xFF_FFFFFF);
 
-			ScreenDrawing.texturedRect(x1, y1, width - 2 * cornerSize, height - 2 * cornerSize, texture, uv1, uv1, uv2, uv2, 0xFF_FFFFFF);
+			ScreenDrawing.texturedRect(matrices, x1, y1, width - 2 * cornerSize, height - 2 * cornerSize, texture, uv1, uv1, uv2, uv2, 0xFF_FFFFFF);
 		}
 	}
 

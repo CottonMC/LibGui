@@ -101,9 +101,9 @@ public class WToggleButton extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		ScreenDrawing.texturedRect(x, y, 18, 18, isOn ? onImage : offImage, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(matrices, x, y, 18, 18, isOn ? onImage : offImage, 0xFFFFFFFF);
 		if (isFocused()) {
-			ScreenDrawing.texturedRect(x, y, 18, 18, focusImage, 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(matrices, x, y, 18, 18, focusImage, 0xFFFFFFFF);
 		}
 
 		if (label!=null) {

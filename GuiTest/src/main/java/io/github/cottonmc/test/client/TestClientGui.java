@@ -144,7 +144,7 @@ public class TestClientGui extends LightweightGuiDescription {
 		
 		@Override
 		public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-			ScreenDrawing.coloredRect(x, y, this.getWidth(), this.getHeight(), color);
+			ScreenDrawing.coloredRect(matrices, x, y, this.getWidth(), this.getHeight(), color);
 		}
 	}
 }

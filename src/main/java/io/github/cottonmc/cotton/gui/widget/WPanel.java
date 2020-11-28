@@ -184,7 +184,7 @@ public abstract class WPanel extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		if (backgroundPainter!=null) backgroundPainter.paintBackground(x, y, this);
+		if (backgroundPainter!=null) backgroundPainter.paintBackground(matrices, x, y, this);
 
 		for(WWidget child : children) {
 			child.paint(matrices, x + child.getX(), y + child.getY(), mouseX-child.getX(), mouseY-child.getY());

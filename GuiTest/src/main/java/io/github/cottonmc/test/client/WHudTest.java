@@ -16,7 +16,7 @@ public class WHudTest extends WWidget {
 
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		ScreenDrawing.coloredRect(x, y, width, height, 0xFF_00FF00);
+		ScreenDrawing.coloredRect(matrices, x, y, width, height, 0xFF_00FF00);
 	}
 
 	@Override

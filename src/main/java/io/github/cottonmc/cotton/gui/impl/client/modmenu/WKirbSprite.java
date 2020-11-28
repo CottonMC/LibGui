@@ -96,7 +96,7 @@ public class WKirbSprite extends WWidget {
 		}
 		
 		float offset = KIRB_WIDTH * currentFrame;
-		ScreenDrawing.texturedRect(x, y+8, 32, 32, KIRB, offset, 0, offset+KIRB_WIDTH, 1, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(matrices, x, y+8, 32, 32, KIRB, offset, 0, offset+KIRB_WIDTH, 1, 0xFFFFFFFF);
 		
 		long elapsed = now - lastFrame;
 		currentFrameTime += elapsed;

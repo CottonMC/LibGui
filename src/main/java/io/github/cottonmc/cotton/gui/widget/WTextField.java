@@ -1,15 +1,24 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix4f;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -116,8 +125,8 @@ public class WTextField extends WWidget {
 		if (this.font==null) this.font = MinecraftClient.getInstance().textRenderer;
 		
 		int borderColor = (this.isFocused()) ? 0xFF_FFFFA0 : 0xFF_A0A0A0;
-		ScreenDrawing.coloredRect(x-1, y-1, width+2, height+2, borderColor);
-		ScreenDrawing.coloredRect(x, y, width, height, 0xFF000000);
+		ScreenDrawing.coloredRect(matrices, x-1, y-1, width+2, height+2, borderColor);
+		ScreenDrawing.coloredRect(matrices, x, y, width, height, 0xFF000000);
 		
 
 		int textColor = this.editable ? this.enabledColor : this.uneditableColor;
@@ -171,7 +180,7 @@ public class WTextField extends WWidget {
 				//} else {
 				//	caretLoc = textX+caretLoc-1;
 				//}
-				ScreenDrawing.coloredRect(preCursorAdvance-1, textY-2, 1, 12, 0xFFD0D0D0);
+				ScreenDrawing.coloredRect(matrices, preCursorAdvance-1, textY-2, 1, 12, 0xFFD0D0D0);
 			//if (boolean_3) {
 			//	int var10001 = int_7 - 1;
 			//	var10002 = int_9 + 1;
@@ -192,7 +201,7 @@ public class WTextField extends WWidget {
 				b = a;
 				a = tmp;
 			}
-			invertedRect(textX+a-1, textY-1, Math.min(b-a, width - OFFSET_X_TEXT), 12);
+			invertedRect(matrices, textX+a-1, textY-1, Math.min(b-a, width - OFFSET_X_TEXT), 12);
 		//	int int_10 = int_6 + MinecraftClient.getInstance().textRenderer.getStringWidth(trimText.substring(0, adjustedCursor));
 		//	var10002 = int_7 - 1;
 		//	var10003 = int_10 - 1;
@@ -202,18 +211,18 @@ public class WTextField extends WWidget {
 	}
 	
 	@Environment(EnvType.CLIENT)
-	private void invertedRect(int x, int y, int width, int height) {
+	private void invertedRect(MatrixStack matrices, int x, int y, int width, int height) {
 		Tessellator tessellator_1 = Tessellator.getInstance();
 		BufferBuilder bufferBuilder_1 = tessellator_1.getBuffer();
-		RenderSystem.color4f(0.0F, 0.0F, 255.0F, 255.0F);
+		Matrix4f model = matrices.peek().getModel();
 		RenderSystem.disableTexture();
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-		bufferBuilder_1.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-		bufferBuilder_1.vertex(x,       y+height, 0.0D).next();
-		bufferBuilder_1.vertex(x+width, y+height, 0.0D).next();
-		bufferBuilder_1.vertex(x+width, y,        0.0D).next();
-		bufferBuilder_1.vertex(x,       y,        0.0D).next();
+		bufferBuilder_1.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bufferBuilder_1.vertex(model, x,       y+height, 0).color(0, 0, 255, 255).next();
+		bufferBuilder_1.vertex(model, x+width, y+height, 0).color(0, 0, 255, 255).next();
+		bufferBuilder_1.vertex(model, x+width, y,        0).color(0, 0, 255, 255).next();
+		bufferBuilder_1.vertex(model, x,       y,        0).color(0, 0, 255, 255).next();
 		tessellator_1.draw();
 		RenderSystem.disableColorLogicOp();
 		RenderSystem.enableTexture();

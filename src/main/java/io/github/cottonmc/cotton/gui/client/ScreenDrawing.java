@@ -10,6 +10,7 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Matrix4f;
 
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
@@ -24,6 +25,7 @@ public class ScreenDrawing {
 	/**
 	 * Draws a textured rectangle.
 	 *
+	 * @param matrices  the rendering matrix stack
 	 * @param x         the x coordinate of the box on-screen
 	 * @param y         the y coordinate of the box on-screen
 	 * @param width     the width of the box on-screen
@@ -31,13 +33,14 @@ public class ScreenDrawing {
 	 * @param texture   the Identifier for the texture
 	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
 	 */
-	public static void texturedRect(int x, int y, int width, int height, Identifier texture, int color) {
-		texturedRect(x, y, width, height, texture, 0, 0, 1, 1, color, 1.0f);
+	public static void texturedRect(MatrixStack matrices, int x, int y, int width, int height, Identifier texture, int color) {
+		texturedRect(matrices, x, y, width, height, texture, 0, 0, 1, 1, color, 1.0f);
 	}
 
 	/**
 	 * Draws a textured rectangle.
 	 *
+	 * @param matrices  the rendering matrix stack
 	 * @param x         the x coordinate of the box on-screen
 	 * @param y         the y coordinate of the box on-screen
 	 * @param width     the width of the box on-screen
@@ -47,13 +50,14 @@ public class ScreenDrawing {
 	 * @param opacity   opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
 	 * @since 2.0.0
 	 */
-	public static void texturedRect(int x, int y, int width, int height, Identifier texture, int color, float opacity) {
-		texturedRect(x, y, width, height, texture, 0, 0, 1, 1, color, opacity);
+	public static void texturedRect(MatrixStack matrices, int x, int y, int width, int height, Identifier texture, int color, float opacity) {
+		texturedRect(matrices, x, y, width, height, texture, 0, 0, 1, 1, color, opacity);
 	}
 
 	/**
 	 * Draws a textured rectangle.
 	 *
+	 * @param matrices  the rendering matrix stack
 	 * @param x         the x coordinate of the box on-screen
 	 * @param y         the y coordinate of the box on-screen
 	 * @param width     the width of the box on-screen
@@ -65,13 +69,14 @@ public class ScreenDrawing {
 	 * @param v2        the bottom edge of the texture
 	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
 	 */
-	public static void texturedRect(int x, int y, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color) {
-		texturedRect(x, y, width, height, texture, u1, v1, u2, v2, color, 1.0f);
+	public static void texturedRect(MatrixStack matrices, int x, int y, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color) {
+		texturedRect(matrices, x, y, width, height, texture, u1, v1, u2, v2, color, 1.0f);
 	}
 
 	/**
 	 * Draws a textured rectangle.
 	 *
+	 * @param matrices  the rendering matrix stack
 	 * @param x         the x coordinate of the box on-screen
 	 * @param y         the y coordinate of the box on-screen
 	 * @param width     the width of the box on-screen
@@ -80,13 +85,14 @@ public class ScreenDrawing {
 	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
 	 * @since 3.0.0
 	 */
-	public static void texturedRect(int x, int y, int width, int height, Texture texture, int color) {
-		texturedRect(x, y, width, height, texture, color, 1.0f);
+	public static void texturedRect(MatrixStack matrices, int x, int y, int width, int height, Texture texture, int color) {
+		texturedRect(matrices, x, y, width, height, texture, color, 1.0f);
 	}
 
 	/**
 	 * Draws a textured rectangle.
 	 *
+	 * @param matrices  the rendering matrix stack
 	 * @param x         the x coordinate of the box on-screen
 	 * @param y         the y coordinate of the box on-screen
 	 * @param width     the width of the box on-screen
@@ -96,13 +102,14 @@ public class ScreenDrawing {
 	 * @param opacity   opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
 	 * @since 3.0.0
 	 */
-	public static void texturedRect(int x, int y, int width, int height, Texture texture, int color, float opacity) {
-		texturedRect(x, y, width, height, texture.image, texture.u1, texture.v1, texture.u2, texture.v2, color, opacity);
+	public static void texturedRect(MatrixStack matrices, int x, int y, int width, int height, Texture texture, int color, float opacity) {
+		texturedRect(matrices, x, y, width, height, texture.image, texture.u1, texture.v1, texture.u2, texture.v2, color, opacity);
 	}
 
 	/**
 	 * Draws a textured rectangle.
 	 *
+	 * @param matrices  the rendering matrix stack
 	 * @param x         the x coordinate of the box on-screen
 	 * @param y         the y coordinate of the box on-screen
 	 * @param width     the width of the box on-screen
@@ -116,7 +123,7 @@ public class ScreenDrawing {
 	 * @param opacity   opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
 	 * @since 2.0.0
 	 */
-	public static void texturedRect(int x, int y, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color, float opacity) {
+	public static void texturedRect(MatrixStack matrices, int x, int y, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color, float opacity) {
 		MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
 
 		//float scale = 0.00390625F;
@@ -129,14 +136,15 @@ public class ScreenDrawing {
 		float b = (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
+		Matrix4f model = matrices.peek().getModel();
 		RenderSystem.enableBlend();
 		//GlStateManager.disableTexture2D();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(x,         y + height, 0).color(r, g, b, opacity).texture(u1, v2).next();
-		buffer.vertex(x + width, y + height, 0).color(r, g, b, opacity).texture(u2, v2).next();
-		buffer.vertex(x + width, y,          0).color(r, g, b, opacity).texture(u2, v1).next();
-		buffer.vertex(x,         y,          0).color(r, g, b, opacity).texture(u1, v1).next();
+		buffer.vertex(model, x,         y + height, 0).color(r, g, b, opacity).texture(u1, v2).next();
+		buffer.vertex(model, x + width, y + height, 0).color(r, g, b, opacity).texture(u2, v2).next();
+		buffer.vertex(model, x + width, y,          0).color(r, g, b, opacity).texture(u2, v1).next();
+		buffer.vertex(model, x,         y,          0).color(r, g, b, opacity).texture(u1, v1).next();
 		tessellator.draw();
 		//GlStateManager.enableTexture2D();
 		RenderSystem.disableBlend();
@@ -146,6 +154,8 @@ public class ScreenDrawing {
 	 * Draws a textured rectangle with UV values based on the width and height.
 	 *
 	 * <p>If the texture is 256x256, this draws the texture at one pixel per texel.
+	 *
+	 * @param matrices  the rendering matrix stack
 	 * @param x         the x coordinate of the box on-screen
 	 * @param y         the y coordinate of the box on-screen
 	 * @param width     the width of the box on-screen
@@ -155,9 +165,9 @@ public class ScreenDrawing {
 	 * @param textureY  the y offset into the texture
 	 * @param color     a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
 	 */
-	public static void texturedGuiRect(int x, int y, int width, int height, Identifier texture, int textureX, int textureY, int color) {
+	public static void texturedGuiRect(MatrixStack matrices, int x, int y, int width, int height, Identifier texture, int textureX, int textureY, int color) {
 		float px = 1/256f;
-		texturedRect(x, y, width, height, texture, textureX*px, textureY*px, (textureX+width)*px, (textureY+height)*px, color);
+		texturedRect(matrices, x, y, width, height, texture, textureX*px, textureY*px, (textureX+width)*px, (textureY+height)*px, color);
 	}
 
 	/**
@@ -165,21 +175,22 @@ public class ScreenDrawing {
 	 *
 	 * <p>If the texture is 256x256, this draws the texture at one pixel per texel.
 	 *
-	 * @param left    the x coordinate of the box on-screen
-	 * @param top     the y coordinate of the box on-screen
-	 * @param width   the width of the box on-screen
-	 * @param height  the height of the box on-screen
-	 * @param texture the Identifier for the texture
-	 * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
+	 * @param matrices the rendering matrix stack
+	 * @param left     the x coordinate of the box on-screen
+	 * @param top      the y coordinate of the box on-screen
+	 * @param width    the width of the box on-screen
+	 * @param height   the height of the box on-screen
+	 * @param texture  the Identifier for the texture
+	 * @param color    a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
 	 */
-	public static void texturedGuiRect(int left, int top, int width, int height, Identifier texture, int color) {
-		texturedGuiRect(left, top, width, height, texture, 0, 0, color);
+	public static void texturedGuiRect(MatrixStack matrices, int left, int top, int width, int height, Identifier texture, int color) {
+		texturedGuiRect(matrices, left, top, width, height, texture, 0, 0, color);
 	}
 
 	/**
 	 * Draws an untextured rectangle of the specified RGB color.
 	 */
-	public static void coloredRect(int left, int top, int width, int height, int color) {
+	public static void coloredRect(MatrixStack matrices, int left, int top, int width, int height, int color) {
 		if (width <= 0) width = 1;
 		if (height <= 0) height = 1;
 
@@ -189,28 +200,29 @@ public class ScreenDrawing {
 		float b = (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
+		Matrix4f model = matrices.peek().getModel();
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(left,         top + height, 0.0D).color(r, g, b, a).next();
-		buffer.vertex(left + width, top + height, 0.0D).color(r, g, b, a).next();
-		buffer.vertex(left + width, top,          0.0D).color(r, g, b, a).next();
-		buffer.vertex(left,         top,          0.0D).color(r, g, b, a).next();
+		buffer.vertex(model, left,         top + height, 0).color(r, g, b, a).next();
+		buffer.vertex(model, left + width, top + height, 0).color(r, g, b, a).next();
+		buffer.vertex(model, left + width, top,          0).color(r, g, b, a).next();
+		buffer.vertex(model, left,         top,          0).color(r, g, b, a).next();
 		tessellator.draw();
 		RenderSystem.enableTexture();
 		RenderSystem.disableBlend();
 	}
 
-	public static void maskedRect(Identifier mask, Identifier texture, int left, int top, int width, int height) {
+	public static void maskedRect(MatrixStack matrices, Identifier mask, Identifier texture, int left, int top, int width, int height) {
 
 
-		texturedRect(left, top, width, height, mask, 0, 0, 1, 1, 0xFFFFFFFF); //TODO: 7 Z
+		texturedRect(matrices, left, top, width, height, mask, 0, 0, 1, 1, 0xFFFFFFFF); //TODO: 7 Z
 
 		RenderSystem.enableDepthTest();
 		RenderSystem.depthFunc(GL11.GL_EQUAL);
 
-		texturedRect(left, top, width, height, texture, 0, 0, 1, 1, 0xFFFFFFFF); //, 7);
+		texturedRect(matrices, left, top, width, height, texture, 0, 0, 1, 1, 0xFFFFFFFF); //, 7);
 
 		RenderSystem.depthFunc(GL11.GL_LESS);
 		RenderSystem.disableDepthTest();
@@ -257,82 +269,86 @@ public class ScreenDrawing {
 	/**
 	 * Draws a beveled, round rectangle that is substantially similar to default Minecraft UI panels.
 	 *
-	 * @param x      the X position of the panel
-	 * @param y      the Y position of the panel
-	 * @param width  the width of the panel
-	 * @param height the height of the panel
+	 * @param matrices the rendering matrix stack
+	 * @param x        the X position of the panel
+	 * @param y        the Y position of the panel
+	 * @param width    the width of the panel
+	 * @param height   the height of the panel
 	 */
-	public static void drawGuiPanel(int x, int y, int width, int height) {
-		if (LibGui.isDarkMode()) drawGuiPanel(x, y, width, height, 0xFF0B0B0B, 0xFF2F2F2F, 0xFF414141, 0xFF000000);
-		else drawGuiPanel(x, y, width, height, 0xFF555555, 0xFFC6C6C6, 0xFFFFFFFF, 0xFF000000);
+	public static void drawGuiPanel(MatrixStack matrices, int x, int y, int width, int height) {
+		if (LibGui.isDarkMode()) drawGuiPanel(matrices, x, y, width, height, 0xFF0B0B0B, 0xFF2F2F2F, 0xFF414141, 0xFF000000);
+		else drawGuiPanel(matrices, x, y, width, height, 0xFF555555, 0xFFC6C6C6, 0xFFFFFFFF, 0xFF000000);
 	}
 
 	/**
 	 * Draws a beveled, round, and colored rectangle that is substantially similar to default Minecraft UI panels.
 	 *
+	 * @param matrices   the rendering matrix stack
 	 * @param x          the X position of the panel
 	 * @param y          the Y position of the panel
 	 * @param width      the width of the panel
 	 * @param height     the height of the panel
 	 * @param panelColor the panel ARGB color
 	 */
-	public static void drawGuiPanel(int x, int y, int width, int height, int panelColor) {
+	public static void drawGuiPanel(MatrixStack matrices, int x, int y, int width, int height, int panelColor) {
 		int shadowColor = multiplyColor(panelColor, 0.50f);
 		int hilightColor = multiplyColor(panelColor, 1.25f);
 
-		drawGuiPanel(x, y, width, height, shadowColor, panelColor, hilightColor, 0xFF000000);
+		drawGuiPanel(matrices, x, y, width, height, shadowColor, panelColor, hilightColor, 0xFF000000);
 	}
 
 	/**
 	 * Draws a beveled, round rectangle with custom edge colors that is substantially similar to default Minecraft UI panels.
 	 *
-	 * @param x       the X position of the panel
-	 * @param y       the Y position of the panel
-	 * @param width   the width of the panel
-	 * @param height  the height of the panel
-	 * @param shadow  the bottom/right shadow ARGB color
-	 * @param panel   the center ARGB color
-	 * @param hilight the top/left hilight ARGB color
-	 * @param outline the outline ARGB color
+	 * @param matrices the rendering matrix stack
+	 * @param x        the X position of the panel
+	 * @param y        the Y position of the panel
+	 * @param width    the width of the panel
+	 * @param height   the height of the panel
+	 * @param shadow   the bottom/right shadow ARGB color
+	 * @param panel    the center ARGB color
+	 * @param hilight  the top/left hilight ARGB color
+	 * @param outline  the outline ARGB color
 	 */
-	public static void drawGuiPanel(int x, int y, int width, int height, int shadow, int panel, int hilight, int outline) {
-		coloredRect(x + 3,         y + 3,          width - 6, height - 6, panel); //Main panel area
+	public static void drawGuiPanel(MatrixStack matrices, int x, int y, int width, int height, int shadow, int panel, int hilight, int outline) {
+		coloredRect(matrices, x + 3,         y + 3,          width - 6, height - 6, panel); //Main panel area
 
-		coloredRect(x + 2,         y + 1,          width - 4, 2,          hilight); //Top hilight
-		coloredRect(x + 2,         y + height - 3, width - 4, 2,          shadow); //Bottom shadow
-		coloredRect(x + 1,         y + 2,          2,         height - 4, hilight); //Left hilight
-		coloredRect(x + width - 3, y + 2,          2,         height - 4, shadow); //Right shadow
-		coloredRect(x + width - 3, y + 2,          1,         1,          panel); //Topright non-hilight/non-shadow transition pixel
-		coloredRect(x + 2,         y + height - 3, 1,         1,          panel); //Bottomleft non-hilight/non-shadow transition pixel
-		coloredRect(x + 3,         y + 3,          1,         1,          hilight); //Topleft round hilight pixel
-		coloredRect(x + width - 4, y + height - 4, 1,         1,          shadow); //Bottomright round shadow pixel
+		coloredRect(matrices, x + 2,         y + 1,          width - 4, 2,          hilight); //Top hilight
+		coloredRect(matrices, x + 2,         y + height - 3, width - 4, 2,          shadow); //Bottom shadow
+		coloredRect(matrices, x + 1,         y + 2,          2,         height - 4, hilight); //Left hilight
+		coloredRect(matrices, x + width - 3, y + 2,          2,         height - 4, shadow); //Right shadow
+		coloredRect(matrices, x + width - 3, y + 2,          1,         1,          panel); //Topright non-hilight/non-shadow transition pixel
+		coloredRect(matrices, x + 2,         y + height - 3, 1,         1,          panel); //Bottomleft non-hilight/non-shadow transition pixel
+		coloredRect(matrices, x + 3,         y + 3,          1,         1,          hilight); //Topleft round hilight pixel
+		coloredRect(matrices, x + width - 4, y + height - 4, 1,         1,          shadow); //Bottomright round shadow pixel
 
-		coloredRect(x + 2,         y,              width - 4, 1,          outline); //Top outline
-		coloredRect(x,             y + 2,          1,         height - 4, outline); //Left outline
-		coloredRect(x + width - 1, y + 2,          1,         height - 4, outline); //Right outline
-		coloredRect(x + 2,         y + height - 1, width - 4, 1,          outline); //Bottom outline
-		coloredRect(x + 1,         y + 1,          1,         1,          outline); //Topleft round pixel
-		coloredRect(x + 1,         y + height - 2, 1,         1,          outline); //Bottomleft round pixel
-		coloredRect(x + width - 2, y + 1,          1,         1,          outline); //Topright round pixel
-		coloredRect(x + width - 2, y + height - 2, 1,         1,          outline); //Bottomright round pixel
+		coloredRect(matrices, x + 2,         y,              width - 4, 1,          outline); //Top outline
+		coloredRect(matrices, x,             y + 2,          1,         height - 4, outline); //Left outline
+		coloredRect(matrices, x + width - 1, y + 2,          1,         height - 4, outline); //Right outline
+		coloredRect(matrices, x + 2,         y + height - 1, width - 4, 1,          outline); //Bottom outline
+		coloredRect(matrices, x + 1,         y + 1,          1,         1,          outline); //Topleft round pixel
+		coloredRect(matrices, x + 1,         y + height - 2, 1,         1,          outline); //Bottomleft round pixel
+		coloredRect(matrices, x + width - 2, y + 1,          1,         1,          outline); //Topright round pixel
+		coloredRect(matrices, x + width - 2, y + height - 2, 1,         1,          outline); //Bottomright round pixel
 	}
 
 	/**
 	 * Draws a default-sized recessed itemslot panel
 	 */
-	public static void drawBeveledPanel(int x, int y) {
-		drawBeveledPanel(x, y, 18, 18, 0xFF373737, 0xFF8b8b8b, 0xFFFFFFFF);
+	public static void drawBeveledPanel(MatrixStack matrices, int x, int y) {
+		drawBeveledPanel(matrices, x, y, 18, 18, 0xFF373737, 0xFF8b8b8b, 0xFFFFFFFF);
 	}
 
 	/**
 	 * Draws a default-color recessed itemslot panel of variable size
 	 */
-	public static void drawBeveledPanel(int x, int y, int width, int height) {
-		drawBeveledPanel(x, y, width, height, 0xFF373737, 0xFF8b8b8b, 0xFFFFFFFF);
+	public static void drawBeveledPanel(MatrixStack matrices, int x, int y, int width, int height) {
+		drawBeveledPanel(matrices, x, y, width, height, 0xFF373737, 0xFF8b8b8b, 0xFFFFFFFF);
 	}
 
 	/**
 	 * Draws a generalized-case beveled panel. Can be inset or outset depending on arguments.
+	 * @param matrices 	    the rendering matrix stack
 	 * @param x				x coordinate of the topleft corner
 	 * @param y				y coordinate of the topleft corner
 	 * @param width			width of the panel
@@ -341,12 +357,12 @@ public class ScreenDrawing {
 	 * @param panel			color of the panel area
 	 * @param bottomright	color of the bottom/right bevel
 	 */
-	public static void drawBeveledPanel(int x, int y, int width, int height, int topleft, int panel, int bottomright) {
-		coloredRect(x,             y,              width,     height,     panel); //Center panel
-		coloredRect(x,             y,              width - 1, 1,          topleft); //Top shadow
-		coloredRect(x,             y + 1,          1,         height - 2, topleft); //Left shadow
-		coloredRect(x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
-		coloredRect(x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
+	public static void drawBeveledPanel(MatrixStack matrices, int x, int y, int width, int height, int topleft, int panel, int bottomright) {
+		coloredRect(matrices, x,             y,              width,     height,     panel); //Center panel
+		coloredRect(matrices, x,             y,              width - 1, 1,          topleft); //Top shadow
+		coloredRect(matrices, x,             y + 1,          1,         height - 2, topleft); //Left shadow
+		coloredRect(matrices, x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
+		coloredRect(matrices, x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
 	}
 
 	/**
