@@ -214,20 +214,6 @@ public class ScreenDrawing {
 		RenderSystem.disableBlend();
 	}
 
-	public static void maskedRect(MatrixStack matrices, Identifier mask, Identifier texture, int left, int top, int width, int height) {
-
-
-		texturedRect(matrices, left, top, width, height, mask, 0, 0, 1, 1, 0xFFFFFFFF); //TODO: 7 Z
-
-		RenderSystem.enableDepthTest();
-		RenderSystem.depthFunc(GL11.GL_EQUAL);
-
-		texturedRect(matrices, left, top, width, height, texture, 0, 0, 1, 1, 0xFFFFFFFF); //, 7);
-
-		RenderSystem.depthFunc(GL11.GL_LESS);
-		RenderSystem.disableDepthTest();
-	}
-
 	/**
 	 * Draws a rectangle for a Fluid, because fluids are tough.
 	 */
