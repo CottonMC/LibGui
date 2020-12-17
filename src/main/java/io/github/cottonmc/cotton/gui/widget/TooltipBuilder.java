@@ -39,7 +39,7 @@ public final class TooltipBuilder {
 	public TooltipBuilder add(Text... lines) {
 		Objects.requireNonNull(lines, "lines");
 		for (Text line : lines) {
-			components.add(TooltipComponent.createOrderedTextTooltipComponent(line.asOrderedText()));
+			components.add(TooltipComponent.of(line.asOrderedText()));
 		}
 
 		return this;
@@ -55,7 +55,7 @@ public final class TooltipBuilder {
 	public TooltipBuilder add(OrderedText... lines) {
 		Objects.requireNonNull(lines, "lines");
 		for (OrderedText line : lines) {
-			components.add(TooltipComponent.createOrderedTextTooltipComponent(line));
+			components.add(TooltipComponent.of(line));
 		}
 
 		return this;
@@ -86,7 +86,7 @@ public final class TooltipBuilder {
 	 */
 	public TooltipBuilder add(TooltipData tooltipData) {
 		Objects.requireNonNull(tooltipData, "tooltipData");
-		components.add(TooltipComponent.createTooltipComponent(tooltipData));
+		components.add(TooltipComponent.of(tooltipData));
 
 		return this;
 	}

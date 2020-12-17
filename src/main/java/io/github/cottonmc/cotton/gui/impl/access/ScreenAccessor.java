@@ -11,6 +11,6 @@ import java.util.List;
 
 @Mixin(Screen.class)
 public interface ScreenAccessor {
-	@Invoker("method_32633")
+	@Invoker
 	void callRenderTooltipFromComponents(MatrixStack matrices, List<TooltipComponent> components, int x, int y);
 }
