@@ -15,7 +15,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
-public class CottonClientScreen extends Screen implements TextHoverRendererScreen, CottonScreenImpl {
+public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	protected GuiDescription description;
 	protected int left = 0;
 	protected int top = 0;
@@ -252,7 +252,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	//}
 
 	@Override
-	public void renderTextHover(MatrixStack matrices, Style textStyle, int x, int y) {
+	public void renderTextHover(MatrixStack matrices, @Nullable Style textStyle, int x, int y) {
 		renderTextHoverEffect(matrices, textStyle, x, y);
 	}
 

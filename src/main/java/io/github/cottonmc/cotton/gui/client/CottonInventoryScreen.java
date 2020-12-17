@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL11;
  *
  * @param <T> the description type
  */
-public class CottonInventoryScreen<T extends SyncedGuiDescription> extends HandledScreen<T> implements TextHoverRendererScreen, CottonScreenImpl {
+public class CottonInventoryScreen<T extends SyncedGuiDescription> extends HandledScreen<T> implements CottonScreenImpl {
 	protected SyncedGuiDescription description;
 	protected WWidget lastResponder = null;
 
@@ -293,7 +293,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	}
 
 	@Override
-	public void renderTextHover(MatrixStack matrices, Style textStyle, int x, int y) {
+	public void renderTextHover(MatrixStack matrices, @Nullable Style textStyle, int x, int y) {
 		renderTextHoverEffect(matrices, textStyle, x, y);
 	}
 
