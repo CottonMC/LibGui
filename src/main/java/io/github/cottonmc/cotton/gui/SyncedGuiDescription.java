@@ -2,6 +2,9 @@ package io.github.cottonmc.cotton.gui;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.InventoryProvider;
@@ -18,10 +21,13 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.networking.NetworkSide;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
@@ -512,5 +518,34 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	@Override
 	public void setTitleAlignment(HorizontalAlignment titleAlignment) {
 		this.titleAlignment = titleAlignment;
+	}
+
+	/**
+	 * Gets the network side this GUI description runs on.
+	 *
+	 * @return this GUI's network side
+	 * @since 3.3.0
+	 */
+	public final NetworkSide getNetworkSide() {
+		return world instanceof ServerWorld ? NetworkSide.SERVER : NetworkSide.CLIENT;
+	}
+
+	/**
+	 * Gets the packet sender corresponding to this GUI's network side.
+	 *
+	 * @return the packet sender
+	 * @since 3.3.0
+	 */
+	public final PacketSender getPacketSender() {
+		if (getNetworkSide() == NetworkSide.SERVER) {
+			return ServerPlayNetworking.getSender((ServerPlayerEntity) playerInventory.player);
+		} else {
+			return getClientPacketSender();
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	private PacketSender getClientPacketSender() {
+		return ClientPlayNetworking.getSender();
 	}
 }
