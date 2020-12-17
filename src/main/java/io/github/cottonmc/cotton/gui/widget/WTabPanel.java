@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -111,9 +113,7 @@ public class WTabPanel extends WPanel {
 
 		@Environment(EnvType.CLIENT)
 		@Override
-		public void onClick(int x, int y, int button) {
-			super.onClick(x, y, button);
-
+		public InputResult onClick(int x, int y, int button) {
 			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
 			for (WTab tab : tabWidgets) {
@@ -122,6 +122,7 @@ public class WTabPanel extends WPanel {
 
 			mainPanel.setSelectedCard(data.getWidget());
 			WTabPanel.this.layout();
+			return InputResult.PROCESSED;
 		}
 
 		@Environment(EnvType.CLIENT)

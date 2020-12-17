@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -125,13 +126,15 @@ public class WText extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onClick(int x, int y, int button) {
-		if (button != 0) return; // only left clicks
+	public InputResult onClick(int x, int y, int button) {
+		if (button != 0) return InputResult.IGNORED; // only left clicks
 
 		Style hoveredTextStyle = getTextStyleAt(x, y);
 		if (hoveredTextStyle != null) {
 			MinecraftClient.getInstance().currentScreen.handleTextClick(hoveredTextStyle);
 		}
+
+		return InputResult.PROCESSED;
 	}
 
 	/**

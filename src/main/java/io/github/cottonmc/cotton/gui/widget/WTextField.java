@@ -2,6 +2,9 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -349,9 +352,10 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onClick(int x, int y, int button) {
+	public InputResult onClick(int x, int y, int button) {
 		requestFocus();
 		cursor = getCaretPos(this.text, x-OFFSET_X_TEXT);
+		return InputResult.PROCESSED;
 	}
 
 	@Environment(EnvType.CLIENT)

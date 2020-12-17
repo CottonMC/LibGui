@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -111,7 +112,7 @@ public class WLabel extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onClick(int x, int y, int button) {
+	public InputResult onClick(int x, int y, int button) {
 		Style hoveredTextStyle = getTextStyleAt(x, y);
 		if (hoveredTextStyle != null) {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
@@ -119,6 +120,7 @@ public class WLabel extends WWidget {
 				screen.handleTextClick(hoveredTextStyle);
 			}
 		}
+		return InputResult.PROCESSED;
 	}
 
 	/**

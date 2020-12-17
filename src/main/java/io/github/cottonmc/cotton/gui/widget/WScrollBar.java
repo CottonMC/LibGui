@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -167,7 +169,7 @@ public class WScrollBar extends WWidget {
 	}
 
 	@Override
-	public WWidget onMouseDown(int x, int y, int button) {
+	public InputResult onMouseDown(int x, int y, int button) {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
 		requestFocus();
 
@@ -179,23 +181,25 @@ public class WScrollBar extends WWidget {
 			anchorValue = value;
 		}
 		sliding = true;
-		return this;
+
+		return InputResult.PROCESSED;
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onMouseDrag(int x, int y, int button) {
+	public InputResult onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
 		adjustSlider(x, y);
+		return InputResult.PROCESSED;
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public WWidget onMouseUp(int x, int y, int button) {
+	public InputResult onMouseUp(int x, int y, int button) {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
 		anchor = -1;
 		anchorValue = -1;
 		sliding = false;
-		return this;
+		return InputResult.PROCESSED;
 	}
 
 	@Override
@@ -217,8 +221,9 @@ public class WScrollBar extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onMouseScroll(int x, int y, double amount) {
+	public InputResult onMouseScroll(int x, int y, double amount) {
 		setValue(getValue() + (int) -amount);
+		return InputResult.PROCESSED;
 	}
 
 	public int getValue() {

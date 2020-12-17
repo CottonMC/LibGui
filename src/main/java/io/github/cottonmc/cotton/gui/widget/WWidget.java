@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -153,16 +155,15 @@ public class WWidget {
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public WWidget onMouseDown(int x, int y, int button) {
-		return this;
+	public InputResult onMouseDown(int x, int y, int button) {
+		return InputResult.IGNORED;
 	}
 
 	/**
 	 * Notifies this widget that the mouse has been moved while pressed and inside its bounds.
-	 *
-	 * <p>The default implementation calls {@link #onMouseDrag(int, int, int)} for backwards compatibility.
 	 *
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
@@ -171,20 +172,11 @@ public class WWidget {
 	 * @param deltaY The amount of dragging on the Y axis
 	 *
 	 * @since 1.5.0
+	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public void onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
-		onMouseDrag(x, y, button);
-	}
-
-	/**
-	 * Notifies this widget that the mouse has been moved while pressed and inside its bounds
-	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
-	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
-	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
-	 */
-	@Environment(EnvType.CLIENT)
-	public void onMouseDrag(int x, int y, int button) {
+	public InputResult onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
+		return InputResult.IGNORED;
 	}
 
 	/**
@@ -192,10 +184,11 @@ public class WWidget {
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public WWidget onMouseUp(int x, int y, int button) {
-		return this;
+	public InputResult onMouseUp(int x, int y, int button) {
+		return InputResult.IGNORED;
 	}
 
 	/**
@@ -203,9 +196,11 @@ public class WWidget {
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public void onClick(int x, int y, int button) {
+	public InputResult onClick(int x, int y, int button) {
+		return InputResult.IGNORED;
 	}
 
 	/**
@@ -213,9 +208,11 @@ public class WWidget {
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @param amount The scrolled amount. Positive values are up and negative values are down.
+	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public void onMouseScroll(int x, int y, double amount) {
+	public InputResult onMouseScroll(int x, int y, double amount) {
+		return InputResult.IGNORED;
 	}
 
 	/**
@@ -224,9 +221,11 @@ public class WWidget {
 	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
 	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
 	 * @since 1.5.0
+	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public void onMouseMove(int x, int y) {
+	public InputResult onMouseMove(int x, int y) {
+		return InputResult.IGNORED;
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import io.github.cottonmc.cotton.gui.impl.MouseInputHandler;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -8,11 +10,13 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.impl.CottonScreenImpl;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
-public class CottonClientScreen extends Screen implements TextHoverRendererScreen {
+public class CottonClientScreen extends Screen implements TextHoverRendererScreen, CottonScreenImpl {
 	protected GuiDescription description;
 	protected int left = 0;
 	protected int top = 0;
@@ -62,6 +66,17 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	public void removed() {
 		super.removed();
 		this.client.keyboard.setRepeatEvents(false);
+	}
+
+	@Nullable
+	@Override
+	public WWidget getLastResponder() {
+		return lastResponder;
+	}
+
+	@Override
+	public void setLastResponder(@Nullable WWidget lastResponder) {
+		this.lastResponder = lastResponder;
 	}
 
 	/**
@@ -158,68 +173,46 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 			}
 		}
 		
-		boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
+		super.mouseClicked(mouseX, mouseY, mouseButton);
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-		if (lastResponder==null) {
-			lastResponder = description.getRootPanel().hit(containerX, containerY);
-			if (lastResponder!=null) lastResponder.onMouseDown(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
-		} else {
-			//This is a drag instead
-		}
-		return result;
-		
+		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return true;
+		MouseInputHandler.onMouseDown(description, this, containerX, containerY, mouseButton);
+
+		return true;
 	}
 	
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
 		if (description.getRootPanel()==null) return super.mouseReleased(mouseX, mouseY, mouseButton);
-		boolean result = super.mouseReleased(mouseX, mouseY, mouseButton);
+		super.mouseReleased(mouseX, mouseY, mouseButton);
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		
-		if (lastResponder!=null) {
-			lastResponder.onMouseUp(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
-			if (containerX>=0 && containerY>=0 && containerX<width && containerY<height) {
-				lastResponder.onClick(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
-			}
-		} else {
-			description.getRootPanel().onMouseUp(containerX, containerY, mouseButton);
-		}
-		
-		lastResponder = null;
-		return result;
+		MouseInputHandler.onMouseUp(description, this, containerX, containerY, mouseButton);
+
+		return true;
 	}
 	
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (description.getRootPanel()==null) return super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
-		boolean result = super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+		super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 		
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		
-		if (lastResponder!=null) {
-			lastResponder.onMouseDrag(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton, deltaX, deltaY);
-			return result;
-		} else {
-			if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-			description.getRootPanel().onMouseDrag(containerX, containerY, mouseButton, deltaX, deltaY);
-		}
-		return result;
+		MouseInputHandler.onMouseDrag(description, this, containerX, containerY, mouseButton, deltaX, deltaY);
+
+		return true;
 	}
 	
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
 		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
 		
-		WPanel root = description.getRootPanel();
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		
-		WWidget child = root.hit(containerX, containerY);
-		child.onMouseScroll(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY(), amount);
+		MouseInputHandler.onMouseScroll(description, containerX, containerY, amount);
+
 		return true;
 	}
 
@@ -227,12 +220,9 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	public void mouseMoved(double mouseX, double mouseY) {
 		if (description.getRootPanel()==null) return;
 
-		WPanel root = description.getRootPanel();
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-
-		WWidget child = root.hit(containerX, containerY);
-		child.onMouseMove(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY());
+		MouseInputHandler.onMouseMove(description, containerX, containerY);
 	}
 
 	@Override

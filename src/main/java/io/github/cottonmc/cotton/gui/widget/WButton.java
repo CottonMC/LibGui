@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -120,7 +122,7 @@ public class WButton extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onClick(int x, int y, int button) {
+	public InputResult onClick(int x, int y, int button) {
 		super.onClick(x, y, button);
 		
 		if (enabled && isWithinBounds(x, y)) {
@@ -128,6 +130,7 @@ public class WButton extends WWidget {
 
 			if (onClick!=null) onClick.run();
 		}
+		return InputResult.PROCESSED;
 	}
 
 	@Environment(EnvType.CLIENT)
