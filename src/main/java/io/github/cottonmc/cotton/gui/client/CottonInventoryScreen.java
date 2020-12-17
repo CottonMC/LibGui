@@ -1,7 +1,5 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import io.github.cottonmc.cotton.gui.impl.MouseInputHandler;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
@@ -13,6 +11,7 @@ import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.impl.CottonScreenImpl;
+import io.github.cottonmc.cotton.gui.impl.MouseInputHandler;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import org.jetbrains.annotations.Nullable;

@@ -3,10 +3,9 @@ package io.github.cottonmc.cotton.gui.impl;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
-
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The implementation for mouse inputs.

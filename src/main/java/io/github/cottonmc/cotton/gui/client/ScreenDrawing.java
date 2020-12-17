@@ -14,7 +14,6 @@ import net.minecraft.util.math.Matrix4f;
 
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
-import org.lwjgl.opengl.GL11;
 
 /**
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.

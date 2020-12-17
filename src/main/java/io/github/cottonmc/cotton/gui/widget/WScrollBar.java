@@ -1,7 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.widget.data.InputResult;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -9,6 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 
 public class WScrollBar extends WWidget {
 	protected Axis axis = Axis.HORIZONTAL;

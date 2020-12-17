@@ -1,11 +1,10 @@
 package io.github.cottonmc.cotton.gui.impl;
 
-import io.github.cottonmc.cotton.gui.widget.WWidget;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 
+import io.github.cottonmc.cotton.gui.widget.WWidget;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)

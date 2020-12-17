@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -15,6 +14,7 @@ import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.client.TextHoverRendererScreen;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import org.jetbrains.annotations.Nullable;
 

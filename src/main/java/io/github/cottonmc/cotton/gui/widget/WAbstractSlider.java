@@ -1,12 +1,11 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.widget.data.InputResult;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.math.MathHelper;
 
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 

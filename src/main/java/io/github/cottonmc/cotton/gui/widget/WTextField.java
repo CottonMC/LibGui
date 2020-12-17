@@ -2,9 +2,6 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-
-import io.github.cottonmc.cotton.gui.widget.data.InputResult;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -22,6 +19,7 @@ import net.minecraft.util.math.Matrix4f;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
