@@ -18,6 +18,7 @@
 
 	"environment": "*",
 	"entrypoints": {
+		"main": ["io.github.cottonmc.cotton.gui.impl.LibGuiCommon"],
 		"client": ["io.github.cottonmc.cotton.gui.client.LibGuiClient"],
 		"modmenu": ["io.github.cottonmc.cotton.gui.client.modmenu.ModMenuSupport"]
 	},
@@ -28,7 +29,8 @@
 		"fabricloader": ">=0.8.8",
 		"fabric": "*",
 		"minecraft": ">=1.16.1",
-		"jankson": "^3.0.0"
+		"jankson": "^3.0.0",
+		"fabric-networking-api-v1": "^1.0.0"
 	},
 	"suggests": {
 		"flamingo": "*"

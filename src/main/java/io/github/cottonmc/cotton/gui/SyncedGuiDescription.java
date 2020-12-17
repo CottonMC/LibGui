@@ -2,6 +2,9 @@ package io.github.cottonmc.cotton.gui;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.InventoryProvider;
@@ -18,10 +21,13 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGuiClient;
+import io.github.cottonmc.cotton.gui.networking.NetworkSide;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
@@ -297,22 +303,22 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		if (rootPanel!=null) return rootPanel.onMouseUp(x, y, state);
 		return null;
 	}
-	
+
 	@Nullable
 	public WWidget doMouseDown(int x, int y, int button) {
 		if (rootPanel!=null) return rootPanel.onMouseDown(x, y, button);
 		return null;
 	}
-	
+
 	public void doMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
 		if (rootPanel!=null) rootPanel.onMouseDrag(x, y, button, deltaX, deltaY);
 	}
-	
+
 	public void doClick(int x, int y, int button) {
 		if (focus!=null) {
 			int wx = focus.getAbsoluteX();
 			int wy = focus.getAbsoluteY();
-			
+
 			if (x>=wx && x<wx+focus.getWidth() && y>=wy && y<wy+focus.getHeight()) {
 				//Do nothing, focus will get the click soon
 			} else {
@@ -322,22 +328,22 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 				lastFocus.onFocusLost();
 			}
 		}
-		
+
 		//if (rootPanel!=null) rootPanel.onClick(x, y, button);
 	}
-	
+
 	public void doCharType(char ch) {
 		if (focus!=null) focus.onCharTyped(ch);
 	}
-	
+
 	//public void doKeyPress(int key) {
 	//	if (focus!=null) focus.onKeyPressed(key);
 	//}
-	
+
 	//public void doKeyRelease(int key) {
 	//	if (focus!=null) focus.onKeyReleased(key);
 	//}
-	
+
 	@Nullable
 	@Override
 	public PropertyDelegate getPropertyDelegate() {
@@ -558,5 +564,34 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	@Override
 	public void setTitleAlignment(HorizontalAlignment titleAlignment) {
 		this.titleAlignment = titleAlignment;
+	}
+
+	/**
+	 * Gets the network side this GUI description runs on.
+	 *
+	 * @return this GUI's network side
+	 * @since 3.3.0
+	 */
+	public final NetworkSide getNetworkSide() {
+		return world instanceof ServerWorld ? NetworkSide.SERVER : NetworkSide.CLIENT;
+	}
+
+	/**
+	 * Gets the packet sender corresponding to this GUI's network side.
+	 *
+	 * @return the packet sender
+	 * @since 3.3.0
+	 */
+	public final PacketSender getPacketSender() {
+		if (getNetworkSide() == NetworkSide.SERVER) {
+			return ServerPlayNetworking.getSender((ServerPlayerEntity) playerInventory.player);
+		} else {
+			return getClientPacketSender();
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	private PacketSender getClientPacketSender() {
+		return ClientPlayNetworking.getSender();
 	}
 }
