@@ -56,8 +56,8 @@ public interface BackgroundPainter {
 						ScreenDrawing.drawBeveledPanel((x * 18) + left - 4, (y * 18) + top - 4, 26, 26,
 								lo, bg, hi);
 						if (slot.getFocusedSlot() == index) {
-							int sx = (x * 18) + left - 3;
-							int sy = (y * 18) + top - 3;
+							int sx = (x * 18) + left - 4;
+							int sy = (y * 18) + top - 4;
 							ScreenDrawing.coloredRect(sx,          sy,          26,     1,      0xFF_FFFFA0);
 							ScreenDrawing.coloredRect(sx,          sy + 1,      1,      26 - 1, 0xFF_FFFFA0);
 							ScreenDrawing.coloredRect(sx + 26 - 1, sy + 1,      1,      26 - 1, 0xFF_FFFFA0);
