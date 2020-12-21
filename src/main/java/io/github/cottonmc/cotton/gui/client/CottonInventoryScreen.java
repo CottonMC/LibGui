@@ -111,8 +111,12 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 			clearPeers();
 			basePanel.validate(description);
 
-			backgroundWidth = basePanel.getWidth();
-			backgroundHeight = basePanel.getHeight();
+			// This is needed for REI; otherwise it'll overlap.
+			// 8 = the padding of BackgroundPainter.VANILLA
+			int padding = 2 * 8; // TODO: This is awful and bad and should be removed ASAP
+
+			backgroundWidth = basePanel.getWidth() + padding;
+			backgroundHeight = basePanel.getHeight() + padding;
 			
 			//DEBUG
 			if (backgroundWidth<16) backgroundWidth=300;
@@ -120,8 +124,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		}
 
 		if (!description.isFullscreen()) {
-			x = (width / 2) - (backgroundWidth / 2);
-			y = (height / 2) - (backgroundHeight / 2);
+			x = (screenWidth / 2) - (backgroundWidth / 2);
+			y = (screenHeight / 2) - (backgroundHeight / 2);
 			titleX = 0;
 			titleY = 0;
 		} else {
