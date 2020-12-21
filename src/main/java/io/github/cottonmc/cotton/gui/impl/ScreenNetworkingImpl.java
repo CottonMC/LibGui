@@ -1,8 +1,5 @@
 package io.github.cottonmc.cotton.gui.impl;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
@@ -73,14 +70,7 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		});
 	}
 
-	@Environment(EnvType.CLIENT)
-	public static void initClient() {
-		ClientPlayNetworking.registerGlobalReceiver(SCREEN_MESSAGE_S2C, (client, networkHandler, buf, responseSender) -> {
-			handle(client, client.player, buf);
-		});
-	}
-
-	private static void handle(Executor executor, PlayerEntity player, PacketByteBuf buf) {
+	public static void handle(Executor executor, PlayerEntity player, PacketByteBuf buf) {
 		ScreenHandler screenHandler = player.currentScreenHandler;
 
 		// Packet data

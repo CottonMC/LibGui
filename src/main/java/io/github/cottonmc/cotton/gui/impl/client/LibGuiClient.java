@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.impl.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resource.ResourceType;
@@ -8,8 +9,8 @@ import net.minecraft.resource.ResourceType;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonObject;
-import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
 import io.github.cottonmc.jankson.JanksonFactory;
+import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,8 +29,11 @@ public class LibGuiClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		config = loadConfig();
 
-		ScreenNetworkingImpl.initClient();
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NinePatchInternals.MetadataLoader.INSTANCE);
+
+		ClientPlayNetworking.registerGlobalReceiver(ScreenNetworkingImpl.SCREEN_MESSAGE_S2C, (client, networkHandler, buf, responseSender) -> {
+			ScreenNetworkingImpl.handle(client, client.player, buf);
+		});
 	}
 
 	public static LibGuiConfig loadConfig() {
