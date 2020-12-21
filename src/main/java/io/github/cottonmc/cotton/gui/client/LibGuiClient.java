@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resource.ResourceType;
@@ -28,8 +29,11 @@ public class LibGuiClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		config = loadConfig();
 
-		ScreenNetworkingImpl.initClient();
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NinePatch.MetadataLoader.INSTANCE);
+
+		ClientPlayNetworking.registerGlobalReceiver(ScreenNetworkingImpl.SCREEN_MESSAGE_S2C, (client, networkHandler, buf, responseSender) -> {
+			ScreenNetworkingImpl.handle(client, client.player, buf);
+		});
 	}
 
 	public static LibGuiConfig loadConfig() {
