@@ -167,7 +167,7 @@ public class WLabeledSlider extends WAbstractSlider {
 		int rotMouseY = axis == Axis.HORIZONTAL ? mouseY : mouseX;
 
 		RenderSystem.pushMatrix();
-		matrices.translate(x, y, 0);
+		RenderSystem.translatef(x, y, 0);
 		if (axis == Axis.VERTICAL) {
 			RenderSystem.translatef(0, height, 0);
 			RenderSystem.rotatef(270, 0, 0, 1);
