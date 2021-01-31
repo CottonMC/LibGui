@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -51,14 +50,14 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	}
 	
 	@Override
-	public void init(MinecraftClient client, int screenWidth, int screenHeight) {
-		super.init(client, screenWidth, screenHeight);
+	public void init() {
+		super.init();
 		client.keyboard.setRepeatEvents(true);
 		
 		WPanel root = description.getRootPanel();
 		if (root != null) root.addPainters();
 		description.addPainters();
-		reposition(screenWidth, screenHeight);
+		reposition(width, height);
 	}
 
 	@Override
@@ -108,7 +107,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	}
 	
 	private void paint(MatrixStack matrices, int mouseX, int mouseY) {
-		super.renderBackground(matrices);
+		renderBackground(matrices);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();

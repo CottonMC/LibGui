@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
@@ -64,15 +63,15 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	 */
 	
 	@Override
-	public void init(MinecraftClient client, int screenWidth, int screenHeight) {
-		super.init(client, screenWidth, screenHeight);
+	public void init() {
+		super.init();
 		client.keyboard.setRepeatEvents(true);
 		
 		WPanel root = description.getRootPanel();
 		if (root != null) root.addPainters();
 		description.addPainters();
 		
-		reposition(screenWidth, screenHeight);
+		reposition(width, height);
 	}
 
 	@Override
@@ -167,7 +166,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		} else {
 			//if (super.keyPressed(ch, keyCode, modifiers)) return true;
 			if (description.getFocus()==null) {
-				if (MinecraftClient.getInstance().options.keyInventory.matchesKey(ch, keyCode)) {
+				if (client.options.keyInventory.matchesKey(ch, keyCode)) {
 					this.client.player.closeHandledScreen();
 					return true;
 				}
@@ -242,7 +241,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
 	private void paint(MatrixStack matrices, int mouseX, int mouseY) {
-		super.renderBackground(matrices);
+		renderBackground(matrices);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
