@@ -36,9 +36,10 @@ dependencies {
 	modImplementation "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 
-	modRuntime(modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
+	// TODO: Add modmenu on runtime when it's stable
+	modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
-	})
+	}
 }
 
 processResources {

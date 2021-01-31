@@ -34,6 +34,7 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WPlayerInvPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	protected World world;
 	protected PropertyDelegate propertyDelegate;
 	
-	protected WPanel rootPanel = new WGridPanel();
+	protected WPanel rootPanel = new WGridPanel().setInsets(Insets.ROOT_PANEL);
 	protected int titleColor = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkTitleColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 	protected boolean fullscreen = false;

@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -78,8 +80,19 @@ public abstract class WPanel extends WWidget {
 	 * @param w the widget
 	 */
 	protected void expandToFit(WWidget w) {
-		int pushRight = w.getX()+w.getWidth();
-		int pushDown =  w.getY()+w.getHeight();
+		expandToFit(w, Insets.NONE);
+	}
+
+	/**
+	 * Expands this panel be at least as large as the widget.
+	 *
+	 * @param w      the widget
+	 * @param insets the layout insets
+	 * @since 4.0.0
+	 */
+	protected void expandToFit(WWidget w, Insets insets) {
+		int pushRight = w.getX()+w.getWidth()+insets.right;
+		int pushDown =  w.getY()+w.getHeight()+insets.bottom;
 		this.setSize(Math.max(this.getWidth(), pushRight), Math.max(this.getHeight(), pushDown));
 	}
 

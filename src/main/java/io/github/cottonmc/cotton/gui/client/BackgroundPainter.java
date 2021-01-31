@@ -27,16 +27,14 @@ public interface BackgroundPainter {
 	 * <p>This background painter uses {@code libgui:textures/widget/panel_light.png} as the light texture and
 	 * {@code libgui:textures/widget/panel_dark.png} as the dark texture.
 	 *
-	 * <p>This background painter applies a padding of 8 pixels to all sides around the widget.
-	 *
 	 * <p>This background painter is the default painter for root panels.
 	 * 	 * You can override {@link io.github.cottonmc.cotton.gui.GuiDescription#addPainters()} to customize the painter yourself.
 	 *
 	 * @since 1.5.0
 	 */
 	public static BackgroundPainter VANILLA = createLightDarkVariants(
-			createNinePatch(new Identifier("libgui", "textures/widget/panel_light.png"), 8),
-			createNinePatch(new Identifier("libgui", "textures/widget/panel_dark.png"), 8)
+			createNinePatch(new Identifier("libgui", "textures/widget/panel_light.png")),
+			createNinePatch(new Identifier("libgui", "textures/widget/panel_dark.png"))
 	);
 
 	/**

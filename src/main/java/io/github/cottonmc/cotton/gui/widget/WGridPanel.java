@@ -1,5 +1,9 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
+
+import java.util.Objects;
+
 /**
  * A panel that positions children in a grid.
  */
@@ -9,6 +13,8 @@ public class WGridPanel extends WPanel {
 	 * Defaults to 18, which is the size of one item slot.
 	 */
 	protected int grid = 18;
+
+	private Insets insets = Insets.NONE;
 
 	/**
 	 * Constructs a grid panel with the default grid size.
@@ -35,12 +41,12 @@ public class WGridPanel extends WPanel {
 	public void add(WWidget w, int x, int y) {
 		children.add(w);
 		w.parent = this;
-		w.setLocation(x * grid, y * grid);
+		w.setLocation(x * grid + insets.left, y * grid + insets.top);
 		if (w.canResize()) {
 			w.setSize(grid, grid);
 		}
 		
-		expandToFit(w);
+		expandToFit(w, insets);
 	}
 
 	/**
@@ -55,11 +61,33 @@ public class WGridPanel extends WPanel {
 	public void add(WWidget w, int x, int y, int width, int height) {
 		children.add(w);
 		w.parent = this;
-		w.setLocation(x * grid, y * grid);
+		w.setLocation(x * grid + insets.left, y * grid + insets.top);
 		if (w.canResize()) {
 			w.setSize(width * grid, height * grid);
 		}
 		
-		expandToFit(w);
+		expandToFit(w, insets);
+	}
+
+	/**
+	 * Gets the layout insets of this panel.
+	 *
+	 * @return the insets
+	 * @since 4.0.0
+	 */
+	public Insets getInsets() {
+		return insets;
+	}
+
+	/**
+	 * Sets the layout insets of this panel.
+	 *
+	 * @param insets the insets, should not be null
+	 * @return this panel
+	 * @since 4.0.0
+	 */
+	public WGridPanel setInsets(Insets insets) {
+		this.insets = Objects.requireNonNull(insets, "insets");
+		return this;
 	}
 }

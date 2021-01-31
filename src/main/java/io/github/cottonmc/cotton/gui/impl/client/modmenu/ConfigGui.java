@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.impl.client.modmenu;
 
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.TranslatableText;
@@ -16,6 +18,7 @@ public class ConfigGui extends LightweightGuiDescription {
 
 	public ConfigGui(Screen previous) {
 		WGridPanel root = new WGridPanel();
+		root.setInsets(Insets.ROOT_PANEL);
 		setRootPanel(root);
 
 		WToggleButton darkmodeButton = new WToggleButton(new TranslatableText("option.libgui.darkmode")) {
