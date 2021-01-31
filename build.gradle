@@ -1,7 +1,7 @@
 plugins {
 	id 'fabric-loom' version '0.5-SNAPSHOT'
 	id 'maven-publish'
-	id "com.jfrog.artifactory" version "4.9.0"
+	id "com.jfrog.artifactory" version "4.20.0"
 	id 'checkstyle'
 }
 
@@ -20,6 +20,12 @@ group = project.maven_group
 
 repositories {
 	maven { url "http://server.bbkr.space:8081/artifactory/libs-release" }
+	maven {
+		url = "http://maven.terraformersmc.com/releases"
+		content {
+			includeGroup "com.terraformersmc"
+		}
+	}
 }
 
 dependencies {
@@ -30,7 +36,7 @@ dependencies {
 	modImplementation "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 
-	modRuntime(modCompileOnly("io.github.prospector:modmenu:$project.modmenu_version") {
+	modRuntime(modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
 	})
 }
