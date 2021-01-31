@@ -18,9 +18,6 @@ archivesBaseName = project.archives_base_name
 version = "$project.mod_version+$project.minecraft_version"
 group = project.maven_group
 
-minecraft {
-}
-
 repositories {
 	maven { url "http://server.bbkr.space:8081/artifactory/libs-release" }
 }

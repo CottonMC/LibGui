@@ -13,7 +13,8 @@ archivesBaseName = "LibGuiTest"
 version = rootProject.version
 group = rootProject.group
 
-minecraft {
+loom {
+	autoGenIDERuns = true
 }
 
 //configurations.modApi {
