@@ -94,7 +94,7 @@ public class CottonClientScreen extends Screen implements TextHoverRendererScree
 	}
 	
 	private void paint(MatrixStack matrices, int mouseX, int mouseY) {
-		super.renderBackground(matrices);
+		renderBackground(matrices);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();

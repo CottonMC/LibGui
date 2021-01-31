@@ -251,7 +251,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
 	private void paint(MatrixStack matrices, int mouseX, int mouseY) {
-		super.renderBackground(matrices);
+		renderBackground(matrices);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
