@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -195,5 +196,10 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		cellHeight = height;
 		fixedHeight = true;
 		return this;
+	}
+
+	@Override
+	public InputResult onMouseScroll(int x, int y, double amount) {
+		return scrollBar.onMouseScroll(0, 0, amount);
 	}
 }
