@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 
 /**
  * Similar to the JScrollPane in Swing, this widget represents a scrollable widget.
@@ -104,12 +105,8 @@ public class WScrollPanel extends WClippedPanel {
 	public void layout() {
 		children.clear();
 
-		boolean horizontal = (scrollingHorizontally == TriState.DEFAULT)
-				? (widget.width > this.width - SCROLL_BAR_SIZE)
-				: scrollingHorizontally.get();
-		boolean vertical = (scrollingVertically == TriState.DEFAULT)
-				? (widget.height > this.height - SCROLL_BAR_SIZE)
-				: scrollingVertically.get();
+		boolean horizontal = hasHorizontalScrollbar();
+		boolean vertical = hasVerticalScrollbar();
 
 		int offset = (horizontal && vertical) ? SCROLL_BAR_SIZE : 0;
 		verticalScrollBar.setSize(SCROLL_BAR_SIZE, this.height - offset);
@@ -130,5 +127,26 @@ public class WScrollPanel extends WClippedPanel {
 
 		if (vertical) children.add(verticalScrollBar);
 		if (horizontal) children.add(horizontalScrollBar);
+	}
+
+	private boolean hasHorizontalScrollbar() {
+		return (scrollingHorizontally == TriState.DEFAULT)
+				? (widget.width > this.width - SCROLL_BAR_SIZE)
+				: scrollingHorizontally.get();
+	}
+
+	private boolean hasVerticalScrollbar() {
+		return (scrollingVertically == TriState.DEFAULT)
+				? (widget.height > this.height - SCROLL_BAR_SIZE)
+				: scrollingVertically.get();
+	}
+
+	@Override
+	public InputResult onMouseScroll(int x, int y, double amount) {
+		if (hasVerticalScrollbar()) {
+			return verticalScrollBar.onMouseScroll(0, 0, amount);
+		}
+
+		return InputResult.IGNORED;
 	}
 }
