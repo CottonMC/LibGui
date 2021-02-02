@@ -63,7 +63,7 @@ tasks.withType(JavaCompile) {
 }
 
 jar {
-	from "LICENSE"
+	from "CREDITS.txt", "LICENSE"
 }
 
 checkstyle {
