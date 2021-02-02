@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -207,8 +208,9 @@ public class WLabeledSlider extends WAbstractSlider {
 		float buttonHeight = 20 * px;
 		float buttonEndLeft = (200 - halfWidth) * px;
 
-		ScreenDrawing.texturedRect(matrices, x, y, halfWidth, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
-		ScreenDrawing.texturedRect(matrices, x + halfWidth, y, halfWidth, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
+		Identifier texture = WButton.getTexture();
+		ScreenDrawing.texturedRect(matrices, x, y, halfWidth, 20, texture, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(matrices, x + halfWidth, y, halfWidth, 20, texture, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
 	}
 
 	/**

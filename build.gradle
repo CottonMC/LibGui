@@ -71,7 +71,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 jar {
-	from "LICENSE"
+	from "CREDITS.txt", "LICENSE"
 }
 
 checkstyle {
