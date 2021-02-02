@@ -10,6 +10,8 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 
 public class WScrollBar extends WWidget {
+	private static final int SCROLLING_SPEED = 4;
+
 	protected Axis axis = Axis.HORIZONTAL;
 	protected int value;
 	protected int maxValue = 100;
@@ -221,7 +223,7 @@ public class WScrollBar extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public InputResult onMouseScroll(int x, int y, double amount) {
-		setValue(getValue() + (int) -amount);
+		setValue(getValue() + (int) -amount * SCROLLING_SPEED);
 		return InputResult.PROCESSED;
 	}
 
