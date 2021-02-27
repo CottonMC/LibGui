@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 
 import java.util.Objects;
@@ -35,6 +36,8 @@ public class WBox extends WPanel {
 	 * @since 2.1.0
 	 */
 	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
+
+	private Insets insets = Insets.NONE;
 
 	/**
 	 * Constructs a box.
@@ -74,7 +77,7 @@ public class WBox extends WPanel {
 
 	@Override
 	public void layout() {
-		int dimension = 0;
+		int dimension = axis.choose(insets.left, insets.top);
 
 		// Set position offset from alignment along the box axis
 		if (axis == Axis.HORIZONTAL && horizontalAlignment != HorizontalAlignment.LEFT) {
@@ -110,13 +113,13 @@ public class WBox extends WPanel {
 				switch (verticalAlignment) {
 					case TOP:
 					default:
-						y = 0;
+						y = insets.top;
 						break;
 					case CENTER:
-						y = (getHeight() - child.getHeight()) / 2;
+						y = insets.top + (getHeight() - insets.top - insets.bottom - child.getHeight()) / 2;
 						break;
 					case BOTTOM:
-						y = getHeight() - child.getHeight();
+						y = getHeight() - insets.bottom - child.getHeight();
 						break;
 				}
 
@@ -127,13 +130,13 @@ public class WBox extends WPanel {
 				switch (horizontalAlignment) {
 					case LEFT:
 					default:
-						x = 0;
+						x = insets.left;
 						break;
 					case CENTER:
-						x = (getWidth() - child.getWidth()) / 2;
+						x = insets.left + (getWidth() - insets.left - insets.right - child.getWidth()) / 2;
 						break;
 					case RIGHT:
-						x = getWidth() - child.getWidth();
+						x = getWidth() - insets.right - child.getWidth();
 						break;
 				}
 
@@ -141,13 +144,13 @@ public class WBox extends WPanel {
 			}
 
 			if (child instanceof WPanel) ((WPanel) child).layout();
-			expandToFit(child);
+			expandToFit(child, insets);
 
 			if (i != children.size() - 1) {
 				dimension += spacing;
 			}
 
-			dimension += axis == Axis.HORIZONTAL ? child.getWidth() : child.getHeight();
+			dimension += axis.choose(child.getWidth(), child.getHeight());
 		}
 	}
 
@@ -236,6 +239,31 @@ public class WBox extends WPanel {
 	 */
 	public WBox setVerticalAlignment(VerticalAlignment alignment) {
 		this.verticalAlignment = Objects.requireNonNull(alignment, "alignment");
+		return this;
+	}
+
+	/**
+	 * Gets the layout insets of this box.
+	 *
+	 * @return the insets
+	 * @since 4.0.0
+	 */
+	public Insets getInsets() {
+		return insets;
+	}
+
+	/**
+	 * Sets the layout insets of this box.
+	 *
+	 * <p>The insets should be set <i>before</i> adding any widgets
+	 * to this box.
+	 *
+	 * @param insets the insets, should not be null
+	 * @return this box
+	 * @since 4.0.0
+	 */
+	public WBox setInsets(Insets insets) {
+		this.insets = Objects.requireNonNull(insets, "insets");
 		return this;
 	}
 }
