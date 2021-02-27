@@ -92,7 +92,13 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 
 			if (receiver != null) {
 				buf.retain();
-				executor.execute(() -> receiver.onMessage(buf));
+				executor.execute(() -> {
+					try {
+						receiver.onMessage(buf);
+					} finally {
+						buf.release();
+					}
+				});
 			} else {
 				LOGGER.warn("Message {} not registered for {} on side {}", messageId, screenHandler, networking.side);
 			}
