@@ -95,6 +95,8 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 				executor.execute(() -> {
 					try {
 						receiver.onMessage(buf);
+					} catch (Exception e) {
+						LOGGER.error("Error handling screen message {} for {} on side {}", messageId, screenHandler, networking.side, e);
 					} finally {
 						buf.release();
 					}
