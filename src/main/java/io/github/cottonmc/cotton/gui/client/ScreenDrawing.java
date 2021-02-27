@@ -8,19 +8,24 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
+import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
-
-import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
-import io.github.cottonmc.cotton.gui.widget.data.Texture;
-
 import net.minecraft.util.math.Matrix4f;
 
+import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 /**
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.
  */
 public class ScreenDrawing {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private ScreenDrawing() {}
 
 	/**
@@ -506,6 +511,28 @@ public class ScreenDrawing {
 	 */
 	public static void drawString(MatrixStack matrices, OrderedText text, int x, int y, int color) {
 		MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color);
+	}
+
+	/**
+	 * Draws the text hover effects for a text style.
+	 *
+	 * <p>This method should only be called from a widget in a screen.
+	 * For example, there will be nothing drawn in HUDs.
+	 *
+	 * @param matrices  the rendering matrix stack
+	 * @param textStyle the text style
+	 * @param x         the X position
+	 * @param y         the Y position
+	 * @since 4.0.0
+	 */
+	public static void drawTextHover(MatrixStack matrices, @Nullable Style textStyle, int x, int y) {
+		CottonScreenImpl screen = (CottonScreenImpl) MinecraftClient.getInstance().currentScreen;
+
+		if (screen != null) {
+			screen.renderTextHover(matrices, textStyle, x, y);
+		} else {
+			LOGGER.error("Rendering text hover effects outside of a screen!");
+		}
 	}
 
 	public static int colorAtOpacity(int opaque, float opacity) {
