@@ -10,7 +10,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
-import io.github.cottonmc.cotton.gui.client.LibGuiClient;
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.client.TextHoverRendererScreen;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -109,7 +109,7 @@ public class WText extends WWidget {
 
 		for (int i = 0; i < wrappedLines.size(); i++) {
 			OrderedText line = wrappedLines.get(i);
-			int c = LibGuiClient.config.darkMode ? darkmodeColor : color;
+			int c = LibGui.isDarkMode() ? darkmodeColor : color;
 
 			ScreenDrawing.drawString(matrices, line, horizontalAlignment, x, y + yOffset + i * font.fontHeight, width, c);
 		}

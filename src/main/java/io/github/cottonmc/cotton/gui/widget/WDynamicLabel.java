@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 
-import io.github.cottonmc.cotton.gui.client.LibGuiClient;
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 
@@ -40,7 +40,7 @@ public class WDynamicLabel extends WWidget {
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		String tr = text.get();
-		ScreenDrawing.drawString(matrices, tr, alignment, x, y, this.getWidth(), LibGuiClient.config.darkMode ? darkmodeColor : color);
+		ScreenDrawing.drawString(matrices, tr, alignment, x, y, this.getWidth(), LibGui.isDarkMode() ? darkmodeColor : color);
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import io.github.cottonmc.cotton.gui.client.LibGuiClient;
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import org.jetbrains.annotations.Nullable;
@@ -107,7 +107,7 @@ public class WToggleButton extends WWidget {
 		}
 
 		if (label!=null) {
-			ScreenDrawing.drawString(matrices, label.asOrderedText(), x + 22, y+6, LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawString(matrices, label.asOrderedText(), x + 22, y+6, LibGui.isDarkMode() ? darkmodeColor : color);
 		}
 	}
 	
