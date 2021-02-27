@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import io.github.cottonmc.cotton.gui.impl.client.LibGuiClient;
+
 /**
  * This class provides access to LibGui configuration and other global data.
  *

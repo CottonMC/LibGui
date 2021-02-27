@@ -1,4 +1,4 @@
-package io.github.cottonmc.cotton.gui.client.modmenu;
+package io.github.cottonmc.cotton.gui.impl.modmenu;
 
 import net.minecraft.text.TranslatableText;
 

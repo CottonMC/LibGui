@@ -1,4 +1,4 @@
-package io.github.cottonmc.cotton.gui.client;
+package io.github.cottonmc.cotton.gui.impl.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -13,18 +13,14 @@ import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
 import io.github.cottonmc.jankson.JanksonFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 
-@ApiStatus.Internal
 public class LibGuiClient implements ClientModInitializer {
 	public static final Logger logger = LogManager.getLogger();
 	public static final String MODID = "libgui";
-	/** @deprecated Replaced with {@link LibGui} */
-	@Deprecated
 	public static volatile LibGuiConfig config;
 
 	public static final Jankson jankson = JanksonFactory.createJankson();
@@ -33,7 +29,7 @@ public class LibGuiClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		config = loadConfig();
 
-		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NinePatch.MetadataLoader.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NinePatchInternals.MetadataLoader.INSTANCE);
 
 		ClientPlayNetworking.registerGlobalReceiver(ScreenNetworkingImpl.SCREEN_MESSAGE_S2C, (client, networkHandler, buf, responseSender) -> {
 			ScreenNetworkingImpl.handle(client, client.player, buf);

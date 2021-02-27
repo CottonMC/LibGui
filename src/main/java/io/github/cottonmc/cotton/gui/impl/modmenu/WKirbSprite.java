@@ -1,4 +1,4 @@
-package io.github.cottonmc.cotton.gui.client.modmenu;
+package io.github.cottonmc.cotton.gui.impl.modmenu;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
