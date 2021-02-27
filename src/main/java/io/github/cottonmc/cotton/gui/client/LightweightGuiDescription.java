@@ -9,13 +9,14 @@ import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * A GuiDescription without any associated Minecraft classes
  */
 public class LightweightGuiDescription implements GuiDescription {
-	protected WPanel rootPanel = new WGridPanel();
+	protected WPanel rootPanel = new WGridPanel().setInsets(Insets.ROOT_PANEL);
 	protected PropertyDelegate propertyDelegate;
 	protected WWidget focus;
 

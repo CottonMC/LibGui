@@ -20,6 +20,7 @@ import io.github.cottonmc.cotton.gui.widget.WTiledSprite;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color;
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
 
 public class TestClientGui extends LightweightGuiDescription {
 	//private static final Identifier PORTAL1 = new Identifier("libgui-test:portal.png");
@@ -31,6 +32,7 @@ public class TestClientGui extends LightweightGuiDescription {
 	
 	public TestClientGui() {
 		WGridPanel root = new WGridPanel(22);
+		root.setInsets(Insets.ROOT_PANEL);
 		this.setRootPanel(root);
 		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
 			@Environment(EnvType.CLIENT)

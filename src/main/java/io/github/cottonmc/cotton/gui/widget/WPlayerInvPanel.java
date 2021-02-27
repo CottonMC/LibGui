@@ -59,6 +59,11 @@ public class WPlayerInvPanel extends WPlainPanel {
 		this.add(hotbar, 0, y + 58);
 	}
 
+	@Override
+	public boolean canResize() {
+		return false;
+	}
+
 	/**
 	 * Creates a vanilla-style inventory label for a player inventory.
 	 *

@@ -1,10 +1,9 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
-
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
@@ -28,16 +27,14 @@ public interface BackgroundPainter {
 	 * <p>This background painter uses {@code libgui:textures/widget/panel_light.png} as the light texture and
 	 * {@code libgui:textures/widget/panel_dark.png} as the dark texture.
 	 *
-	 * <p>This background painter applies a padding of 8 pixels to all sides around the widget.
-	 *
 	 * <p>This background painter is the default painter for root panels.
 	 * 	 * You can override {@link io.github.cottonmc.cotton.gui.GuiDescription#addPainters()} to customize the painter yourself.
 	 *
 	 * @since 1.5.0
 	 */
 	public static BackgroundPainter VANILLA = createLightDarkVariants(
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/panel_light.png"), 8),
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/panel_dark.png"), 8)
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/panel_light.png")),
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/panel_dark.png"))
 	);
 
 	/**
@@ -92,7 +89,7 @@ public interface BackgroundPainter {
 	 */
 	public static BackgroundPainter createColorful(int panelColor) {
 		return (matrices, left, top, panel) -> {
-			ScreenDrawing.drawGuiPanel(matrices, left-8, top-8, panel.getWidth()+16, panel.getHeight()+16, panelColor);
+			ScreenDrawing.drawGuiPanel(matrices, left, top, panel.getWidth(), panel.getHeight(), panelColor);
 		};
 	}
 
@@ -108,7 +105,7 @@ public interface BackgroundPainter {
 			int shadowColor = ScreenDrawing.multiplyColor(panelColor, 1.0f - contrast);
 			int hilightColor = ScreenDrawing.multiplyColor(panelColor, 1.0f + contrast);
 			
-			ScreenDrawing.drawGuiPanel(matrices, left-8, top-8, panel.getWidth()+16, panel.getHeight()+16, shadowColor, panelColor, hilightColor, 0xFF000000);
+			ScreenDrawing.drawGuiPanel(matrices, left, top, panel.getWidth(), panel.getHeight(), shadowColor, panelColor, hilightColor, 0xFF000000);
 		};
 	}
 

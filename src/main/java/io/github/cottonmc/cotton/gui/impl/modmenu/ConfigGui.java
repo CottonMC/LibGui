@@ -5,17 +5,19 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.TranslatableText;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.impl.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
+import io.github.cottonmc.cotton.gui.impl.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WTextField;
 import io.github.cottonmc.cotton.gui.widget.WToggleButton;
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
 
 public class ConfigGui extends LightweightGuiDescription {
 
 	public ConfigGui(Screen previous) {
 		WGridPanel root = new WGridPanel();
+		root.setInsets(Insets.ROOT_PANEL);
 		setRootPanel(root);
 
 		WToggleButton darkmodeButton = new WToggleButton(new TranslatableText("option.libgui.darkmode")) {
