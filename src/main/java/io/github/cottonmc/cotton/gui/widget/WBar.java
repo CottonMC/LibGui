@@ -113,9 +113,9 @@ public class WBar extends WWidget {
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (bg!=null) {
-			ScreenDrawing.texturedRect(x, y, getWidth(), getHeight(), bg, 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(matrices, x, y, getWidth(), getHeight(), bg, 0xFFFFFFFF);
 		} else {
-			ScreenDrawing.coloredRect(x, y, getWidth(), getHeight(), ScreenDrawing.colorAtOpacity(0x000000, 0.25f));
+			ScreenDrawing.coloredRect(matrices, x, y, getWidth(), getHeight(), ScreenDrawing.colorAtOpacity(0x000000, 0.25f));
 		}
 		
 		float percent = properties.get(field) / (float) properties.get(max);
@@ -135,25 +135,25 @@ public class WBar extends WWidget {
 				int top = y + getHeight();
 				top -= barSize;
 				if (bar!=null) {
-					ScreenDrawing.texturedRect(left, top, getWidth(), barSize, bar.image, bar.u1, MathHelper.lerp(percent, bar.v2, bar.v1), bar.u2, bar.v2, 0xFFFFFFFF);
+					ScreenDrawing.texturedRect(matrices, left, top, getWidth(), barSize, bar.image, bar.u1, MathHelper.lerp(percent, bar.v2, bar.v1), bar.u2, bar.v2, 0xFFFFFFFF);
 				} else {
-					ScreenDrawing.coloredRect(left, top, getWidth(), barSize,  ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
+					ScreenDrawing.coloredRect(matrices, left, top, getWidth(), barSize,  ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
 				break;
 			}
 			case RIGHT: {
 				if (bar!=null) {
-					ScreenDrawing.texturedRect(x, y, barSize, getHeight(), bar.image, bar.u1, bar.v1, MathHelper.lerp(percent, bar.u1, bar.u2), bar.v2, 0xFFFFFFFF);
+					ScreenDrawing.texturedRect(matrices, x, y, barSize, getHeight(), bar.image, bar.u1, bar.v1, MathHelper.lerp(percent, bar.u1, bar.u2), bar.v2, 0xFFFFFFFF);
 				} else {
-					ScreenDrawing.coloredRect(x, y, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
+					ScreenDrawing.coloredRect(matrices, x, y, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
 				break;
 			}
 			case DOWN: {
 				if (bar!=null) {
-					ScreenDrawing.texturedRect(x, y, getWidth(), barSize, bar.image, bar.u1, bar.v1, bar.u2, MathHelper.lerp(percent, bar.v1, bar.v2), 0xFFFFFFFF);
+					ScreenDrawing.texturedRect(matrices, x, y, getWidth(), barSize, bar.image, bar.u1, bar.v1, bar.u2, MathHelper.lerp(percent, bar.v1, bar.v2), 0xFFFFFFFF);
 				} else {
-					ScreenDrawing.coloredRect(x, y, getWidth(), barSize, ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
+					ScreenDrawing.coloredRect(matrices, x, y, getWidth(), barSize, ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
 				break;
 			}
@@ -162,9 +162,9 @@ public class WBar extends WWidget {
 				int top = y;
 				left -= barSize;
 				if (bar!=null) {
-					ScreenDrawing.texturedRect(left, top, barSize, getHeight(), bar.image, MathHelper.lerp(percent, bar.u2, bar.u1), bar.v1, bar.u2, bar.v2, 0xFFFFFFFF);
+					ScreenDrawing.texturedRect(matrices, left, top, barSize, getHeight(), bar.image, MathHelper.lerp(percent, bar.u2, bar.u1), bar.v1, bar.u2, bar.v2, 0xFFFFFFFF);
 				} else {
-					ScreenDrawing.coloredRect(left, top, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
+					ScreenDrawing.coloredRect(matrices, left, top, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
 				break;
 			}

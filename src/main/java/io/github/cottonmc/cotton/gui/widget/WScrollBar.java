@@ -37,9 +37,9 @@ public class WScrollBar extends WWidget {
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (LibGui.isDarkMode()) {
-			ScreenDrawing.drawBeveledPanel(x, y, width, height, 0xFF_212121, 0xFF_2F2F2F, 0xFF_5D5D5D);
+			ScreenDrawing.drawBeveledPanel(matrices, x, y, width, height, 0xFF_212121, 0xFF_2F2F2F, 0xFF_5D5D5D);
 		} else {
-			ScreenDrawing.drawBeveledPanel(x, y, width, height, 0xFF_373737, 0xFF_8B8B8B, 0xFF_FFFFFF);
+			ScreenDrawing.drawBeveledPanel(matrices, x, y, width, height, 0xFF_373737, 0xFF_8B8B8B, 0xFF_FFFFFF);
 		}
 		if (maxValue<=0) return;
 
@@ -79,16 +79,16 @@ public class WScrollBar extends WWidget {
 		}
 
 		if (axis==Axis.HORIZONTAL) {
-			ScreenDrawing.drawBeveledPanel(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, top, middle, bottom);
+			ScreenDrawing.drawBeveledPanel(matrices, x+1+getHandlePosition(), y+1, getHandleSize(), height-2, top, middle, bottom);
 
 			if (isFocused()) {
-				drawBeveledOutline(x+1+getHandlePosition(), y+1, getHandleSize(), height-2, 0xFF_FFFFA7, 0xFF_8C8F39);
+				drawBeveledOutline(matrices, x+1+getHandlePosition(), y+1, getHandleSize(), height-2, 0xFF_FFFFA7, 0xFF_8C8F39);
 			}
 		} else {
-			ScreenDrawing.drawBeveledPanel(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), top, middle, bottom);
+			ScreenDrawing.drawBeveledPanel(matrices, x+1, y+1+getHandlePosition(), width-2, getHandleSize(), top, middle, bottom);
 
 			if (isFocused()) {
-				drawBeveledOutline(x+1, y+1+getHandlePosition(), width-2, getHandleSize(), 0xFF_FFFFA7, 0xFF_8C8F39);
+				drawBeveledOutline(matrices, x+1, y+1+getHandlePosition(), width-2, getHandleSize(), 0xFF_FFFFA7, 0xFF_8C8F39);
 			}
 		}
 	}
@@ -103,11 +103,11 @@ public class WScrollBar extends WWidget {
 		return true;
 	}
 
-	private static void drawBeveledOutline(int x, int y, int width, int height, int topleft, int bottomright) {
-		ScreenDrawing.coloredRect(x,             y,              width,     1,          topleft); //Top shadow
-		ScreenDrawing.coloredRect(x,             y + 1,          1,         height - 1, topleft); //Left shadow
-		ScreenDrawing.coloredRect(x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
-		ScreenDrawing.coloredRect(x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
+	private static void drawBeveledOutline(MatrixStack matrices, int x, int y, int width, int height, int topleft, int bottomright) {
+		ScreenDrawing.coloredRect(matrices, x,             y,              width,     1,          topleft); //Top shadow
+		ScreenDrawing.coloredRect(matrices, x,             y + 1,          1,         height - 1, topleft); //Left shadow
+		ScreenDrawing.coloredRect(matrices, x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
+		ScreenDrawing.coloredRect(matrices, x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
 	}
 
 	/**

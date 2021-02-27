@@ -172,7 +172,7 @@ public class WLabeledSlider extends WAbstractSlider {
 			RenderSystem.translatef(0, height, 0);
 			RenderSystem.rotatef(270, 0, 0, 1);
 		}
-		drawButton(0, 0, 0, aWidth);
+		drawButton(matrices, 0, 0, 0, aWidth);
 
 		// 1: regular, 2: hovered, 0: disabled/dragging
 		int thumbX = Math.round(coordToValueRatio * (value - min));
@@ -182,11 +182,11 @@ public class WLabeledSlider extends WAbstractSlider {
 		boolean hovering = rotMouseX >= thumbX && rotMouseX <= thumbX + thumbWidth && rotMouseY >= thumbY && rotMouseY <= thumbY + thumbHeight;
 		int thumbState = dragging || hovering ? 2 : 1;
 
-		drawButton(thumbX, thumbY, thumbState, thumbWidth);
+		drawButton(matrices, thumbX, thumbY, thumbState, thumbWidth);
 
 		if (thumbState == 1 && isFocused()) {
 			float px = 1 / 32f;
-			ScreenDrawing.texturedRect(thumbX, thumbY, thumbWidth, thumbHeight, WSlider.LIGHT_TEXTURE, 24*px, 0*px, 32*px, 20*px, 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(matrices, thumbX, thumbY, thumbWidth, thumbHeight, WSlider.LIGHT_TEXTURE, 24*px, 0*px, 32*px, 20*px, 0xFFFFFFFF);
 		}
 
 		if (label != null) {
@@ -198,7 +198,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
 	// state = 1: regular, 2: hovered, 0: disabled/dragging
 	@Environment(EnvType.CLIENT)
-	private void drawButton(int x, int y, int state, int width) {
+	private void drawButton(MatrixStack matrices, int x, int y, int state, int width) {
 		float px = 1 / 256f;
 		float buttonLeft = 0 * px;
 		float buttonTop = (46 + (state * 20)) * px;
@@ -208,8 +208,8 @@ public class WLabeledSlider extends WAbstractSlider {
 		float buttonHeight = 20 * px;
 		float buttonEndLeft = (200 - halfWidth) * px;
 
-		ScreenDrawing.texturedRect(x, y, halfWidth, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
-		ScreenDrawing.texturedRect(x + halfWidth, y, halfWidth, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(matrices, x, y, halfWidth, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(matrices, x + halfWidth, y, halfWidth, 20, AbstractButtonWidget.WIDGETS_LOCATION, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
 	}
 
 	/**

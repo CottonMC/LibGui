@@ -67,9 +67,9 @@ public class WSlider extends WAbstractSlider {
 						: Math.round(coordToValueRatio * (value - min));
 				thumbXOffset = 0;
 
-				ScreenDrawing.texturedRect(trackX, y + 1, TRACK_WIDTH, 1, texture, 16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(trackX, y + 2, TRACK_WIDTH, height - 2, texture, 16*px, 1*px, 22*px, 2*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(trackX, y + height, TRACK_WIDTH, 1, texture, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(matrices, trackX, y + 1, TRACK_WIDTH, 1, texture, 16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(matrices, trackX, y + 2, TRACK_WIDTH, height - 2, texture, 16*px, 1*px, 22*px, 2*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(matrices, trackX, y + height, TRACK_WIDTH, 1, texture, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
 				thumbX = direction == Direction.LEFT
@@ -78,18 +78,18 @@ public class WSlider extends WAbstractSlider {
 				thumbY = height / 2 - THUMB_SIZE / 2;
 				thumbXOffset = 8;
 
-				ScreenDrawing.texturedRect(x, trackY, 1, TRACK_WIDTH, texture, 16*px, 3*px, 17*px, 9*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(x + 1, trackY, width - 2, TRACK_WIDTH, texture, 17*px, 3*px, 18*px, 9*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(x + width - 1, trackY, 1, TRACK_WIDTH, texture, 18*px, 3*px, 19*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(matrices, x, trackY, 1, TRACK_WIDTH, texture, 16*px, 3*px, 17*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(matrices, x + 1, trackY, width - 2, TRACK_WIDTH, texture, 17*px, 3*px, 18*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(matrices, x + width - 1, trackY, 1, TRACK_WIDTH, texture, 18*px, 3*px, 19*px, 9*px, 0xFFFFFFFF);
 			}
 
 			// thumbState values:
 			// 0: default, 1: dragging, 2: hovered
 			int thumbState = dragging ? 1 : (mouseX >= thumbX && mouseX <= thumbX + THUMB_SIZE && mouseY >= thumbY && mouseY <= thumbY + THUMB_SIZE ? 2 : 0);
-			ScreenDrawing.texturedRect(x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(matrices, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
 
 			if (thumbState == 0 && isFocused()) {
-				ScreenDrawing.texturedRect(x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, 0*px, 24*px, 8*px, 32*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(matrices, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, 0*px, 24*px, 8*px, 32*px, 0xFFFFFFFF);
 			}
 		}
 	}

@@ -314,8 +314,8 @@ public class WTextField extends WWidget {
 		if (this.font==null) this.font = MinecraftClient.getInstance().textRenderer;
 		
 		int borderColor = (this.isFocused()) ? 0xFF_FFFFA0 : 0xFF_A0A0A0;
-		ScreenDrawing.coloredRect(x-1, y-1, width+2, height+2, borderColor);
-		ScreenDrawing.coloredRect(x, y, width, height, 0xFF000000);
+		ScreenDrawing.coloredRect(matrices, x-1, y-1, width+2, height+2, borderColor);
+		ScreenDrawing.coloredRect(matrices, x, y, width, height, 0xFF000000);
 		
 
 		int textColor = this.editable ? this.enabledColor : this.uneditableColor;
@@ -369,7 +369,7 @@ public class WTextField extends WWidget {
 				//} else {
 				//	caretLoc = textX+caretLoc-1;
 				//}
-				ScreenDrawing.coloredRect(preCursorAdvance-1, textY-2, 1, 12, 0xFFD0D0D0);
+				ScreenDrawing.coloredRect(matrices, preCursorAdvance-1, textY-2, 1, 12, 0xFFD0D0D0);
 			//if (boolean_3) {
 			//	int var10001 = int_7 - 1;
 			//	var10002 = int_9 + 1;

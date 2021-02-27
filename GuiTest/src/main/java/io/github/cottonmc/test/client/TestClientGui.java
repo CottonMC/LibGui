@@ -19,12 +19,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 public class TestClientGui extends LightweightGuiDescription {
-
-	@Environment(EnvType.CLIENT)
-	public static final BackgroundPainter PANEL = (x, y, panel)->{
-		ScreenDrawing.drawBeveledPanel(x-1, y-1, panel.getWidth()+2, panel.getHeight()+2);
-	};
-	
 	//private static final Identifier PORTAL1 = new Identifier("libgui-test:portal.png");
 	//private static final Identifier PORTAL2 = new Identifier("libgui-test:portal2.png");
 	
@@ -146,7 +140,7 @@ public class TestClientGui extends LightweightGuiDescription {
 		
 		@Override
 		public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-			ScreenDrawing.coloredRect(x, y, this.getWidth(), this.getHeight(), color);
+			ScreenDrawing.coloredRect(matrices, x, y, this.getWidth(), this.getHeight(), color);
 		}
 	}
 }

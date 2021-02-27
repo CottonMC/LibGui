@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -129,13 +130,14 @@ public class WTiledSprite extends WSprite {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paintFrame(int x, int y, Texture texture) {
+	public void paintFrame(MatrixStack matrices, int x, int y, Texture texture) {
 		// Y Direction (down)
 		for (int tileYOffset = 0; tileYOffset < height; tileYOffset += tileHeight) {
 			// X Direction (right)
 			for (int tileXOffset = 0; tileXOffset < width; tileXOffset += tileWidth) {
 				// draw the texture
 				ScreenDrawing.texturedRect(
+						matrices,
 						// at the correct position using tileXOffset and tileYOffset
 						x + tileXOffset, y + tileYOffset,
 						// but using the set tileWidth and tileHeight instead of the full height and

@@ -43,7 +43,7 @@ public interface BackgroundPainter {
 	 */
 	public static BackgroundPainter SLOT = (matrices, left, top, panel) -> {
 		if (!(panel instanceof WItemSlot)) {
-			ScreenDrawing.drawBeveledPanel(left-1, top-1, panel.getWidth()+2, panel.getHeight()+2, 0xB8000000, 0x4C000000, 0xB8FFFFFF);
+			ScreenDrawing.drawBeveledPanel(matrices, left-1, top-1, panel.getWidth()+2, panel.getHeight()+2, 0xB8000000, 0x4C000000, 0xB8FFFFFF);
 		} else {
 			WItemSlot slot = (WItemSlot)panel;
 			for(int x = 0; x < slot.getWidth()/18; ++x) {
@@ -54,26 +54,26 @@ public interface BackgroundPainter {
 					//this will cause a slightly discolored bottom border on vanilla backgrounds but it's necessary for color support, it shouldn't be *too* visible unless you're looking for it
 					int hi = 0xB8FFFFFF;
 					if (slot.isBigSlot()) {
-						ScreenDrawing.drawBeveledPanel((x * 18) + left - 4, (y * 18) + top - 4, 26, 26,
+						ScreenDrawing.drawBeveledPanel(matrices, (x * 18) + left - 4, (y * 18) + top - 4, 26, 26,
 								lo, bg, hi);
 						if (slot.getFocusedSlot() == index) {
 							int sx = (x * 18) + left - 4;
 							int sy = (y * 18) + top - 4;
-							ScreenDrawing.coloredRect(sx,          sy,          26,     1,      0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(sx,          sy + 1,      1,      26 - 1, 0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(sx + 26 - 1, sy + 1,      1,      26 - 1, 0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(sx + 1,      sy + 26 - 1, 26 - 1, 1,      0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(matrices, sx,          sy,          26,     1,      0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(matrices, sx,          sy + 1,      1,      26 - 1, 0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(matrices, sx + 26 - 1, sy + 1,      1,      26 - 1, 0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(matrices, sx + 1,      sy + 26 - 1, 26 - 1, 1,      0xFF_FFFFA0);
 						}
 					} else {
-						ScreenDrawing.drawBeveledPanel((x * 18) + left, (y * 18) + top, 16+2, 16+2,
+						ScreenDrawing.drawBeveledPanel(matrices, (x * 18) + left, (y * 18) + top, 16+2, 16+2,
 								lo, bg, hi);
 						if (slot.getFocusedSlot() == index) {
 							int sx = (x * 18) + left;
 							int sy = (y * 18) + top;
-							ScreenDrawing.coloredRect(sx,          sy,          18,     1,      0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(sx,          sy + 1,      1,      18 - 1, 0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(sx + 18 - 1, sy + 1,      1,      18 - 1, 0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(sx + 1,      sy + 18 - 1, 18 - 1, 1,      0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(matrices, sx,          sy,          18,     1,      0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(matrices, sx,          sy + 1,      1,      18 - 1, 0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(matrices, sx + 18 - 1, sy + 1,      1,      18 - 1, 0xFF_FFFFA0);
+							ScreenDrawing.coloredRect(matrices, sx + 1,      sy + 18 - 1, 18 - 1, 1,      0xFF_FFFFA0);
 						}
 					}
 				}
@@ -86,11 +86,11 @@ public interface BackgroundPainter {
 	 *
 	 * @param panelColor the panel background color
 	 * @return a colorful gui panel painter
-	 * @see ScreenDrawing#drawGuiPanel(int, int, int, int, int)
+	 * @see ScreenDrawing#drawGuiPanel(MatrixStack, int, int, int, int, int)
 	 */
 	public static BackgroundPainter createColorful(int panelColor) {
 		return (matrices, left, top, panel) -> {
-			ScreenDrawing.drawGuiPanel(left-8, top-8, panel.getWidth()+16, panel.getHeight()+16, panelColor);
+			ScreenDrawing.drawGuiPanel(matrices, left-8, top-8, panel.getWidth()+16, panel.getHeight()+16, panelColor);
 		};
 	}
 
@@ -106,7 +106,7 @@ public interface BackgroundPainter {
 			int shadowColor = ScreenDrawing.multiplyColor(panelColor, 1.0f - contrast);
 			int hilightColor = ScreenDrawing.multiplyColor(panelColor, 1.0f + contrast);
 			
-			ScreenDrawing.drawGuiPanel(left-8, top-8, panel.getWidth()+16, panel.getHeight()+16, shadowColor, panelColor, hilightColor, 0xFF000000);
+			ScreenDrawing.drawGuiPanel(matrices, left-8, top-8, panel.getWidth()+16, panel.getHeight()+16, shadowColor, panelColor, hilightColor, 0xFF000000);
 		};
 	}
 

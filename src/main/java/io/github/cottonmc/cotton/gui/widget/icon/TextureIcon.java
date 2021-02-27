@@ -80,6 +80,6 @@ public class TextureIcon implements Icon {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int size) {
-		ScreenDrawing.texturedRect(x, y, size, size, texture, color, opacity);
+		ScreenDrawing.texturedRect(matrices, x, y, size, size, texture, color, opacity);
 	}
 }
