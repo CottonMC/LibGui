@@ -26,9 +26,9 @@
 		"mixins.libgui.accessors.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.8.8",
+		"fabricloader": ">=0.11.0",
 		"fabric": "*",
-		"minecraft": ">=1.16.1",
+		"minecraft": ">=1.16.5",
 		"jankson": "^3.0.0",
 		"fabric-networking-api-v1": "^1.0.0"
 	},
