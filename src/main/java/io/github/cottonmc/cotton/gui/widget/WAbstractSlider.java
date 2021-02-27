@@ -344,6 +344,16 @@ public abstract class WAbstractSlider extends WWidget {
 	}
 
 	/**
+	 * Tests whether the user is dragging this slider.
+	 *
+	 * @return true if this slider is being dragged, false otherwise
+	 * @since 4.0.0
+	 */
+	public boolean isDragging() {
+		return dragging;
+	}
+
+	/**
 	 * Tests if the key should decrease sliders with the specified direction.
 	 *
 	 * @param ch        the key code
