@@ -1,10 +1,10 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -155,7 +155,6 @@ public class WLabeledSlider extends WAbstractSlider {
 		return x >= 0 && x <= width && y >= 0 && y <= height;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
@@ -166,11 +165,11 @@ public class WLabeledSlider extends WAbstractSlider {
 				: (direction == Direction.UP ? height - mouseY : mouseY);
 		int rotMouseY = axis == Axis.HORIZONTAL ? mouseY : mouseX;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(x, y, 0);
+		matrices.push();
+		matrices.translate(x, y, 0);
 		if (axis == Axis.VERTICAL) {
-			RenderSystem.translatef(0, height, 0);
-			RenderSystem.rotatef(270, 0, 0, 1);
+			matrices.translate(0, height, 0);
+			matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(270));
 		}
 		drawButton(matrices, 0, 0, 0, aWidth);
 
@@ -193,7 +192,7 @@ public class WLabeledSlider extends WAbstractSlider {
 			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
 			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
-		RenderSystem.popMatrix();
+		matrices.pop();
 	}
 
 	// state = 1: regular, 2: hovered, 0: disabled/dragging
