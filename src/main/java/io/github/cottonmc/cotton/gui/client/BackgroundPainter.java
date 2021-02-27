@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
+
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
@@ -34,8 +36,8 @@ public interface BackgroundPainter {
 	 * @since 1.5.0
 	 */
 	public static BackgroundPainter VANILLA = createLightDarkVariants(
-			createNinePatch(new Identifier("libgui", "textures/widget/panel_light.png"), 8),
-			createNinePatch(new Identifier("libgui", "textures/widget/panel_dark.png"), 8)
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/panel_light.png"), 8),
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/panel_dark.png"), 8)
 	);
 
 	/**

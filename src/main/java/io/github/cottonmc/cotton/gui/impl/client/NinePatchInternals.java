@@ -2,6 +2,8 @@ package io.github.cottonmc.cotton.gui.impl.client;
 
 import io.github.cottonmc.cotton.gui.client.NinePatch;
 
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -39,7 +41,7 @@ public final class NinePatchInternals {
 	public static class MetadataLoader extends SinglePreparationResourceReloadListener<Map<Identifier, Properties>> implements IdentifiableResourceReloadListener {
 		public static final MetadataLoader INSTANCE = new MetadataLoader();
 
-		private static final Identifier ID = new Identifier("libgui", "9patch_metadata");
+		private static final Identifier ID = new Identifier(LibGuiCommon.MOD_ID, "9patch_metadata");
 		private static final String SUFFIX = ".9patch";
 
 		private Map<Identifier, TextureProperties> properties = Collections.emptyMap();

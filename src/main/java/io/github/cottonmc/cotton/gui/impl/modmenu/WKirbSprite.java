@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.impl.modmenu;
 
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -12,7 +14,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import java.util.ArrayList;
 
 public class WKirbSprite extends WWidget {
-	private static final Identifier KIRB = new Identifier("libgui:textures/widget/kirb.png");
+	private static final Identifier KIRB = new Identifier(LibGuiCommon.MOD_ID, "textures/widget/kirb.png");
 	
 	private static final float PX = 1f/416f;
 	private static final float KIRB_WIDTH = 32*PX;

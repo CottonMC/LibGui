@@ -26,8 +26,8 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 	//   message: identifier
 	//   rest: buf
 
-	public static final Identifier SCREEN_MESSAGE_S2C = new Identifier("libgui", "screen_message_s2c");
-	public static final Identifier SCREEN_MESSAGE_C2S = new Identifier("libgui", "screen_message_c2s");
+	public static final Identifier SCREEN_MESSAGE_S2C = new Identifier(LibGuiCommon.MOD_ID, "screen_message_s2c");
+	public static final Identifier SCREEN_MESSAGE_C2S = new Identifier(LibGuiCommon.MOD_ID, "screen_message_c2s");
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Map<SyncedGuiDescription, ScreenNetworkingImpl> instanceCache = new WeakHashMap<>();
