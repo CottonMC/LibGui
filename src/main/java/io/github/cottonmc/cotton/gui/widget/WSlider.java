@@ -50,7 +50,7 @@ public class WSlider extends WAbstractSlider {
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter != null) {
-			backgroundPainter.paintBackground(x, y, this);
+			backgroundPainter.paintBackground(matrices, x, y, this);
 		} else {
 			float px = 1 / 32f;
 			// thumbX/Y: thumb position in widget-space

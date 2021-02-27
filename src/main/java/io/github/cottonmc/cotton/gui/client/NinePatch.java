@@ -3,6 +3,7 @@ package io.github.cottonmc.cotton.gui.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloadListener;
@@ -167,7 +168,7 @@ public class NinePatch implements BackgroundPainter {
 	}
 
 	@Override
-	public void paintBackground(int left, int top, WWidget panel) {
+	public void paintBackground(MatrixStack matrices, int left, int top, WWidget panel) {
 		int width = panel.getWidth() + leftPadding + rightPadding;
 		int height = panel.getHeight() + topPadding + bottomPadding;
 		left = left - leftPadding;

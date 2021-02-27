@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
@@ -17,7 +18,7 @@ public interface BackgroundPainter {
 	 * @param top The absolute position of the top of the panel, in gui-screen coordinates
 	 * @param panel The panel being painted
 	 */
-	public void paintBackground(int left, int top, WWidget panel);
+	public void paintBackground(MatrixStack matrices, int left, int top, WWidget panel);
 
 	/**
 	 * The {@code VANILLA} background painter draws a vanilla-like gui panel using {@linkplain NinePatch nine-patch textures}.
@@ -40,7 +41,7 @@ public interface BackgroundPainter {
 	/**
 	 * The {@code SLOT} background painter draws item slots or slot-like widgets.
 	 */
-	public static BackgroundPainter SLOT = (left, top, panel) -> {
+	public static BackgroundPainter SLOT = (matrices, left, top, panel) -> {
 		if (!(panel instanceof WItemSlot)) {
 			ScreenDrawing.drawBeveledPanel(left-1, top-1, panel.getWidth()+2, panel.getHeight()+2, 0xB8000000, 0x4C000000, 0xB8FFFFFF);
 		} else {
@@ -88,7 +89,7 @@ public interface BackgroundPainter {
 	 * @see ScreenDrawing#drawGuiPanel(int, int, int, int, int)
 	 */
 	public static BackgroundPainter createColorful(int panelColor) {
-		return (left, top, panel) -> {
+		return (matrices, left, top, panel) -> {
 			ScreenDrawing.drawGuiPanel(left-8, top-8, panel.getWidth()+16, panel.getHeight()+16, panelColor);
 		};
 	}
@@ -101,7 +102,7 @@ public interface BackgroundPainter {
 	 * @return a colorful gui panel painter
 	 */
 	public static BackgroundPainter createColorful(int panelColor, float contrast) {
-		return (left, top, panel) -> {
+		return (matrices, left, top, panel) -> {
 			int shadowColor = ScreenDrawing.multiplyColor(panelColor, 1.0f - contrast);
 			int hilightColor = ScreenDrawing.multiplyColor(panelColor, 1.0f + contrast);
 			
@@ -146,9 +147,9 @@ public interface BackgroundPainter {
 	 * @since 1.5.0
 	 */
 	public static BackgroundPainter createLightDarkVariants(BackgroundPainter light, BackgroundPainter dark) {
-		return (left, top, panel) -> {
-			if (LibGui.isDarkMode()) dark.paintBackground(left, top, panel);
-			else light.paintBackground(left, top, panel);
+		return (matrices, left, top, panel) -> {
+			if (LibGui.isDarkMode()) dark.paintBackground(matrices, left, top, panel);
+			else light.paintBackground(matrices, left, top, panel);
 		};
 	}
 }

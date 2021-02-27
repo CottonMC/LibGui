@@ -13,7 +13,7 @@ public class WClippedPanel extends WPanel {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		if (getBackgroundPainter()!=null) getBackgroundPainter().paintBackground(x, y, this);
+		if (getBackgroundPainter()!=null) getBackgroundPainter().paintBackground(matrices, x, y, this);
 
 		Scissors.push(x, y, width, height);
 		for(WWidget child : children) {

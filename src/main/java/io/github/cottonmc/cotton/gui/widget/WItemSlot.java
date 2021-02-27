@@ -328,7 +328,7 @@ public class WItemSlot extends WWidget {
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter != null) {
-			backgroundPainter.paintBackground(x, y, this);
+			backgroundPainter.paintBackground(matrices, x, y, this);
 		}
 	}
 
