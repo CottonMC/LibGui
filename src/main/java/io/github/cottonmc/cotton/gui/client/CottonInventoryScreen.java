@@ -119,8 +119,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		}
 
 		if (!description.isFullscreen()) {
-			x = (width / 2) - (backgroundWidth / 2);
-			y = (height / 2) - (backgroundHeight / 2);
+			x = (screenWidth / 2) - (backgroundWidth / 2);
+			y = (screenHeight / 2) - (backgroundHeight / 2);
 			titleX = 0;
 			titleY = 0;
 		} else {
