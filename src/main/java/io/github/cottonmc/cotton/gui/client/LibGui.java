@@ -3,7 +3,7 @@ package io.github.cottonmc.cotton.gui.client;
 /**
  * This class provides access to LibGui configuration and other global data.
  *
- * @since 3.4.0
+ * @since 4.0.0
  */
 public final class LibGui {
 	private LibGui() {
