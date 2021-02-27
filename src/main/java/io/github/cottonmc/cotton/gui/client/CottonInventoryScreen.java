@@ -9,8 +9,11 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
+import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
+import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -19,9 +22,9 @@ import org.lwjgl.opengl.GL11;
  *
  * @param <T> the description type
  */
-public class CottonInventoryScreen<T extends SyncedGuiDescription> extends HandledScreen<T> implements TextHoverRendererScreen {
+public class CottonInventoryScreen<T extends SyncedGuiDescription> extends HandledScreen<T> implements TextHoverRendererScreen, CottonScreenImpl {
 	protected SyncedGuiDescription description;
-	protected WWidget lastResponder = null;
+	@Nullable protected WWidget lastResponder = null;
 
 	/**
 	 * Constructs a new screen without a title.
@@ -75,6 +78,17 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	public void removed() {
 		super.removed();
 		this.client.keyboard.setRepeatEvents(false);
+	}
+
+	@Nullable
+	@Override
+	public WWidget getLastResponder() {
+		return lastResponder;
+	}
+
+	@Override
+	public void setLastResponder(@Nullable WWidget lastResponder) {
+		this.lastResponder = lastResponder;
 	}
 
 	/**
@@ -177,60 +191,40 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-		if (lastResponder==null) {
-			lastResponder = description.doMouseDown(containerX, containerY, mouseButton);
-		} else {
-			//This is a drag instead
-		}
-		return result;
+		MouseInputHandler.onMouseDown(description, this, containerX, containerY, mouseButton);
+
+		return true;
 	}
 	
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) { //Testing shows that STATE IS ACTUALLY BUTTON
-		boolean result = super.mouseReleased(mouseX, mouseY, mouseButton);
+		super.mouseReleased(mouseX, mouseY, mouseButton);
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-		
-		if (lastResponder!=null) {
-			lastResponder.onMouseUp(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
-			if (containerX>=0 && containerY>=0 && containerX<width && containerY<height) {
-				lastResponder.onClick(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton);
-			}
-		} else {
-			description.doMouseUp(containerX, containerY, mouseButton);
-		}
-		
-		lastResponder = null;
-		return result;
+		MouseInputHandler.onMouseUp(description, this, containerX, containerY, mouseButton);
+
+		return true;
 	}
 	
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		boolean result = super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+		super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 		
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-		
-		if (lastResponder!=null) {
-			lastResponder.onMouseDrag(containerX-lastResponder.getAbsoluteX(), containerY-lastResponder.getAbsoluteY(), mouseButton, deltaX, deltaY);
-			return result;
-		} else {
-			if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-			description.doMouseDrag(containerX, containerY, mouseButton, deltaX, deltaY);
-		}
-		return result;
+		MouseInputHandler.onMouseDrag(description, this, containerX, containerY, mouseButton, deltaX, deltaY);
+
+		return true;
 	}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
 		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
-		
-		WPanel root = description.getRootPanel();
+
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-		
-		WWidget child = root.hit(containerX, containerY);
-		child.onMouseScroll(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY(), amount);
+		MouseInputHandler.onMouseScroll(description, containerX, containerY, amount);
+
 		return true;
 	}
 
@@ -238,12 +232,9 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	public void mouseMoved(double mouseX, double mouseY) {
 		if (description.getRootPanel()==null) return;
 
-		WPanel root = description.getRootPanel();
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-
-		WWidget child = root.hit(containerX, containerY);
-		child.onMouseMove(containerX - child.getAbsoluteX(), containerY - child.getAbsoluteY());
+		MouseInputHandler.onMouseMove(description, containerX, containerY);
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import net.minecraft.util.math.MathHelper;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -538,9 +539,10 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onClick(int x, int y, int button) {
+	public InputResult onClick(int x, int y, int button) {
 		requestFocus();
 		cursor = getCaretPos(this.text, x-OFFSET_X_TEXT);
+		return InputResult.PROCESSED;
 	}
 
 	@Environment(EnvType.CLIENT)

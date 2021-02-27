@@ -297,52 +297,6 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		
 		return inserted;
 	}
-	
-	@Nullable
-	public WWidget doMouseUp(int x, int y, int state) {
-		if (rootPanel!=null) return rootPanel.onMouseUp(x, y, state);
-		return null;
-	}
-
-	@Nullable
-	public WWidget doMouseDown(int x, int y, int button) {
-		if (rootPanel!=null) return rootPanel.onMouseDown(x, y, button);
-		return null;
-	}
-
-	public void doMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
-		if (rootPanel!=null) rootPanel.onMouseDrag(x, y, button, deltaX, deltaY);
-	}
-
-	public void doClick(int x, int y, int button) {
-		if (focus!=null) {
-			int wx = focus.getAbsoluteX();
-			int wy = focus.getAbsoluteY();
-
-			if (x>=wx && x<wx+focus.getWidth() && y>=wy && y<wy+focus.getHeight()) {
-				//Do nothing, focus will get the click soon
-			} else {
-				//Invalidate the component first
-				WWidget lastFocus = focus;
-				focus = null;
-				lastFocus.onFocusLost();
-			}
-		}
-
-		//if (rootPanel!=null) rootPanel.onClick(x, y, button);
-	}
-
-	public void doCharType(char ch) {
-		if (focus!=null) focus.onCharTyped(ch);
-	}
-
-	//public void doKeyPress(int key) {
-	//	if (focus!=null) focus.onKeyPressed(key);
-	//}
-
-	//public void doKeyRelease(int key) {
-	//	if (focus!=null) focus.onKeyReleased(key);
-	//}
 
 	@Nullable
 	@Override

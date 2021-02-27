@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.math.MathHelper;
 
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -108,28 +109,33 @@ public abstract class WAbstractSlider extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public WWidget onMouseDown(int x, int y, int button) {
+	public InputResult onMouseDown(int x, int y, int button) {
 		// Check if cursor is inside or <=2px away from track
 		if (isMouseInsideBounds(x, y)) {
 			requestFocus();
+			return InputResult.PROCESSED;
 		}
-		return super.onMouseDown(x, y, button);
+		return InputResult.IGNORED;
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onMouseDrag(int x, int y, int button) {
+	public InputResult onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
 		if (isFocused()) {
 			dragging = true;
 			moveSlider(x, y);
+			return InputResult.PROCESSED;
 		}
+
+		return InputResult.IGNORED;
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onClick(int x, int y, int button) {
+	public InputResult onClick(int x, int y, int button) {
 		moveSlider(x, y);
 		if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
+		return InputResult.PROCESSED;
 	}
 
 	private void moveSlider(int x, int y) {
@@ -160,15 +166,15 @@ public abstract class WAbstractSlider extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public WWidget onMouseUp(int x, int y, int button) {
+	public InputResult onMouseUp(int x, int y, int button) {
 		dragging = false;
 		if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
-		return super.onMouseUp(x, y, button);
+		return InputResult.PROCESSED;
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onMouseScroll(int x, int y, double amount) {
+	public InputResult onMouseScroll(int x, int y, double amount) {
 		if (direction == Direction.LEFT || direction == Direction.DOWN) {
 			amount = -amount;
 		}
@@ -180,6 +186,8 @@ public abstract class WAbstractSlider extends WWidget {
 			onValueChanged(value);
 			pendingDraggingFinishedFromScrolling = true;
 		}
+
+		return InputResult.PROCESSED;
 	}
 
 	@Environment(EnvType.CLIENT)

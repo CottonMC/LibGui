@@ -14,6 +14,7 @@ import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.client.TextHoverRendererScreen;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import org.jetbrains.annotations.Nullable;
 
@@ -125,13 +126,16 @@ public class WText extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onClick(int x, int y, int button) {
-		if (button != 0) return; // only left clicks
+	public InputResult onClick(int x, int y, int button) {
+		if (button != 0) return InputResult.IGNORED; // only left clicks
 
 		Style hoveredTextStyle = getTextStyleAt(x, y);
 		if (hoveredTextStyle != null) {
-			MinecraftClient.getInstance().currentScreen.handleTextClick(hoveredTextStyle);
+			boolean processed = MinecraftClient.getInstance().currentScreen.handleTextClick(hoveredTextStyle);
+			return InputResult.of(processed);
 		}
+
+		return InputResult.IGNORED;
 	}
 
 	/**
