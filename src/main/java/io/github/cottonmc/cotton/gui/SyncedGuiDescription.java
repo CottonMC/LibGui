@@ -127,12 +127,9 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			if (slot == null || !slot.canTakeItems(player)) {
 				return;
 			}
-			
-			ItemStack remaining = ItemStack.EMPTY;
+
 			if (slot != null && slot.hasStack()) {
 				ItemStack toTransfer = slot.getStack();
-				remaining = toTransfer.copy();
-				//if (slot.inventory==blockInventory) {
 				if (blockInventory!=null) {
 					if (slot.inventory==blockInventory) {
 						//Try to transfer the item from the block into the player's inventory
@@ -155,8 +152,6 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 					slot.markDirty();
 				}
 			}
-			
-			// return remaining;
 		} else {
 			super.onSlotClick(slotNumber, button, action, player);
 		}

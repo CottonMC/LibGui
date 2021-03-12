@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget.icon;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
