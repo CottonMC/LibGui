@@ -48,10 +48,10 @@ public class ItemIcon implements Icon {
 
 		float scale = size != 16 ? ((float) size / 16f) : 1f;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(x, y, 0);
-		RenderSystem.scalef(scale, scale, 1);
+		matrices.push();
+		matrices.translate(x, y, 0);
+		matrices.scale(scale, scale, 1);
 		renderer.renderInGui(stack, 0, 0);
-		RenderSystem.popMatrix();
+		matrices.pop();
 	}
 }

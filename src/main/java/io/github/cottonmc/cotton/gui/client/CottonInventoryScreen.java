@@ -257,7 +257,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		paint(matrices, mouseX, mouseY);
 		
 		super.render(matrices, mouseX, mouseY, partialTicks);
-		DiffuseLighting.disable(); //Needed because super.render leaves dirty state
+		DiffuseLighting.disableGuiDepthLighting(); //Needed because super.render leaves dirty state
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();

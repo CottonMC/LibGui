@@ -115,17 +115,17 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	}
 	
 	@Override
-	public ItemStack onSlotClick(int slotNumber, int button, SlotActionType action, PlayerEntity player) {
+	public void onSlotClick(int slotNumber, int button, SlotActionType action, PlayerEntity player) {
 		if (action==SlotActionType.QUICK_MOVE) {
 			
 			if (slotNumber < 0) {
-				return ItemStack.EMPTY;
+				return;
 			}
 			
-			if (slotNumber>=this.slots.size()) return ItemStack.EMPTY;
+			if (slotNumber>=this.slots.size()) return;
 			Slot slot = this.slots.get(slotNumber);
 			if (slot == null || !slot.canTakeItems(player)) {
-				return ItemStack.EMPTY;
+				return;
 			}
 			
 			ItemStack remaining = ItemStack.EMPTY;
@@ -137,15 +137,15 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 					if (slot.inventory==blockInventory) {
 						//Try to transfer the item from the block into the player's inventory
 						if (!this.insertItem(toTransfer, this.playerInventory, true, player)) {
-							return ItemStack.EMPTY;
+							return;
 						}
 					} else if (!this.insertItem(toTransfer, this.blockInventory, false, player)) { //Try to transfer the item from the player to the block
-						return ItemStack.EMPTY;
+						return;
 					}
 				} else {
 					//There's no block, just swap between the player's storage and their hotbar
 					if (!swapHotbar(toTransfer, slotNumber, this.playerInventory, player)) {
-						return ItemStack.EMPTY;
+						return;
 					}
 				}
 				
@@ -156,9 +156,9 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 				}
 			}
 			
-			return remaining;
+			// return remaining;
 		} else {
-			return super.onSlotClick(slotNumber, button, action, player);
+			super.onSlotClick(slotNumber, button, action, player);
 		}
 	}
 	
