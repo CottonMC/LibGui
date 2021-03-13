@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Objects;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+
 /**
  * An icon that draws an item stack.
  *
@@ -41,9 +43,10 @@ public class ItemIcon implements Icon {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int size) {
+	public void paint(MatrixStack bruh, int x, int y, int size) {
 		MinecraftClient client = MinecraftClient.getInstance();
 		ItemRenderer renderer = client.getItemRenderer();
+		MatrixStack matrices = RenderSystem.getModelViewStack();
 
 		float scale = size != 16 ? ((float) size / 16f) : 1f;
 
@@ -52,5 +55,6 @@ public class ItemIcon implements Icon {
 		matrices.scale(scale, scale, 1);
 		renderer.renderInGui(stack, 0, 0);
 		matrices.pop();
+		RenderSystem.applyModelViewMatrix();
 	}
 }

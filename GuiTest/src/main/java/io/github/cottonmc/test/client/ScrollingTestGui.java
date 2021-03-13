@@ -6,7 +6,8 @@ import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WScrollPanel;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
-
+import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
+import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
 
 public class ScrollingTestGui extends LightweightGuiDescription {
@@ -17,6 +18,8 @@ public class ScrollingTestGui extends LightweightGuiDescription {
 		for (int i = 0; i < 20; i++) {
 			box.add(new WButton(new LiteralText("Button #" + i)));
 		}
+
+		box.add(new WButton(new ItemIcon(Items.APPLE)));
 
 		root.add(new WScrollPanel(box), 0, 0, 5, 3);
 		root.validate(this);
