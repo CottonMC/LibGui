@@ -1,9 +1,5 @@
 package io.github.cottonmc.cotton.gui.impl.client;
 
-import io.github.cottonmc.cotton.gui.client.NinePatch;
-
-import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -12,6 +8,9 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloadListener;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
+
+import io.github.cottonmc.cotton.gui.client.NinePatch;
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 
 import java.io.InputStream;
 import java.util.Collection;
