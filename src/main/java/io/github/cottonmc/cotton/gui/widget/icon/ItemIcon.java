@@ -43,15 +43,17 @@ public class ItemIcon implements Icon {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int size) {
+		// TODO: Make this not ignore the actual matrices
 		MinecraftClient client = MinecraftClient.getInstance();
 		ItemRenderer renderer = client.getItemRenderer();
+		MatrixStack modelViewMatrices = RenderSystem.getModelViewStack();
 
 		float scale = size != 16 ? ((float) size / 16f) : 1f;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(x, y, 0);
-		RenderSystem.scalef(scale, scale, 1);
+		modelViewMatrices.push();
+		modelViewMatrices.translate(x, y, 0);
+		modelViewMatrices.scale(scale, scale, 1);
 		renderer.renderInGui(stack, 0, 0);
-		RenderSystem.popMatrix();
+		modelViewMatrices.pop();
 	}
 }

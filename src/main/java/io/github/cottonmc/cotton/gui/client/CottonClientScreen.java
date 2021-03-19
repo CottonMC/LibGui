@@ -127,7 +127,6 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
 		paint(matrices, mouseX, mouseY);

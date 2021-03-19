@@ -3,9 +3,9 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3f;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
@@ -169,7 +169,7 @@ public class WLabeledSlider extends WAbstractSlider {
 		matrices.translate(x, y, 0);
 		if (axis == Axis.VERTICAL) {
 			matrices.translate(0, height, 0);
-			matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(270));
+			matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(270));
 		}
 		drawButton(matrices, 0, 0, 0, aWidth);
 

@@ -8,7 +8,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -20,7 +22,6 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -404,11 +405,12 @@ public class WTextField extends WWidget {
 	private void invertedRect(int x, int y, int width, int height) {
 		Tessellator tessellator_1 = Tessellator.getInstance();
 		BufferBuilder bufferBuilder_1 = tessellator_1.getBuffer();
-		RenderSystem.color4f(0.0F, 0.0F, 255.0F, 255.0F);
+		RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
+		RenderSystem.setShader(GameRenderer::method_34542);
 		RenderSystem.disableTexture();
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-		bufferBuilder_1.begin(GL11.GL_QUADS, VertexFormats.POSITION);
+		bufferBuilder_1.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
 		bufferBuilder_1.vertex(x,       y+height, 0.0D).next();
 		bufferBuilder_1.vertex(x+width, y+height, 0.0D).next();
 		bufferBuilder_1.vertex(x+width, y,        0.0D).next();

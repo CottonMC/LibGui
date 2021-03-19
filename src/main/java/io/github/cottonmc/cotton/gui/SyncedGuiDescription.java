@@ -115,17 +115,17 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	}
 	
 	@Override
-	public ItemStack onSlotClick(int slotNumber, int button, SlotActionType action, PlayerEntity player) {
+	public void onSlotClick(int slotNumber, int button, SlotActionType action, PlayerEntity player) {
 		if (action==SlotActionType.QUICK_MOVE) {
 			
 			if (slotNumber < 0) {
-				return ItemStack.EMPTY;
+				return;
 			}
 			
-			if (slotNumber>=this.slots.size()) return ItemStack.EMPTY;
+			if (slotNumber>=this.slots.size()) return;
 			Slot slot = this.slots.get(slotNumber);
 			if (slot == null || !slot.canTakeItems(player)) {
-				return ItemStack.EMPTY;
+				return;
 			}
 			
 			ItemStack remaining = ItemStack.EMPTY;
@@ -137,15 +137,15 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 					if (slot.inventory==blockInventory) {
 						//Try to transfer the item from the block into the player's inventory
 						if (!this.insertItem(toTransfer, this.playerInventory, true, player)) {
-							return ItemStack.EMPTY;
+							return;
 						}
 					} else if (!this.insertItem(toTransfer, this.blockInventory, false, player)) { //Try to transfer the item from the player to the block
-						return ItemStack.EMPTY;
+						return;
 					}
 				} else {
 					//There's no block, just swap between the player's storage and their hotbar
 					if (!swapHotbar(toTransfer, slotNumber, this.playerInventory, player)) {
-						return ItemStack.EMPTY;
+						return;
 					}
 				}
 				
@@ -156,16 +156,14 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 				}
 			}
 			
-			return remaining;
-		} else {
-			return super.onSlotClick(slotNumber, button, action, player);
+			super.onSlotClick(slotNumber, button, action, player);
 		}
 	}
 	
 	/** WILL MODIFY toInsert! Returns true if anything was inserted. */
 	private boolean insertIntoExisting(ItemStack toInsert, Slot slot, PlayerEntity player) {
 		ItemStack curSlotStack = slot.getStack();
-		if (!curSlotStack.isEmpty() && canStacksCombine(toInsert, curSlotStack) && slot.canInsert(toInsert)) {
+		if (!curSlotStack.isEmpty() && ItemStack.canCombine(toInsert, curSlotStack) && slot.canInsert(toInsert)) {
 			int combinedAmount = curSlotStack.getCount() + toInsert.getCount();
 			int maxAmount = Math.min(toInsert.getMaxCount(), slot.getMaxItemCount(toInsert));
 			if (combinedAmount <= maxAmount) {
@@ -384,7 +382,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	}
 
 	private static Inventory getBlockInventory(ScreenHandlerContext ctx, Supplier<Inventory> fallback) {
-		return ctx.run((world, pos) -> {
+		return ctx.get((world, pos) -> {
 			BlockState state = world.getBlockState(pos);
 			Block b = state.getBlock();
 
@@ -422,7 +420,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	 * @return the found property delegate
 	 */
 	public static PropertyDelegate getBlockPropertyDelegate(ScreenHandlerContext ctx) {
-		return ctx.run((world, pos) -> {
+		return ctx.get((world, pos) -> {
 			BlockEntity be = world.getBlockEntity(pos);
 			if (be!=null && be instanceof PropertyDelegateHolder) {
 				return ((PropertyDelegateHolder)be).getPropertyDelegate();
@@ -446,7 +444,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	 * @since 2.0.0
 	 */
 	public static PropertyDelegate getBlockPropertyDelegate(ScreenHandlerContext ctx, int size) {
-		return ctx.run((world, pos) -> {
+		return ctx.get((world, pos) -> {
 			BlockEntity be = world.getBlockEntity(pos);
 			if (be!=null && be instanceof PropertyDelegateHolder) {
 				return ((PropertyDelegateHolder)be).getPropertyDelegate();

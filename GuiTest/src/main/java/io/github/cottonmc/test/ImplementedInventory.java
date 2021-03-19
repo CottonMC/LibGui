@@ -5,7 +5,6 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * A simple {@code SidedInventory} implementation with only default methods + an item list getter.
  *
  * <h2>Reading and writing to tags</h2>
- * Use {@link Inventories#fromTag(CompoundTag, DefaultedList)} and {@link Inventories#toTag(CompoundTag, DefaultedList)}
+ * Use {@link Inventories#readNbt(net.minecraft.nbt.NbtCompound, DefaultedList)} and {@link Inventories#writeNbt(net.minecraft.nbt.NbtCompound, DefaultedList)}
  * on {@linkplain #getItems() the item list}.
  *
  * License: <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>

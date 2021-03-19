@@ -44,7 +44,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	 * @param title       the screen title
 	 */
 	public CottonInventoryScreen(T description, PlayerEntity player, Text title) {
-		super(description, player.inventory, title);
+		super(description, player.getInventory(), title);
 		this.description = description;
 		width = 18*9;
 		height = 18*9;
@@ -251,13 +251,12 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
 		paint(matrices, mouseX, mouseY);
 		
 		super.render(matrices, mouseX, mouseY, partialTicks);
-		DiffuseLighting.disable(); //Needed because super.render leaves dirty state
+		DiffuseLighting.disableGuiDepthLighting(); //Needed because super.render leaves dirty state
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();

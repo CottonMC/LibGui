@@ -33,9 +33,10 @@ dependencies {
 	modImplementation "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 
-	modRuntime(modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
+	// TODO: Add runtime when ModMenu updates to 1.17
+	modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
-	})
+	}
 }
 
 processResources {

@@ -1,10 +1,13 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
@@ -18,7 +21,6 @@ import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 
 /**
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.
@@ -130,10 +132,6 @@ public class ScreenDrawing {
 	 * @since 2.0.0
 	 */
 	public static void texturedRect(MatrixStack matrices, int x, int y, int width, int height, Identifier texture, float u1, float v1, float u2, float v2, int color, float opacity) {
-		MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
-
-		//float scale = 0.00390625F;
-
 		if (width <= 0) width = 1;
 		if (height <= 0) height = 1;
 
@@ -143,17 +141,16 @@ public class ScreenDrawing {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		Matrix4f model = matrices.peek().getModel();
-		RenderSystem.enableBlend();
-		//GlStateManager.disableTexture2D();
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR_TEXTURE); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(model, x,         y + height, 0).color(r, g, b, opacity).texture(u1, v2).next();
-		buffer.vertex(model, x + width, y + height, 0).color(r, g, b, opacity).texture(u2, v2).next();
-		buffer.vertex(model, x + width, y,          0).color(r, g, b, opacity).texture(u2, v1).next();
-		buffer.vertex(model, x,         y,          0).color(r, g, b, opacity).texture(u1, v1).next();
-		tessellator.draw();
-		//GlStateManager.enableTexture2D();
-		RenderSystem.disableBlend();
+		RenderSystem.setShaderTexture(0, texture);
+		RenderSystem.setShaderColor(r, g, b, opacity);
+		RenderSystem.setShader(GameRenderer::method_34542);
+		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+		buffer.vertex(model, x,         y + height, 0).texture(u1, v2).next();
+		buffer.vertex(model, x + width, y + height, 0).texture(u2, v2).next();
+		buffer.vertex(model, x + width, y,          0).texture(u2, v1).next();
+		buffer.vertex(model, x,         y,          0).texture(u1, v1).next();
+		buffer.end();
+		BufferRenderer.draw(buffer);
 	}
 
 	/**
@@ -200,24 +197,7 @@ public class ScreenDrawing {
 		if (width <= 0) width = 1;
 		if (height <= 0) height = 1;
 
-		float a = (color >> 24 & 255) / 255.0F;
-		float r = (color >> 16 & 255) / 255.0F;
-		float g = (color >> 8 & 255) / 255.0F;
-		float b = (color & 255) / 255.0F;
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
-		Matrix4f model = matrices.peek().getModel();
-		RenderSystem.enableBlend();
-		RenderSystem.disableTexture();
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR); //I thought GL_QUADS was deprecated but okay, sure.
-		buffer.vertex(model, left,         top + height, 0).color(r, g, b, a).next();
-		buffer.vertex(model, left + width, top + height, 0).color(r, g, b, a).next();
-		buffer.vertex(model, left + width, top,          0).color(r, g, b, a).next();
-		buffer.vertex(model, left,         top,          0).color(r, g, b, a).next();
-		tessellator.draw();
-		RenderSystem.enableTexture();
-		RenderSystem.disableBlend();
+		DrawableHelper.fill(matrices, left, top, left + width, top + height, color);
 	}
 
 	/**
