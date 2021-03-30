@@ -13,11 +13,17 @@ import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
 import io.github.cottonmc.jankson.JanksonFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @deprecated Replaced by {@link LibGui}.
+ */
+@Deprecated
+@ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
 public class LibGuiClient implements ClientModInitializer {
 	public static final Logger logger = LogManager.getLogger();
 	public static final String MODID = "libgui";
