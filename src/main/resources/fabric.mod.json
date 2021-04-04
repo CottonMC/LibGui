@@ -37,6 +37,8 @@
 	},
 
 	"custom": {
-		"badges": [ "library" ]
+		"modmenu": {
+			"badges": [ "library" ]
+		}
 	}
 }
