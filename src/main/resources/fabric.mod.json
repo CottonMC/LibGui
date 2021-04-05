@@ -37,7 +37,8 @@
 	},
 
 	"custom": {
-		"modmenu:api": true,
-		"modmenu:clientsideOnly": false
+		"modmenu": {
+			"badges": [ "library" ]
+		}
 	}
 }
