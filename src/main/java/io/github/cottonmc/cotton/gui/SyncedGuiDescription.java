@@ -259,7 +259,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 					hotbarSlots.add(slot);
 				} else {
 					storageSlots.add(slot);
-					if (index==slotNumber) swapToStorage = false;
+					if (slot.id==slotNumber) swapToStorage = false;
 				}
 			}
 		}
