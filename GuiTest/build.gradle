@@ -2,8 +2,8 @@ plugins {
 	id 'fabric-loom'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 if(rootProject.file('private.gradle').exists()) { //Publishing details
 	apply from: rootProject.file('private.gradle')
@@ -25,7 +25,7 @@ loom {
 
 repositories {
 	mavenLocal();
-	maven { url "http://server.bbkr.space:8081/artifactory/libs-release" }
+	maven { url "https://server.bbkr.space/artifactory/libs-release" }
 }
 
 dependencies {

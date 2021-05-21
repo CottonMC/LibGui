@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.SinglePreparationResourceReloadListener;
+import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
 
@@ -37,7 +37,7 @@ public final class NinePatchInternals {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static class MetadataLoader extends SinglePreparationResourceReloadListener<Map<Identifier, Properties>> implements IdentifiableResourceReloadListener {
+	public static class MetadataLoader extends SinglePreparationResourceReloader<Map<Identifier, Properties>> implements IdentifiableResourceReloadListener {
 		public static final MetadataLoader INSTANCE = new MetadataLoader();
 
 		private static final Identifier ID = new Identifier(LibGuiCommon.MOD_ID, "9patch_metadata");

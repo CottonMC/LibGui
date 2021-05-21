@@ -1,11 +1,11 @@
 plugins {
-	id 'fabric-loom' version '0.6-SNAPSHOT'
+	id 'fabric-loom' version '0.8-SNAPSHOT'
 	id 'maven-publish'
 	id 'checkstyle'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 if(rootProject.file('private.gradle').exists()) { //Publishing details
 	apply from: 'private.gradle'
@@ -18,7 +18,7 @@ group = project.maven_group
 repositories {
 	maven { url "https://server.bbkr.space/artifactory/libs-release" }
 	maven {
-		url = "http://maven.terraformersmc.com/releases"
+		url = "https://maven.terraformersmc.com/releases"
 		content {
 			includeGroup "com.terraformersmc"
 		}

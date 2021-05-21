@@ -143,7 +143,7 @@ public class ScreenDrawing {
 		Matrix4f model = matrices.peek().getModel();
 		RenderSystem.setShaderTexture(0, texture);
 		RenderSystem.setShaderColor(r, g, b, opacity);
-		RenderSystem.setShader(GameRenderer::method_34542);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 		buffer.vertex(model, x,         y + height, 0).texture(u1, v2).next();
 		buffer.vertex(model, x + width, y + height, 0).texture(u2, v2).next();

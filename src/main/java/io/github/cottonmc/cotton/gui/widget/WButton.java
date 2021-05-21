@@ -3,7 +3,7 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
@@ -221,6 +221,6 @@ public class WButton extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	static Identifier getTexture() {
-		return LibGui.isDarkMode() ? DARK_WIDGETS_LOCATION : AbstractButtonWidget.WIDGETS_LOCATION;
+		return LibGui.isDarkMode() ? DARK_WIDGETS_LOCATION : ClickableWidget.WIDGETS_TEXTURE;
 	}
 }
