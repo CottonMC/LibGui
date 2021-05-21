@@ -406,7 +406,7 @@ public class WTextField extends WWidget {
 		Tessellator tessellator_1 = Tessellator.getInstance();
 		BufferBuilder bufferBuilder_1 = tessellator_1.getBuffer();
 		RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
-		RenderSystem.setShader(GameRenderer::method_34542);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.disableTexture();
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);

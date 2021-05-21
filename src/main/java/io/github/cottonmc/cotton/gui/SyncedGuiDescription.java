@@ -155,7 +155,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 					slot.markDirty();
 				}
 			}
-			
+		} else {
 			super.onSlotClick(slotNumber, button, action, player);
 		}
 	}
