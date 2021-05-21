@@ -44,12 +44,12 @@ import java.util.function.Supplier;
  * A screen handler-based GUI description for GUIs with slots.
  */
 public class SyncedGuiDescription extends ScreenHandler implements GuiDescription {
-
+	
 	protected Inventory blockInventory;
 	protected PlayerInventory playerInventory;
 	protected World world;
 	protected PropertyDelegate propertyDelegate;
-
+	
 	protected WPanel rootPanel = new WGridPanel().setInsets(Insets.ROOT_PANEL);
 	protected int titleColor = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkTitleColor = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
@@ -66,7 +66,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		this.world = playerInventory.player.world;
 		this.propertyDelegate = null;//new ArrayPropertyDelegate(1);
 	}
-
+	
 	public SyncedGuiDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory blockInventory, PropertyDelegate propertyDelegate) {
 		super(type, syncId);
 		this.blockInventory = blockInventory;
@@ -75,15 +75,15 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		this.propertyDelegate = propertyDelegate;
 		if (propertyDelegate!=null && propertyDelegate.size()>0) this.addProperties(propertyDelegate);
 	}
-
+	
 	public WPanel getRootPanel() {
 		return rootPanel;
 	}
-
+	
 	public int getTitleColor() {
 		return (world.isClient && LibGui.isDarkMode()) ? darkTitleColor : titleColor;
 	}
-
+	
 	public SyncedGuiDescription setRootPanel(WPanel panel) {
 		this.rootPanel = panel;
 		return this;
@@ -102,32 +102,32 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		this.darkTitleColor = darkColor;
 		return this;
 	}
-
+	
 	@Environment(EnvType.CLIENT)
 	public void addPainters() {
 		if (this.rootPanel!=null && !fullscreen) {
 			this.rootPanel.setBackgroundPainter(BackgroundPainter.VANILLA);
 		}
 	}
-
+	
 	public void addSlotPeer(ValidatedSlot slot) {
 		this.addSlot(slot);
 	}
-
+	
 	@Override
 	public void onSlotClick(int slotNumber, int button, SlotActionType action, PlayerEntity player) {
 		if (action==SlotActionType.QUICK_MOVE) {
-
+			
 			if (slotNumber < 0) {
 				return;
 			}
-
+			
 			if (slotNumber>=this.slots.size()) return;
 			Slot slot = this.slots.get(slotNumber);
 			if (slot == null || !slot.canTakeItems(player)) {
 				return;
 			}
-
+			
 			ItemStack remaining = ItemStack.EMPTY;
 			if (slot != null && slot.hasStack()) {
 				ItemStack toTransfer = slot.getStack();
@@ -148,20 +148,18 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 						return;
 					}
 				}
-
+				
 				if (toTransfer.isEmpty()) {
 					slot.setStack(ItemStack.EMPTY);
 				} else {
 					slot.markDirty();
 				}
 			}
-
 		} else {
-
 			super.onSlotClick(slotNumber, button, action, player);
 		}
 	}
-
+	
 	/** WILL MODIFY toInsert! Returns true if anything was inserted. */
 	private boolean insertIntoExisting(ItemStack toInsert, Slot slot, PlayerEntity player) {
 		ItemStack curSlotStack = slot.getStack();
@@ -182,7 +180,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		}
 		return false;
 	}
-
+	
 	/** WILL MODIFY toInsert! Returns true if anything was inserted. */
 	private boolean insertIntoEmpty(ItemStack toInsert, Slot slot) {
 		ItemStack curSlotStack = slot.getStack();
@@ -196,10 +194,10 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			slot.markDirty();
 			return true;
 		}
-
+		
 		return false;
 	}
-
+	
 	private boolean insertItem(ItemStack toInsert, Inventory inventory, boolean walkBackwards, PlayerEntity player) {
 		//Make a unified list of slots *only from this inventory*
 		ArrayList<Slot> inventorySlots = new ArrayList<>();
@@ -207,7 +205,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			if (slot.inventory==inventory) inventorySlots.add(slot);
 		}
 		if (inventorySlots.isEmpty()) return false;
-
+		
 		//Try to insert it on top of existing stacks
 		boolean inserted = false;
 		if (walkBackwards) {
@@ -222,9 +220,9 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 				if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
 				if (toInsert.isEmpty()) break;
 			}
-
+			
 		}
-
+		
 		//If we still have any, shove them into empty slots
 		if (!toInsert.isEmpty()) {
 			if (walkBackwards) {
@@ -239,20 +237,20 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 					if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
 					if (toInsert.isEmpty()) break;
 				}
-
+				
 			}
 		}
-
+		
 		return inserted;
 	}
-
+	
 	private boolean swapHotbar(ItemStack toInsert, int slotNumber, Inventory inventory, PlayerEntity player) {
 		//Feel out the slots to see what's storage versus hotbar
 		ArrayList<Slot> storageSlots = new ArrayList<>();
 		ArrayList<Slot> hotbarSlots = new ArrayList<>();
 		boolean swapToStorage = true;
 		boolean inserted = false;
-
+		
 		for(Slot slot : slots) {
 			if (slot.inventory==inventory && slot instanceof ValidatedSlot) {
 				int index = ((ValidatedSlot)slot).getInventoryIndex();
@@ -265,7 +263,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			}
 		}
 		if (storageSlots.isEmpty() || hotbarSlots.isEmpty()) return false;
-
+		
 		if (swapToStorage) {
 			//swap from hotbar to storage
 			for(int i=0; i<storageSlots.size(); i++) {
@@ -295,7 +293,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 				}
 			}
 		}
-
+		
 		return inserted;
 	}
 
@@ -304,7 +302,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	public PropertyDelegate getPropertyDelegate() {
 		return propertyDelegate;
 	}
-
+	
 	@Override
 	public GuiDescription setPropertyDelegate(PropertyDelegate delegate) {
 		this.propertyDelegate = delegate;
@@ -427,7 +425,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			if (be!=null && be instanceof PropertyDelegateHolder) {
 				return ((PropertyDelegateHolder)be).getPropertyDelegate();
 			}
-
+			
 			return new ArrayPropertyDelegate(0);
 		}).orElse(new ArrayPropertyDelegate(0));
 	}
@@ -455,7 +453,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			return new ArrayPropertyDelegate(size);
 		}).orElse(new ArrayPropertyDelegate(size));
 	}
-
+	
 	//extends ScreenHandler {
 		@Override
 		public boolean canUse(PlayerEntity entity) {
