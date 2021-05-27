@@ -563,10 +563,6 @@ public class WTextField extends WWidget {
 		}
 	}
 	
-	public void insertText(int ofs, String s) {
-		//TODO: Implement
-	}
-
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyPressed(int ch, int key, int modifiers) {
