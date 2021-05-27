@@ -4,6 +4,10 @@ package io.github.cottonmc.cotton.gui.widget.data;
  * The layout insets of a panel. The insets describe how many pixels should be around the panel's contents.
  * For example, root panels have 7 pixels around their contents, which is set via {@link #ROOT_PANEL}.
  *
+ * @param top    the top (Y-) inset size
+ * @param left   the left (X-) inset size
+ * @param bottom the bottom (Y+) inset size
+ * @param right  the right (X+) inset size
  * @since 4.0.0
  */
 public record Insets(int top, int left, int bottom, int right) {
@@ -20,10 +24,10 @@ public record Insets(int top, int left, int bottom, int right) {
 	/**
 	 * Constructs layout insets.
 	 *
-	 * @param top the top (-Y) inset size
-	 * @param left the left (-X) inset size
-	 * @param bottom the bottom (+Y) inset size
-	 * @param right the right (+X) inset size
+	 * @param top    the top (Y-) inset size
+	 * @param left   the left (X-) inset size
+	 * @param bottom the bottom (Y+) inset size
+	 * @param right  the right (X+) inset size
 	 */
 	public Insets {
 		if (top < 0) throw new IllegalArgumentException("top cannot be negative, found " + top);
