@@ -53,7 +53,9 @@ public class ItemIcon implements Icon {
 		modelViewMatrices.push();
 		modelViewMatrices.translate(x, y, 0);
 		modelViewMatrices.scale(scale, scale, 1);
+		RenderSystem.applyModelViewMatrix();
 		renderer.renderInGui(stack, 0, 0);
 		modelViewMatrices.pop();
+		RenderSystem.applyModelViewMatrix();
 	}
 }

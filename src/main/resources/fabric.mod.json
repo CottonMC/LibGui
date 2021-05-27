@@ -30,7 +30,8 @@
 		"fabric": "*",
 		"minecraft": ">=1.16.5",
 		"jankson": "^3.0.0",
-		"fabric-networking-api-v1": "^1.0.0"
+		"fabric-networking-api-v1": "^1.0.0",
+		"libninepatch": "^1.0.0"
 	},
 	"suggests": {
 		"flamingo": "*"

@@ -4,8 +4,14 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
+import io.github.cottonmc.cotton.gui.impl.client.NinePatchTextureRendererImpl;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
+import juuxel.libninepatch.NinePatch;
+import juuxel.libninepatch.TextureRegion;
+
+import java.util.function.Consumer;
 
 /**
  * Background painters are used to paint the background of a widget.
@@ -112,28 +118,39 @@ public interface BackgroundPainter {
 	/**
 	 * Creates a new nine-patch background painter.
 	 *
-	 * <p>This method is equivalent to {@code new NinePatch(texture)}.
+	 * <p>The resulting painter has a corner size of 4 px and a corner UV of 0.25.
 	 *
 	 * @param texture the background painter texture
 	 * @return a new nine-patch background painter
 	 * @since 1.5.0
 	 */
-	public static NinePatch createNinePatch(Identifier texture) {
-		return new NinePatch(texture);
+	public static BackgroundPainter createNinePatch(Identifier texture) {
+		return createNinePatch(new Texture(texture), builder -> builder.cornerSize(4).cornerUv(0.25f));
 	}
 
 	/**
-	 * Creates a new nine-patch background painter with a custom padding.
+	 * Creates a new nine-patch background painter with a custom configuration.
 	 *
-	 * <p>This method is equivalent to {@code new NinePatch(texture).setPadding(padding)}.
-	 *
-	 * @param texture the background painter texture
-	 * @param padding the padding of the painter
-	 * @return a new nine-patch background painter
-	 * @since 1.5.0
+	 * @param texture      the background painter texture
+	 * @param configurator a consumer that configures the {@link NinePatch.Builder}
+	 * @return the created nine-patch background painter
+	 * @since 4.0.0
+	 * @see NinePatch
+	 * @see NinePatch.Builder
 	 */
-	public static NinePatch createNinePatch(Identifier texture, int padding) {
-		return new NinePatch(texture).setPadding(padding);
+	public static BackgroundPainter createNinePatch(Texture texture, Consumer<NinePatch.Builder<Identifier>> configurator) {
+		TextureRegion<Identifier> region = new TextureRegion<>(texture.image, texture.u1, texture.v1, texture.u2, texture.v2);
+		var builder = NinePatch.builder(region);
+		configurator.accept(builder);
+		var ninePatch = builder.build();
+		return (matrices, left, top, panel) -> {
+			try (NinePatchTextureRendererImpl renderer = NinePatchTextureRendererImpl.bind(matrices)) {
+				matrices.push();
+				matrices.translate(left, top, 0);
+				ninePatch.draw(renderer, panel.getWidth(), panel.getHeight());
+				matrices.pop();
+			}
+		};
 	}
 
 	/**
