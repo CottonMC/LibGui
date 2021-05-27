@@ -25,6 +25,7 @@ import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -69,14 +70,29 @@ public class WTextField extends WWidget {
 	public WTextField(Text suggestion) {
 		this.suggestion = suggestion;
 	}
-	
+
+	/**
+	 * Sets the text in this text field.
+	 *
+	 * @param s the new text
+	 * @throws NullPointerException if the text is null
+	 */
 	public void setText(String s) {
+		Objects.requireNonNull(s, "text");
+
 		if (this.textPredicate==null || this.textPredicate.test(s)) {
+			String original = this.text;
 			this.text = (s.length()>maxLength) ? s.substring(0,maxLength) : s;
-			if (onChanged!=null) onChanged.accept(this.text);
+			if (cursor > text.length()) cursor = text.length();
+			if (!original.equals(s) && onChanged!=null) onChanged.accept(this.text);
 		}
 	}
 
+	/**
+	 * Gets the text in this text field.
+	 *
+	 * @return the text in this text field
+	 */
 	public String getText() {
 		return this.text;
 	}
@@ -109,6 +125,7 @@ public class WTextField extends WWidget {
 		if (select==cursor) return null;
 		
 		//Tidy some things
+		// TODO: This tidying doesn't belong here
 		if (select>text.length()) select = text.length();
 		if (cursor<0) cursor = 0;
 		if (cursor>text.length()) cursor = text.length();
@@ -315,10 +332,9 @@ public class WTextField extends WWidget {
 			if (cursor>this.text.length()) cursor = this.text.length();
 			
 			String before = this.text.substring(0, cursor);
-			String after = this.text.substring(cursor, this.text.length());
-			this.text = before+ch+after;
+			String after = this.text.substring(cursor);
 			cursor++;
-			if (onChanged != null) onChanged.accept(text);
+			setText(before+ch+after);
 		}
 	}
 	
@@ -347,7 +363,7 @@ public class WTextField extends WWidget {
 				String after = this.text.substring(b);
 				
 				String clip = MinecraftClient.getInstance().keyboard.getClipboard();
-				text = before+clip+after;
+				setText(before+clip+after);
 				select = -1;
 				cursor = (before+clip).length();
 			} else {
@@ -355,12 +371,8 @@ public class WTextField extends WWidget {
 				String after = this.text.substring(cursor, this.text.length());
 				
 				String clip = MinecraftClient.getInstance().keyboard.getClipboard();
-				text = before + clip + after;
+				setText(before + clip + after);
 				cursor += clip.length();
-				if (text.length()>this.maxLength) {
-					text = text.substring(0, maxLength);
-					if (cursor>text.length()) cursor = text.length();
-				}
 			}
 
 			if (onChanged != null) onChanged.accept(text);
@@ -374,6 +386,7 @@ public class WTextField extends WWidget {
 		//System.out.println("Ch: "+ch+", Key: "+key+", Mod: "+modifiers);
 		
 		if (modifiers==0) {
+			// TODO: Make Del work backwards as it should
 			if (ch==GLFW.GLFW_KEY_DELETE || ch==GLFW.GLFW_KEY_BACKSPACE) {
 				if (text.length()>0 && cursor>0) {
 					if (select>=0 && select!=cursor) {
@@ -386,7 +399,7 @@ public class WTextField extends WWidget {
 						}
 						String before = this.text.substring(0, a);
 						String after = this.text.substring(b);
-						text = before+after;
+						setText(before+after);
 						if (cursor==b) cursor = a;
 						select = -1;
 					} else {
@@ -394,7 +407,7 @@ public class WTextField extends WWidget {
 						String after = this.text.substring(cursor, this.text.length());
 						
 						before = before.substring(0,before.length()-1);
-						text = before+after;
+						setText(before+after);
 						cursor--;
 					}
 
