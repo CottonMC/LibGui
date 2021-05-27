@@ -1,4 +1,4 @@
-package io.github.cottonmc.cotton.gui.math;
+package io.github.cottonmc.cotton.gui.widget.data;
 
 /**
  * An immutable, two-dimensional int vector.

@@ -5,10 +5,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.screen.PropertyDelegate;
 
 import io.github.cottonmc.cotton.gui.impl.FocusHandler;
-import io.github.cottonmc.cotton.gui.math.Vec2i;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.Vec2i;
 import org.jetbrains.annotations.Nullable;
 
 /**
