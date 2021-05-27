@@ -41,7 +41,7 @@ public class WGridPanel extends WPanel {
 	public void add(WWidget w, int x, int y) {
 		children.add(w);
 		w.parent = this;
-		w.setLocation(x * grid + insets.left, y * grid + insets.top);
+		w.setLocation(x * grid + insets.left(), y * grid + insets.top());
 		if (w.canResize()) {
 			w.setSize(grid, grid);
 		}
@@ -61,7 +61,7 @@ public class WGridPanel extends WPanel {
 	public void add(WWidget w, int x, int y, int width, int height) {
 		children.add(w);
 		w.parent = this;
-		w.setLocation(x * grid + insets.left, y * grid + insets.top);
+		w.setLocation(x * grid + insets.left(), y * grid + insets.top());
 		if (w.canResize()) {
 			w.setSize(width * grid, height * grid);
 		}

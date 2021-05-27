@@ -77,7 +77,7 @@ public class WBox extends WPanel {
 
 	@Override
 	public void layout() {
-		int dimension = axis.choose(insets.left, insets.top);
+		int dimension = axis.choose(insets.left(), insets.top());
 
 		// Set position offset from alignment along the box axis
 		if (axis == Axis.HORIZONTAL && horizontalAlignment != HorizontalAlignment.LEFT) {
@@ -113,13 +113,13 @@ public class WBox extends WPanel {
 				switch (verticalAlignment) {
 					case TOP:
 					default:
-						y = insets.top;
+						y = insets.top();
 						break;
 					case CENTER:
-						y = insets.top + (getHeight() - insets.top - insets.bottom - child.getHeight()) / 2;
+						y = insets.top() + (getHeight() - insets.top() - insets.bottom() - child.getHeight()) / 2;
 						break;
 					case BOTTOM:
-						y = getHeight() - insets.bottom - child.getHeight();
+						y = getHeight() - insets.bottom() - child.getHeight();
 						break;
 				}
 
@@ -130,13 +130,13 @@ public class WBox extends WPanel {
 				switch (horizontalAlignment) {
 					case LEFT:
 					default:
-						x = insets.left;
+						x = insets.left();
 						break;
 					case CENTER:
-						x = insets.left + (getWidth() - insets.left - insets.right - child.getWidth()) / 2;
+						x = insets.left() + (getWidth() - insets.left() - insets.right() - child.getWidth()) / 2;
 						break;
 					case RIGHT:
-						x = getWidth() - insets.right - child.getWidth();
+						x = getWidth() - insets.right() - child.getWidth();
 						break;
 				}
 

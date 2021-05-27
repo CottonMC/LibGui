@@ -99,8 +99,8 @@ public abstract class WPanel extends WWidget {
 	 * @since 4.0.0
 	 */
 	protected void expandToFit(WWidget w, Insets insets) {
-		int pushRight = w.getX()+w.getWidth()+insets.right;
-		int pushDown =  w.getY()+w.getHeight()+insets.bottom;
+		int pushRight = w.getX() + w.getWidth() + insets.right();
+		int pushDown =  w.getY() + w.getHeight() + insets.bottom();
 		this.setSize(Math.max(this.getWidth(), pushRight), Math.max(this.getHeight(), pushDown));
 	}
 

@@ -142,6 +142,7 @@ public interface GuiDescription {
 	/**
 	 * Gets the position of the screen title.
 	 *
+	 * @return the title position
 	 * @since 4.0.0
 	 */
 	Vec2i getTitlePos();
