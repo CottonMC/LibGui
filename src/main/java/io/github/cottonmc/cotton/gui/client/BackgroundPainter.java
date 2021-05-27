@@ -16,6 +16,17 @@ import java.util.function.Consumer;
 /**
  * Background painters are used to paint the background of a widget.
  * The background painter instance of a widget can be changed to customize the look of a widget.
+ *
+ * <h2>Nine-patch background painters</h2>
+ *
+ * Nine-patch background painters paint rectangles using a special nine-patch texture.
+ * The texture is divided into nine sections: four corners, four edges and a center part.
+ * The edges and the center are either tiled or stretched, depending on the mode of the painter,
+ * to fill the area between the corners. By default, the texture is tiled.
+ *
+ * <p>Nine-patch background painters are created using {@link #createNinePatch(Identifier)} or
+ * {@link #createNinePatch(Texture, Consumer)}. The latter lets you customise the look of
+ * the background more finely.
  */
 @FunctionalInterface
 public interface BackgroundPainter {
@@ -28,7 +39,7 @@ public interface BackgroundPainter {
 	public void paintBackground(MatrixStack matrices, int left, int top, WWidget panel);
 
 	/**
-	 * The {@code VANILLA} background painter draws a vanilla-like gui panel using {@linkplain NinePatch nine-patch textures}.
+	 * The {@code VANILLA} background painter draws a vanilla-like GUI panel using nine-patch textures.
 	 *
 	 * <p>This background painter uses {@code libgui:textures/widget/panel_light.png} as the light texture and
 	 * {@code libgui:textures/widget/panel_dark.png} as the dark texture.
