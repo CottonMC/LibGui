@@ -34,18 +34,18 @@ public class WTextField extends WWidget {
 	
 	@Environment(EnvType.CLIENT)
 	private TextRenderer font;
-	
-	protected String text = "";
-	protected int maxLength = 16;
-	protected boolean editable = true;
-	
-	protected int enabledColor = 0xE0E0E0;
-	protected int uneditableColor = 0x707070;
+
+	private String text = "";
+	private int maxLength = 16;
+	private boolean editable = true;
+
+	private int enabledColor = 0xE0E0E0;
+	private int uneditableColor = 0x707070;
 	
 	@Nullable
-	protected Text suggestion = null;
-	
-	protected int cursor = 0;
+	private Text suggestion = null;
+
+	private int cursor = 0;
 	/**
 	 * If not -1, select is the "anchor point" of a selection. That is, if you hit shift+left with
 	 * no existing selection, the selection will be anchored to where you were, but the cursor will
@@ -53,15 +53,15 @@ public class WTextField extends WWidget {
 	 * eventually you'll overtake the anchor, drop the anchor at the same place and start expanding
 	 * the selection rightwards instead.
 	 */
-	protected int select = -1;
-	
-	protected Consumer<String> onChanged;
-	
-	protected Predicate<String> textPredicate;
+	private int select = -1;
+
+	private Consumer<String> onChanged;
+
+	private Predicate<String> textPredicate;
 	
 	@Environment(EnvType.CLIENT)
 	@Nullable
-	protected BackgroundPainter backgroundPainter;
+	private BackgroundPainter backgroundPainter;
 
 	public WTextField() {
 	}
