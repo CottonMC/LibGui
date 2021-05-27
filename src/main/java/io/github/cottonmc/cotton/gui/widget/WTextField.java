@@ -559,6 +559,7 @@ public class WTextField extends WWidget {
 			String after = this.text.substring(cursor, this.text.length());
 			this.text = before+ch+after;
 			cursor++;
+			if (onChanged != null) onChanged.accept(text);
 		}
 	}
 	
@@ -606,6 +607,8 @@ public class WTextField extends WWidget {
 					if (cursor>text.length()) cursor = text.length();
 				}
 			}
+
+			if (onChanged != null) onChanged.accept(text);
 			return;
 		} else if (Screen.isSelectAll(ch)) {
 			select = 0;
@@ -639,6 +642,8 @@ public class WTextField extends WWidget {
 						text = before+after;
 						cursor--;
 					}
+
+					if (onChanged != null) onChanged.accept(text);
 				}
 			} else if (ch==GLFW.GLFW_KEY_LEFT) {
 				if (select!=-1) {
