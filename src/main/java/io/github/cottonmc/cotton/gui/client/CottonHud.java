@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
-import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
@@ -19,27 +18,38 @@ import java.util.Set;
  * Manages widgets that are painted on the in-game HUD.
  */
 @Environment(EnvType.CLIENT)
-public enum CottonHud implements HudRenderCallback {
-	INSTANCE; // TODO (4.0): Migrate from singleton to static methods
+public final class CottonHud {
+	private static final Set<WWidget> widgets = new HashSet<>();
+	private static final Map<WWidget, Positioner> positioners = new HashMap<>();
 
 	static {
-		HudRenderCallback.EVENT.register(INSTANCE);
+		HudRenderCallback.EVENT.register((matrices, tickDelta) -> {
+			Window window = MinecraftClient.getInstance().getWindow();
+			int hudWidth = window.getScaledWidth();
+			int hudHeight = window.getScaledHeight();
+			for (WWidget widget : widgets) {
+				Positioner positioner = positioners.get(widget);
+				if (positioner != null) {
+					positioner.reposition(widget, hudWidth, hudHeight);
+				}
+
+				widget.paint(matrices, widget.getX(), widget.getY(), -1, -1);
+			}
+		});
+
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			for (WWidget widget : INSTANCE.widgets) {
+			for (WWidget widget : widgets) {
 				widget.tick();
 			}
 		});
 	}
-
-	private final Set<WWidget> widgets = new HashSet<>();
-	private final Map<WWidget, Positioner> positioners = new HashMap<>();
 
 	/**
 	 * Adds a new widget to the HUD.
 	 *
 	 * @param widget the widget
 	 */
-	public void add(WWidget widget) {
+	public static void add(WWidget widget) {
 		widgets.add(widget);
 	}
 
@@ -51,7 +61,7 @@ public enum CottonHud implements HudRenderCallback {
 	 * @param y the y offset
 	 * @see Positioner#of documentation about the offsets
 	 */
-	public void add(WWidget widget, int x, int y) {
+	public static void add(WWidget widget, int x, int y) {
 		add(widget, Positioner.of(x, y));
 	}
 
@@ -65,7 +75,7 @@ public enum CottonHud implements HudRenderCallback {
 	 * @param height the height of the widget
 	 * @see Positioner#of documentation about the offsets
 	 */
-	public void add(WWidget widget, int x, int y, int width, int height) {
+	public static void add(WWidget widget, int x, int y, int width, int height) {
 		add(widget, Positioner.of(x, y));
 		widget.setSize(width, height);
 	}
@@ -76,7 +86,7 @@ public enum CottonHud implements HudRenderCallback {
 	 * @param widget the widget
 	 * @param positioner the positioner
 	 */
-	public void add(WWidget widget, Positioner positioner) {
+	public static void add(WWidget widget, Positioner positioner) {
 		widgets.add(widget);
 		setPositioner(widget, positioner);
 	}
@@ -89,7 +99,7 @@ public enum CottonHud implements HudRenderCallback {
 	 * @param width the width of the widget
 	 * @param height the height of the widget
 	 */
-	public void add(WWidget widget, Positioner positioner, int width, int height) {
+	public static void add(WWidget widget, Positioner positioner, int width, int height) {
 		widgets.add(widget);
 		widget.setSize(width, height);
 		setPositioner(widget, positioner);
@@ -101,7 +111,7 @@ public enum CottonHud implements HudRenderCallback {
 	 * @param widget the widget
 	 * @param positioner the positioner
 	 */
-	public void setPositioner(WWidget widget, Positioner positioner) {
+	public static void setPositioner(WWidget widget, Positioner positioner) {
 		positioners.put(widget, positioner);
 	}
 
@@ -110,23 +120,8 @@ public enum CottonHud implements HudRenderCallback {
 	 *
 	 * @param widget the widget
 	 */
-	public void remove(WWidget widget) {
+	public static void remove(WWidget widget) {
 		widgets.remove(widget);
-	}
-
-	@Override
-	public void onHudRender(MatrixStack matrices, float tickDelta) {
-		Window window = MinecraftClient.getInstance().getWindow();
-		int hudWidth = window.getScaledWidth();
-		int hudHeight = window.getScaledHeight();
-		for (WWidget widget : widgets) {
-			Positioner positioner = positioners.get(widget);
-			if (positioner != null) {
-				positioner.reposition(widget, hudWidth, hudHeight);
-			}
-
-			widget.paint(matrices, widget.getX(), widget.getY(), -1, -1);
-		}
 	}
 
 	/**

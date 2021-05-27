@@ -22,7 +22,7 @@ public class LibGuiTestClient implements ClientModInitializer {
 				(desc, inventory, title) -> new CottonInventoryScreen<>(desc, inventory.player, title)
 		);
 
-		CottonHud.INSTANCE.add(new WHudTest(), 10, -20, 10, 10);
+		CottonHud.add(new WHudTest(), 10, -20, 10, 10);
 
 		ClientCommandManager.DISPATCHER.register(
 				literal("libgui")
