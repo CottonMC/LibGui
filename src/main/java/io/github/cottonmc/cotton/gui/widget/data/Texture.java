@@ -7,19 +7,14 @@ import java.util.Objects;
 /**
  * Represents a texture for a widget.
  *
+ * @param image the image of this texture
+ * @param u1 the start U-coordinate, between 0 and 1
+ * @param v1 the start V-coordinate, between 0 and 1
+ * @param u2 the end U-coordinate, between 0 and 1
+ * @param v2 the end V-coordinate, between 0 and 1
  * @since 3.0.0
  */
-public final class Texture {
-	/**
-	 * The image of this texture.
-	 */
-	public final Identifier image;
-
-	/**
-	 * The UV coordinates of this texture, between 0 and 1.
-	 */
-	public final float u1, v1, u2, v2;
-
+public record Texture(Identifier image, float u1, float v1, float u2, float v2) {
 	/**
 	 * Constructs a new texture that uses the full image.
 	 *
@@ -40,13 +35,8 @@ public final class Texture {
 	 * @param v2    the bottom V coordinate
 	 * @throws NullPointerException if the image is null
 	 */
-	public Texture(Identifier image, float u1, float v1, float u2, float v2) {
-		this.image = Objects.requireNonNull(image, "image");
-
-		this.u1 = u1;
-		this.v1 = v1;
-		this.u2 = u2;
-		this.v2 = v2;
+	public Texture {
+		Objects.requireNonNull(image, "image");
 	}
 
 	/**

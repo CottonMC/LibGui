@@ -111,7 +111,7 @@ public class ScreenDrawing {
 	 * @since 3.0.0
 	 */
 	public static void texturedRect(MatrixStack matrices, int x, int y, int width, int height, Texture texture, int color, float opacity) {
-		texturedRect(matrices, x, y, width, height, texture.image, texture.u1, texture.v1, texture.u2, texture.v2, color, opacity);
+		texturedRect(matrices, x, y, width, height, texture.image(), texture.u1(), texture.v1(), texture.u2(), texture.v2(), color, opacity);
 	}
 
 	/**

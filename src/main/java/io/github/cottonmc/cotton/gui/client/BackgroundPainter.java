@@ -150,7 +150,7 @@ public interface BackgroundPainter {
 	 * @see NinePatch.Builder
 	 */
 	public static BackgroundPainter createNinePatch(Texture texture, Consumer<NinePatch.Builder<Identifier>> configurator) {
-		TextureRegion<Identifier> region = new TextureRegion<>(texture.image, texture.u1, texture.v1, texture.u2, texture.v2);
+		TextureRegion<Identifier> region = new TextureRegion<>(texture.image(), texture.u1(), texture.v1(), texture.u2(), texture.v2());
 		var builder = NinePatch.builder(region);
 		configurator.accept(builder);
 		var ninePatch = builder.build();
