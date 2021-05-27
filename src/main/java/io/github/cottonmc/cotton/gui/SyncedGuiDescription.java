@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.math.Vec2i;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
@@ -58,6 +59,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	protected HorizontalAlignment titleAlignment = HorizontalAlignment.LEFT;
 
 	protected WWidget focus;
+	private Vec2i titlePos = new Vec2i(8, 6);
 
 	public SyncedGuiDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory) {
 		super(type, syncId);
@@ -517,6 +519,16 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	@Override
 	public void setTitleAlignment(HorizontalAlignment titleAlignment) {
 		this.titleAlignment = titleAlignment;
+	}
+
+	@Override
+	public Vec2i getTitlePos() {
+		return titlePos;
+	}
+
+	@Override
+	public void setTitlePos(Vec2i titlePos) {
+		this.titlePos = titlePos;
 	}
 
 	/**

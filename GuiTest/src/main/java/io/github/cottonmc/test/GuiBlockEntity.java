@@ -36,7 +36,7 @@ public class GuiBlockEntity extends BlockEntity implements ImplementedInventory,
 
 	@Override
 	public Text getDisplayName() {
-		return new LiteralText(""); // no title
+		return new LiteralText("test title");
 	}
 
 	@Nullable

@@ -88,18 +88,15 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
+				titleX = description.getTitlePos().x();
+				titleY = description.getTitlePos().y();
+
 				if (!description.isFullscreen()) {
 					this.left = (screenWidth - root.getWidth()) / 2;
 					this.top = (screenHeight - root.getHeight()) / 2;
-					this.titleX = 0;
-					this.titleY = 0;
 				} else {
 					this.left = 0;
 					this.top = 0;
-
-					// Offset the title coordinates a little from the edge
-					this.titleX = 10;
-					this.titleY = 10;
 
 					root.setSize(screenWidth, screenHeight);
 				}

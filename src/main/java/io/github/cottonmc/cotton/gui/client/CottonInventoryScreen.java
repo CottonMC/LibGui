@@ -118,18 +118,15 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 			if (backgroundHeight<16) backgroundHeight=300;
 		}
 
+		titleX = description.getTitlePos().x();
+		titleY = description.getTitlePos().y();
+
 		if (!description.isFullscreen()) {
 			x = (screenWidth / 2) - (backgroundWidth / 2);
 			y = (screenHeight / 2) - (backgroundHeight / 2);
-			titleX = 0;
-			titleY = 0;
 		} else {
 			x = 0;
 			y = 0;
-
-			// Offset the title coordinates a little from the edge
-			titleX = 10;
-			titleY = 10;
 
 			if (basePanel != null) {
 				basePanel.setSize(screenWidth, screenHeight);

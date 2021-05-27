@@ -4,6 +4,7 @@ import net.minecraft.screen.PropertyDelegate;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
+import io.github.cottonmc.cotton.gui.math.Vec2i;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
@@ -25,6 +26,7 @@ public class LightweightGuiDescription implements GuiDescription {
 	protected boolean fullscreen = false;
 	protected boolean titleVisible = true;
 	protected HorizontalAlignment titleAlignment = HorizontalAlignment.LEFT;
+	private Vec2i titlePos = new Vec2i(8, 6);
 	
 	@Override
 	public WPanel getRootPanel() {
@@ -136,5 +138,15 @@ public class LightweightGuiDescription implements GuiDescription {
 	@Override
 	public void setTitleAlignment(HorizontalAlignment titleAlignment) {
 		this.titleAlignment = titleAlignment;
+	}
+
+	@Override
+	public Vec2i getTitlePos() {
+		return titlePos;
+	}
+
+	@Override
+	public void setTitlePos(Vec2i titlePos) {
+		this.titlePos = titlePos;
 	}
 }

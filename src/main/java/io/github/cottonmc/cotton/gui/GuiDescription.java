@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.screen.PropertyDelegate;
 
 import io.github.cottonmc.cotton.gui.impl.FocusHandler;
+import io.github.cottonmc.cotton.gui.math.Vec2i;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -137,4 +138,19 @@ public interface GuiDescription {
 	 * @since 2.1.0
 	 */
 	void setTitleAlignment(HorizontalAlignment alignment);
+
+	/**
+	 * Gets the position of the screen title.
+	 *
+	 * @since 4.0.0
+	 */
+	Vec2i getTitlePos();
+
+	/**
+	 * Sets the position of the screen title.
+	 *
+	 * @param titlePos the new title position
+	 * @since 4.0.0
+	 */
+	void setTitlePos(Vec2i titlePos);
 }
