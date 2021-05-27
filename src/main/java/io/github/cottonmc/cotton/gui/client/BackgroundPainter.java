@@ -155,12 +155,10 @@ public interface BackgroundPainter {
 		configurator.accept(builder);
 		var ninePatch = builder.build();
 		return (matrices, left, top, panel) -> {
-			try (NinePatchTextureRendererImpl renderer = NinePatchTextureRendererImpl.bind(matrices)) {
-				matrices.push();
-				matrices.translate(left, top, 0);
-				ninePatch.draw(renderer, panel.getWidth(), panel.getHeight());
-				matrices.pop();
-			}
+			matrices.push();
+			matrices.translate(left, top, 0);
+			ninePatch.draw(NinePatchTextureRendererImpl.INSTANCE, matrices, panel.getWidth(), panel.getHeight());
+			matrices.pop();
 		};
 	}
 
