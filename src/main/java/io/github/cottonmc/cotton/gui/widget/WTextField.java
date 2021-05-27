@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
@@ -16,6 +17,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix4f;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -202,30 +204,27 @@ public class WTextField extends WWidget {
 				b = a;
 				a = tmp;
 			}
-			invertedRect(textX+a-1, textY-1, Math.min(b-a, width - OFFSET_X_TEXT), 12);
-		//	int int_10 = int_6 + MinecraftClient.getInstance().textRenderer.getStringWidth(trimText.substring(0, adjustedCursor));
-		//	var10002 = int_7 - 1;
-		//	var10003 = int_10 - 1;
-		//	int var10004 = int_7 + 1;
-		//	//this.method_1886(int_9, var10002, var10003, var10004 + 9);
+			invertedRect(matrices, textX+a-1, textY-1, Math.min(b-a, width - OFFSET_X_TEXT), 12);
 		}
 	}
 	
 	@Environment(EnvType.CLIENT)
-	private void invertedRect(int x, int y, int width, int height) {
-		Tessellator tessellator_1 = Tessellator.getInstance();
-		BufferBuilder bufferBuilder_1 = tessellator_1.getBuffer();
+	private void invertedRect(MatrixStack matrices, int x, int y, int width, int height) {
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
+		Matrix4f model = matrices.peek().getModel();
 		RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.disableTexture();
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-		bufferBuilder_1.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-		bufferBuilder_1.vertex(x,       y+height, 0.0D).next();
-		bufferBuilder_1.vertex(x+width, y+height, 0.0D).next();
-		bufferBuilder_1.vertex(x+width, y,        0.0D).next();
-		bufferBuilder_1.vertex(x,       y,        0.0D).next();
-		tessellator_1.draw();
+		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+		buffer.vertex(model, x,       y+height, 0).next();
+		buffer.vertex(model, x+width, y+height, 0).next();
+		buffer.vertex(model, x+width, y,        0).next();
+		buffer.vertex(model, x,       y,        0).next();
+		buffer.end();
+		BufferRenderer.draw(buffer);
 		RenderSystem.disableColorLogicOp();
 		RenderSystem.enableTexture();
 	}
