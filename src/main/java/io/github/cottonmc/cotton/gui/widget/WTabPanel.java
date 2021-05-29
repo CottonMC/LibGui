@@ -326,21 +326,9 @@ public class WTabPanel extends WPanel {
 				}
 			}
 
-			// Make the tab a bit higher...
-			if (selected) {
-				height += 2;
-				y -= 2;
-			}
-
 			(selected ? Painters.SELECTED_TAB : Painters.UNSELECTED_TAB).paintBackground(matrices, x, y, this);
 			if (isFocused()) {
 				(selected ? Painters.SELECTED_TAB_FOCUS_BORDER : Painters.UNSELECTED_TAB_FOCUS_BORDER).paintBackground(matrices, x, y, this);
-			}
-
-			// ...and revert the size change here
-			if (selected) {
-				height -= 2;
-				y += 2;
 			}
 
 			int iconX = 6;
@@ -378,8 +366,8 @@ public class WTabPanel extends WPanel {
 	@Environment(EnvType.CLIENT)
 	final static class Painters {
 		static final BackgroundPainter SELECTED_TAB = BackgroundPainter.createLightDarkVariants(
-				BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/selected_light.png")),
-				BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/selected_dark.png"))
+				BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/selected_light.png")).setTopPadding(2),
+				BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/selected_dark.png")).setTopPadding(2)
 		);
 
 		static final BackgroundPainter UNSELECTED_TAB = BackgroundPainter.createLightDarkVariants(
@@ -387,7 +375,7 @@ public class WTabPanel extends WPanel {
 				BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/unselected_dark.png"))
 		);
 
-		static final BackgroundPainter SELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/focus.png"));
+		static final BackgroundPainter SELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/focus.png")).setTopPadding(2);
 		static final BackgroundPainter UNSELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/focus.png"));
 	}
 }

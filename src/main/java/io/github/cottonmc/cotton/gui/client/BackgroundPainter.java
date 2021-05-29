@@ -4,7 +4,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
-import io.github.cottonmc.cotton.gui.impl.client.NinePatchTextureRendererImpl;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
@@ -16,17 +15,6 @@ import java.util.function.Consumer;
 /**
  * Background painters are used to paint the background of a widget.
  * The background painter instance of a widget can be changed to customize the look of a widget.
- *
- * <h2>Nine-patch background painters</h2>
- *
- * Nine-patch background painters paint rectangles using a special nine-patch texture.
- * The texture is divided into nine sections: four corners, four edges and a center part.
- * The edges and the center are either tiled or stretched, depending on the mode of the painter,
- * to fill the area between the corners. By default, the texture is tiled.
- *
- * <p>Nine-patch background painters are created using {@link #createNinePatch(Identifier)} or
- * {@link #createNinePatch(Texture, Consumer)}. The latter lets you customise the look of
- * the background more finely.
  */
 @FunctionalInterface
 public interface BackgroundPainter {
@@ -134,8 +122,9 @@ public interface BackgroundPainter {
 	 * @param texture the background painter texture
 	 * @return a new nine-patch background painter
 	 * @since 1.5.0
+	 * @see NinePatchBackgroundPainter
 	 */
-	public static BackgroundPainter createNinePatch(Identifier texture) {
+	public static NinePatchBackgroundPainter createNinePatch(Identifier texture) {
 		return createNinePatch(new Texture(texture), builder -> builder.cornerSize(4).cornerUv(0.25f));
 	}
 
@@ -148,18 +137,13 @@ public interface BackgroundPainter {
 	 * @since 4.0.0
 	 * @see NinePatch
 	 * @see NinePatch.Builder
+	 * @see NinePatchBackgroundPainter
 	 */
-	public static BackgroundPainter createNinePatch(Texture texture, Consumer<NinePatch.Builder<Identifier>> configurator) {
+	public static NinePatchBackgroundPainter createNinePatch(Texture texture, Consumer<NinePatch.Builder<Identifier>> configurator) {
 		TextureRegion<Identifier> region = new TextureRegion<>(texture.image(), texture.u1(), texture.v1(), texture.u2(), texture.v2());
 		var builder = NinePatch.builder(region);
 		configurator.accept(builder);
-		var ninePatch = builder.build();
-		return (matrices, left, top, panel) -> {
-			matrices.push();
-			matrices.translate(left, top, 0);
-			ninePatch.draw(NinePatchTextureRendererImpl.INSTANCE, matrices, panel.getWidth(), panel.getHeight());
-			matrices.pop();
-		};
+		return new NinePatchBackgroundPainter(builder.build());
 	}
 
 	/**
