@@ -73,6 +73,10 @@ checkstyle {
 }
 
 javadoc {
+	options {
+		links("https://maven.fabricmc.net/docs/yarn-$project.yarn_mappings")
+	}
+
 	exclude("**/impl/**")
 }
 
