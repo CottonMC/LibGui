@@ -7,7 +7,6 @@ import net.minecraft.screen.slot.Slot;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import io.github.cottonmc.cotton.gui.impl.access.SlotAccessor;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -170,13 +169,12 @@ public class ValidatedSlot extends Slot {
 		if (this.visible != visible) {
 			this.visible = visible;
 
-			SlotAccessor accessor = (SlotAccessor) this;
 			if (visible) {
-				accessor.setX(originalX);
-				accessor.setY(originalY);
+				x = originalX;
+				y = originalY;
 			} else {
-				accessor.setX(-100000);
-				accessor.setY(-100000);
+				x = -100000;
+				y = -100000;
 			}
 		}
 	}

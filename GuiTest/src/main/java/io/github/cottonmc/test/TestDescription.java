@@ -18,8 +18,9 @@ public class TestDescription extends SyncedGuiDescription {
 		super(type, syncId, playerInventory, getBlockInventory(context, GuiBlockEntity.INVENTORY_SIZE), null);
 		
 		WGridPanel root = (WGridPanel)this.getRootPanel();
-		
-		root.add(WItemSlot.of(blockInventory, 0, 4, 1), 0, 1);
+
+		WItemSlot slot = WItemSlot.of(blockInventory, 0, 4, 1);
+		root.add(slot, 0, 1);
 
 		WButton buttonA = new WButton(new LiteralText("Button A"));
 
@@ -45,5 +46,12 @@ public class TestDescription extends SyncedGuiDescription {
 		ScreenNetworking.of(this, NetworkSide.SERVER).receive(TEST_MESSAGE, buf -> {
 			System.out.println("Received on the server!");
 		});
+
+		try {
+			slot.onHidden();
+			slot.onShown();
+		} catch (Throwable t) {
+			throw new AssertionError("ValidatedSlot.setVisible crashed", t);
+		}
 	}
 }

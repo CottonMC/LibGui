@@ -22,9 +22,7 @@
 		"client": ["io.github.cottonmc.cotton.gui.impl.client.LibGuiClient"],
 		"modmenu": ["io.github.cottonmc.cotton.gui.impl.modmenu.ModMenuSupport"]
 	},
-	"mixins": [
-		"mixins.libgui.accessors.json"
-	],
+	"accessWidener": "libgui.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.11.0",
 		"fabric": "*",
