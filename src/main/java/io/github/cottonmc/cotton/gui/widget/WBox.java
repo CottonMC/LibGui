@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @since 2.0.0
  */
-public class WBox extends WPanel {
+public class WBox extends WPanelWithInsets {
 	/**
 	 * The spacing between widgets.
 	 */
@@ -36,8 +36,6 @@ public class WBox extends WPanel {
 	 * @since 2.1.0
 	 */
 	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
-
-	private Insets insets = Insets.NONE;
 
 	/**
 	 * Constructs a box.
@@ -242,28 +240,8 @@ public class WBox extends WPanel {
 		return this;
 	}
 
-	/**
-	 * Gets the layout insets of this box.
-	 *
-	 * @return the insets
-	 * @since 4.0.0
-	 */
-	public Insets getInsets() {
-		return insets;
-	}
-
-	/**
-	 * Sets the layout insets of this box.
-	 *
-	 * <p>The insets should be set <i>before</i> adding any widgets
-	 * to this box.
-	 *
-	 * @param insets the insets, should not be null
-	 * @return this box
-	 * @since 4.0.0
-	 */
 	public WBox setInsets(Insets insets) {
-		this.insets = Objects.requireNonNull(insets, "insets");
+		super.setInsets(insets);
 		return this;
 	}
 }

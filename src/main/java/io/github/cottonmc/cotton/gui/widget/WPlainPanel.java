@@ -2,14 +2,10 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 
-import java.util.Objects;
-
 /**
  * A panel that positions children by pixel-perfect positions.
  */
-public class WPlainPanel extends WPanel {
-	private Insets insets = Insets.NONE;
-
+public class WPlainPanel extends WPanelWithInsets {
 	/**
 	 * Adds a new widget to this panel.
 	 *
@@ -53,28 +49,8 @@ public class WPlainPanel extends WPanel {
 		//valid = false;
 	}
 
-	/**
-	 * Gets the layout insets of this panel.
-	 *
-	 * @return the insets
-	 * @since 4.0.0
-	 */
-	public Insets getInsets() {
-		return insets;
-	}
-
-	/**
-	 * Sets the layout insets of this panel.
-	 *
-	 * <p>The insets should be set <i>before</i> adding any widgets
-	 * to this panel.
-	 *
-	 * @param insets the insets, should not be null
-	 * @return this panel
-	 * @since 4.0.0
-	 */
 	public WPlainPanel setInsets(Insets insets) {
-		this.insets = Objects.requireNonNull(insets, "insets");
+		super.setInsets(insets);
 		return this;
 	}
 }

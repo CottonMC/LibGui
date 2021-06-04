@@ -2,14 +2,10 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 
-import java.util.Objects;
-
 /**
  * A panel that positions children in a grid.
  */
-public class WGridPanel extends WPanel {
-	private Insets insets = Insets.NONE;
-
+public class WGridPanel extends WPanelWithInsets {
 	/**
 	 * The grid size in pixels.
 	 * Defaults to 18, which is the size of one item slot.
@@ -69,28 +65,9 @@ public class WGridPanel extends WPanel {
 		expandToFit(w, insets);
 	}
 
-	/**
-	 * Gets the layout insets of this panel.
-	 *
-	 * @return the insets
-	 * @since 4.0.0
-	 */
-	public Insets getInsets() {
-		return insets;
-	}
-
-	/**
-	 * Sets the layout insets of this panel.
-	 *
-	 * <p>The insets should be set <i>before</i> adding any widgets
-	 * to this panel.
-	 *
-	 * @param insets the insets, should not be null
-	 * @return this panel
-	 * @since 4.0.0
-	 */
+	@Override
 	public WGridPanel setInsets(Insets insets) {
-		this.insets = Objects.requireNonNull(insets, "insets");
+		super.setInsets(insets);
 		return this;
 	}
 }

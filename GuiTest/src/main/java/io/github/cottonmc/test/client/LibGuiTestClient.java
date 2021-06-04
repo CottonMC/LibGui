@@ -47,6 +47,13 @@ public class LibGuiTestClient implements ClientModInitializer {
 							});
 							return 0;
 						}))
+						.then(literal("insets").executes(context -> {
+							var client = context.getSource().getClient();
+							client.send(() -> {
+								client.openScreen(new CottonClientScreen(new InsetsTestGui()));
+							});
+							return 0;
+						}))
 		);
 	}
 
