@@ -370,7 +370,7 @@ public class WWidget {
 		if (host != null) {
 			this.host = host;
 		} else {
-			LOGGER.warn("Validating {} with a null host", this);
+			LOGGER.warn("Validating {} with a null host", this);
 		}
 	}
 

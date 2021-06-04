@@ -57,6 +57,7 @@ public class WBar extends WWidget {
 	 */
 	protected int maxValue;
 	protected PropertyDelegate properties;
+	private boolean manuallySetProperties = false;
 	protected final Direction direction;
 	protected String tooltipLabel;
 	protected Text tooltipTextComponent;
@@ -197,7 +198,7 @@ public class WBar extends WWidget {
 	@Override
 	public void validate(GuiDescription host) {
 		super.validate(host);
-		if (properties==null) properties = host.getPropertyDelegate();
+		if (properties==null || !manuallySetProperties) properties = host.getPropertyDelegate();
 	}
 
 	/**
@@ -221,6 +222,7 @@ public class WBar extends WWidget {
 	 */
 	public WBar setProperties(PropertyDelegate properties) {
 		this.properties = properties;
+		manuallySetProperties = properties != null;
 		return this;
 	}
 
