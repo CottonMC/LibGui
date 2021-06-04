@@ -40,6 +40,13 @@ public class LibGuiTestClient implements ClientModInitializer {
 							});
 							return 0;
 						}))
+						.then(literal("scrolling").executes(context -> {
+							var client = context.getSource().getClient();
+							client.send(() -> {
+								client.openScreen(new CottonClientScreen(new ScrollingTestGui()));
+							});
+							return 0;
+						}))
 		);
 	}
 

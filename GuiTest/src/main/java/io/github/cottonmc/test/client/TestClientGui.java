@@ -2,16 +2,13 @@ package io.github.cottonmc.test.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
-import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
-import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WSlider;
@@ -106,12 +103,6 @@ public class TestClientGui extends LightweightGuiDescription {
 			this.b = i;
 			updateCol(col);
 		});
-
-		WButton openOther = new WButton(new LiteralText("Go to scrolling"));
-		openOther.setOnClick(() -> {
-			MinecraftClient.getInstance().openScreen(new CottonClientScreen(new ScrollingTestGui()));
-		});
-		root.add(openOther, 0, 7, 4, 1);
 		
 		root.validate(this);
 	}
