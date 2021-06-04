@@ -37,13 +37,13 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	protected WWidget lastResponder = null;
 	
 	public CottonClientScreen(GuiDescription description) {
-		super(new LiteralText(""));
-		this.description = description;
+		this(new LiteralText(""), description);
 	}
 	
 	public CottonClientScreen(Text title, GuiDescription description) {
 		super(title);
 		this.description = description;
+		description.getRootPanel().validate(description);
 	}
 	
 	public GuiDescription getDescription() {

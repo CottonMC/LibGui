@@ -50,6 +50,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		height = 18*9;
 		this.backgroundWidth = 18*9;
 		this.backgroundHeight = 18*9;
+		description.getRootPanel().validate(description);
 	}
 	
 	/*
