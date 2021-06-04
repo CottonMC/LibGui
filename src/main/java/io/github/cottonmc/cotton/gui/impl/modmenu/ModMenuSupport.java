@@ -2,9 +2,9 @@ package io.github.cottonmc.cotton.gui.impl.modmenu;
 
 import net.minecraft.text.TranslatableText;
 
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
-import io.github.prospector.modmenu.api.ConfigScreenFactory;
-import io.github.prospector.modmenu.api.ModMenuApi;
 
 public class ModMenuSupport implements ModMenuApi {
 	@Override

@@ -40,10 +40,9 @@ dependencies {
 	// Using modApi instead of api because of https://github.com/FabricMC/fabric-loom/issues/200
 	include modApi("io.github.juuxel:libninepatch:${project.libninepatch_version}")
 
-	// TODO: Add runtime when ModMenu updates to 1.17
-	modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
+	modRuntime(modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
-	}
+	})
 }
 
 processResources {
