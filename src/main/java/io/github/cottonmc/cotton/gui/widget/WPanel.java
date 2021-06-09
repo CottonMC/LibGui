@@ -27,15 +27,6 @@ public abstract class WPanel extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private BackgroundPainter backgroundPainter = null;
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void createPeers(GuiDescription c) {
-		super.createPeers(c);
-		for(WWidget child : children) {
-			child.createPeers(c);
-		}
-	}
-
 	/**
 	 * Removes the widget from this panel.
 	 *
@@ -136,7 +127,6 @@ public abstract class WPanel extends WWidget {
 		for (WWidget child : children) {
 			child.validate(c);
 		}
-		if (c!=null) createPeers(c);
 	}
 
 	@Environment(EnvType.CLIENT)

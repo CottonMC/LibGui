@@ -305,15 +305,6 @@ public class WWidget {
 	}
 
 	/**
-	 * Creates "heavyweight" component peers
-	 * @param c the top-level Container that will hold the peers
-	 * @deprecated All widget peers should be added in {@link #validate(GuiDescription)}.
-	 */
-	@Deprecated
-	public void createPeers(GuiDescription c) {
-	}
-
-	/**
 	 * Paints this widget.
 	 *
 	 * @param matrices the rendering matrix stack
@@ -341,8 +332,8 @@ public class WWidget {
 	}
 
 	/**
-	 * Internal method to render tooltip data. This requires an overriden {@link #addTooltip(TooltipBuilder)
-	 * addTooltip} method to insert data into the tooltip - without this, the method returns early, because no work
+	 * Internal method to render tooltip data. This requires an overridden {@link #addTooltip(TooltipBuilder)
+	 * addTooltip} method to insert data into the tooltip - without this, the method returns early because of no work.
 	 *
 	 * @param x  the X coordinate of this widget on screen
 	 * @param y  the Y coordinate of this widget on screen
