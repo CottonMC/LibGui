@@ -26,7 +26,7 @@
 	"depends": {
 		"fabricloader": ">=0.11.0",
 		"fabric": "*",
-		"minecraft": ">=1.16.5",
+		"minecraft": ">=1.17.0",
 		"jankson": "^3.0.0",
 		"fabric-networking-api-v1": "^1.0.0",
 		"libninepatch": "^1.1.0"
