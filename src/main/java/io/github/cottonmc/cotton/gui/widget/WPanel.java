@@ -9,6 +9,7 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public abstract class WPanel extends WWidget {
 	 *
 	 * <p>The list is mutable.
 	 */
-	protected final List<WWidget> children = new ArrayList<>();
+	protected final List<WWidget> children = new WidgetList(this, new ArrayList<>());
 	@Environment(EnvType.CLIENT)
 	private BackgroundPainter backgroundPainter = null;
 
@@ -249,5 +250,63 @@ public abstract class WPanel extends WWidget {
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " {\n" + children.stream().map(Object::toString).map(x -> x + ",").flatMap(x -> Stream.of(x.split("\n")).filter(y -> !y.isEmpty()).map(y -> "\t" + y)).collect(Collectors.joining("\n")) + "\n}";
+	}
+
+	private static final class WidgetList extends AbstractList<WWidget> {
+		private final WPanel owner;
+		private final List<WWidget> backing;
+
+		private WidgetList(WPanel owner, List<WWidget> backing) {
+			this.owner = owner;
+			this.backing = backing;
+		}
+
+		@Override
+		public WWidget get(int index) {
+			return backing.get(index);
+		}
+
+		private void checkWidget(WWidget widget) {
+			if (widget == null) {
+				throw new NullPointerException("Adding null widget to " + owner);
+			}
+
+			int n = 0;
+			WWidget parent = owner;
+			while (parent != null) {
+				if (widget == parent) {
+					if (n == 0) {
+						throw new IllegalArgumentException("Adding panel to itself: " + widget);
+					} else {
+						throw new IllegalArgumentException("Adding level " + n + " parent recursively to " + owner + ": " + widget);
+					}
+				}
+
+				parent = parent.getParent();
+				n++;
+			}
+		}
+
+		@Override
+		public WWidget set(int index, WWidget element) {
+			checkWidget(element);
+			return backing.set(index, element);
+		}
+
+		@Override
+		public void add(int index, WWidget element) {
+			checkWidget(element);
+			backing.add(index, element);
+		}
+
+		@Override
+		public WWidget remove(int index) {
+			return backing.remove(index);
+		}
+
+		@Override
+		public int size() {
+			return backing.size();
+		}
 	}
 }
