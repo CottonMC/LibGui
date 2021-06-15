@@ -106,37 +106,19 @@ public class WBox extends WPanelWithInsets {
 			WWidget child = children.get(i);
 
 			if (axis == Axis.HORIZONTAL) {
-				int y;
-
-				switch (verticalAlignment) {
-					case TOP:
-					default:
-						y = insets.top();
-						break;
-					case CENTER:
-						y = insets.top() + (getHeight() - insets.top() - insets.bottom() - child.getHeight()) / 2;
-						break;
-					case BOTTOM:
-						y = getHeight() - insets.bottom() - child.getHeight();
-						break;
-				}
+				int y = switch (verticalAlignment) {
+					case TOP -> insets.top();
+					case CENTER -> insets.top() + (getHeight() - insets.top() - insets.bottom() - child.getHeight()) / 2;
+					case BOTTOM -> getHeight() - insets.bottom() - child.getHeight();
+				};
 
 				child.setLocation(dimension, y);
 			} else {
-				int x;
-
-				switch (horizontalAlignment) {
-					case LEFT:
-					default:
-						x = insets.left();
-						break;
-					case CENTER:
-						x = insets.left() + (getWidth() - insets.left() - insets.right() - child.getWidth()) / 2;
-						break;
-					case RIGHT:
-						x = getWidth() - insets.right() - child.getWidth();
-						break;
-				}
+				int x = switch (horizontalAlignment) {
+					case LEFT -> insets.left();
+					case CENTER -> insets.left() + (getWidth() - insets.left() - insets.right() - child.getWidth()) / 2;
+					case RIGHT -> getWidth() - insets.right() - child.getWidth();
+				};
 
 				child.setLocation(x, dimension);
 			}

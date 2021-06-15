@@ -92,19 +92,11 @@ public class WText extends WWidget {
 
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
 
-		int yOffset;
-		switch (verticalAlignment) {
-			case CENTER:
-				yOffset = height / 2 - font.fontHeight * wrappedLines.size() / 2;
-				break;
-			case BOTTOM:
-				yOffset = height - font.fontHeight * wrappedLines.size();
-				break;
-			case TOP:
-			default:
-				yOffset = 0;
-				break;
-		}
+		int yOffset = switch (verticalAlignment) {
+			case CENTER -> height / 2 - font.fontHeight * wrappedLines.size() / 2;
+			case BOTTOM -> height - font.fontHeight * wrappedLines.size();
+			case TOP -> 0;
+		};
 
 		for (int i = 0; i < wrappedLines.size(); i++) {
 			OrderedText line = wrappedLines.get(i);

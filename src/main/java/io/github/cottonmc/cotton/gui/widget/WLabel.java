@@ -84,20 +84,11 @@ public class WLabel extends WWidget {
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		TextRenderer renderer = mc.textRenderer;
-		int yOffset;
-
-		switch (verticalAlignment) {
-			case CENTER:
-				yOffset = height / 2 - renderer.fontHeight / 2;
-				break;
-			case BOTTOM:
-				yOffset = height - renderer.fontHeight;
-				break;
-			case TOP:
-			default:
-				yOffset = 0;
-				break;
-		}
+		int yOffset = switch (verticalAlignment) {
+			case CENTER -> height / 2 - renderer.fontHeight / 2;
+			case BOTTOM -> height - renderer.fontHeight;
+			case TOP -> 0;
+		};
 
 		ScreenDrawing.drawString(matrices, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), LibGui.isDarkMode() ? darkmodeColor : color);
 

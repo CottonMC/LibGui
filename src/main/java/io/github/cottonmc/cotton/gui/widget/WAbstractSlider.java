@@ -139,23 +139,12 @@ public abstract class WAbstractSlider extends WWidget {
 	}
 
 	private void moveSlider(int x, int y) {
-		int axisPos;
-
-		switch (direction) {
-			case UP:
-				axisPos = height - y;
-				break;
-			case DOWN:
-				axisPos = y;
-				break;
-			case LEFT:
-				axisPos = width - x;
-				break;
-			case RIGHT:
-			default:
-				axisPos = x;
-				break;
-		}
+		int axisPos = switch (direction) {
+			case UP -> height - y;
+			case DOWN -> y;
+			case LEFT -> width - x;
+			case RIGHT -> x;
+		};
 
 		int pos = axisPos - getThumbWidth() / 2;
 		int rawValue = min + Math.round(valueToCoordRatio * pos);
