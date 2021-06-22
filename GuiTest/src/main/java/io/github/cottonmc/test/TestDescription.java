@@ -4,6 +4,8 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
 import io.github.cottonmc.cotton.gui.networking.ScreenNetworking;
 import io.github.cottonmc.cotton.gui.widget.*;
+import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
@@ -37,6 +39,8 @@ public class TestDescription extends SyncedGuiDescription {
 
 		root.add(new WLabel(new LiteralText("Large slot:")), 0, 9);
 		root.add(WItemSlot.outputOf(blockInventory, 0), 4, 9);
+
+		root.add(WItemSlot.of(blockInventory, 7).setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))), 7, 9);
 
 		root.add(createPlayerInventoryPanel(), 0, 11);
 		System.out.println(root.toString());

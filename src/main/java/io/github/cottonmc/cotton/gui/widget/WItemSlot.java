@@ -12,6 +12,7 @@ import net.minecraft.screen.slot.SlotActionType;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -62,6 +63,8 @@ public class WItemSlot extends WWidget {
 	@Nullable
 	@Environment(EnvType.CLIENT)
 	private BackgroundPainter backgroundPainter = null;
+	@Nullable
+	private Icon icon = null;
 	private Inventory inventory;
 	private int startIndex = 0;
 	private int slotsWide = 1;
@@ -146,6 +149,27 @@ public class WItemSlot extends WWidget {
 
 	public boolean isBigSlot() {
 		return big;
+	}
+
+	/**
+	 * Sets the icon to this slot. Can be used for labeling slots for certain activities.
+	 *
+	 * @param icon the icon
+	 * @since 4.0.0
+	 */
+	public WItemSlot setIcon(@Nullable Icon icon) {
+		this.icon = icon;
+		return this;
+	}
+
+	/**
+	 *
+	 * @return icon if set, otherwise null
+	 * @since 4.0.0
+	 */
+	@Nullable
+	public Icon getIcon() {
+		return this.icon;
 	}
 
 	/**
@@ -329,6 +353,10 @@ public class WItemSlot extends WWidget {
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter != null) {
 			backgroundPainter.paintBackground(matrices, x, y, this);
+		}
+
+		if (icon != null) {
+			icon.paint(matrices, x + 1, y + 1, 16);
 		}
 	}
 
