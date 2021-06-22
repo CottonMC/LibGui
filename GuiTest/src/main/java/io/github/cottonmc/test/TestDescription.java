@@ -41,7 +41,7 @@ public class TestDescription extends SyncedGuiDescription {
 		root.add(WItemSlot.outputOf(blockInventory, 0), 4, 9);
 
 		WItemSlot saddleSlot = WItemSlot.of(blockInventory, 7);
-		saddleSlot.icon(new TextureIcon(new Identifier("libgui-test", "saddle.png")));
+		saddleSlot.setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png")));
 		root.add(saddleSlot, 7, 9);
 
 		root.add(createPlayerInventoryPanel(), 0, 11);

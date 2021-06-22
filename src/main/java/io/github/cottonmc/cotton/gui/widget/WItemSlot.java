@@ -10,9 +10,9 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -152,13 +152,24 @@ public class WItemSlot extends WWidget {
 	}
 
 	/**
-	 * Adds an icon to this slot. Can be used for labeling slots for certain activities.
+	 * Sets the icon to this slot. Can be used for labeling slots for certain activities.
 	 *
 	 * @param icon the icon
 	 * @since 4.0.0
 	 */
-	public void icon(Icon icon) {
+	public WItemSlot setIcon(@Nullable Icon icon) {
 		this.icon = icon;
+		return this;
+	}
+
+	/**
+	 *
+	 * @return icon if set, otherwise null
+	 * @since 4.0.0
+	 */
+	@Nullable
+	public Icon getIcon() {
+		return this.icon;
 	}
 
 	/**
