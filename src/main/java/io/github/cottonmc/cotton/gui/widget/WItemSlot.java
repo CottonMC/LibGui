@@ -13,6 +13,8 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -58,6 +60,7 @@ import java.util.function.Predicate;
  * </pre>
  */
 public class WItemSlot extends WWidget {
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Predicate<ItemStack> DEFAULT_FILTER = stack -> true;
 	private final List<ValidatedSlot> peers = new ArrayList<>();
 	@Nullable
@@ -152,24 +155,31 @@ public class WItemSlot extends WWidget {
 	}
 
 	/**
-	 * Sets the icon to this slot. Can be used for labeling slots for certain activities.
+	 * {@return the icon if set, otherwise null}
 	 *
-	 * @param icon the icon
-	 * @since 4.0.0
-	 */
-	public WItemSlot setIcon(@Nullable Icon icon) {
-		this.icon = icon;
-		return this;
-	}
-
-	/**
-	 *
-	 * @return icon if set, otherwise null
-	 * @since 4.0.0
+	 * @since 4.1.0
 	 */
 	@Nullable
 	public Icon getIcon() {
 		return this.icon;
+	}
+
+	/**
+	 * Sets the icon to this slot. Can be used for labeling slots for certain activities.
+	 *
+	 * @param icon the icon
+	 * @return this slot widget
+	 * @since 4.1.0
+	 */
+	public WItemSlot setIcon(@Nullable Icon icon) {
+		this.icon = icon;
+
+		if (icon != null && (slotsWide * slotsHigh) > 1) {
+			// TODO: Should these types of warnings be visible in the screen itself in a dev env?
+			LOGGER.warn("Setting icon {} for item slot {} with more than 1 slot ({})", icon, this, slotsWide * slotsHigh);
+		}
+
+		return this;
 	}
 
 	/**
