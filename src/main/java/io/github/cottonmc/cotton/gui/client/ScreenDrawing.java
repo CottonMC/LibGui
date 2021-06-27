@@ -350,23 +350,22 @@ public class ScreenDrawing {
 	 * @param color    the text color
 	 */
 	public static void drawString(MatrixStack matrices, String s, HorizontalAlignment align, int x, int y, int width, int color) {
-		switch(align) {
-		case LEFT: {
+		switch (align) {
+			case LEFT -> {
 				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x, y, color);
 			}
-			break;
-		case CENTER: {
+
+			case CENTER -> {
 				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
-				int l = (width/2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x+l, y, color);
+				int l = (width / 2) - (wid / 2);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x + l, y, color);
 			}
-			break;
-		case RIGHT: {
+
+			case RIGHT -> {
 				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, s, x + l, y, color);
 			}
-			break;
 		}
 	}
 
@@ -383,23 +382,22 @@ public class ScreenDrawing {
 	 * @since 1.9.0
 	 */
 	public static void drawString(MatrixStack matrices, OrderedText text, HorizontalAlignment align, int x, int y, int width, int color) {
-		switch(align) {
-		case LEFT: {
+		switch (align) {
+			case LEFT -> {
 				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color);
 			}
-			break;
-		case CENTER: {
+
+			case CENTER -> {
 				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
-				int l = (width/2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x+l, y, color);
+				int l = (width / 2) - (wid / 2);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x + l, y, color);
 			}
-			break;
-		case RIGHT: {
+
+			case RIGHT -> {
 				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.draw(matrices, text, x + l, y, color);
 			}
-			break;
 		}
 	}
 
@@ -415,23 +413,22 @@ public class ScreenDrawing {
 	 * @param color    the text color
 	 */
 	public static void drawStringWithShadow(MatrixStack matrices, String s, HorizontalAlignment align, int x, int y, int width, int color) {
-		switch(align) {
-		case LEFT: {
+		switch (align) {
+			case LEFT -> {
 				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x, y, color);
 			}
-			break;
-		case CENTER: {
+
+			case CENTER -> {
 				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
-				int l = (width/2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x+l, y, color);
+				int l = (width / 2) - (wid / 2);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x + l, y, color);
 			}
-			break;
-		case RIGHT: {
+
+			case RIGHT -> {
 				int wid = MinecraftClient.getInstance().textRenderer.getWidth(s);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, s, x + l, y, color);
 			}
-			break;
 		}
 	}
 
@@ -447,23 +444,22 @@ public class ScreenDrawing {
 	 * @param color    the text color
 	 */
 	public static void drawStringWithShadow(MatrixStack matrices, OrderedText text, HorizontalAlignment align, int x, int y, int width, int color) {
-		switch(align) {
-		case LEFT: {
+		switch (align) {
+			case LEFT -> {
 				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x, y, color);
 			}
-			break;
-		case CENTER: {
+
+			case CENTER -> {
 				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
-				int l = (width/2) - (wid/2);
-				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x+l, y, color);
+				int l = (width / 2) - (wid / 2);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x + l, y, color);
 			}
-			break;
-		case RIGHT: {
+
+			case RIGHT -> {
 				int wid = MinecraftClient.getInstance().textRenderer.getWidth(text);
 				int l = width - wid;
-				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x+l, y, color);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x + l, y, color);
 			}
-			break;
 		}
 	}
 

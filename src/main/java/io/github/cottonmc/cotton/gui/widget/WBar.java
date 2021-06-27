@@ -159,7 +159,7 @@ public class WBar extends WWidget {
 		if (barSize <= 0) return;
 
 		switch (direction) { //anonymous blocks in this switch statement are to sandbox variables
-			case UP: {
+			case UP -> {
 				int left = x;
 				int top = y + getHeight();
 				top -= barSize;
@@ -168,25 +168,25 @@ public class WBar extends WWidget {
 				} else {
 					ScreenDrawing.coloredRect(matrices, left, top, getWidth(), barSize, ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
-				break;
 			}
-			case RIGHT: {
+
+			case RIGHT -> {
 				if (bar != null) {
 					ScreenDrawing.texturedRect(matrices, x, y, barSize, getHeight(), bar.image(), bar.u1(), bar.v1(), MathHelper.lerp(percent, bar.u1(), bar.u2()), bar.v2(), 0xFFFFFFFF);
 				} else {
 					ScreenDrawing.coloredRect(matrices, x, y, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
-				break;
 			}
-			case DOWN: {
+
+			case DOWN -> {
 				if (bar != null) {
 					ScreenDrawing.texturedRect(matrices, x, y, getWidth(), barSize, bar.image(), bar.u1(), bar.v1(), bar.u2(), MathHelper.lerp(percent, bar.v1(), bar.v2()), 0xFFFFFFFF);
 				} else {
 					ScreenDrawing.coloredRect(matrices, x, y, getWidth(), barSize, ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
-				break;
 			}
-			case LEFT: {
+
+			case LEFT -> {
 				int left = x + getWidth();
 				int top = y;
 				left -= barSize;
@@ -195,7 +195,6 @@ public class WBar extends WWidget {
 				} else {
 					ScreenDrawing.coloredRect(matrices, left, top, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
-				break;
 			}
 		}
 	}
