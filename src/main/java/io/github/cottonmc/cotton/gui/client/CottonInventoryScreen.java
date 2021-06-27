@@ -152,7 +152,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	public boolean keyPressed(int ch, int keyCode, int modifiers) {
 		//System.out.println("Key " + Integer.toHexString(ch)+" "+Integer.toHexString(keyCode));
 		if (ch==GLFW.GLFW_KEY_ESCAPE) {
-			this.client.player.closeHandledScreen();
+			onClose();
 			return true;
 		} else if (ch==GLFW.GLFW_KEY_TAB) {
 			changeFocus(!hasShiftDown());
