@@ -7,15 +7,14 @@ import net.minecraft.screen.slot.Slot;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ValidatedSlot extends Slot {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final VisualLogger LOGGER = new VisualLogger(ValidatedSlot.class);
 	private final int slotNumber;
 	// Original positions that will be restored when this slot is reshown
 	private final int originalX, originalY;

@@ -8,9 +8,8 @@ import net.minecraft.client.util.math.MatrixStack;
 
 import com.google.common.annotations.Beta;
 import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -18,7 +17,7 @@ import org.lwjgl.glfw.GLFW;
  * The base class for all widgets.
  */
 public class WWidget {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final VisualLogger LOGGER = new VisualLogger(WWidget.class);
 
 	/**
 	 * The containing panel of this widget.

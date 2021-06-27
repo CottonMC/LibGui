@@ -7,6 +7,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
 import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
@@ -65,6 +66,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	public void removed() {
 		super.removed();
 		this.client.keyboard.setRepeatEvents(false);
+		VisualLogger.reset();
 	}
 
 	@Nullable
@@ -137,6 +139,8 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 				if (hitChild!=null) hitChild.renderTooltip(matrices, left, top, mouseX-left, mouseY-top);
 			}
 		}
+
+		VisualLogger.render(matrices);
 	}
 	
 	

@@ -12,9 +12,8 @@ import net.minecraft.screen.slot.SlotActionType;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ import java.util.function.Predicate;
  * </pre>
  */
 public class WItemSlot extends WWidget {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final VisualLogger LOGGER = new VisualLogger(WItemSlot.class);
 	private static final Predicate<ItemStack> DEFAULT_FILTER = stack -> true;
 	private final List<ValidatedSlot> peers = new ArrayList<>();
 	@Nullable
@@ -175,7 +174,6 @@ public class WItemSlot extends WWidget {
 		this.icon = icon;
 
 		if (icon != null && (slotsWide * slotsHigh) > 1) {
-			// TODO: Should these types of warnings be visible in the screen itself in a dev env?
 			LOGGER.warn("Setting icon {} for item slot {} with more than 1 slot ({})", icon, this, slotsWide * slotsHigh);
 		}
 

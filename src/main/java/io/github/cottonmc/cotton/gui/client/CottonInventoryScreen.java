@@ -9,6 +9,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
+import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
 import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
@@ -79,6 +80,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	public void removed() {
 		super.removed();
 		this.client.keyboard.setRepeatEvents(false);
+		VisualLogger.reset();
 	}
 
 	@Nullable
@@ -265,6 +267,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		}
 		
 		drawMouseoverTooltip(matrices, mouseX, mouseY); //Draws the itemstack tooltips
+		VisualLogger.render(matrices);
 	}
 
 	@Override
