@@ -281,8 +281,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	protected void handledScreenTick() {
+		super.handledScreenTick();
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
