@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.GuiDescription;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.TriState;
@@ -148,5 +150,13 @@ public class WScrollPanel extends WClippedPanel {
 		}
 
 		return InputResult.IGNORED;
+	}
+
+	@Override
+	public void validate(GuiDescription c) {
+		//you have to validate these ones manually since they are not in children list
+		this.horizontalScrollBar.validate(c);
+		this.verticalScrollBar.validate(c);
+		super.validate(c);
 	}
 }
