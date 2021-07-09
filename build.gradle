@@ -18,8 +18,15 @@ group = project.maven_group
 
 repositories {
 	maven { url "https://server.bbkr.space/artifactory/libs-release" }
-	maven {
+	/*maven {
 		url = "https://maven.terraformersmc.com/releases"
+		content {
+			includeGroup "com.terraformersmc"
+		}
+	}*/
+	maven {
+		name = "TerraformersMC archive"
+		url = "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases/"
 		content {
 			includeGroup "com.terraformersmc"
 		}
