@@ -22,11 +22,9 @@ public class TestDescription extends SyncedGuiDescription {
 		WGridPanel root = (WGridPanel)this.getRootPanel();
 
 		WItemSlot slot = WItemSlot.of(blockInventory, 0, 4, 1);
-		// test visual logger warnings
-		slot.setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png")));
 		root.add(slot, 0, 1);
 
-		WButton buttonA = new WButton(new LiteralText("Button A"));
+		WButton buttonA = new WButton(new LiteralText("Send Message"));
 
 		buttonA.setOnClick(() -> {
 			ScreenNetworking.of(this, NetworkSide.CLIENT).send(TEST_MESSAGE, buf -> {});
@@ -34,7 +32,11 @@ public class TestDescription extends SyncedGuiDescription {
 		});
 
 		root.add(buttonA, 0, 3, 4, 1);
-		root.add(new WButton(new LiteralText("Button B")), 5, 3, 4, 1);
+
+		WButton buttonB = new WButton(new LiteralText("Show Warnings"));
+		buttonB.setOnClick(() -> slot.setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))));
+
+		root.add(buttonB, 5, 3, 4, 1);
 		root.add(new WButton(new LiteralText("Button C")), 0, 5, 4, 1);
 		root.add(new WButton(new LiteralText("Button D")), 5, 5, 4, 1);
 		root.add(new WTextField(new LiteralText("Type something...")), 0, 7, 5, 1);
