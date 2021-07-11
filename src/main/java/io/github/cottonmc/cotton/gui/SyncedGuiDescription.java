@@ -61,6 +61,13 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	protected WWidget focus;
 	private Vec2i titlePos = new Vec2i(8, 6);
 
+	/**
+	 * Constructs a new synced GUI description without a block inventory or a property delegate.
+	 *
+	 * @param type            the {@link ScreenHandlerType} of this GUI description
+	 * @param syncId          the current sync ID
+	 * @param playerInventory the player inventory of the player viewing this screen
+	 */
 	public SyncedGuiDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory) {
 		super(type, syncId);
 		this.blockInventory = null;
@@ -68,8 +75,17 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		this.world = playerInventory.player.world;
 		this.propertyDelegate = null;//new ArrayPropertyDelegate(1);
 	}
-	
-	public SyncedGuiDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory blockInventory, PropertyDelegate propertyDelegate) {
+
+	/**
+	 * Constructs a new synced GUI description.
+	 *
+	 * @param type             the {@link ScreenHandlerType} of this GUI description
+	 * @param syncId           the current sync ID
+	 * @param playerInventory  the player inventory of the player viewing this screen
+	 * @param blockInventory   the block inventory of a corresponding container block, or null if not found or applicable
+	 * @param propertyDelegate a property delegate whose properties, if any, will automatically be {@linkplain #addProperties(PropertyDelegate) added}
+	 */
+	public SyncedGuiDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, @Nullable Inventory blockInventory, @Nullable PropertyDelegate propertyDelegate) {
 		super(type, syncId);
 		this.blockInventory = blockInventory;
 		this.playerInventory = playerInventory;
