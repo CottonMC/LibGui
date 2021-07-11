@@ -32,6 +32,6 @@ public class GuiItem extends Item {
 
 	@Environment(EnvType.CLIENT)
 	private void openScreen() {
-		MinecraftClient.getInstance().openScreen(new CottonClientScreen(new TestClientGui()));
+		MinecraftClient.getInstance().setScreen(new CottonClientScreen(new TestClientGui()));
 	}
 }

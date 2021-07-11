@@ -52,7 +52,7 @@ public class ConfigGui extends LightweightGuiDescription {
 		
 		WButton doneButton = new WButton(new TranslatableText("gui.done"));
 		doneButton.setOnClick(()->{
-			MinecraftClient.getInstance().openScreen(previous);
+			MinecraftClient.getInstance().setScreen(previous);
 		});
 		root.add(doneButton, 0, 5, 3, 1);
 		

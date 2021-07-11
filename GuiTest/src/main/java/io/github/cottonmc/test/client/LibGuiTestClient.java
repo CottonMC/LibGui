@@ -29,28 +29,28 @@ public class LibGuiTestClient implements ClientModInitializer {
 						.then(literal("config").executes(context -> {
 							var client = context.getSource().getClient();
 							client.send(() -> {
-								client.openScreen(new CottonClientScreen(new ConfigGui(client.currentScreen)));
+								client.setScreen(new CottonClientScreen(new ConfigGui(client.currentScreen)));
 							});
 							return 0;
 						}))
 						.then(literal("tab").executes(context -> {
 							var client = context.getSource().getClient();
 							client.send(() -> {
-								client.openScreen(new CottonClientScreen(new TabTestGui()));
+								client.setScreen(new CottonClientScreen(new TabTestGui()));
 							});
 							return 0;
 						}))
 						.then(literal("scrolling").executes(context -> {
 							var client = context.getSource().getClient();
 							client.send(() -> {
-								client.openScreen(new CottonClientScreen(new ScrollingTestGui()));
+								client.setScreen(new CottonClientScreen(new ScrollingTestGui()));
 							});
 							return 0;
 						}))
 						.then(literal("insets").executes(context -> {
 							var client = context.getSource().getClient();
 							client.send(() -> {
-								client.openScreen(new CottonClientScreen(new InsetsTestGui()));
+								client.setScreen(new CottonClientScreen(new InsetsTestGui()));
 							});
 							return 0;
 						}))

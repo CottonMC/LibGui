@@ -11,7 +11,7 @@ public class ModMenuSupport implements ModMenuApi {
 	public ConfigScreenFactory<?> getModConfigScreenFactory() {
 		return screen -> new CottonClientScreen(new TranslatableText("options.libgui.libgui_settings"), new ConfigGui(screen)) {
 			public void onClose() {
-				this.client.openScreen(screen);
+				this.client.setScreen(screen);
 			}
 		};
 	}
