@@ -92,6 +92,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		this.world = playerInventory.player.world;
 		this.propertyDelegate = propertyDelegate;
 		if (propertyDelegate!=null && propertyDelegate.size()>0) this.addProperties(propertyDelegate);
+		if (blockInventory != null) blockInventory.onOpen(playerInventory.player);
 	}
 	
 	public WPanel getRootPanel() {
@@ -476,6 +477,12 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		@Override
 		public boolean canUse(PlayerEntity entity) {
 			return (blockInventory!=null) ? blockInventory.canPlayerUse(entity) : true;
+		}
+
+		@Override
+		public void close(PlayerEntity player) {
+			super.close(player);
+			if (blockInventory != null) blockInventory.onClose(player);
 		}
 	//}
 
