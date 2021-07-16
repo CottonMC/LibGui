@@ -141,6 +141,7 @@ public class ScreenDrawing {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		Matrix4f model = matrices.peek().getModel();
+		RenderSystem.enableBlend();
 		RenderSystem.setShaderTexture(0, texture);
 		RenderSystem.setShaderColor(r, g, b, opacity);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -151,6 +152,7 @@ public class ScreenDrawing {
 		buffer.vertex(model, x,         y,          0).texture(u1, v1).next();
 		buffer.end();
 		BufferRenderer.draw(buffer);
+		RenderSystem.disableBlend();
 	}
 
 	/**
