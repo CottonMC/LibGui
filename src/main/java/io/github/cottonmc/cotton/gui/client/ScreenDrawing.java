@@ -18,16 +18,12 @@ import net.minecraft.util.math.Matrix4f;
 import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.
  */
 public class ScreenDrawing {
-	private static final Logger LOGGER = LogManager.getLogger();
-
 	private ScreenDrawing() {}
 
 	/**
@@ -494,7 +490,7 @@ public class ScreenDrawing {
 	/**
 	 * Draws the text hover effects for a text style.
 	 *
-	 * <p>This method should only be called from a widget in a screen.
+	 * <p>This method has no effect when the caller is not in a LibGui screen.
 	 * For example, there will be nothing drawn in HUDs.
 	 *
 	 * @param matrices  the rendering matrix stack
@@ -504,12 +500,8 @@ public class ScreenDrawing {
 	 * @since 4.0.0
 	 */
 	public static void drawTextHover(MatrixStack matrices, @Nullable Style textStyle, int x, int y) {
-		CottonScreenImpl screen = (CottonScreenImpl) MinecraftClient.getInstance().currentScreen;
-
-		if (screen != null) {
+		if (MinecraftClient.getInstance().currentScreen instanceof CottonScreenImpl screen) {
 			screen.renderTextHover(matrices, textStyle, x, y);
-		} else {
-			LOGGER.error("Rendering text hover effects outside of a screen!");
 		}
 	}
 
