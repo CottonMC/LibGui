@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -40,6 +42,8 @@ public class WWidget {
 	 */
 	@Nullable
 	protected GuiDescription host;
+
+	private final ObservableProperty<Boolean> hovered = ObservableProperty.of(false).nonnullValues();
 
 	/**
 	 * Sets the location of this widget relative to its parent.
@@ -454,6 +458,10 @@ public class WWidget {
 	 */
 	@Environment(EnvType.CLIENT)
 	public void addPainters() {
+	}
+
+	public ObservableProperty<Boolean> getHovered() {
+		return hovered;
 	}
 
 	/**
