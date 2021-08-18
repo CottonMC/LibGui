@@ -6,7 +6,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 
-import com.google.common.annotations.Beta;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
@@ -429,7 +428,6 @@ public class WWidget {
 	 *
 	 * @since 3.0.0
 	 */
-	@Beta
 	public void onShown() {
 	}
 
@@ -443,7 +441,6 @@ public class WWidget {
 	 *
 	 * @since 3.0.0
 	 */
-	@Beta
 	public void onHidden() {
 		releaseFocus();
 	}
