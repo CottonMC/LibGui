@@ -38,6 +38,8 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
 	@Nullable
 	protected WWidget lastResponder = null;
+
+	private final MouseInputHandler<CottonClientScreen> mouseInputHandler = new MouseInputHandler<>(this);
 	
 	public CottonClientScreen(GuiDescription description) {
 		this(new LiteralText(""), description);
@@ -48,7 +50,8 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		this.description = description;
 		description.getRootPanel().validate(description);
 	}
-	
+
+	@Override
 	public GuiDescription getDescription() {
 		return description;
 	}
@@ -178,7 +181,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return true;
-		MouseInputHandler.onMouseDown(description, this, containerX, containerY, mouseButton);
+		mouseInputHandler.onMouseDown(containerX, containerY, mouseButton);
 
 		return true;
 	}
@@ -189,7 +192,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		super.mouseReleased(mouseX, mouseY, mouseButton);
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		MouseInputHandler.onMouseUp(description, this, containerX, containerY, mouseButton);
+		mouseInputHandler.onMouseUp(containerX, containerY, mouseButton);
 		
 		return true;
 	}
@@ -201,7 +204,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		MouseInputHandler.onMouseDrag(description, this, containerX, containerY, mouseButton, deltaX, deltaY);
+		mouseInputHandler.onMouseDrag(containerX, containerY, mouseButton, deltaX, deltaY);
 
 		return true;
 	}
@@ -212,7 +215,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		MouseInputHandler.onMouseScroll(description, containerX, containerY, amount);
+		mouseInputHandler.onMouseScroll(containerX, containerY, amount);
 
 		return true;
 	}
@@ -223,7 +226,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		MouseInputHandler.onMouseMove(description, containerX, containerY);
+		mouseInputHandler.onMouseMove(containerX, containerY);
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package io.github.cottonmc.cotton.gui.impl.client;
 
 import net.minecraft.client.gui.screen.Screen;
 
-import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.Nullable;
@@ -12,10 +11,17 @@ import java.util.function.Function;
 /**
  * The implementation for mouse inputs.
  */
-public final class MouseInputHandler {
-	public static void onMouseDown(GuiDescription description, CottonScreenImpl screen, int containerX, int containerY, int mouseButton) {
+public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
+	private final S screen;
+	private @Nullable WWidget hovered;
+
+	public MouseInputHandler(S screen) {
+		this.screen = screen;
+	}
+
+	public void onMouseDown(int containerX, int containerY, int mouseButton) {
 		if (screen.getLastResponder() == null) {
-			WWidget lastResponder = description.getRootPanel().hit(containerX, containerY);
+			WWidget lastResponder = screen.getDescription().getRootPanel().hit(containerX, containerY);
 			screen.setLastResponder(lastResponder);
 			if (lastResponder != null) {
 				runTree(
@@ -28,7 +34,7 @@ public final class MouseInputHandler {
 		}
 	}
 
-	public static <S extends Screen & CottonScreenImpl> void onMouseUp(GuiDescription description, S screen, int containerX, int containerY, int mouseButton) {
+	public void onMouseUp(int containerX, int containerY, int mouseButton) {
 		WWidget lastResponder = screen.getLastResponder();
 
 		if (lastResponder != null) {
@@ -48,7 +54,7 @@ public final class MouseInputHandler {
 			}
 		} else {
 			runTree(
-					description.getRootPanel().hit(containerX, containerY),
+					screen.getDescription().getRootPanel().hit(containerX, containerY),
 					widget -> widget.onMouseUp(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(), mouseButton)
 			);
 		}
@@ -56,7 +62,7 @@ public final class MouseInputHandler {
 		screen.setLastResponder(null);
 	}
 
-	public static <S extends Screen & CottonScreenImpl> void onMouseDrag(GuiDescription description, S screen, int containerX, int containerY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDrag(int containerX, int containerY, int mouseButton, double deltaX, double deltaY) {
 		WWidget lastResponder = screen.getLastResponder();
 
 		if (lastResponder != null) {
@@ -68,22 +74,34 @@ public final class MouseInputHandler {
 			if (containerX < 0 || containerY < 0 || containerX >= width || containerY >= height) return;
 
 			runTree(
-					description.getRootPanel().hit(containerX, containerY),
+					screen.getDescription().getRootPanel().hit(containerX, containerY),
 					widget -> widget.onMouseDrag(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(), mouseButton, deltaX, deltaY)
 			);
 		}
 	}
 
-	public static void onMouseScroll(GuiDescription description, int containerX, int containerY, double amount) {
+	public void onMouseScroll(int containerX, int containerY, double amount) {
 		runTree(
-				description.getRootPanel().hit(containerX, containerY),
+				screen.getDescription().getRootPanel().hit(containerX, containerY),
 				widget -> widget.onMouseScroll(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(), amount)
 		);
 	}
 
-	public static void onMouseMove(GuiDescription description, int containerX, int containerY) {
+	public void onMouseMove(int containerX, int containerY) {
+		WWidget hit = screen.getDescription().getRootPanel().hit(containerX, containerY);
+
+		// TODO: Some sort of canHover?
+		if (hit != hovered) {
+			if (hovered != null) {
+				hovered.getHovered().set(false);
+			}
+
+			hovered = hit;
+			hit.getHovered().set(true);
+		}
+
 		runTree(
-				description.getRootPanel().hit(containerX, containerY),
+				hit,
 				widget -> widget.onMouseMove(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY())
 		);
 	}
