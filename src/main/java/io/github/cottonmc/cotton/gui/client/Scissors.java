@@ -81,7 +81,7 @@ public final class Scissors {
 			}
 		}
 
-		int windowHeight = mc.getWindow().getHeight();
+		int windowHeight = mc.getWindow().getFramebufferHeight();
 		double scale = mc.getWindow().getScaleFactor();
 		int scaledWidth = (int) (width * scale);
 		int scaledHeight = (int) (height * scale);
