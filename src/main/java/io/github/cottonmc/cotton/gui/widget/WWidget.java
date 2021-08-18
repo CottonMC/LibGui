@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
@@ -454,6 +455,30 @@ public class WWidget {
 	 */
 	@Environment(EnvType.CLIENT)
 	public void addPainters() {
+	}
+
+	/**
+	 * {@return whether this widget can be narrated}
+	 *
+	 * @see #addNarrations(NarrationMessageBuilder)
+	 * @since 4.2.0
+	 */
+	public boolean isNarratable() {
+		return true;
+	}
+
+	/**
+	 * Adds the narrations of this widget to a narration builder.
+	 * Narrations will only apply if this widget {@linkplain #isNarratable() is narratable}.
+	 *
+	 * <p>As of LibGui 4.2.0, the widget also needs to be {@linkplain #canFocus() focusable}, but that is
+	 * planned to be changed in the future to include "hoverable" widgets.
+	 *
+	 * @param builder the narration builder, cannot be null
+	 * @since 4.2.0
+	 */
+	@Environment(EnvType.CLIENT)
+	public void addNarrations(NarrationMessageBuilder builder) {
 	}
 
 	/**

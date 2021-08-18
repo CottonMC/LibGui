@@ -3,16 +3,22 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
+import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
 
@@ -124,7 +130,12 @@ public class WItemSlot extends WWidget {
 	 * @see WPlayerInvPanel
 	 */
 	public static WItemSlot ofPlayerStorage(Inventory inventory) {
-		WItemSlot w = new WItemSlot();
+		WItemSlot w = new WItemSlot() {
+			@Override
+			Text getExtraNarrationMessage() {
+				return inventory instanceof PlayerInventory inv ? inv.getDisplayName() : NarrationMessages.Vanilla.INVENTORY;
+			}
+		};
 		w.inventory = inventory;
 		w.startIndex = 9;
 		w.slotsWide = 9;
@@ -427,6 +438,23 @@ public class WItemSlot extends WWidget {
 	@Override
 	public void addPainters() {
 		backgroundPainter = BackgroundPainter.SLOT;
+	}
+
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void addNarrations(NarrationMessageBuilder builder) {
+		if (focusedSlot >= 0) {
+			List<Text> parts = new ArrayList<>();
+			Text extra = getExtraNarrationMessage();
+			if (extra != null) parts.add(extra);
+			parts.add(new TranslatableText(NarrationMessages.ITEM_SLOT_TITLE_KEY, focusedSlot + 1, slotsWide * slotsHigh));
+			builder.put(NarrationPart.TITLE, parts.toArray(new Text[0]));
+		}
+	}
+
+	@Nullable
+	Text getExtraNarrationMessage() {
+		return null;
 	}
 
 	/**

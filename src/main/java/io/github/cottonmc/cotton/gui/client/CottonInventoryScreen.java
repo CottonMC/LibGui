@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.client;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,6 +13,7 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
 import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
+import io.github.cottonmc.cotton.gui.impl.client.NarrationHelper;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import org.jetbrains.annotations.Nullable;
@@ -303,5 +305,10 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		}
 
 		return true;
+	}
+
+	@Override
+	protected void addElementNarrations(NarrationMessageBuilder builder) {
+		if (description != null) NarrationHelper.addNarrations(description.getRootPanel(), builder);
 	}
 }

@@ -3,6 +3,8 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
@@ -12,6 +14,7 @@ import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
@@ -217,6 +220,21 @@ public class WButton extends WWidget {
 	public WButton setIcon(@Nullable Icon icon) {
 		this.icon = icon;
 		return this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void addNarrations(NarrationMessageBuilder builder) {
+		builder.put(NarrationPart.TITLE, ClickableWidget.getNarrationMessage(getLabel()));
+
+		if (isEnabled()) {
+			if (isFocused()) {
+				builder.put(NarrationPart.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_FOCUSED);
+			} else {
+				// TODO: hovering, again
+				builder.put(NarrationPart.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_HOVERED);
+			}
+		}
 	}
 
 	@Environment(EnvType.CLIENT)
