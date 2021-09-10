@@ -1,4 +1,17 @@
 {
-	"options.libgui.libgui_settings": "LibGui-asetukset",
-	"option.libgui.darkmode": "Tumma tila"
+  "options.libgui.libgui_settings": "LibGui-asetukset",
+  "option.libgui.darkmode": "Tumma tila",
+  "widget.libgui.item_slot.narration.title": "Tavararuutu %s / %s",
+  "widget.libgui.labeled_slider.narration.title": "%s-liukusäädin: kohdassa %s %s:n ja %s:n välillä",
+  "widget.libgui.scroll_bar.narration.title": "Vierityspalkki",
+  "widget.libgui.slider.narration.title": "Liukusäädin: kohdassa %s %s:n ja %s:n välillä",
+  "widget.libgui.slider.narration.usage": "Siirrä raahaamalla tai nuolinäppäimillä",
+  "widget.libgui.tab.narration.title": "%s-välilehti",
+  "widget.libgui.tab.narration.position": "Välilehti %s / %s",
+  "widget.libgui.text_field.narration.title": "Tekstikenttä: %s",
+  "widget.libgui.text_field.narration.suggestion": "Ehdotus: %s",
+  "widget.libgui.toggle_button.narration.unnamed": "Kytkinpainike: %s",
+  "widget.libgui.toggle_button.narration.named": "Kytkinpainike: %s (%s)",
+  "widget.libgui.toggle_button.narration.on": "Päällä",
+  "widget.libgui.toggle_button.narration.off": "Pois päältä"
 } 
