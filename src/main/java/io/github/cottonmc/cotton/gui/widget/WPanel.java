@@ -7,6 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractList;
@@ -245,6 +246,17 @@ public abstract class WPanel extends WWidget {
 		for (WWidget child : children) {
 			child.addPainters();
 		}
+	}
+
+	/**
+	 * {@return a stream of all visible widgets in this panel}
+	 *
+	 * @experimental
+	 * @since 4.2.0
+	 */
+	@ApiStatus.Experimental
+	public final Stream<WWidget> streamChildren() {
+		return children.stream();
 	}
 
 	@Override

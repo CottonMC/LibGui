@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.client;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -8,12 +9,15 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
+import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
 import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
+import io.github.cottonmc.cotton.gui.impl.client.NarrationHelper;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -26,6 +30,7 @@ import org.lwjgl.opengl.GL11;
 public class CottonInventoryScreen<T extends SyncedGuiDescription> extends HandledScreen<T> implements CottonScreenImpl {
 	protected SyncedGuiDescription description;
 	@Nullable protected WWidget lastResponder = null;
+	private final MouseInputHandler<CottonInventoryScreen<T>> mouseInputHandler = new MouseInputHandler<>(this);
 
 	/**
 	 * Constructs a new screen without a title.
@@ -81,6 +86,12 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		super.removed();
 		this.client.keyboard.setRepeatEvents(false);
 		VisualLogger.reset();
+	}
+
+	@ApiStatus.Internal
+	@Override
+	public GuiDescription getDescription() {
+		return description;
 	}
 
 	@Nullable
@@ -187,7 +198,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
-		MouseInputHandler.onMouseDown(description, this, containerX, containerY, mouseButton);
+		mouseInputHandler.onMouseDown(containerX, containerY, mouseButton);
 
 		return true;
 	}
@@ -197,7 +208,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		super.mouseReleased(mouseX, mouseY, mouseButton);
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-		MouseInputHandler.onMouseUp(description, this, containerX, containerY, mouseButton);
+		mouseInputHandler.onMouseUp(containerX, containerY, mouseButton);
 
 		return true;
 	}
@@ -208,7 +219,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-		MouseInputHandler.onMouseDrag(description, this, containerX, containerY, mouseButton, deltaX, deltaY);
+		mouseInputHandler.onMouseDrag(containerX, containerY, mouseButton, deltaX, deltaY);
 
 		return true;
 	}
@@ -219,7 +230,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-		MouseInputHandler.onMouseScroll(description, containerX, containerY, amount);
+		mouseInputHandler.onMouseScroll(containerX, containerY, amount);
 
 		return true;
 	}
@@ -230,7 +241,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-		MouseInputHandler.onMouseMove(description, containerX, containerY);
+		mouseInputHandler.onMouseMove(containerX, containerY);
 	}
 
 	@Override
@@ -303,5 +314,10 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		}
 
 		return true;
+	}
+
+	@Override
+	protected void addElementNarrations(NarrationMessageBuilder builder) {
+		if (description != null) NarrationHelper.addNarrations(description.getRootPanel(), builder);
 	}
 }

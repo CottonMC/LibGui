@@ -5,11 +5,14 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Style;
 
+import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public interface CottonScreenImpl {
+	GuiDescription getDescription();
+
 	@Nullable
 	WWidget getLastResponder();
 

@@ -4,16 +4,20 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
+import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
@@ -354,9 +358,22 @@ public class WTabPanel extends WPanel {
 			}
 		}
 
+		@Environment(EnvType.CLIENT)
 		@Override
 		public void addTooltip(TooltipBuilder tooltip) {
 			data.addTooltip(tooltip);
+		}
+
+		@Environment(EnvType.CLIENT)
+		@Override
+		public void addNarrations(NarrationMessageBuilder builder) {
+			Text label = data.getTitle();
+
+			if (label != null) {
+				builder.put(NarrationPart.TITLE, new TranslatableText(NarrationMessages.TAB_TITLE_KEY, label));
+			}
+
+			builder.put(NarrationPart.POSITION, new TranslatableText(NarrationMessages.TAB_POSITION_KEY, tabWidgets.indexOf(this) + 1, tabWidgets.size()));
 		}
 	}
 

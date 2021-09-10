@@ -15,3 +15,4 @@ pluginManagement {
 rootProject.name = 'LibGui'
 
 include ':GuiTest'
+include 'javadoc'

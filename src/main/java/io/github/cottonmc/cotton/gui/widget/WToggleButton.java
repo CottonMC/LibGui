@@ -3,15 +3,19 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
+import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import org.jetbrains.annotations.Nullable;
@@ -201,5 +205,26 @@ public class WToggleButton extends WWidget {
 	public WToggleButton setFocusImage(Texture focusImage) {
 		this.focusImage = focusImage;
 		return this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void addNarrations(NarrationMessageBuilder builder) {
+		Text onOff = isOn ? NarrationMessages.TOGGLE_BUTTON_ON : NarrationMessages.TOGGLE_BUTTON_OFF;
+		Text title;
+
+		if (label != null) {
+			title = new TranslatableText(NarrationMessages.TOGGLE_BUTTON_NAMED_KEY, label, onOff);
+		} else {
+			title = new TranslatableText(NarrationMessages.TOGGLE_BUTTON_UNNAMED_KEY, onOff);
+		}
+
+		builder.put(NarrationPart.TITLE, title);
+
+		if (isFocused()) {
+			builder.put(NarrationPart.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_FOCUSED);
+		} else if (isHovered()) {
+			builder.put(NarrationPart.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_HOVERED);
+		}
 	}
 }

@@ -16,6 +16,10 @@ archivesBaseName = project.archives_base_name
 version = "$project.mod_version+$project.minecraft_version"
 group = project.maven_group
 
+configurations {
+	javadocClasspath
+}
+
 repositories {
 	maven { url "https://server.bbkr.space/artifactory/libs-release" }
 	/*maven {
@@ -47,6 +51,8 @@ dependencies {
 	modRuntime(modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
 	})
+
+	javadocClasspath project(':javadoc')
 }
 
 processResources {
@@ -79,9 +85,16 @@ checkstyle {
 	toolVersion = '8.36.2'
 }
 
+evaluationDependsOn(':javadoc')
+
 javadoc {
+	dependsOn project(':javadoc').tasks.jar
+
 	options {
 		links("https://maven.fabricmc.net/docs/yarn-$project.yarn_mappings")
+		taglets 'io.github.cottonmc.cotton.gui.jd.ExperimentalTaglet'
+		taglets 'io.github.cottonmc.cotton.gui.jd.PropertyTaglet'
+		tagletPath project(':javadoc').tasks.jar.outputs.files.singleFile
 	}
 
 	exclude("**/impl/**")

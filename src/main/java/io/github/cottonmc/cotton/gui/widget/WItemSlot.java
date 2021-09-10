@@ -3,16 +3,23 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
+import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,10 +82,12 @@ public class WItemSlot extends WWidget {
 	private boolean insertingAllowed = true;
 	private boolean takingAllowed = true;
 	private int focusedSlot = -1;
+	private int hoveredSlot = -1;
 	private Predicate<ItemStack> filter = DEFAULT_FILTER;
 	private final Set<ChangeListener> listeners = new HashSet<>();
 
 	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
+		this();
 		this.inventory = inventory;
 		this.startIndex = startIndex;
 		this.slotsWide = slotsWide;
@@ -87,7 +96,12 @@ public class WItemSlot extends WWidget {
 		//this.ltr = ltr;
 	}
 	
-	private WItemSlot() {}
+	private WItemSlot() {
+		hoveredProperty().addListener((property, from, to) -> {
+			assert to != null;
+			if (!to) hoveredSlot = -1;
+		});
+	}
 	
 	public static WItemSlot of(Inventory inventory, int index) {
 		WItemSlot w = new WItemSlot();
@@ -124,7 +138,12 @@ public class WItemSlot extends WWidget {
 	 * @see WPlayerInvPanel
 	 */
 	public static WItemSlot ofPlayerStorage(Inventory inventory) {
-		WItemSlot w = new WItemSlot();
+		WItemSlot w = new WItemSlot() {
+			@Override
+			protected Text getNarrationName() {
+				return inventory instanceof PlayerInventory inv ? inv.getDisplayName() : NarrationMessages.Vanilla.INVENTORY;
+			}
+		};
 		w.inventory = inventory;
 		w.startIndex = 9;
 		w.slotsWide = 9;
@@ -415,6 +434,14 @@ public class WItemSlot extends WWidget {
 	}
 
 	@Override
+	public InputResult onMouseMove(int x, int y) {
+		int slotX = x / 18;
+		int slotY = y / 18;
+		hoveredSlot = slotX + slotY * slotsWide;
+		return InputResult.PROCESSED;
+	}
+
+	@Override
 	public void onHidden() {
 		super.onHidden();
 
@@ -427,6 +454,34 @@ public class WItemSlot extends WWidget {
 	@Override
 	public void addPainters() {
 		backgroundPainter = BackgroundPainter.SLOT;
+	}
+
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void addNarrations(NarrationMessageBuilder builder) {
+		List<Text> parts = new ArrayList<>();
+		Text name = getNarrationName();
+		if (name != null) parts.add(name);
+
+		if (focusedSlot >= 0) {
+			parts.add(new TranslatableText(NarrationMessages.ITEM_SLOT_TITLE_KEY, focusedSlot + 1, slotsWide * slotsHigh));
+		} else if (hoveredSlot >= 0) {
+			parts.add(new TranslatableText(NarrationMessages.ITEM_SLOT_TITLE_KEY, hoveredSlot + 1, slotsWide * slotsHigh));
+		}
+
+		builder.put(NarrationPart.TITLE, parts.toArray(new Text[0]));
+	}
+
+	/**
+	 * Returns a "narration name" for this slot.
+	 * It's narrated before the slot index. One example of a narration name would be "hotbar" for the player's hotbar.
+	 *
+	 * @return the narration name, or null if there's none for this slot
+	 * @since 4.2.0
+	 */
+	@Nullable
+	protected Text getNarrationName() {
+		return null;
 	}
 
 	/**

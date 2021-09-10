@@ -3,9 +3,11 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -54,7 +56,12 @@ public class WPlayerInvPanel extends WPlainPanel {
 		}
 
 		inv = WItemSlot.ofPlayerStorage(playerInventory);
-		hotbar = WItemSlot.of(playerInventory, 0, 9, 1);
+		hotbar = new WItemSlot(playerInventory, 0, 9, 1, false) {
+			@Override
+			protected Text getNarrationName() {
+				return NarrationMessages.PLAYER_INVENTORY_HOTBAR;
+			}
+		};
 		this.add(inv, 0, y);
 		this.add(hotbar, 0, y + 58);
 	}

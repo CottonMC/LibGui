@@ -4,16 +4,21 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 /**
  * The base class for all widgets.
+ *
+ * @properties
  */
 public class WWidget {
 	private static final VisualLogger LOGGER = new VisualLogger(WWidget.class);
@@ -40,6 +45,8 @@ public class WWidget {
 	 */
 	@Nullable
 	protected GuiDescription host;
+
+	private final ObservableProperty<Boolean> hovered = ObservableProperty.of(false).nonnullValues().setName("WWidget.hovered");
 
 	/**
 	 * Sets the location of this widget relative to its parent.
@@ -454,6 +461,68 @@ public class WWidget {
 	 */
 	@Environment(EnvType.CLIENT)
 	public void addPainters() {
+	}
+
+	/**
+	 * Returns whether the user is hovering over this widget.
+	 * The result is an <i>observable property</i> that can be modified and listened to.
+	 *
+	 * @experimental
+	 * @return the {@code hovered} property
+	 * @since 4.2.0
+	 */
+	@ApiStatus.Experimental
+	public ObservableProperty<Boolean> hoveredProperty() {
+		return hovered;
+	}
+
+	/**
+	 * Returns whether the user is hovering over this widget.
+	 * This is equivalent to calling <code>{@link #hoveredProperty()}.get()</code>.
+	 *
+	 * @experimental
+	 * @return true if this widget is hovered, false otherwise
+	 * @since 4.2.0
+	 */
+	@ApiStatus.Experimental
+	public final boolean isHovered() {
+		return hoveredProperty().get();
+	}
+
+	/**
+	 * Sets the {@link #hoveredProperty() hovered} property.
+	 *
+	 * @experimental
+	 * @param hovered the new value; true if hovered, false otherwise
+	 * @since 4.2.0
+	 */
+	@ApiStatus.Experimental
+	public final void setHovered(boolean hovered) {
+		hoveredProperty().set(hovered);
+	}
+
+	/**
+	 * {@return whether this widget can be narrated}
+	 *
+	 * @see #addNarrations(NarrationMessageBuilder)
+	 * @since 4.2.0
+	 */
+	public boolean isNarratable() {
+		return true;
+	}
+
+	/**
+	 * Adds the narrations of this widget to a narration builder.
+	 * Narrations will only apply if this widget {@linkplain #isNarratable() is narratable}.
+	 *
+	 * <p>As of LibGui 4.2.0, the widget also needs to be {@linkplain #canFocus() focusable}, but that is
+	 * planned to be changed in the future to include "hoverable" widgets.
+	 *
+	 * @param builder the narration builder, cannot be null
+	 * @since 4.2.0
+	 */
+	@Environment(EnvType.CLIENT)
+	public void addNarrations(NarrationMessageBuilder builder) {
 	}
 
 	/**

@@ -1,4 +1,18 @@
 {
-	"options.libgui.libgui_settings": "LibGui Settings",
-	"option.libgui.darkmode": "Dark Mode"
-} 
+  "options.libgui.libgui_settings": "LibGui Settings",
+  "option.libgui.darkmode": "Dark Mode",
+  "widget.libgui.item_slot.narration.title": "Item slot %s out of %s",
+  "widget.libgui.labeled_slider.narration.title": "%s slider: at %s between %s and %s",
+  "widget.libgui.player_inventory.narration.hotbar": "Hotbar",
+  "widget.libgui.scroll_bar.narration.title": "Scroll bar",
+  "widget.libgui.slider.narration.title": "Slider: at %s between %s and %s",
+  "widget.libgui.slider.narration.usage": "Move by dragging or with arrow keys",
+  "widget.libgui.tab.narration.title": "%s tab",
+  "widget.libgui.tab.narration.position": "Tab %s out of %s",
+  "widget.libgui.text_field.narration.title": "Text field: %s",
+  "widget.libgui.text_field.narration.suggestion": "Suggestion: %s",
+  "widget.libgui.toggle_button.narration.unnamed": "Toggle button: %s",
+  "widget.libgui.toggle_button.narration.named": "Toggle button: %s (%s)",
+  "widget.libgui.toggle_button.narration.on": "On",
+  "widget.libgui.toggle_button.narration.off": "Off"
+}
