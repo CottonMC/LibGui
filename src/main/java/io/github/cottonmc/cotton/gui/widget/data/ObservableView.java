@@ -67,8 +67,8 @@ public interface ObservableView<T> extends Supplier<T> {
 		 * Handles a change in an observable property.
 		 *
 		 * @param property the changed property or view
-		 * @param from     the previous value
-		 * @param to       the new value
+		 * @param from     the previous value, or null if not set before
+		 * @param to       the new value, or null if cleared
 		 */
 		void onPropertyChange(ObservableView<? extends T> property, @Nullable T from, @Nullable T to);
 	}
