@@ -45,12 +45,6 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 		return hasValue;
 	}
 
-	/**
-	 * {@return the value of this property}
-	 * @throws IllegalStateException if not initialized
-	 * @throws NullPointerException if the value is null and null values aren't allowed
-	 * @see #hasValue()
-	 */
 	@Override
 	public T get() {
 		if (!hasValue) {
