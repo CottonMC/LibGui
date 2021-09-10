@@ -6,7 +6,6 @@ import net.minecraft.text.TranslatableText;
 public final class NarrationMessages {
 	public static final String ITEM_SLOT_TITLE_KEY = "widget.libgui.item_slot.narration.title";
 	public static final String LABELED_SLIDER_TITLE_KEY = "widget.libgui.labeled_slider.narration.title";
-	public static final Text PLAYER_INVENTORY_HOTBAR = new TranslatableText("widget.libgui.player_inventory.narration.hotbar");
 	public static final Text SCROLL_BAR_TITLE = new TranslatableText("widget.libgui.scroll_bar.narration.title");
 	public static final String SLIDER_MESSAGE_KEY = "widget.libgui.slider.narration.title";
 	public static final Text SLIDER_USAGE = new TranslatableText("widget.libgui.slider.narration.usage");
@@ -25,5 +24,6 @@ public final class NarrationMessages {
 		public static final Text COMPONENT_LIST_USAGE = new TranslatableText("narration.component_list.usage");
 		public static final Text INVENTORY = new TranslatableText("container.inventory");
 		public static final String SCREEN_POSITION_KEY = "narrator.position.screen";
+		public static final Text HOTBAR = new TranslatableText("options.attack.hotbar");
 	}
 }

@@ -59,7 +59,7 @@ public class WPlayerInvPanel extends WPlainPanel {
 		hotbar = new WItemSlot(playerInventory, 0, 9, 1, false) {
 			@Override
 			protected Text getNarrationName() {
-				return NarrationMessages.PLAYER_INVENTORY_HOTBAR;
+				return NarrationMessages.Vanilla.HOTBAR;
 			}
 		};
 		this.add(inv, 0, y);
