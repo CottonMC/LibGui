@@ -1,7 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget.data;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +16,7 @@ import java.util.function.Supplier;
  * @param <T> the contained value type
  * @since 4.2.0
  */
-public final class ObservableProperty<T> implements Supplier<T> {
+public final class ObservableProperty<T> implements ObservableView<T> {
 	private Supplier<? extends T> value;
 	private final List<ChangeListener<? super T>> listeners = new ArrayList<>();
 	private boolean allowNull = true;
@@ -113,6 +111,33 @@ public final class ObservableProperty<T> implements Supplier<T> {
 	}
 
 	/**
+	 * Returns a read-only view of this property.
+	 * The result is not an instance of {@link ObservableProperty},
+	 * and thus can't be mutated.
+	 *
+	 * @return an observable view of this property
+	 */
+	public ObservableView<T> readOnly() {
+		// Missing delegates from Kotlin... :(
+		return new ObservableView<>() {
+			@Override
+			public T get() {
+				return ObservableProperty.this.get();
+			}
+
+			@Override
+			public void addListener(ChangeListener<? super T> listener) {
+				ObservableProperty.this.addListener(listener);
+			}
+
+			@Override
+			public void removeListener(ChangeListener<? super T> listener) {
+				ObservableProperty.this.removeListener(listener);
+			}
+		};
+	}
+
+	/**
 	 * {@return the name of this property}
 	 */
 	public String getName() {
@@ -130,28 +155,15 @@ public final class ObservableProperty<T> implements Supplier<T> {
 		return this;
 	}
 
-	/**
-	 * Adds a change listener to this observable property.
-	 *
-	 * @param listener the added listener
-	 */
+	@Override
 	public void addListener(ChangeListener<? super T> listener) {
 		Objects.requireNonNull(listener);
 		listeners.add(listener);
 	}
 
-	/**
-	 * Removes a change listener from this observable property if present.
-	 *
-	 * @param listener the removed listener
-	 */
+	@Override
 	public void removeListener(ChangeListener<? super T> listener) {
 		Objects.requireNonNull(listener);
 		listeners.remove(listener);
-	}
-
-	@FunctionalInterface
-	public interface ChangeListener<T> {
-		void onPropertyChange(ObservableProperty<? extends T> property, @Nullable T from, @Nullable T to);
 	}
 }
