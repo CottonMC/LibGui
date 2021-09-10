@@ -15,6 +15,19 @@ import java.util.function.Supplier;
 @ApiStatus.Experimental
 public interface ObservableView<T> extends Supplier<T> {
 	/**
+	 * {@return whether this property has been set to a value}
+	 */
+	boolean hasValue();
+
+	/**
+	 * {@return the value of this property}
+	 * @throws IllegalStateException if not initialized
+	 * @see #hasValue()
+	 */
+	@Override
+	T get();
+
+	/**
 	 * Adds a change listener to this property view.
 	 *
 	 * @param listener the added listener

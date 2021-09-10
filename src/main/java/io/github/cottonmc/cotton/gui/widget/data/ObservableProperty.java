@@ -40,9 +40,7 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 		return new ObservableProperty<>(initialValue, true);
 	}
 
-	/**
-	 * {@return whether this property has been set to a value}
-	 */
+	@Override
 	public boolean hasValue() {
 		return hasValue;
 	}
@@ -51,6 +49,7 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 	 * {@return the value of this property}
 	 * @throws IllegalStateException if not initialized
 	 * @throws NullPointerException if the value is null and null values aren't allowed
+	 * @see #hasValue()
 	 */
 	@Override
 	public T get() {
@@ -115,6 +114,11 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 	public ObservableView<T> readOnly() {
 		// Missing delegates from Kotlin... :(
 		return new ObservableView<>() {
+			@Override
+			public boolean hasValue() {
+				return ObservableProperty.this.hasValue();
+			}
+
 			@Override
 			public T get() {
 				return ObservableProperty.this.get();
