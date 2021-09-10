@@ -251,6 +251,7 @@ public abstract class WPanel extends WWidget {
 	/**
 	 * {@return a stream of all visible widgets in this panel}
 	 *
+	 * @experimental
 	 * @since 4.2.0
 	 */
 	@ApiStatus.Experimental

@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget.data;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -7,9 +8,11 @@ import java.util.function.Supplier;
 /**
  * A read-only {@linkplain ObservableProperty observable property}.
  *
+ * @experimental
  * @param <T> the contained value type
  * @since 4.2.0
  */
+@ApiStatus.Experimental
 public interface ObservableView<T> extends Supplier<T> {
 	/**
 	 * Adds a change listener to this property view.

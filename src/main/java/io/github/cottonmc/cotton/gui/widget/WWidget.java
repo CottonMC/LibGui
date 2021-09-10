@@ -11,6 +11,7 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -466,9 +467,11 @@ public class WWidget {
 	 * Returns whether the user is hovering over this widget.
 	 * The result is an <i>observable property</i> that can be modified and listened to.
 	 *
+	 * @experimental
 	 * @return the {@code hovered} property
 	 * @since 4.2.0
 	 */
+	@ApiStatus.Experimental
 	public ObservableProperty<Boolean> hoveredProperty() {
 		return hovered;
 	}
@@ -477,9 +480,11 @@ public class WWidget {
 	 * Returns whether the user is hovering over this widget.
 	 * This is equivalent to calling <code>{@link #hoveredProperty()}.get()</code>.
 	 *
+	 * @experimental
 	 * @return true if this widget is hovered, false otherwise
 	 * @since 4.2.0
 	 */
+	@ApiStatus.Experimental
 	public final boolean isHovered() {
 		return hoveredProperty().get();
 	}
@@ -487,9 +492,11 @@ public class WWidget {
 	/**
 	 * Sets the {@link #hoveredProperty() hovered} property.
 	 *
+	 * @experimental
 	 * @param hovered the new value; true if hovered, false otherwise
 	 * @since 4.2.0
 	 */
+	@ApiStatus.Experimental
 	public final void setHovered(boolean hovered) {
 		hoveredProperty().set(hovered);
 	}

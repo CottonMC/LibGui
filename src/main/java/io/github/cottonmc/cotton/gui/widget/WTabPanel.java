@@ -367,7 +367,7 @@ public class WTabPanel extends WPanel {
 		@Environment(EnvType.CLIENT)
 		@Override
 		public void addNarrations(NarrationMessageBuilder builder) {
-			Text label = data.getTitle(); // TODO: a separate narration message
+			Text label = data.getTitle();
 
 			if (label != null) {
 				builder.put(NarrationPart.TITLE, new TranslatableText(NarrationMessages.TAB_TITLE_KEY, label));

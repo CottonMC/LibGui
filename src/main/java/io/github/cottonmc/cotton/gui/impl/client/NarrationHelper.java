@@ -18,11 +18,11 @@ public final class NarrationHelper {
 	public static void addNarrations(WPanel rootPanel, NarrationMessageBuilder builder) {
 		List<WWidget> narratableWidgets = getAllWidgets(rootPanel)
 			.filter(WWidget::isNarratable)
-			.filter(widget -> widget.isFocused() || widget.isHovered())
 			.collect(Collectors.toList());
 
 		for (int i = 0, childCount = narratableWidgets.size(); i < childCount; i++) {
 			WWidget child = narratableWidgets.get(i);
+			if (!child.isFocused() && !child.isHovered()) continue;
 
 			// replicates Screen.addElementNarrations
 			if (narratableWidgets.size() > 1) {
