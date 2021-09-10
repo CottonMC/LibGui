@@ -223,8 +223,7 @@ public class WToggleButton extends WWidget {
 
 		if (isFocused()) {
 			builder.put(NarrationPart.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_FOCUSED);
-		} else {
-			// TODO: hovering, again
+		} else if (isHovered()) {
 			builder.put(NarrationPart.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_HOVERED);
 		}
 	}

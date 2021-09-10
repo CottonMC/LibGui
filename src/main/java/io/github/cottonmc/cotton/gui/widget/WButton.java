@@ -230,8 +230,7 @@ public class WButton extends WWidget {
 		if (isEnabled()) {
 			if (isFocused()) {
 				builder.put(NarrationPart.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_FOCUSED);
-			} else {
-				// TODO: hovering, again
+			} else if (isHovered()) {
 				builder.put(NarrationPart.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_HOVERED);
 			}
 		}

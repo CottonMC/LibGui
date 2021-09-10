@@ -18,7 +18,7 @@ public final class NarrationHelper {
 	public static void addNarrations(WPanel rootPanel, NarrationMessageBuilder builder) {
 		List<WWidget> narratableWidgets = getAllWidgets(rootPanel)
 			.filter(WWidget::isNarratable)
-			.filter(WWidget::isFocused) // TODO: || isHovered
+			.filter(widget -> widget.isFocused() || widget.isHovered())
 			.collect(Collectors.toList());
 
 		for (int i = 0, childCount = narratableWidgets.size(); i < childCount; i++) {
@@ -28,7 +28,7 @@ public final class NarrationHelper {
 			if (narratableWidgets.size() > 1) {
 				builder.put(NarrationPart.POSITION, new TranslatableText(NarrationMessages.Vanilla.SCREEN_POSITION_KEY, i + 1, childCount));
 
-				if (child.isFocused()) { // TODO: this check is currently useless but will be used with hovering
+				if (child.isFocused()) {
 					builder.put(NarrationPart.USAGE, NarrationMessages.Vanilla.COMPONENT_LIST_USAGE);
 				}
 			}

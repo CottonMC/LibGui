@@ -5,6 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -260,5 +262,11 @@ public class WLabel extends WWidget {
 	public WLabel setVerticalAlignment(VerticalAlignment align) {
 		this.verticalAlignment = align;
 		return this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	@Override
+	public void addNarrations(NarrationMessageBuilder builder) {
+		builder.put(NarrationPart.TITLE, text);
 	}
 }

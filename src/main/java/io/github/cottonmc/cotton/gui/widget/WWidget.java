@@ -44,7 +44,7 @@ public class WWidget {
 	@Nullable
 	protected GuiDescription host;
 
-	private final ObservableProperty<Boolean> hovered = ObservableProperty.of(false).nonnullValues();
+	private final ObservableProperty<Boolean> hovered = ObservableProperty.of(false).nonnullValues().setName("WWidget.hovered");
 
 	/**
 	 * Sets the location of this widget relative to its parent.
@@ -461,8 +461,36 @@ public class WWidget {
 	public void addPainters() {
 	}
 
-	public ObservableProperty<Boolean> getHovered() {
+	/**
+	 * Returns whether the user is hovering over this widget.
+	 * The result is an <i>observable property</i> that can be modified and listened to.
+	 *
+	 * @return the {@code hovered} property
+	 * @since 4.2.0
+	 */
+	public ObservableProperty<Boolean> hoveredProperty() {
 		return hovered;
+	}
+
+	/**
+	 * Returns whether the user is hovering over this widget.
+	 * This is equivalent to calling <code>{@link #hoveredProperty()}.get()</code>.
+	 *
+	 * @return true if this widget is hovered, false otherwise
+	 * @since 4.2.0
+	 */
+	public final boolean isHovered() {
+		return hoveredProperty().get();
+	}
+
+	/**
+	 * Sets the {@link ##hoveredProperty()} hovered} property.
+	 *
+	 * @param hovered the new value; true if hovered, false otherwise
+	 * @since 4.2.0
+	 */
+	public final void setHovered(boolean hovered) {
+		hoveredProperty().set(hovered);
 	}
 
 	/**

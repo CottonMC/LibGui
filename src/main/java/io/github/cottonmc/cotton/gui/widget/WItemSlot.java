@@ -450,6 +450,8 @@ public class WItemSlot extends WWidget {
 			parts.add(new TranslatableText(NarrationMessages.ITEM_SLOT_TITLE_KEY, focusedSlot + 1, slotsWide * slotsHigh));
 			builder.put(NarrationPart.TITLE, parts.toArray(new Text[0]));
 		}
+
+		// TODO: hovered slot
 	}
 
 	@Nullable

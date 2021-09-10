@@ -7,10 +7,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public final class ObservableProperty<T> {
+/**
+ * An observable mutable property. Observable properties are containers for values
+ * that can be modified, listened to and bound to other suppliers.
+ *
+ * <p>The naming convention for {@code ObservableProperty} getters follows the convention
+ * {@code <property name>Property}. For example, the {@code WWidget.hovered} property can be retrieved with
+ * {@link io.github.cottonmc.cotton.gui.widget.WWidget#hoveredProperty() hoveredProperty()}.
+ *
+ * @param <T> the contained value type
+ * @since 4.2.0
+ */
+public final class ObservableProperty<T> implements Supplier<T> {
 	private Supplier<? extends T> value;
 	private final List<ChangeListener<? super T>> listeners = new ArrayList<>();
 	private boolean allowNull = true;
+	private String name = "<unnamed>";
 
 	private ObservableProperty() {
 	}
@@ -36,13 +48,14 @@ public final class ObservableProperty<T> {
 	 * @throws IllegalStateException if not initialized
 	 * @throws NullPointerException if the value is null and null values aren't allowed
 	 */
+	@Override
 	public T get() {
 		if (value == null) {
-			throw new IllegalStateException("Property not initialized!");
+			throw new IllegalStateException("Property " + name + " not initialized!");
 		}
 
 		T ret = value.get();
-		if (ret == null && !allowNull) throw new NullPointerException("Null value for nonnull property!");
+		if (ret == null && !allowNull) throw new NullPointerException("Null value for nonnull property " + name + "!");
 		return ret;
 	}
 
@@ -66,9 +79,12 @@ public final class ObservableProperty<T> {
 		Objects.requireNonNull(value, "value");
 		T oldValue = this.value != null ? this.value.get() : null;
 		this.value = value;
+		T newValue = value.get();
 
-		for (ChangeListener<? super T> listener : listeners) {
-			listener.onPropertyChange(this, oldValue, value.get());
+		if (oldValue != newValue) {
+			for (ChangeListener<? super T> listener : listeners) {
+				listener.onPropertyChange(this, oldValue, newValue);
+			}
 		}
 	}
 
@@ -79,8 +95,10 @@ public final class ObservableProperty<T> {
 		T oldValue = this.value != null ? this.value.get() : null;
 		value = null;
 
-		for (ChangeListener<? super T> listener : listeners) {
-			listener.onPropertyChange(this, oldValue, null);
+		if (oldValue != null) {
+			for (ChangeListener<? super T> listener : listeners) {
+				listener.onPropertyChange(this, oldValue, null);
+			}
 		}
 	}
 
@@ -91,6 +109,24 @@ public final class ObservableProperty<T> {
 	 */
 	public ObservableProperty<T> nonnullValues() {
 		allowNull = false;
+		return this;
+	}
+
+	/**
+	 * {@return the name of this property}
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets the name of this property, which is used in debug messages.
+	 *
+	 * @param name the new name
+	 * @return this property
+	 */
+	public ObservableProperty<T> setName(String name) {
+		this.name = Objects.requireNonNull(name, "name");
 		return this;
 	}
 

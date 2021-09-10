@@ -4,6 +4,7 @@ import net.minecraft.client.gui.screen.Screen;
 
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
@@ -13,10 +14,14 @@ import java.util.function.Function;
  */
 public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 	private final S screen;
-	private @Nullable WWidget hovered;
+	private final ObservableProperty<WWidget> hovered = ObservableProperty.of(null);
 
 	public MouseInputHandler(S screen) {
 		this.screen = screen;
+		hovered.addListener((property, from, to) -> {
+			if (from != null) from.setHovered(false);
+			if (to != null) to.setHovered(true);
+		});
 	}
 
 	public void onMouseDown(int containerX, int containerY, int mouseButton) {
@@ -89,16 +94,7 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 
 	public void onMouseMove(int containerX, int containerY) {
 		WWidget hit = screen.getDescription().getRootPanel().hit(containerX, containerY);
-
-		// TODO: Some sort of canHover?
-		if (hit != hovered) {
-			if (hovered != null) {
-				hovered.getHovered().set(false);
-			}
-
-			hovered = hit;
-			hit.getHovered().set(true);
-		}
+		hovered.set(hit);
 
 		runTree(
 				hit,
