@@ -19,6 +19,7 @@ import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
 
@@ -81,10 +82,12 @@ public class WItemSlot extends WWidget {
 	private boolean insertingAllowed = true;
 	private boolean takingAllowed = true;
 	private int focusedSlot = -1;
+	private int hoveredSlot = -1;
 	private Predicate<ItemStack> filter = DEFAULT_FILTER;
 	private final Set<ChangeListener> listeners = new HashSet<>();
 
 	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
+		this();
 		this.inventory = inventory;
 		this.startIndex = startIndex;
 		this.slotsWide = slotsWide;
@@ -93,7 +96,12 @@ public class WItemSlot extends WWidget {
 		//this.ltr = ltr;
 	}
 	
-	private WItemSlot() {}
+	private WItemSlot() {
+		hoveredProperty().addListener((property, from, to) -> {
+			assert to != null;
+			if (!to) hoveredSlot = -1;
+		});
+	}
 	
 	public static WItemSlot of(Inventory inventory, int index) {
 		WItemSlot w = new WItemSlot();
@@ -426,6 +434,14 @@ public class WItemSlot extends WWidget {
 	}
 
 	@Override
+	public InputResult onMouseMove(int x, int y) {
+		int slotX = x / 18;
+		int slotY = y / 18;
+		hoveredSlot = slotX + slotY * slotsWide;
+		return InputResult.PROCESSED;
+	}
+
+	@Override
 	public void onHidden() {
 		super.onHidden();
 
@@ -443,15 +459,17 @@ public class WItemSlot extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void addNarrations(NarrationMessageBuilder builder) {
+		List<Text> parts = new ArrayList<>();
+		Text extra = getExtraNarrationMessage();
+		if (extra != null) parts.add(extra);
+
 		if (focusedSlot >= 0) {
-			List<Text> parts = new ArrayList<>();
-			Text extra = getExtraNarrationMessage();
-			if (extra != null) parts.add(extra);
 			parts.add(new TranslatableText(NarrationMessages.ITEM_SLOT_TITLE_KEY, focusedSlot + 1, slotsWide * slotsHigh));
-			builder.put(NarrationPart.TITLE, parts.toArray(new Text[0]));
+		} else if (hoveredSlot >= 0) {
+			parts.add(new TranslatableText(NarrationMessages.ITEM_SLOT_TITLE_KEY, hoveredSlot + 1, slotsWide * slotsHigh));
 		}
 
-		// TODO: hovered slot
+		builder.put(NarrationPart.TITLE, parts.toArray(new Text[0]));
 	}
 
 	@Nullable
