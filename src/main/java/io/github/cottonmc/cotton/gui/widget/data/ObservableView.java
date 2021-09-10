@@ -4,6 +4,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+/**
+ * A read-only {@linkplain ObservableProperty observable property}.
+ *
+ * @param <T> the contained value type
+ * @since 4.2.0
+ */
 public interface ObservableView<T> extends Supplier<T> {
 	/**
 	 * Adds a change listener to this property view.
