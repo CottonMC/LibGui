@@ -1,15 +1,15 @@
 package io.github.cottonmc.cotton.gui.widget.data;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * An observable mutable property. Observable properties are containers for values
- * that can be modified, listened to and bound to other suppliers.
+ * that can be modified and listened to.
  *
  * <p>The naming convention for {@code ObservableProperty} getters follows the convention
  * {@code <property name>Property}. For example, the {@code WWidget.hovered} property can be retrieved with
@@ -21,28 +21,30 @@ import java.util.function.Supplier;
  */
 @ApiStatus.Experimental
 public final class ObservableProperty<T> implements ObservableView<T> {
-	private Supplier<? extends T> value;
+	private boolean hasValue;
+	private T value;
 	private final List<ChangeListener<? super T>> listeners = new ArrayList<>();
 	private boolean allowNull = true;
 	private String name = "<unnamed>";
 
-	private ObservableProperty() {
-	}
-
-	private ObservableProperty(Supplier<? extends T> value) {
+	private ObservableProperty(@Nullable T value, boolean hasValue) {
 		this.value = value;
+		this.hasValue = hasValue;
 	}
 
 	public static <T> ObservableProperty<T> lateinit() {
-		return new ObservableProperty<>();
+		return new ObservableProperty<>(null, false);
 	}
 
 	public static <T> ObservableProperty<T> of(T initialValue) {
-		return new ObservableProperty<>(() -> initialValue);
+		return new ObservableProperty<>(initialValue, true);
 	}
 
-	public static <T> ObservableProperty<T> bound(Supplier<? extends T> initialValue) {
-		return new ObservableProperty<>(initialValue);
+	/**
+	 * {@return whether this property has been set to a value}
+	 */
+	public boolean hasValue() {
+		return hasValue;
 	}
 
 	/**
@@ -52,13 +54,11 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 	 */
 	@Override
 	public T get() {
-		if (value == null) {
+		if (!hasValue) {
 			throw new IllegalStateException("Property " + name + " not initialized!");
 		}
 
-		T ret = value.get();
-		if (ret == null && !allowNull) throw new NullPointerException("Null value for nonnull property " + name + "!");
-		return ret;
+		return value;
 	}
 
 	/**
@@ -68,24 +68,14 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 	 * @throws NullPointerException if the value is null and nulls aren't allowed
 	 */
 	public void set(T value) {
-		if (value == null && !allowNull) throw new NullPointerException("value");
-		bind(() -> value);
-	}
-
-	/**
-	 * Binds this property to a supplier.
-	 *
-	 * @param value the new value supplier
-	 */
-	public void bind(Supplier<? extends T> value) {
-		Objects.requireNonNull(value, "value");
-		T oldValue = this.value != null ? this.value.get() : null;
+		if (value == null && !allowNull) throw new NullPointerException("Trying to set null value for nonnull property " + name);
+		T oldValue = this.value;
 		this.value = value;
-		T newValue = value.get();
+		hasValue = true;
 
-		if (oldValue != newValue) {
+		if (oldValue != value) {
 			for (ChangeListener<? super T> listener : listeners) {
-				listener.onPropertyChange(this, oldValue, newValue);
+				listener.onPropertyChange(this, oldValue, value);
 			}
 		}
 	}
@@ -94,8 +84,9 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 	 * Clears the current value, if any, from this property.
 	 */
 	public void clear() {
-		T oldValue = this.value != null ? this.value.get() : null;
+		T oldValue = value;
 		value = null;
+		hasValue = false;
 
 		if (oldValue != null) {
 			for (ChangeListener<? super T> listener : listeners) {
