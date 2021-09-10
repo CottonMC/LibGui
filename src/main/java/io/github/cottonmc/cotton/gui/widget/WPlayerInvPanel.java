@@ -58,7 +58,7 @@ public class WPlayerInvPanel extends WPlainPanel {
 		inv = WItemSlot.ofPlayerStorage(playerInventory);
 		hotbar = new WItemSlot(playerInventory, 0, 9, 1, false) {
 			@Override
-			Text getExtraNarrationMessage() {
+			protected Text getNarrationName() {
 				return NarrationMessages.PLAYER_INVENTORY_HOTBAR;
 			}
 		};

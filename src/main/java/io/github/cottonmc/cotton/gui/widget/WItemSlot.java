@@ -140,7 +140,7 @@ public class WItemSlot extends WWidget {
 	public static WItemSlot ofPlayerStorage(Inventory inventory) {
 		WItemSlot w = new WItemSlot() {
 			@Override
-			Text getExtraNarrationMessage() {
+			protected Text getNarrationName() {
 				return inventory instanceof PlayerInventory inv ? inv.getDisplayName() : NarrationMessages.Vanilla.INVENTORY;
 			}
 		};
@@ -460,8 +460,8 @@ public class WItemSlot extends WWidget {
 	@Override
 	public void addNarrations(NarrationMessageBuilder builder) {
 		List<Text> parts = new ArrayList<>();
-		Text extra = getExtraNarrationMessage();
-		if (extra != null) parts.add(extra);
+		Text name = getNarrationName();
+		if (name != null) parts.add(name);
 
 		if (focusedSlot >= 0) {
 			parts.add(new TranslatableText(NarrationMessages.ITEM_SLOT_TITLE_KEY, focusedSlot + 1, slotsWide * slotsHigh));
@@ -472,8 +472,15 @@ public class WItemSlot extends WWidget {
 		builder.put(NarrationPart.TITLE, parts.toArray(new Text[0]));
 	}
 
+	/**
+	 * Returns a "narration name" for this slot.
+	 * It's narrated before the slot index. One example of a narration name would be "hotbar" for the player's hotbar.
+	 *
+	 * @return the narration name, or null if there's none for this slot
+	 * @since 4.2.0
+	 */
 	@Nullable
-	Text getExtraNarrationMessage() {
+	protected Text getNarrationName() {
 		return null;
 	}
 
