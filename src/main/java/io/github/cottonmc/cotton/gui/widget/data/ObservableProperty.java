@@ -130,11 +130,23 @@ public final class ObservableProperty<T> implements Supplier<T> {
 		return this;
 	}
 
+	/**
+	 * Adds a change listener to this observable property.
+	 *
+	 * @param listener the added listener
+	 */
 	public void addListener(ChangeListener<? super T> listener) {
+		Objects.requireNonNull(listener);
 		listeners.add(listener);
 	}
 
+	/**
+	 * Removes a change listener from this observable property if present.
+	 *
+	 * @param listener the removed listener
+	 */
 	public void removeListener(ChangeListener<? super T> listener) {
+		Objects.requireNonNull(listener);
 		listeners.remove(listener);
 	}
 
