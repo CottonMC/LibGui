@@ -484,7 +484,7 @@ public class WWidget {
 	}
 
 	/**
-	 * Sets the {@link ##hoveredProperty()} hovered} property.
+	 * Sets the {@link #hoveredProperty() hovered} property.
 	 *
 	 * @param hovered the new value; true if hovered, false otherwise
 	 * @since 4.2.0
