@@ -20,6 +20,9 @@ import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @properties
+ */
 public class WButton extends WWidget {
 	private static final Identifier DARK_WIDGETS_LOCATION = new Identifier("libgui", "textures/widget/dark_widgets.png");
 
