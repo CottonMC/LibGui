@@ -91,9 +91,10 @@ javadoc {
 	dependsOn project(':javadoc').tasks.jar
 
 	options {
-		links("https://maven.fabricmc.net/docs/yarn-$project.yarn_mappings")
-		taglets 'io.github.cottonmc.cotton.gui.jd.ExperimentalTaglet'
-		taglets 'io.github.cottonmc.cotton.gui.jd.PropertyTaglet'
+		links "https://maven.fabricmc.net/docs/yarn-$project.yarn_mappings",
+				'https://javadoc.io/doc/org.jetbrains/annotations/19.0.0'
+		taglets 'io.github.cottonmc.cotton.gui.jd.ExperimentalTaglet',
+				'io.github.cottonmc.cotton.gui.jd.PropertyTaglet'
 		tagletPath project(':javadoc').tasks.jar.outputs.files.singleFile
 	}
 
