@@ -537,8 +537,8 @@ public class WWidget {
 	 * Adds the narrations of this widget to a narration builder.
 	 * Narrations will only apply if this widget {@linkplain #isNarratable() is narratable}.
 	 *
-	 * <p>As of LibGui 4.2.0, the widget also needs to be {@linkplain #canFocus() focusable}, but that is
-	 * planned to be changed in the future to include "hoverable" widgets.
+	 * <p>The widget needs to be {@linkplain #canFocus() focusable} or {@linkplain #canHover() hoverable},
+	 * and also be focused/hovered for narrations to be added.
 	 *
 	 * @param builder the narration builder, cannot be null
 	 * @since 4.2.0
