@@ -464,12 +464,33 @@ public class WWidget {
 	}
 
 	/**
+	 * Tests whether this widget receives {@linkplain #hoveredProperty() mouse hovering status}.
+	 *
+	 * @return true if this widget receives hovering status, false otherwise
+	 * @since 4.2.0
+	 */
+	public boolean canHover() {
+		return true;
+	}
+
+	/**
 	 * Returns whether the user is hovering over this widget.
 	 * The result is an <i>observable property</i> that can be modified and listened to.
+	 *
+	 * <p>This property takes into account {@link #isWithinBounds(int, int)} to check
+	 * if the cursor is within the bounds, as well as {@link #canHover()} to enable hovering at all.
+	 *
+	 * <p>Hovering is used by LibGui itself mostly for narration support.
+	 * For rendering, it might be preferable that you check the mouse coordinates in
+	 * {@link #paint(MatrixStack, int, int, int, int) paint()} directly.
+	 * That lets you react to different parts of the widget being hovered over.
 	 *
 	 * @experimental
 	 * @return the {@code hovered} property
 	 * @since 4.2.0
+	 * @see #canHover()
+	 * @see #isHovered()
+	 * @see #setHovered(boolean)
 	 */
 	@ApiStatus.Experimental
 	public ObservableProperty<Boolean> hoveredProperty() {
@@ -491,6 +512,7 @@ public class WWidget {
 
 	/**
 	 * Sets the {@link #hoveredProperty() hovered} property.
+	 * This is equivalent to calling <code>{@link #hoveredProperty()}.set(<i>hovered</i>)</code>.
 	 *
 	 * @experimental
 	 * @param hovered the new value; true if hovered, false otherwise

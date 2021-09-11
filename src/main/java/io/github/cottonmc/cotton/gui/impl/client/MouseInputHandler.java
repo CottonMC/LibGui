@@ -94,12 +94,18 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 
 	public void onMouseMove(int containerX, int containerY) {
 		WWidget hit = screen.getDescription().getRootPanel().hit(containerX, containerY);
-		hovered.set(hit);
 
 		runTree(
 				hit,
 				widget -> widget.onMouseMove(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY())
 		);
+
+		@Nullable
+		WWidget hoveredWidget = runTree(
+				hit,
+				widget -> InputResult.of(widget.canHover() && widget.isWithinBounds(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY()))
+		);
+		hovered.set(hoveredWidget);
 	}
 
 	/**

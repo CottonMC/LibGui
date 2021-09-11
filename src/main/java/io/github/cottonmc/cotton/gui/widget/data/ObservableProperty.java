@@ -20,6 +20,7 @@ import java.util.Objects;
  * @since 4.2.0
  */
 @ApiStatus.Experimental
+// TODO: Add filters
 public final class ObservableProperty<T> implements ObservableView<T> {
 	private static final String DEFAULT_NAME = "<unnamed>";
 	private boolean hasValue;
