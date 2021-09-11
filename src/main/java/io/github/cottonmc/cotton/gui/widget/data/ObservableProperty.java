@@ -21,23 +21,44 @@ import java.util.Objects;
  */
 @ApiStatus.Experimental
 public final class ObservableProperty<T> implements ObservableView<T> {
+	private static final String DEFAULT_NAME = "<unnamed>";
 	private boolean hasValue;
 	private T value;
 	private final List<ChangeListener<? super T>> listeners = new ArrayList<>();
-	private boolean allowNull = true;
-	private String name = "<unnamed>";
+	private final boolean allowNull;
+	private final String name;
 
-	private ObservableProperty(@Nullable T value, boolean hasValue) {
+	private ObservableProperty(@Nullable T value, boolean hasValue, boolean allowNull, String name) {
 		this.value = value;
 		this.hasValue = hasValue;
+		this.allowNull = allowNull;
+		this.name = name;
+
+		if (hasValue && value == null && !allowNull) {
+			throw new NullPointerException("Cannot initialise nonnull property " + name + " with null value");
+		}
 	}
 
-	public static <T> ObservableProperty<T> lateinit() {
-		return new ObservableProperty<>(null, false);
+	/**
+	 * Creates a "late init" property without an initial value.
+	 * The created property will throw an exception if it has not been initialised yet.
+	 *
+	 * @param <T> the contained value type
+	 * @return the created empty property builder
+	 */
+	public static <T> Builder<T> empty() {
+		return new Builder<>(null, false);
 	}
 
-	public static <T> ObservableProperty<T> of(T initialValue) {
-		return new ObservableProperty<>(initialValue, true);
+	/**
+	 * Creates a property with an initial value.
+	 *
+	 * @param initialValue the initial value
+	 * @param <T> the contained value type
+	 * @return the created property
+	 */
+	public static <T> Builder<T> of(T initialValue) {
+		return new Builder<>(initialValue, true);
 	}
 
 	@Override
@@ -48,7 +69,7 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 	@Override
 	public T get() {
 		if (!hasValue) {
-			throw new IllegalStateException("Property " + name + " not initialized!");
+			throw new IllegalStateException("Property " + name + " not initialised!");
 		}
 
 		return value;
@@ -71,31 +92,6 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 				listener.onPropertyChange(this, oldValue, value);
 			}
 		}
-	}
-
-	/**
-	 * Clears the current value, if any, from this property.
-	 */
-	public void clear() {
-		T oldValue = value;
-		value = null;
-		hasValue = false;
-
-		if (oldValue != null) {
-			for (ChangeListener<? super T> listener : listeners) {
-				listener.onPropertyChange(this, oldValue, null);
-			}
-		}
-	}
-
-	/**
-	 * Prevents this property from accepting null values.
-	 *
-	 * @return this property
-	 */
-	public ObservableProperty<T> nonnullValues() {
-		allowNull = false;
-		return this;
 	}
 
 	/**
@@ -137,17 +133,6 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 		return name;
 	}
 
-	/**
-	 * Sets the name of this property, which is used in debug messages.
-	 *
-	 * @param name the new name
-	 * @return this property
-	 */
-	public ObservableProperty<T> setName(String name) {
-		this.name = Objects.requireNonNull(name, "name");
-		return this;
-	}
-
 	@Override
 	public void addListener(ChangeListener<? super T> listener) {
 		Objects.requireNonNull(listener);
@@ -158,5 +143,49 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 	public void removeListener(ChangeListener<? super T> listener) {
 		Objects.requireNonNull(listener);
 		listeners.remove(listener);
+	}
+
+	/**
+	 * A builder for properties.
+	 *
+	 * @param <T> the contained value type
+	 */
+	public static final class Builder<T> {
+		private final T initialValue;
+		private final boolean hasValue;
+		private String name = DEFAULT_NAME;
+		private boolean allowNull = true;
+
+		Builder(@Nullable T initialValue, boolean hasValue) {
+			this.initialValue = initialValue;
+			this.hasValue = hasValue;
+		}
+
+		/**
+		 * Disallows null values.
+		 *
+		 * @return this builder
+		 */
+		public Builder<T> nonnull() {
+			allowNull = false;
+			return this;
+		}
+
+		/**
+		 * Sets the name of this property, which is used in debug messages.
+		 */
+		public Builder<T> name(String name) {
+			this.name = Objects.requireNonNull(name, "name");
+			return this;
+		}
+
+		/**
+		 * Builds the observable property.
+		 *
+		 * @return the created property
+		 */
+		public ObservableProperty<T> build() {
+			return new ObservableProperty<>(initialValue, hasValue, allowNull, name);
+		}
 	}
 }

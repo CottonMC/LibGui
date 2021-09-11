@@ -14,7 +14,7 @@ import java.util.function.Function;
  */
 public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 	private final S screen;
-	private final ObservableProperty<WWidget> hovered = ObservableProperty.of(null);
+	private final ObservableProperty<@Nullable WWidget> hovered = ObservableProperty.<WWidget>of(null).build();
 
 	public MouseInputHandler(S screen) {
 		this.screen = screen;
