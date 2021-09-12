@@ -163,21 +163,12 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	
 	@Override
 	public boolean keyPressed(int ch, int keyCode, int modifiers) {
-		//System.out.println("Key " + Integer.toHexString(ch)+" "+Integer.toHexString(keyCode));
-		if (ch==GLFW.GLFW_KEY_ESCAPE) {
-			onClose();
-			return true;
-		} else if (ch==GLFW.GLFW_KEY_TAB) {
-			changeFocus(!hasShiftDown());
-			return true;
+		if (ch == GLFW.GLFW_KEY_ESCAPE || ch == GLFW.GLFW_KEY_TAB) {
+			// special hardcoded keys, these will never be delivered to widgets
+			return super.keyPressed(ch, keyCode, modifiers);
 		} else {
-			//if (super.keyPressed(ch, keyCode, modifiers)) return true;
 			if (description.getFocus()==null) {
-				if (client.options.keyInventory.matchesKey(ch, keyCode)) {
-					this.client.player.closeHandledScreen();
-					return true;
-				}
-				return false;
+				return super.keyPressed(ch, keyCode, modifiers);
 			} else {
 				description.getFocus().onKeyPressed(ch, keyCode, modifiers);
 				return true;
