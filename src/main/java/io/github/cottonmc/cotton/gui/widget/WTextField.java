@@ -127,6 +127,7 @@ public class WTextField extends WWidget {
 		return this.cursor;
 	}
 
+	@Environment(EnvType.CLIENT)
 	public void scrollCursorIntoView() {
 		if (scrollOffset > cursor) {
 			scrollOffset = cursor;
@@ -322,9 +323,26 @@ public class WTextField extends WWidget {
 	@Override
 	public InputResult onClick(int x, int y, int button) {
 		requestFocus();
-		cursor = getCaretPos(this.text, x - TEXT_PADDING_X);
+		cursor = getCaretPosition(x - TEXT_PADDING_X);
 		scrollCursorIntoView();
 		return InputResult.PROCESSED;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public int getCaretPosition(int clickX) {
+		if (clickX < 0) return 0;
+		int lastPos = 0;
+		String string = text.substring(scrollOffset);
+		for (int i = 0; i < string.length(); i++) {
+			int w = font.getWidth(string.charAt(i) + "");
+			if (lastPos + w >= clickX) {
+				if (clickX - lastPos < w / 2) {
+					return i + scrollOffset;
+				}
+			}
+			lastPos += w;
+		}
+		return string.length();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -474,6 +492,7 @@ public class WTextField extends WWidget {
 	 * @return
 	 */
 	@Environment(EnvType.CLIENT)
+	@Deprecated
 	public static int getCaretPos(String s, int x) {
 		if (x <= 0) return 0;
 
