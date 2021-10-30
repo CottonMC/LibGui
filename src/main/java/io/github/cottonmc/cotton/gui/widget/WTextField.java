@@ -348,127 +348,139 @@ public class WTextField extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onCharTyped(char ch) {
-		if (this.text.length() < this.maxLength) {
-			//snap cursor into bounds if it went astray
-			if (cursor < 0) cursor = 0;
-			if (cursor > this.text.length()) cursor = this.text.length();
+		insertText(ch + "");
+	}
 
-			String before = this.text.substring(0, cursor);
-			String after = this.text.substring(cursor, this.text.length());
-			this.text = before + ch + after;
-			cursor++;
-			scrollCursorIntoView();
-			if (onChanged != null) onChanged.accept(text);
+	@Environment(EnvType.CLIENT)
+	private void insertText(String toInsert) {
+		String before, after;
+		if (select != -1 && select != cursor) {
+			int left = Math.min(cursor, select);
+			int right = Math.max(cursor, select);
+			before = this.text.substring(0, left);
+			after = this.text.substring(right);
+		} else {
+			before = this.text.substring(0, cursor);
+			after = this.text.substring(cursor);
+		}
+		if (before.length() + after.length() + toInsert.length() > maxLength) return;
+		text = before + toInsert + after;
+		select = -1;
+		cursor = (before + toInsert).length();
+		scrollCursorIntoView();
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void copySelection() {
+		String selection = getSelection();
+		if (selection != null) {
+			MinecraftClient.getInstance().keyboard.setClipboard(selection);
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void paste() {
+		String clip = MinecraftClient.getInstance().keyboard.getClipboard();
+		insertText(clip);
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void deleteSelection() {
+		int left = Math.min(cursor, select);
+		int right = Math.max(cursor, select);
+		text = text.substring(0, left) + text.substring(right);
+		select = -1;
+		cursor = left;
+		scrollCursorIntoView();
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void delete(int modifiers, boolean backwards) {
+		if (select == -1 || select == cursor) {
+			select = skipCharaters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, backwards ? -1 : 1);
+		}
+		deleteSelection();
+	}
+
+	@Environment(EnvType.CLIENT)
+	private int skipCharaters(boolean skipMany, int direction) {
+		if (direction != -1 && direction != 1) return cursor;
+		int position = cursor;
+		while (true) {
+			position += direction;
+			if (position < 0) {
+				return 0;
+			}
+			if (position > text.length()) {
+				return text.length();
+			}
+			if (!skipMany) return position;
+			if (position < text.length() && Character.isWhitespace(text.charAt(position))) {
+				return position;
+			}
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void onDirectionalKey(int direction, int modifiers) {
+		if ((GLFW.GLFW_MOD_SHIFT & modifiers) != 0) {
+			if (select == -1 || select == cursor) select = cursor;
+			cursor = skipCharaters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, direction);
+		} else {
+			if (select != -1) {
+				cursor = direction < 0 ? Math.min(cursor, select) : Math.max(cursor, select);
+				select = -1;
+			} else {
+				cursor = skipCharaters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, direction);
+			}
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyPressed(int ch, int key, int modifiers) {
-		if (!this.editable) return;
 
 		if (Screen.isCopy(ch)) {
-			String selection = getSelection();
-			if (selection != null) {
-				MinecraftClient.getInstance().keyboard.setClipboard(selection);
-			}
-
+			copySelection();
 			return;
-		} else if (Screen.isPaste(ch)) {
-			if (select != -1) {
-				int a = select;
-				int b = cursor;
-				if (b < a) {
-					int tmp = b;
-					b = a;
-					a = tmp;
-				}
-				String before = this.text.substring(0, a);
-				String after = this.text.substring(b);
-
-				String clip = MinecraftClient.getInstance().keyboard.getClipboard();
-				text = before + clip + after;
-				select = -1;
-				cursor = (before + clip).length();
-			} else {
-				String before = this.text.substring(0, cursor);
-				String after = this.text.substring(cursor, this.text.length());
-
-				String clip = MinecraftClient.getInstance().keyboard.getClipboard();
-				text = before + clip + after;
-				cursor += clip.length();
-				if (text.length() > this.maxLength) {
-					text = text.substring(0, maxLength);
-					if (cursor > text.length()) cursor = text.length();
-				}
-			}
-			scrollCursorIntoView();
-			if (onChanged != null) onChanged.accept(text);
+		}
+		if (Screen.isPaste(ch)) {
+			paste();
 			return;
-		} else if (Screen.isSelectAll(ch)) {
+		}
+		if (Screen.isSelectAll(ch)) {
 			select = 0;
 			cursor = text.length();
 			return;
 		}
 
-		//System.out.println("Ch: "+ch+", Key: "+key+", Mod: "+modifiers);
-
-		if (modifiers == 0) {
-			if (ch == GLFW.GLFW_KEY_DELETE || ch == GLFW.GLFW_KEY_BACKSPACE) {
-				if (text.length() > 0 && cursor > 0) {
-					if (select >= 0 && select != cursor) {
-						int a = select;
-						int b = cursor;
-						if (b < a) {
-							int tmp = b;
-							b = a;
-							a = tmp;
-						}
-						String before = this.text.substring(0, a);
-						String after = this.text.substring(b);
-						text = before + after;
-						if (cursor == b) cursor = a;
-						select = -1;
-					} else {
-						String before = this.text.substring(0, cursor);
-						String after = this.text.substring(cursor, this.text.length());
-
-						before = before.substring(0, before.length() - 1);
-						text = before + after;
-						cursor--;
-					}
-
-					if (onChanged != null) onChanged.accept(text);
+		switch (ch) {
+			case GLFW.GLFW_KEY_DELETE:
+				delete(modifiers, false);
+				break;
+			case GLFW.GLFW_KEY_BACKSPACE:
+				delete(modifiers, true);
+				break;
+			case GLFW.GLFW_KEY_LEFT:
+				onDirectionalKey(-1, modifiers);
+				break;
+			case GLFW.GLFW_KEY_RIGHT:
+				onDirectionalKey(1, modifiers);
+				break;
+			case GLFW.GLFW_KEY_HOME:
+			case GLFW.GLFW_KEY_UP:
+				if ((GLFW.GLFW_MOD_SHIFT & modifiers) == 0) {
+					select = -1;
 				}
-			} else if (ch == GLFW.GLFW_KEY_LEFT) {
-				if (select != -1) {
-					cursor = Math.min(cursor, select);
-					select = -1; //Clear the selection anchor
-				} else {
-					if (cursor > 0) cursor--;
+				cursor = 0;
+				break;
+			case GLFW.GLFW_KEY_END:
+			case GLFW.GLFW_KEY_DOWN:
+				if ((GLFW.GLFW_MOD_SHIFT & modifiers) == 0) {
+					select = -1;
 				}
-			} else if (ch == GLFW.GLFW_KEY_RIGHT) {
-				if (select != -1) {
-					cursor = Math.max(cursor, select);
-					select = -1; //Clear the selection anchor
-				} else {
-					if (cursor < text.length()) cursor++;
-				}
-			} else {
-				//System.out.println("Ch: "+ch+", Key: "+key);
-			}
-		} else {
-			if (modifiers == GLFW.GLFW_MOD_SHIFT) {
-				if (ch == GLFW.GLFW_KEY_LEFT) {
-					if (select == -1) select = cursor;
-					if (cursor > 0) cursor--;
-					if (select == cursor) select = -1;
-				} else if (ch == GLFW.GLFW_KEY_RIGHT) {
-					if (select == -1) select = cursor;
-					if (cursor < text.length()) cursor++;
-					if (select == cursor) select = -1;
-				}
-			}
+				cursor = text.length();
+				break;
 		}
 		scrollCursorIntoView();
 	}
