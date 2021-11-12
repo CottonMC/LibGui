@@ -33,6 +33,12 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class WTextField extends WWidget {
+	/**
+	 * Use TEXT_PADDING_X instead.
+	 */
+	@Deprecated(forRemoval = true)
+	public static final int OFFSET_X_TEXT = 4;
+
 	public static final int TEXT_PADDING_X = 4;
 	public static final int TEXT_PADDING_Y = 6;
 	public static final int CURSOR_PADDING_Y = 4;
@@ -504,7 +510,7 @@ public class WTextField extends WWidget {
 	 * @return
 	 */
 	@Environment(EnvType.CLIENT)
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static int getCaretPos(String s, int x) {
 		if (x <= 0) return 0;
 
@@ -520,4 +526,21 @@ public class WTextField extends WWidget {
 
 		return s.length();
 	}
+
+	/**
+	 * From a caret position, finds out what the x-offset to draw the caret is.
+	 * @param s
+	 * @param pos
+	 * @return
+	 */
+	@Environment(EnvType.CLIENT)
+	@Deprecated(forRemoval = true)
+	public static int getCaretOffset(String s, int pos) {
+		if (pos==0) return 0;//-1;
+
+		TextRenderer font = MinecraftClient.getInstance().textRenderer;
+		int ofs = font.getWidth(s.substring(0, pos))+1;
+		return ofs; //(font.isRightToLeft()) ? -ofs : ofs;
+	}
+
 }
