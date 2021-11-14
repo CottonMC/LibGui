@@ -216,7 +216,7 @@ public class WTextField extends WWidget {
 	private void invertedRect(MatrixStack matrices, int x, int y, int width, int height) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
-		Matrix4f model = matrices.peek().getModel();
+		Matrix4f model = matrices.peek().getPositionMatrix();
 		RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.disableTexture();
