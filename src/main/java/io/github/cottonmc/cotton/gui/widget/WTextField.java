@@ -33,63 +33,88 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class WTextField extends WWidget {
+	/**
+	 * Use TEXT_PADDING_X instead.
+	 */
+	@Deprecated(forRemoval = true)
 	public static final int OFFSET_X_TEXT = 4;
-	//public static final int OFFSET_Y_TEXT = 6;
-	
+
+	public static final int TEXT_PADDING_X = 4;
+	public static final int TEXT_PADDING_Y = 6;
+	public static final int CURSOR_PADDING_Y = 4;
+	public static final int CURSOR_HEIGHT = 12;
+
 	@Environment(EnvType.CLIENT)
 	private TextRenderer font;
 
 	private String text = "";
 	private int maxLength = 16;
 	private boolean editable = true;
+	private int tickCount = 0;
 
+
+	private int disabledColor = 0x707070;
 	private int enabledColor = 0xE0E0E0;
-	private int uneditableColor = 0x707070;
-	
+	private int suggestionColor = 0x808080;
+
+	private static final int BACKGROUND_COLOR = 0xFF000000;
+	private static final int BORDER_COLOR_SELECTED = 0xFFFFFFA0;
+	private static final int BORDER_COLOR_UNSELECTED = 0xFFA0A0A0;
+	private static final int CURSOR_COLOR = 0xFFD0D0D0;
+
 	@Nullable
 	private Text suggestion = null;
 
+
+	// Index of the leftmost character to be rendered.
+	private int scrollOffset = 0;
+
 	private int cursor = 0;
 	/**
-	 * If not -1, select is the "anchor point" of a selection. That is, if you hit shift+left with
-	 * no existing selection, the selection will be anchored to where you were, but the cursor will
-	 * move left, expanding the selection as you continue to move left. If you move to the right,
-	 * eventually you'll overtake the anchor, drop the anchor at the same place and start expanding
-	 * the selection rightwards instead.
+	 * If not -1, select is the "anchor point" of a selection. That is, if you hit shift+left with no existing
+	 * selection, the selection will be anchored to where you were, but the cursor will move left, expanding the
+	 * selection as you continue to move left. If you move to the right, eventually you'll overtake the anchor, drop the
+	 * anchor at the same place and start expanding the selection rightwards instead.
 	 */
 	private int select = -1;
 
 	private Consumer<String> onChanged;
 
 	private Predicate<String> textPredicate;
-	
+
 	@Environment(EnvType.CLIENT)
 	@Nullable
 	private BackgroundPainter backgroundPainter;
 
 	public WTextField() {
 	}
-	
+
 	public WTextField(Text suggestion) {
 		this.suggestion = suggestion;
 	}
-	
+
 	public void setText(String s) {
-		if (this.textPredicate==null || this.textPredicate.test(s)) {
-			this.text = (s.length()>maxLength) ? s.substring(0,maxLength) : s;
-			if (onChanged!=null) onChanged.accept(this.text);
+		if (this.textPredicate == null || this.textPredicate.test(s)) {
+			this.text = (s.length() > maxLength) ? s.substring(0, maxLength) : s;
+			if (onChanged != null) onChanged.accept(this.text);
 		}
 	}
 
 	public String getText() {
 		return this.text;
 	}
-	
+
 	@Override
 	public boolean canResize() {
 		return true;
 	}
-	
+
+	@Override
+	public void tick() {
+		super.tick();
+		this.tickCount++;
+	}
+
 	@Override
 	public void setSize(int x, int y) {
 		super.setSize(x, 20);
@@ -97,6 +122,7 @@ public class WTextField extends WWidget {
 
 	public void setCursorPos(int location) {
 		this.cursor = MathHelper.clamp(location, 0, this.text.length());
+		scrollCursorIntoView();
 	}
 
 	public int getMaxLength() {
@@ -106,112 +132,104 @@ public class WTextField extends WWidget {
 	public int getCursor() {
 		return this.cursor;
 	}
-	
+
+	@Environment(EnvType.CLIENT)
+	public void scrollCursorIntoView() {
+		if (scrollOffset > cursor) {
+			scrollOffset = cursor;
+		}
+		if (scrollOffset < cursor && font.trimToWidth(text.substring(scrollOffset), width - TEXT_PADDING_X * 2).length() + scrollOffset < cursor) {
+			scrollOffset = cursor;
+		}
+
+		int rightMostScrollOffset = text.length() - font.trimToWidth(text, width - TEXT_PADDING_X * 2, true).length();
+		scrollOffset = Math.min(rightMostScrollOffset, scrollOffset);
+	}
+
 	@Nullable
 	public String getSelection() {
-		if (select<0) return null;
-		if (select==cursor) return null;
-		
+		if (select < 0) return null;
+		if (select == cursor) return null;
+
 		//Tidy some things
-		if (select>text.length()) select = text.length();
-		if (cursor<0) cursor = 0;
-		if (cursor>text.length()) cursor = text.length();
-		
+		if (select > text.length()) select = text.length();
+		if (cursor < 0) cursor = 0;
+		if (cursor > text.length()) cursor = text.length();
+
 		int start = Math.min(select, cursor);
 		int end = Math.max(select, cursor);
-		
+
 		return text.substring(start, end);
 	}
-	
+
 	public boolean isEditable() {
 		return this.editable;
 	}
 
 	@Environment(EnvType.CLIENT)
-	protected void renderTextField(MatrixStack matrices, int x, int y) {
-		if (this.font==null) this.font = MinecraftClient.getInstance().textRenderer;
-		
-		int borderColor = (this.isFocused()) ? 0xFF_FFFFA0 : 0xFF_A0A0A0;
-		ScreenDrawing.coloredRect(matrices, x-1, y-1, width+2, height+2, borderColor);
-		ScreenDrawing.coloredRect(matrices, x, y, width, height, 0xFF000000);
-		
-
-		int textColor = this.editable ? this.enabledColor : this.uneditableColor;
-		
-		//TODO: Scroll offset
-		String trimText = font.trimToWidth(this.text, this.width-OFFSET_X_TEXT);
-		
-		boolean selection = (select!=-1);
-		boolean focused = this.isFocused(); //this.isFocused() && this.focusedTicks / 6 % 2 == 0 && boolean_1; //Blinks the cursor
-		
-		//int textWidth = font.getStringWidth(trimText);
-		//int textAnchor = (font.isRightToLeft()) ?
-		//		x + OFFSET_X_TEXT + textWidth :
-		//		x + OFFSET_X_TEXT;
-		
-		int textX = x + OFFSET_X_TEXT;
-				//(font.isRightToLeft()) ?
-				//textAnchor - textWidth :
-				//textAnchor;
-		
-		int textY = y + (height - 8) / 2;
-		
-		//TODO: Adjust by scroll offset
-		int adjustedCursor = this.cursor;
-		if (adjustedCursor > trimText.length()) {
-			adjustedCursor = trimText.length();
-		}
-		
-		int preCursorAdvance = textX;
-		if (!trimText.isEmpty()) {
-			String string_2 = trimText.substring(0,adjustedCursor);
-			preCursorAdvance = font.drawWithShadow(matrices, string_2, textX, textY, textColor);
-		}
-
-		if (adjustedCursor<trimText.length()) {
-			font.drawWithShadow(matrices, trimText.substring(adjustedCursor), preCursorAdvance-1, (float)textY, textColor);
-		}
-			
-
-		if (text.length()==0 && this.suggestion != null) {
-			font.drawWithShadow(matrices, this.suggestion, textX, textY, 0xFF808080);
-		}
-
-		//int var10002;
-		//int var10003;
-		if (focused && !selection) {
-			if (adjustedCursor<trimText.length()) {
-				//int caretLoc = WTextField.getCaretOffset(text, cursor);
-				//if (caretLoc<0) {
-				//	caretLoc = textX+MinecraftClient.getInstance().textRenderer.getStringWidth(trimText)-caretLoc;
-				//} else {
-				//	caretLoc = textX+caretLoc-1;
-				//}
-				ScreenDrawing.coloredRect(matrices, preCursorAdvance-1, textY-2, 1, 12, 0xFFD0D0D0);
-			//if (boolean_3) {
-			//	int var10001 = int_7 - 1;
-			//	var10002 = int_9 + 1;
-			//	var10003 = int_7 + 1;
-			//	
-			//	DrawableHelper.fill(int_9, var10001, var10002, var10003 + 9, -3092272);
-				
-			} else {
-				font.drawWithShadow(matrices, "_", preCursorAdvance, textY, textColor);
-			}
-		}
-
-		if (selection) {
-			int a = WTextField.getCaretOffset(text, cursor);
-			int b = WTextField.getCaretOffset(text, select);
-			if (b<a) {
-				int tmp = b;
-				b = a;
-				a = tmp;
-			}
-			invertedRect(matrices, textX+a-1, textY-1, Math.min(b-a, width - OFFSET_X_TEXT), 12);
-		}
+	protected void renderBox(MatrixStack matrices, int x, int y) {
+		int borderColor = this.isFocused() ? BORDER_COLOR_SELECTED : BORDER_COLOR_UNSELECTED;
+		ScreenDrawing.coloredRect(matrices, x - 1, y - 1, width + 2, height + 2, borderColor);
+		ScreenDrawing.coloredRect(matrices, x, y, width, height, BACKGROUND_COLOR);
 	}
-	
+
+	@Environment(EnvType.CLIENT)
+	protected void renderText(MatrixStack matrices, int x, int y, String visibleText) {
+		int textColor = this.editable ? this.enabledColor : this.disabledColor;
+		this.font.drawWithShadow(matrices, visibleText, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, textColor);
+	}
+
+	@Environment(EnvType.CLIENT)
+	protected void renderCursor(MatrixStack matrices, int x, int y, String visibleText) {
+		if (this.tickCount / 6 % 2 == 0) return;
+		if (this.cursor < this.scrollOffset) return;
+		if (this.cursor > this.scrollOffset + visibleText.length()) return;
+		int cursorOffset = this.font.getWidth(visibleText.substring(0, this.cursor - this.scrollOffset));
+		ScreenDrawing.coloredRect(matrices, x + TEXT_PADDING_X + cursorOffset, y + CURSOR_PADDING_Y, 1, CURSOR_HEIGHT, CURSOR_COLOR);
+	}
+
+	@Environment(EnvType.CLIENT)
+	protected void renderSuggestion(MatrixStack matrices, int x, int y) {
+		if (this.suggestion == null) return;
+		this.font.drawWithShadow(matrices, this.suggestion, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, this.suggestionColor);
+	}
+
+	@Environment(EnvType.CLIENT)
+	protected void renderSelection(MatrixStack matrices, int x, int y, String visibleText) {
+		if (select == cursor || select == -1) return;
+
+		int textLength = visibleText.length();
+
+		int left = Math.min(cursor, select);
+		int right = Math.max(cursor, select);
+
+		if (right < scrollOffset || left > scrollOffset + textLength) return;
+
+		int normalizedLeft = Math.max(scrollOffset, left) - scrollOffset;
+		int normalizedRight = Math.min(scrollOffset + textLength, right) - scrollOffset;
+
+		int leftCaret = font.getWidth(visibleText.substring(0, normalizedLeft));
+		int selectionWidth = font.getWidth(visibleText.substring(normalizedLeft, normalizedRight));
+
+		invertedRect(matrices, x + TEXT_PADDING_X + leftCaret, y + CURSOR_PADDING_Y, selectionWidth, CURSOR_HEIGHT);
+	}
+
+	@Environment(EnvType.CLIENT)
+	protected void renderTextField(MatrixStack matrices, int x, int y) {
+		if (this.font == null) this.font = MinecraftClient.getInstance().textRenderer;
+
+		String visibleText = font.trimToWidth(this.text.substring(this.scrollOffset), this.width - 2 * TEXT_PADDING_X);
+		renderBox(matrices, x, y);
+		renderText(matrices, x, y, visibleText);
+		if (this.text.isEmpty() && !this.isFocused()) {
+			renderSuggestion(matrices, x, y);
+		}
+		if (this.isFocused()) {
+			renderCursor(matrices, x, y, visibleText);
+		}
+		renderSelection(matrices, x, y, visibleText);
+	}
+
 	@Environment(EnvType.CLIENT)
 	private void invertedRect(MatrixStack matrices, int x, int y, int width, int height) {
 		Tessellator tessellator = Tessellator.getInstance();
@@ -223,10 +241,10 @@ public class WTextField extends WWidget {
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-		buffer.vertex(model, x,       y+height, 0).next();
-		buffer.vertex(model, x+width, y+height, 0).next();
-		buffer.vertex(model, x+width, y,        0).next();
-		buffer.vertex(model, x,       y,        0).next();
+		buffer.vertex(model, x, y + height, 0).next();
+		buffer.vertex(model, x + width, y + height, 0).next();
+		buffer.vertex(model, x + width, y, 0).next();
+		buffer.vertex(model, x, y, 0).next();
 		buffer.end();
 		BufferRenderer.draw(buffer);
 		RenderSystem.disableColorLogicOp();
@@ -237,12 +255,12 @@ public class WTextField extends WWidget {
 		this.textPredicate = predicate_1;
 		return this;
 	}
-	
+
 	public WTextField setChangedListener(Consumer<String> listener) {
 		this.onChanged = listener;
 		return this;
 	}
-	
+
 	public WTextField setMaxLength(int max) {
 		this.maxLength = max;
 		if (this.text.length() > max) {
@@ -251,17 +269,22 @@ public class WTextField extends WWidget {
 		}
 		return this;
 	}
-	
+
 	public WTextField setEnabledColor(int col) {
 		this.enabledColor = col;
 		return this;
 	}
-	
-	public WTextField setDisabledColor(int col) {
-		this.uneditableColor = col;
+
+	public WTextField setSuggestionColor(int suggestionColor) {
+		this.suggestionColor = suggestionColor;
 		return this;
 	}
-	
+
+	public WTextField setDisabledColor(int col) {
+		this.disabledColor = col;
+		return this;
+	}
+
 	public WTextField setEditable(boolean editable) {
 		this.editable = editable;
 		return this;
@@ -281,17 +304,17 @@ public class WTextField extends WWidget {
 		this.suggestion = suggestion;
 		return this;
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public WTextField setBackgroundPainter(BackgroundPainter painter) {
 		this.backgroundPainter = painter;
 		return this;
 	}
-	
+
 	public boolean canFocus() {
 		return true;
 	}
-	
+
 	@Override
 	public void onFocusGained() {
 	}
@@ -306,134 +329,166 @@ public class WTextField extends WWidget {
 	@Override
 	public InputResult onClick(int x, int y, int button) {
 		requestFocus();
-		cursor = getCaretPos(this.text, x-OFFSET_X_TEXT);
+		cursor = getCaretPosition(x - TEXT_PADDING_X);
+		scrollCursorIntoView();
 		return InputResult.PROCESSED;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public int getCaretPosition(int clickX) {
+		if (clickX < 0) return 0;
+		int lastPos = 0;
+		String string = text.substring(scrollOffset);
+		for (int i = 0; i < string.length(); i++) {
+			int w = font.getWidth(string.charAt(i) + "");
+			if (lastPos + w >= clickX) {
+				if (clickX - lastPos < w / 2) {
+					return i + scrollOffset;
+				}
+			}
+			lastPos += w;
+		}
+		return string.length();
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onCharTyped(char ch) {
-		if (this.text.length()<this.maxLength) {
-			//snap cursor into bounds if it went astray
-			if (cursor<0) cursor=0;
-			if (cursor>this.text.length()) cursor = this.text.length();
-			
-			String before = this.text.substring(0, cursor);
-			String after = this.text.substring(cursor, this.text.length());
-			this.text = before+ch+after;
-			cursor++;
-			if (onChanged != null) onChanged.accept(text);
+		insertText(ch + "");
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void insertText(String toInsert) {
+		String before, after;
+		if (select != -1 && select != cursor) {
+			int left = Math.min(cursor, select);
+			int right = Math.max(cursor, select);
+			before = this.text.substring(0, left);
+			after = this.text.substring(right);
+		} else {
+			before = this.text.substring(0, cursor);
+			after = this.text.substring(cursor);
+		}
+		if (before.length() + after.length() + toInsert.length() > maxLength) return;
+		text = before + toInsert + after;
+		select = -1;
+		cursor = (before + toInsert).length();
+		scrollCursorIntoView();
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void copySelection() {
+		String selection = getSelection();
+		if (selection != null) {
+			MinecraftClient.getInstance().keyboard.setClipboard(selection);
 		}
 	}
-	
+
+	@Environment(EnvType.CLIENT)
+	private void paste() {
+		String clip = MinecraftClient.getInstance().keyboard.getClipboard();
+		insertText(clip);
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void deleteSelection() {
+		int left = Math.min(cursor, select);
+		int right = Math.max(cursor, select);
+		text = text.substring(0, left) + text.substring(right);
+		select = -1;
+		cursor = left;
+		scrollCursorIntoView();
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void delete(int modifiers, boolean backwards) {
+		if (select == -1 || select == cursor) {
+			select = skipCharaters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, backwards ? -1 : 1);
+		}
+		deleteSelection();
+	}
+
+	@Environment(EnvType.CLIENT)
+	private int skipCharaters(boolean skipMany, int direction) {
+		if (direction != -1 && direction != 1) return cursor;
+		int position = cursor;
+		while (true) {
+			position += direction;
+			if (position < 0) {
+				return 0;
+			}
+			if (position > text.length()) {
+				return text.length();
+			}
+			if (!skipMany) return position;
+			if (position < text.length() && Character.isWhitespace(text.charAt(position))) {
+				return position;
+			}
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void onDirectionalKey(int direction, int modifiers) {
+		if ((GLFW.GLFW_MOD_SHIFT & modifiers) != 0) {
+			if (select == -1 || select == cursor) select = cursor;
+			cursor = skipCharaters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, direction);
+		} else {
+			if (select != -1) {
+				cursor = direction < 0 ? Math.min(cursor, select) : Math.max(cursor, select);
+				select = -1;
+			} else {
+				cursor = skipCharaters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, direction);
+			}
+		}
+	}
+
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyPressed(int ch, int key, int modifiers) {
-		if (!this.editable) return;
 
 		if (Screen.isCopy(ch)) {
-			String selection = getSelection();
-			if (selection!=null) {
-				MinecraftClient.getInstance().keyboard.setClipboard(selection);
-			}
-			
+			copySelection();
 			return;
-		} else if (Screen.isPaste(ch)) {
-			if (select!=-1) {
-				int a = select;
-				int b = cursor;
-				if (b<a) {
-					int tmp = b;
-					b = a;
-					a = tmp;
-				}
-				String before = this.text.substring(0, a);
-				String after = this.text.substring(b);
-				
-				String clip = MinecraftClient.getInstance().keyboard.getClipboard();
-				text = before+clip+after;
-				select = -1;
-				cursor = (before+clip).length();
-			} else {
-				String before = this.text.substring(0, cursor);
-				String after = this.text.substring(cursor, this.text.length());
-				
-				String clip = MinecraftClient.getInstance().keyboard.getClipboard();
-				text = before + clip + after;
-				cursor += clip.length();
-				if (text.length()>this.maxLength) {
-					text = text.substring(0, maxLength);
-					if (cursor>text.length()) cursor = text.length();
-				}
-			}
-
-			if (onChanged != null) onChanged.accept(text);
+		}
+		if (Screen.isPaste(ch)) {
+			paste();
 			return;
-		} else if (Screen.isSelectAll(ch)) {
+		}
+		if (Screen.isSelectAll(ch)) {
 			select = 0;
 			cursor = text.length();
 			return;
 		}
-		
-		//System.out.println("Ch: "+ch+", Key: "+key+", Mod: "+modifiers);
-		
-		if (modifiers==0) {
-			if (ch==GLFW.GLFW_KEY_DELETE || ch==GLFW.GLFW_KEY_BACKSPACE) {
-				if (text.length()>0 && cursor>0) {
-					if (select>=0 && select!=cursor) {
-						int a = select;
-						int b = cursor;
-						if (b<a) {
-							int tmp = b;
-							b = a;
-							a = tmp;
-						}
-						String before = this.text.substring(0, a);
-						String after = this.text.substring(b);
-						text = before+after;
-						if (cursor==b) cursor = a;
-						select = -1;
-					} else {
-						String before = this.text.substring(0, cursor);
-						String after = this.text.substring(cursor, this.text.length());
-						
-						before = before.substring(0,before.length()-1);
-						text = before+after;
-						cursor--;
-					}
 
-					if (onChanged != null) onChanged.accept(text);
+		switch (ch) {
+			case GLFW.GLFW_KEY_DELETE:
+				delete(modifiers, false);
+				break;
+			case GLFW.GLFW_KEY_BACKSPACE:
+				delete(modifiers, true);
+				break;
+			case GLFW.GLFW_KEY_LEFT:
+				onDirectionalKey(-1, modifiers);
+				break;
+			case GLFW.GLFW_KEY_RIGHT:
+				onDirectionalKey(1, modifiers);
+				break;
+			case GLFW.GLFW_KEY_HOME:
+			case GLFW.GLFW_KEY_UP:
+				if ((GLFW.GLFW_MOD_SHIFT & modifiers) == 0) {
+					select = -1;
 				}
-			} else if (ch==GLFW.GLFW_KEY_LEFT) {
-				if (select!=-1) {
-					cursor = Math.min(cursor, select);
-					select = -1; //Clear the selection anchor
-				} else {
-					if (cursor>0) cursor--;
+				cursor = 0;
+				break;
+			case GLFW.GLFW_KEY_END:
+			case GLFW.GLFW_KEY_DOWN:
+				if ((GLFW.GLFW_MOD_SHIFT & modifiers) == 0) {
+					select = -1;
 				}
-			} else if (ch==GLFW.GLFW_KEY_RIGHT) {
-				if (select!=-1) {
-					cursor = Math.max(cursor, select);
-					select = -1; //Clear the selection anchor
-				} else {
-					if (cursor<text.length()) cursor++;
-				}
-			} else {
-				//System.out.println("Ch: "+ch+", Key: "+key);
-			}
-		} else {
-			if (modifiers==GLFW.GLFW_MOD_SHIFT) {
-				if (ch==GLFW.GLFW_KEY_LEFT) {
-					if (select==-1) select = cursor;
-					if (cursor>0) cursor--;
-					if (select==cursor) select = -1;
-				} else if (ch==GLFW.GLFW_KEY_RIGHT) {
-					if (select==-1) select = cursor;
-					if (cursor<text.length()) cursor++;
-					if (select==cursor) select = -1;
-				}
-			}
+				cursor = text.length();
+				break;
 		}
+		scrollCursorIntoView();
 	}
 
 	@Override
@@ -446,29 +501,32 @@ public class WTextField extends WWidget {
 	}
 
 	/**
-	 * From an X offset past the left edge of a TextRenderer.draw, finds out what the closest caret
-	 * position (division between letters) is.
+	 * From an X offset past the left edge of a TextRenderer.draw, finds out what the closest caret position (division
+	 * between letters) is.
+	 *
 	 * @param s
 	 * @param x
+	 *
 	 * @return
 	 */
 	@Environment(EnvType.CLIENT)
+	@Deprecated(forRemoval = true)
 	public static int getCaretPos(String s, int x) {
-		if (x<=0) return 0;
-		
+		if (x <= 0) return 0;
+
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
 		int lastAdvance = 0;
-		for(int i=0; i<s.length()-1; i++) {
-			int advance = font.getWidth(s.substring(0,i+1));
-			int charAdvance = advance-lastAdvance;
-			if (x<advance + (charAdvance/2)) return i+1;
-			
+		for (int i = 0; i < s.length() - 1; i++) {
+			int advance = font.getWidth(s.substring(0, i + 1));
+			int charAdvance = advance - lastAdvance;
+			if (x < advance + (charAdvance / 2)) return i + 1;
+
 			lastAdvance = advance;
 		}
-		
+
 		return s.length();
 	}
-	
+
 	/**
 	 * From a caret position, finds out what the x-offset to draw the caret is.
 	 * @param s
@@ -476,11 +534,13 @@ public class WTextField extends WWidget {
 	 * @return
 	 */
 	@Environment(EnvType.CLIENT)
+	@Deprecated(forRemoval = true)
 	public static int getCaretOffset(String s, int pos) {
 		if (pos==0) return 0;//-1;
-		
+
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
 		int ofs = font.getWidth(s.substring(0, pos))+1;
 		return ofs; //(font.isRightToLeft()) ? -ofs : ofs;
 	}
+
 }
