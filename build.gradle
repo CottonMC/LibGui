@@ -5,8 +5,8 @@ plugins {
 	id 'checkstyle'
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 if(rootProject.file('private.gradle').exists()) { //Publishing details
 	apply from: 'private.gradle'
@@ -22,15 +22,8 @@ configurations {
 
 repositories {
 	maven { url "https://server.bbkr.space/artifactory/libs-release" }
-	/*maven {
-		url = "https://maven.terraformersmc.com/releases"
-		content {
-			includeGroup "com.terraformersmc"
-		}
-	}*/
 	maven {
-		name = "TerraformersMC archive"
-		url = "https://maven.terraformersmc.com/releases/"
+		url = "https://maven.terraformersmc.com/releases"
 		content {
 			includeGroup "com.terraformersmc"
 		}
@@ -48,7 +41,7 @@ dependencies {
 	// Using modApi instead of api because of https://github.com/FabricMC/fabric-loom/issues/200
 	include modApi("io.github.juuxel:libninepatch:${project.libninepatch_version}")
 
-	modRuntime(modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
+	modLocalRuntime(modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
 	})
 
@@ -73,7 +66,7 @@ tasks.withType(JavaCompile) {
 	// this fixes some edge cases with special characters not displaying correctly
 	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 	options.encoding = "UTF-8"
-	options.release.set 16
+	options.release.set 17
 }
 
 jar {
@@ -105,15 +98,7 @@ javadoc {
 publishing {
 	publications {
 		maven(MavenPublication) {
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-
-			artifact(javadocJar)
+			from components.java
 		}
 	}
 
