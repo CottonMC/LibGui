@@ -136,7 +136,7 @@ public class ScreenDrawing {
 		float b = (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
-		Matrix4f model = matrices.peek().getModel();
+		Matrix4f model = matrices.peek().getPositionMatrix();
 		RenderSystem.enableBlend();
 		RenderSystem.setShaderTexture(0, texture);
 		RenderSystem.setShaderColor(r, g, b, opacity);
