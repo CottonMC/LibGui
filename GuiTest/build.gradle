@@ -36,7 +36,9 @@ dependencies {
 
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
-	implementation project(':')
+	implementation project(path: ':', configuration: 'namedElements')
+	// TODO: Fix this in Loom (namedElements should expose remapped mod* dependencies)
+	modImplementation "io.github.cottonmc:Jankson-Fabric:${rootProject.jankson_version}"
 }
 
 processResources {
