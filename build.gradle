@@ -5,9 +5,6 @@ plugins {
 	id 'checkstyle'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
 if(rootProject.file('private.gradle').exists()) { //Publishing details
 	apply from: 'private.gradle'
 }
@@ -59,6 +56,22 @@ processResources {
 java {
 	withSourcesJar()
 	withJavadocJar()
+}
+
+allprojects {
+	plugins.withId('java') { // when the java plugin is applied in the project
+		java {
+			// Use Java 17 toolchain if running on older version of Java, but allow newer versions
+			if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
+				toolchain {
+					languageVersion = JavaLanguageVersion.of(17)
+				}
+			} else {
+				sourceCompatibility = JavaVersion.VERSION_17
+				targetCompatibility = JavaVersion.VERSION_17
+			}
+		}
+	}
 }
 
 tasks.withType(JavaCompile) {

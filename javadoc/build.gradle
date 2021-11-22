@@ -1,6 +1,3 @@
 plugins {
 	id 'java'
 }
-
-sourceCompatibility = rootProject.sourceCompatibility
-targetCompatibility = rootProject.targetCompatibility

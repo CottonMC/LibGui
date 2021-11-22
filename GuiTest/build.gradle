@@ -2,9 +2,6 @@ plugins {
 	id 'fabric-loom'
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
-
 if(rootProject.file('private.gradle').exists()) { //Publishing details
 	apply from: rootProject.file('private.gradle')
 }
