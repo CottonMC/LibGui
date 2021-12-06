@@ -34,12 +34,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class WTextField extends WWidget {
-	/**
-	 * Use TEXT_PADDING_X instead.
-	 */
-	@Deprecated(forRemoval = true)
-	public static final int OFFSET_X_TEXT = 4;
-
 	public static final int TEXT_PADDING_X = 4;
 	public static final int TEXT_PADDING_Y = 6;
 	public static final int CURSOR_PADDING_Y = 4;
@@ -495,42 +489,5 @@ public class WTextField extends WWidget {
 		if (suggestion != null) {
 			builder.put(NarrationPart.HINT, new TranslatableText(NarrationMessages.TEXT_FIELD_SUGGESTION_KEY, suggestion));
 		}
-	}
-
-	/**
-	 * From an X offset past the left edge of a TextRenderer.draw, finds out what the closest caret position (division
-	 * between letters) is.
-	 */
-	@Environment(EnvType.CLIENT)
-	@Deprecated(forRemoval = true)
-	@ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
-	public static int getCaretPos(String s, int x) {
-		if (x <= 0) return 0;
-
-		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		int lastAdvance = 0;
-		for (int i = 0; i < s.length() - 1; i++) {
-			int advance = font.getWidth(s.substring(0, i + 1));
-			int charAdvance = advance - lastAdvance;
-			if (x < advance + (charAdvance / 2)) return i + 1;
-
-			lastAdvance = advance;
-		}
-
-		return s.length();
-	}
-
-	/**
-	 * From a caret position, finds out what the x-offset to draw the caret is.
-	 */
-	@Environment(EnvType.CLIENT)
-	@Deprecated(forRemoval = true)
-	@ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
-	public static int getCaretOffset(String s, int pos) {
-		if (pos==0) return 0;//-1;
-
-		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		int ofs = font.getWidth(s.substring(0, pos))+1;
-		return ofs; //(font.isRightToLeft()) ? -ofs : ofs;
 	}
 }
