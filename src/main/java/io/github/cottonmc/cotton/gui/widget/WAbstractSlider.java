@@ -61,7 +61,7 @@ public abstract class WAbstractSlider extends WWidget {
 	 * A coordinate:value ratio. Used for rendering the thumb.
 	 *
 	 * @see #valueToCoordRatio
-	 * @see #updateValueCoordRatios()n
+	 * @see #updateValueCoordRatios()
 	 */
 	protected float coordToValueRatio;
 
