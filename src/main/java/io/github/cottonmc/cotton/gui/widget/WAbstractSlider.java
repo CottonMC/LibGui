@@ -51,11 +51,17 @@ public abstract class WAbstractSlider extends WWidget {
 
 	/**
 	 * A value:coordinate ratio. Used for converting user input into values.
+	 *
+	 * @see #coordToValueRatio
+	 * @see #updateValueCoordRatios()
 	 */
 	protected float valueToCoordRatio;
 
 	/**
 	 * A coordinate:value ratio. Used for rendering the thumb.
+	 *
+	 * @see #valueToCoordRatio
+	 * @see #updateValueCoordRatios()n
 	 */
 	protected float coordToValueRatio;
 
@@ -80,7 +86,7 @@ public abstract class WAbstractSlider extends WWidget {
 	}
 
 	/**
-	 * @return the thumb size along the slider axis
+	 * {@return the thumb size along the slider axis}
 	 */
 	protected abstract int getThumbWidth();
 
@@ -93,12 +99,22 @@ public abstract class WAbstractSlider extends WWidget {
 	 */
 	protected abstract boolean isMouseInsideBounds(int x, int y);
 
+	/**
+	 * Updates {@link #coordToValueRatio} and {@link #valueToCoordRatio}.
+	 * This method should be called whenever this widget resizes or changes it min/max value boundaries.
+	 *
+	 * @since 5.1.0
+	 */
+	protected void updateValueCoordRatios() {
+		int trackHeight = (axis == Axis.HORIZONTAL ? getWidth() : getHeight()) - getThumbWidth();
+		valueToCoordRatio = (float) (max - min) / trackHeight;
+		coordToValueRatio = 1 / valueToCoordRatio;
+	}
+
 	@Override
 	public void setSize(int x, int y) {
 		super.setSize(x, y);
-		int trackHeight = (axis == Axis.HORIZONTAL ? x : y) - getThumbWidth();
-		valueToCoordRatio = (float) (max - min) / trackHeight;
-		coordToValueRatio = 1 / valueToCoordRatio;
+		updateValueCoordRatios();
 	}
 
 	@Override
@@ -252,6 +268,7 @@ public abstract class WAbstractSlider extends WWidget {
 
 	public void setMinValue(int min) {
 		this.min = min;
+		updateValueCoordRatios();
 		if (this.value < min) {
 			this.value = min;
 			onValueChanged(this.value);
@@ -260,6 +277,7 @@ public abstract class WAbstractSlider extends WWidget {
 
 	public void setMaxValue(int max) {
 		this.max = max;
+		updateValueCoordRatios();
 		if (this.value > max) {
 			this.value = max;
 			onValueChanged(this.value);
