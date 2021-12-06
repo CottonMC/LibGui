@@ -26,6 +26,7 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -52,7 +53,6 @@ public class WTextField extends WWidget {
 	private boolean editable = true;
 	private int tickCount = 0;
 
-
 	private int disabledColor = 0x707070;
 	private int enabledColor = 0xE0E0E0;
 	private int suggestionColor = 0x808080;
@@ -64,7 +64,6 @@ public class WTextField extends WWidget {
 
 	@Nullable
 	private Text suggestion = null;
-
 
 	// Index of the leftmost character to be rendered.
 	private int scrollOffset = 0;
@@ -94,10 +93,17 @@ public class WTextField extends WWidget {
 	}
 
 	public void setText(String s) {
+		setTextWithResult(s);
+	}
+
+	private boolean setTextWithResult(String s) {
 		if (this.textPredicate == null || this.textPredicate.test(s)) {
 			this.text = (s.length() > maxLength) ? s.substring(0, maxLength) : s;
 			if (onChanged != null) onChanged.accept(this.text);
+			return true;
 		}
+
+		return false;
 	}
 
 	public String getText() {
@@ -370,10 +376,11 @@ public class WTextField extends WWidget {
 			after = this.text.substring(cursor);
 		}
 		if (before.length() + after.length() + toInsert.length() > maxLength) return;
-		text = before + toInsert + after;
-		select = -1;
-		cursor = (before + toInsert).length();
-		scrollCursorIntoView();
+		if (setTextWithResult(before + toInsert + after)) {
+			select = -1;
+			cursor = (before + toInsert).length();
+			scrollCursorIntoView();
+		}
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -394,10 +401,11 @@ public class WTextField extends WWidget {
 	private void deleteSelection() {
 		int left = Math.min(cursor, select);
 		int right = Math.max(cursor, select);
-		text = text.substring(0, left) + text.substring(right);
-		select = -1;
-		cursor = left;
-		scrollCursorIntoView();
+		if (setTextWithResult(text.substring(0, left) + text.substring(right))) {
+			select = -1;
+			cursor = left;
+			scrollCursorIntoView();
+		}
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -445,48 +453,37 @@ public class WTextField extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyPressed(int ch, int key, int modifiers) {
+		if (!isEditable()) return;
 
 		if (Screen.isCopy(ch)) {
 			copySelection();
 			return;
-		}
-		if (Screen.isPaste(ch)) {
+		} else if (Screen.isPaste(ch)) {
 			paste();
 			return;
-		}
-		if (Screen.isSelectAll(ch)) {
+		} else if (Screen.isSelectAll(ch)) {
 			select = 0;
 			cursor = text.length();
 			return;
 		}
 
 		switch (ch) {
-			case GLFW.GLFW_KEY_DELETE:
-				delete(modifiers, false);
-				break;
-			case GLFW.GLFW_KEY_BACKSPACE:
-				delete(modifiers, true);
-				break;
-			case GLFW.GLFW_KEY_LEFT:
-				onDirectionalKey(-1, modifiers);
-				break;
-			case GLFW.GLFW_KEY_RIGHT:
-				onDirectionalKey(1, modifiers);
-				break;
-			case GLFW.GLFW_KEY_HOME:
-			case GLFW.GLFW_KEY_UP:
+			case GLFW.GLFW_KEY_DELETE -> delete(modifiers, false);
+			case GLFW.GLFW_KEY_BACKSPACE -> delete(modifiers, true);
+			case GLFW.GLFW_KEY_LEFT -> onDirectionalKey(-1, modifiers);
+			case GLFW.GLFW_KEY_RIGHT -> onDirectionalKey(1, modifiers);
+			case GLFW.GLFW_KEY_HOME, GLFW.GLFW_KEY_UP -> {
 				if ((GLFW.GLFW_MOD_SHIFT & modifiers) == 0) {
 					select = -1;
 				}
 				cursor = 0;
-				break;
-			case GLFW.GLFW_KEY_END:
-			case GLFW.GLFW_KEY_DOWN:
+			}
+			case GLFW.GLFW_KEY_END, GLFW.GLFW_KEY_DOWN -> {
 				if ((GLFW.GLFW_MOD_SHIFT & modifiers) == 0) {
 					select = -1;
 				}
 				cursor = text.length();
-				break;
+			}
 		}
 		scrollCursorIntoView();
 	}
@@ -503,14 +500,10 @@ public class WTextField extends WWidget {
 	/**
 	 * From an X offset past the left edge of a TextRenderer.draw, finds out what the closest caret position (division
 	 * between letters) is.
-	 *
-	 * @param s
-	 * @param x
-	 *
-	 * @return
 	 */
 	@Environment(EnvType.CLIENT)
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
 	public static int getCaretPos(String s, int x) {
 		if (x <= 0) return 0;
 
@@ -529,12 +522,10 @@ public class WTextField extends WWidget {
 
 	/**
 	 * From a caret position, finds out what the x-offset to draw the caret is.
-	 * @param s
-	 * @param pos
-	 * @return
 	 */
 	@Environment(EnvType.CLIENT)
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
 	public static int getCaretOffset(String s, int pos) {
 		if (pos==0) return 0;//-1;
 
@@ -542,5 +533,4 @@ public class WTextField extends WWidget {
 		int ofs = font.getWidth(s.substring(0, pos))+1;
 		return ofs; //(font.isRightToLeft()) ? -ofs : ofs;
 	}
-
 }
