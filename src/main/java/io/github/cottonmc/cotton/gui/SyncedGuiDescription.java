@@ -132,51 +132,40 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	public void addSlotPeer(ValidatedSlot slot) {
 		this.addSlot(slot);
 	}
-	
+
 	@Override
-	public void onSlotClick(int slotNumber, int button, SlotActionType action, PlayerEntity player) {
-		if (action==SlotActionType.QUICK_MOVE) {
-			
-			if (slotNumber < 0) {
-				return;
-			}
-			
-			if (slotNumber>=this.slots.size()) return;
-			Slot slot = this.slots.get(slotNumber);
-			if (slot == null || !slot.canTakeItems(player)) {
-				return;
-			}
-			
-			ItemStack remaining = ItemStack.EMPTY;
-			if (slot != null && slot.hasStack()) {
-				ItemStack toTransfer = slot.getStack();
-				remaining = toTransfer.copy();
-				//if (slot.inventory==blockInventory) {
-				if (blockInventory!=null) {
-					if (slot.inventory==blockInventory) {
-						//Try to transfer the item from the block into the player's inventory
-						if (!this.insertItem(toTransfer, this.playerInventory, true, player)) {
-							return;
-						}
-					} else if (!this.insertItem(toTransfer, this.blockInventory, false, player)) { //Try to transfer the item from the player to the block
-						return;
+	public ItemStack transferSlot(PlayerEntity player, int index) {
+		ItemStack result = ItemStack.EMPTY;
+		Slot slot = slots.get(index);
+
+		if (slot.hasStack()) {
+			ItemStack slotStack = slot.getStack();
+			result = slotStack.copy();
+
+			if (blockInventory!=null) {
+				if (slot.inventory==blockInventory) {
+					//Try to transfer the item from the block into the player's inventory
+					if (!this.insertItem(slotStack, this.playerInventory, true, player)) {
+						return ItemStack.EMPTY;
 					}
-				} else {
-					//There's no block, just swap between the player's storage and their hotbar
-					if (!swapHotbar(toTransfer, slotNumber, this.playerInventory, player)) {
-						return;
-					}
+				} else if (!this.insertItem(slotStack, this.blockInventory, false, player)) { //Try to transfer the item from the player to the block
+					return ItemStack.EMPTY;
 				}
-				
-				if (toTransfer.isEmpty()) {
-					slot.setStack(ItemStack.EMPTY);
-				} else {
-					slot.markDirty();
+			} else {
+				//There's no block, just swap between the player's storage and their hotbar
+				if (!swapHotbar(slotStack, index, this.playerInventory, player)) {
+					return ItemStack.EMPTY;
 				}
 			}
-		} else {
-			super.onSlotClick(slotNumber, button, action, player);
+
+			if (slotStack.isEmpty()) {
+				slot.setStack(ItemStack.EMPTY);
+			} else {
+				slot.markDirty();
+			}
 		}
+
+		return result;
 	}
 	
 	/** WILL MODIFY toInsert! Returns true if anything was inserted. */
