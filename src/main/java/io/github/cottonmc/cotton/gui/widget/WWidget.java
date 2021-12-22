@@ -357,8 +357,11 @@ public class WWidget {
 	}
 
 	/**
-	 * Creates component peers, lays out children, and initializes animation data for this Widget and all its children.
-	 * The host container must clear any heavyweight peers from its records before this method is called.
+	 * Creates component peers and initializes animation data for this Widget and all its children.
+	 * The host {@linkplain net.minecraft.screen.ScreenHandler screen handler} must clear any heavyweight peers
+	 * from its records before this method is called.
+	 *
+	 * <p>This method must be called on the root panel of any screen once the widgets have been initialized.
 	 *
 	 * @param host the host GUI description
 	 */
