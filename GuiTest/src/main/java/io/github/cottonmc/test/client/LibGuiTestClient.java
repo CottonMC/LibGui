@@ -1,5 +1,7 @@
 package io.github.cottonmc.test.client;
 
+import io.github.cottonmc.test.ReallySimpleDescription;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
@@ -21,6 +23,11 @@ public class LibGuiTestClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ScreenRegistry.<TestDescription, CottonInventoryScreen<TestDescription>>register(
 				LibGuiTest.GUI_SCREEN_HANDLER_TYPE,
+				(desc, inventory, title) -> new CottonInventoryScreen<>(desc, inventory.player, title)
+		);
+
+		ScreenRegistry.<ReallySimpleDescription, CottonInventoryScreen<ReallySimpleDescription>>register(
+				LibGuiTest.REALLY_SIMPLE_SCREEN_HANDLER_TYPE,
 				(desc, inventory, title) -> new CottonInventoryScreen<>(desc, inventory.player, title)
 		);
 
