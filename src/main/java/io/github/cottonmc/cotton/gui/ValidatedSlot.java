@@ -14,11 +14,17 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ValidatedSlot extends Slot {
+	/**
+	 * The default {@linkplain #setFilter(Predicate) item filter} that allows all items.
+	 *
+	 * @since 5.1.1
+	 */
+	public static final Predicate<ItemStack> DEFAULT_ITEM_FILTER = stack -> true;
 	private static final VisualLogger LOGGER = new VisualLogger(ValidatedSlot.class);
 	private final int slotNumber;
 	private boolean insertingAllowed = true;
 	private boolean takingAllowed = true;
-	private Predicate<ItemStack> filter;
+	private Predicate<ItemStack> filter = DEFAULT_ITEM_FILTER;
 	protected final Multimap<WItemSlot, WItemSlot.ChangeListener> listeners = HashMultimap.create();
 	private boolean visible = true;
 

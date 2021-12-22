@@ -67,7 +67,6 @@ import java.util.function.Predicate;
  */
 public class WItemSlot extends WWidget {
 	private static final VisualLogger LOGGER = new VisualLogger(WItemSlot.class);
-	private static final Predicate<ItemStack> DEFAULT_FILTER = stack -> true;
 	private final List<ValidatedSlot> peers = new ArrayList<>();
 	@Nullable
 	@Environment(EnvType.CLIENT)
@@ -83,7 +82,7 @@ public class WItemSlot extends WWidget {
 	private boolean takingAllowed = true;
 	private int focusedSlot = -1;
 	private int hoveredSlot = -1;
-	private Predicate<ItemStack> filter = DEFAULT_FILTER;
+	private Predicate<ItemStack> filter = ValidatedSlot.DEFAULT_ITEM_FILTER;
 	private final Set<ChangeListener> listeners = new HashSet<>();
 
 	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
