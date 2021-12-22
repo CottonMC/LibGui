@@ -167,7 +167,13 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 
 		return result;
 	}
-	
+
+	// This is only kept for backwards binary compat, TODO: Remove in 1.19
+	@Override
+	public void onSlotClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
+		super.onSlotClick(slotIndex, button, actionType, player);
+	}
+
 	/** WILL MODIFY toInsert! Returns true if anything was inserted. */
 	private boolean insertIntoExisting(ItemStack toInsert, Slot slot, PlayerEntity player) {
 		ItemStack curSlotStack = slot.getStack();
