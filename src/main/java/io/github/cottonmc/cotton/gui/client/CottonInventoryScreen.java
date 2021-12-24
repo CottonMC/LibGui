@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -36,10 +37,39 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	 * Constructs a new screen without a title.
 	 *
 	 * @param description the GUI description
+	 * @param inventory   the player inventory
+	 * @since 5.2.0
+	 */
+	public CottonInventoryScreen(T description, PlayerInventory inventory) {
+		this(description, inventory, new LiteralText(""));
+	}
+
+	/**
+	 * Constructs a new screen.
+	 *
+	 * @param description the GUI description
+	 * @param inventory   the player inventory
+	 * @param title       the screen title
+	 * @since 5.2.0
+	 */
+	public CottonInventoryScreen(T description, PlayerInventory inventory, Text title) {
+		super(description, inventory, title);
+		this.description = description;
+		width = 18*9;
+		height = 18*9;
+		this.backgroundWidth = 18*9;
+		this.backgroundHeight = 18*9;
+		description.getRootPanel().validate(description);
+	}
+
+	/**
+	 * Constructs a new screen without a title.
+	 *
+	 * @param description the GUI description
 	 * @param player     the player
 	 */
 	public CottonInventoryScreen(T description, PlayerEntity player) {
-		this(description, player, new LiteralText(""));
+		this(description, player.getInventory());
 	}
 
 	/**
@@ -50,13 +80,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	 * @param title       the screen title
 	 */
 	public CottonInventoryScreen(T description, PlayerEntity player, Text title) {
-		super(description, player.getInventory(), title);
-		this.description = description;
-		width = 18*9;
-		height = 18*9;
-		this.backgroundWidth = 18*9;
-		this.backgroundHeight = 18*9;
-		description.getRootPanel().validate(description);
+		this(description, player.getInventory(), title);
 	}
 	
 	/*

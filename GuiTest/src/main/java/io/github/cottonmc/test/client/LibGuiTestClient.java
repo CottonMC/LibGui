@@ -1,7 +1,5 @@
 package io.github.cottonmc.test.client;
 
-import io.github.cottonmc.test.ReallySimpleDescription;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
@@ -13,6 +11,7 @@ import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen;
 import io.github.cottonmc.cotton.gui.impl.modmenu.ConfigGui;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.test.LibGuiTest;
+import io.github.cottonmc.test.ReallySimpleDescription;
 import io.github.cottonmc.test.TestDescription;
 
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
@@ -23,12 +22,12 @@ public class LibGuiTestClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ScreenRegistry.<TestDescription, CottonInventoryScreen<TestDescription>>register(
 				LibGuiTest.GUI_SCREEN_HANDLER_TYPE,
-				(desc, inventory, title) -> new CottonInventoryScreen<>(desc, inventory.player, title)
+				CottonInventoryScreen::new
 		);
 
 		ScreenRegistry.<ReallySimpleDescription, CottonInventoryScreen<ReallySimpleDescription>>register(
 				LibGuiTest.REALLY_SIMPLE_SCREEN_HANDLER_TYPE,
-				(desc, inventory, title) -> new CottonInventoryScreen<>(desc, inventory.player, title)
+				CottonInventoryScreen::new
 		);
 
 		CottonHud.add(new WHudTest(), 10, -20, 10, 10);
