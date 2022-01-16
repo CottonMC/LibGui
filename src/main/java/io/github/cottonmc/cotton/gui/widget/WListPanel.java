@@ -206,10 +206,10 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	/**
 	 * Gets the {@link io.github.cottonmc.cotton.gui.widget.WScrollBar} attached to this panel.
 	 *
-	 * @return the scroll bar bundled.
+	 * @return the scroll bar bundled
+	 * @since 5.3.0
 	 */
 	public WScrollBar getScrollBar() {
 		return scrollBar;
 	}
-
 }
