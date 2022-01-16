@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 /**
  * Similar to the RecyclerView in Android, this widget represents a scrollable list of items.
- * 
+ *
  * <p> D is the type of data represented. The data must reside in some ordered backing {@code List<D>}.
  *     D's *must* have working equals and hashCode methods to distinguish them from each other!
  * <p> W is the WWidget class that will represent a single D of data.
@@ -36,7 +36,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	 * to display the passed data.
 	 */
 	protected BiConsumer<D, W> configurator;
-	
+
 	protected HashMap<D, W> configured = new HashMap<>();
 	protected List<W> unconfigured = new ArrayList<>();
 
@@ -49,7 +49,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	 * Whether this list has a fixed height for items.
 	 */
 	protected boolean fixedHeight = false;
-	
+
 	protected int margin = 4;
 
 	/**
@@ -80,7 +80,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 			layout();
 			lastScroll = scrollBar.getValue();
 		}
-		
+
 		super.paint(matrices, x, y, mouseX, mouseY);
 		/*
 		if (getBackgroundPainter()!=null) {
@@ -110,16 +110,16 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 
 	@Override
 	public void layout() {
-		
+
 		this.children.clear();
 		this.children.add(scrollBar);
 		scrollBar.setLocation(this.width-scrollBar.getWidth(), 0);
 		scrollBar.setSize(8, this.height);
 
 		//super.layout();
-		
+
 		//System.out.println("Validating");
-		
+
 		//Recompute cellHeight if needed
 		if (!fixedHeight) {
 			if (unconfigured.isEmpty()) {
@@ -137,25 +137,25 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 			}
 		}
 		if (cellHeight<4) cellHeight=4;
-		
+
 		int layoutHeight = this.getHeight()-(margin*2);
 		int cellsHigh = Math.max(layoutHeight / cellHeight, 1); // At least one cell is always visible
-		
+
 		//System.out.println("Adding children...");
-		
+
 		//this.children.clear();
 		//this.children.add(scrollBar);
 		//scrollBar.setLocation(this.width-scrollBar.getWidth(), 0);
 		//scrollBar.setSize(8, this.height);
-		
+
 		//Fix up the scrollbar handle and track metrics
 		scrollBar.setWindow(cellsHigh);
 		scrollBar.setMaxValue(data.size());
 		int scrollOffset = scrollBar.getValue();
 		//System.out.println(scrollOffset);
-		
+
 		int presentCells = Math.min(data.size()-scrollOffset, cellsHigh);
-		
+
 		if (presentCells>0) {
 			for(int i=0; i<presentCells+1; i++) {
 				int index = i+scrollOffset;
@@ -172,7 +172,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 					configurator.accept(d, w);
 					configured.put(d, w);
 				}
-				
+
 				//At this point, w is nonnull and configured by d
 				if (w.canResize()) {
 					w.setSize(this.width-(margin*2) - scrollBar.getWidth(), cellHeight);
@@ -182,7 +182,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 				this.children.add(w);
 			}
 		}
-		
+
 		//System.out.println("Children: "+children.size());
 	}
 
@@ -202,4 +202,14 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	public InputResult onMouseScroll(int x, int y, double amount) {
 		return scrollBar.onMouseScroll(0, 0, amount);
 	}
+
+	/**
+	 * Gets the {@link io.github.cottonmc.cotton.gui.widget.WScrollBar} attached to this panel.
+	 *
+	 * @return the scroll bar bundled.
+	 */
+	public WScrollBar getScrollBar() {
+		return scrollBar;
+	}
+
 }
