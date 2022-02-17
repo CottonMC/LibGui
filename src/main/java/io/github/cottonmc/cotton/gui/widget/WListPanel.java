@@ -139,7 +139,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		if (cellHeight<4) cellHeight=4;
 
 		int layoutHeight = this.getHeight()-(margin*2);
-		int cellsHigh = Math.max(layoutHeight / cellHeight, 1); // At least one cell is always visible
+		int cellsHigh = Math.max((layoutHeight-margin) / (cellHeight + margin), 1); // At least one cell is always visible
 
 		//System.out.println("Adding children...");
 
@@ -157,7 +157,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		int presentCells = Math.min(data.size()-scrollOffset, cellsHigh);
 
 		if (presentCells>0) {
-			for(int i=0; i<presentCells+1; i++) {
+			for(int i=0; i<presentCells; i++) {
 				int index = i+scrollOffset;
 				if (index>=data.size()) break;
 				if (index<0) continue; //THIS IS A THING THAT IS HAPPENING >:(
