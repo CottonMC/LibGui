@@ -85,6 +85,13 @@ public class WTextField extends WWidget {
 		this.suggestion = suggestion;
 	}
 
+	/**
+	 * Sets the text of this text field.
+	 * If the text is more than the {@linkplain #getMaxLength() max length},
+	 * it'll be shortened to the max length.
+	 *
+	 * @param s the new text
+	 */
 	public void setText(String s) {
 		setTextWithResult(s);
 	}
@@ -92,13 +99,19 @@ public class WTextField extends WWidget {
 	private boolean setTextWithResult(String s) {
 		if (this.textPredicate == null || this.textPredicate.test(s)) {
 			this.text = (s.length() > maxLength) ? s.substring(0, maxLength) : s;
+			// Call change listener
 			if (onChanged != null) onChanged.accept(this.text);
+			// Reset cursor if needed
+			if (cursor >= this.text.length()) cursor = this.text.length() - 1;
 			return true;
 		}
 
 		return false;
 	}
 
+	/**
+	 * {@return the text in this text field}
+	 */
 	public String getText() {
 		return this.text;
 	}
@@ -141,6 +154,11 @@ public class WTextField extends WWidget {
 			scrollOffset = cursor;
 		}
 
+		checkScrollOffset();
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void checkScrollOffset() {
 		int rightMostScrollOffset = text.length() - font.trimToWidth(text, width - TEXT_PADDING_X * 2, true).length();
 		scrollOffset = Math.min(rightMostScrollOffset, scrollOffset);
 	}
@@ -217,6 +235,7 @@ public class WTextField extends WWidget {
 	protected void renderTextField(MatrixStack matrices, int x, int y) {
 		if (this.font == null) this.font = MinecraftClient.getInstance().textRenderer;
 
+		checkScrollOffset();
 		String visibleText = font.trimToWidth(this.text.substring(this.scrollOffset), this.width - 2 * TEXT_PADDING_X);
 		renderBox(matrices, x, y);
 		renderText(matrices, x, y, visibleText);
@@ -263,8 +282,7 @@ public class WTextField extends WWidget {
 	public WTextField setMaxLength(int max) {
 		this.maxLength = max;
 		if (this.text.length() > max) {
-			this.text = this.text.substring(0, max);
-			this.onChanged.accept(this.text);
+			setText(this.text.substring(0, max));
 		}
 		return this;
 	}
@@ -337,6 +355,7 @@ public class WTextField extends WWidget {
 	public int getCaretPosition(int clickX) {
 		if (clickX < 0) return 0;
 		int lastPos = 0;
+		checkScrollOffset();
 		String string = text.substring(scrollOffset);
 		for (int i = 0; i < string.length(); i++) {
 			int w = font.getWidth(string.charAt(i) + "");

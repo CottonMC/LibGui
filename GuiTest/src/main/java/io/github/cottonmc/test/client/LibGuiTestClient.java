@@ -1,18 +1,24 @@
 package io.github.cottonmc.test.client;
 
+import com.mojang.brigadier.Command;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen;
+import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.impl.modmenu.ConfigGui;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.test.LibGuiTest;
 import io.github.cottonmc.test.ReallySimpleDescription;
 import io.github.cottonmc.test.TestDescription;
+
+import java.util.function.Function;
 
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
 
@@ -35,35 +41,19 @@ public class LibGuiTestClient implements ClientModInitializer {
 
 		ClientCommandManager.DISPATCHER.register(
 				literal("libgui")
-						.then(literal("config").executes(context -> {
-							var client = context.getSource().getClient();
-							client.send(() -> {
-								client.setScreen(new CottonClientScreen(new ConfigGui(client.currentScreen)));
-							});
-							return 0;
-						}))
-						.then(literal("tab").executes(context -> {
-							var client = context.getSource().getClient();
-							client.send(() -> {
-								client.setScreen(new CottonClientScreen(new TabTestGui()));
-							});
-							return 0;
-						}))
-						.then(literal("scrolling").executes(context -> {
-							var client = context.getSource().getClient();
-							client.send(() -> {
-								client.setScreen(new CottonClientScreen(new ScrollingTestGui()));
-							});
-							return 0;
-						}))
-						.then(literal("insets").executes(context -> {
-							var client = context.getSource().getClient();
-							client.send(() -> {
-								client.setScreen(new CottonClientScreen(new InsetsTestGui()));
-							});
-							return 0;
-						}))
+						.then(literal("config").executes(openScreen(client -> new ConfigGui(client.currentScreen))))
+						.then(literal("tab").executes(openScreen(client -> new TabTestGui())))
+						.then(literal("scrolling").executes(openScreen(client -> new ScrollingTestGui())))
+						.then(literal("insets").executes(openScreen(client -> new InsetsTestGui())))
+						.then(literal("textfield").executes(openScreen(client -> new TextFieldTestGui())))
 		);
 	}
 
+	private static Command<FabricClientCommandSource> openScreen(Function<MinecraftClient, LightweightGuiDescription> screenFactory) {
+		return context -> {
+			var client = context.getSource().getClient();
+			client.send(() -> client.setScreen(new CottonClientScreen(screenFactory.apply(client))));
+			return Command.SINGLE_SUCCESS;
+		};
+	}
 }
