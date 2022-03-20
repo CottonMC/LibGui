@@ -173,7 +173,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	}
 	
 	@Override
-	public boolean isPauseScreen() {
+	public boolean shouldPause() {
 		//...yeah, we're going to go ahead and override that.
 		return false;
 	}

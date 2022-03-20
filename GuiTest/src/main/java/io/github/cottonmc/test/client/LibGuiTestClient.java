@@ -4,8 +4,8 @@ import com.mojang.brigadier.Command;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.text.LiteralText;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
@@ -26,12 +26,12 @@ public class LibGuiTestClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		ScreenRegistry.<TestDescription, CottonInventoryScreen<TestDescription>>register(
+		HandledScreens.<TestDescription, CottonInventoryScreen<TestDescription>>register(
 				LibGuiTest.GUI_SCREEN_HANDLER_TYPE,
 				CottonInventoryScreen::new
 		);
 
-		ScreenRegistry.<ReallySimpleDescription, CottonInventoryScreen<ReallySimpleDescription>>register(
+		HandledScreens.<ReallySimpleDescription, CottonInventoryScreen<ReallySimpleDescription>>register(
 				LibGuiTest.REALLY_SIMPLE_SCREEN_HANDLER_TYPE,
 				CottonInventoryScreen::new
 		);
