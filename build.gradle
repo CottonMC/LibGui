@@ -36,7 +36,7 @@ dependencies {
 			'fabric-api-base',
 			'fabric-lifecycle-events-v1',
 			'fabric-networking-api-v1',
-	        'fabric-rendering-v1',
+			'fabric-rendering-v1',
 	]
 	for (def module : fabricApiModules) {
 		modImplementation fabricApi.module(module, project.fabric_version)
