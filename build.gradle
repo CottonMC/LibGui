@@ -32,14 +32,21 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+	// True: module classes are used in public API classes/methods/fields
 	def fabricApiModules = [
-			'fabric-api-base',
-			'fabric-lifecycle-events-v1',
-			'fabric-networking-api-v1',
-			'fabric-rendering-v1',
+			'fabric-api-base': true,
+			'fabric-lifecycle-events-v1': false,
+			'fabric-networking-api-v1': true,
+			'fabric-rendering-v1': false,
 	]
-	for (def module : fabricApiModules) {
-		modImplementation fabricApi.module(module, project.fabric_version)
+	fabricApiModules.forEach { module, api ->
+		def dependency = fabricApi.module(module, project.fabric_version)
+
+		if (api) {
+			modApi dependency
+		} else {
+			modImplementation dependency
+		}
 	}
 
 	modImplementation "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
