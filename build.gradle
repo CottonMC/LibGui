@@ -31,7 +31,17 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	def fabricApiModules = [
+			'fabric-api-base',
+			'fabric-lifecycle-events-v1',
+			'fabric-networking-api-v1',
+	        'fabric-rendering-v1',
+	]
+	for (def module : fabricApiModules) {
+		modImplementation fabricApi.module(module, project.fabric_version)
+	}
+
 	modImplementation "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 
