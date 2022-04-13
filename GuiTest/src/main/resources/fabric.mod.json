@@ -20,7 +20,7 @@
     "main": [ "io.github.cottonmc.test.LibGuiTest"],
     "client": [ "io.github.cottonmc.test.client.LibGuiTestClient" ]
   },
-  "depends": {
+	"depends": {
     "fabricloader": ">=0.4.0",
     "libgui": "*",
     "jankson": "*",
