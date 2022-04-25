@@ -26,6 +26,7 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -312,6 +313,11 @@ public class WTextField extends WWidget {
 		return suggestion;
 	}
 
+	/**
+	 * @deprecated Use {@link #setSuggestion(Text)} instead.
+	 */
+	@Deprecated(forRemoval = true, since = "5.4.0")
+	@ApiStatus.ScheduledForRemoval(inVersion = "6.0.0")
 	public WTextField setSuggestion(@Nullable String suggestion) {
 		this.suggestion = suggestion != null ? new LiteralText(suggestion) : null;
 		return this;

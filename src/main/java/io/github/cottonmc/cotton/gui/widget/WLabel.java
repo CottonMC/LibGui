@@ -18,6 +18,7 @@ import io.github.cottonmc.cotton.gui.impl.client.LibGuiConfig;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -45,7 +46,10 @@ public class WLabel extends WWidget {
 	 *
 	 * @param text the text of the label
 	 * @param color the color of the label
+	 * @deprecated Use {@link #WLabel(Text, int)} instead.
 	 */
+	@Deprecated(forRemoval = true, since = "5.4.0")
+	@ApiStatus.ScheduledForRemoval(inVersion = "6.0.0")
 	public WLabel(String text, int color) {
 		this(new LiteralText(text), color);
 	}
@@ -66,7 +70,10 @@ public class WLabel extends WWidget {
 	 * Constructs a new label with the {@linkplain #DEFAULT_TEXT_COLOR default text color}.
 	 *
 	 * @param text the text of the label
+	 * @deprecated Use {@link #WLabel(Text)} instead.
 	 */
+	@Deprecated(forRemoval = true, since = "5.4.0")
+	@ApiStatus.ScheduledForRemoval(inVersion = "6.0.0")
 	public WLabel(String text) {
 		this(text, DEFAULT_TEXT_COLOR);
 	}
