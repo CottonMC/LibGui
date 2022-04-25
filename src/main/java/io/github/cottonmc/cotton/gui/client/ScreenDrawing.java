@@ -147,7 +147,7 @@ public class ScreenDrawing {
 		buffer.vertex(model, x + width, y,          0).texture(u2, v1).next();
 		buffer.vertex(model, x,         y,          0).texture(u1, v1).next();
 		buffer.end();
-		BufferRenderer.draw(buffer);
+		BufferRenderer.method_43433(buffer);
 		RenderSystem.disableBlend();
 	}
 

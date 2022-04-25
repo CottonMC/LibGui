@@ -16,9 +16,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 
@@ -264,7 +262,7 @@ public class WTextField extends WWidget {
 		buffer.vertex(model, x + width, y, 0).next();
 		buffer.vertex(model, x, y, 0).next();
 		buffer.end();
-		BufferRenderer.draw(buffer);
+		BufferRenderer.method_43433(buffer);
 		RenderSystem.disableColorLogicOp();
 		RenderSystem.enableTexture();
 	}
@@ -310,11 +308,6 @@ public class WTextField extends WWidget {
 	@Nullable
 	public Text getSuggestion() {
 		return suggestion;
-	}
-
-	public WTextField setSuggestion(@Nullable String suggestion) {
-		this.suggestion = suggestion != null ? new LiteralText(suggestion) : null;
-		return this;
 	}
 
 	public WTextField setSuggestion(@Nullable Text suggestion) {
@@ -502,10 +495,10 @@ public class WTextField extends WWidget {
 
 	@Override
 	public void addNarrations(NarrationMessageBuilder builder) {
-		builder.put(NarrationPart.TITLE, new TranslatableText(NarrationMessages.TEXT_FIELD_TITLE_KEY, text));
+		builder.put(NarrationPart.TITLE, Text.translatable(NarrationMessages.TEXT_FIELD_TITLE_KEY, text));
 
 		if (suggestion != null) {
-			builder.put(NarrationPart.HINT, new TranslatableText(NarrationMessages.TEXT_FIELD_SUGGESTION_KEY, suggestion));
+			builder.put(NarrationPart.HINT, Text.translatable(NarrationMessages.TEXT_FIELD_SUGGESTION_KEY, suggestion));
 		}
 	}
 }

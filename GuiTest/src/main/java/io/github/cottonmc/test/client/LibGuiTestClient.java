@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.cotton.gui.client.CottonHud;
@@ -37,7 +37,7 @@ public class LibGuiTestClient implements ClientModInitializer {
 		);
 
 		CottonHud.add(new WHudTest(), 10, -20, 10, 10);
-		CottonHud.add(new WLabel(new LiteralText("Test label")), 10, -30, 10, 10);
+		CottonHud.add(new WLabel(Text.literal("Test label")), 10, -30, 10, 10);
 
 		ClientCommandManager.DISPATCHER.register(
 				literal("libgui")

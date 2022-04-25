@@ -3,7 +3,7 @@ package io.github.cottonmc.test.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
@@ -31,11 +31,11 @@ public class TestClientGui extends LightweightGuiDescription {
 		WGridPanel root = new WGridPanel(22);
 		root.setInsets(Insets.ROOT_PANEL);
 		this.setRootPanel(root);
-		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
+		WLabel title = new WLabel(Text.literal("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
 			@Environment(EnvType.CLIENT)
 			@Override
 			public void addTooltip(TooltipBuilder tooltip) {
-				tooltip.add(new LiteralText("Radical!"));
+				tooltip.add(Text.literal("Radical!"));
 			}
 		};
 		WTiledSprite wood = new WTiledSprite(
@@ -49,7 +49,7 @@ public class TestClientGui extends LightweightGuiDescription {
 		root.add(title, 0, 0);
 		
 		WTextField text = new WTextField();
-		text.setSuggestion("Search");
+		text.setSuggestion(Text.literal("Search"));
 		root.add(text, 0, 1, 8, 1);
 		text.setSize(7*18, 20);
 		/*

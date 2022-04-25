@@ -9,7 +9,6 @@ import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.LibGui;
@@ -214,9 +213,9 @@ public class WToggleButton extends WWidget {
 		Text title;
 
 		if (label != null) {
-			title = new TranslatableText(NarrationMessages.TOGGLE_BUTTON_NAMED_KEY, label, onOff);
+			title = Text.translatable(NarrationMessages.TOGGLE_BUTTON_NAMED_KEY, label, onOff);
 		} else {
-			title = new TranslatableText(NarrationMessages.TOGGLE_BUTTON_UNNAMED_KEY, onOff);
+			title = Text.translatable(NarrationMessages.TOGGLE_BUTTON_UNNAMED_KEY, onOff);
 		}
 
 		builder.put(NarrationPart.TITLE, title);
