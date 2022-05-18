@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -45,9 +44,9 @@ public final class VisualLogger {
 		logger.log(level, message, params);
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-			var text = new LiteralText(clazz.getSimpleName() + '/');
-			text.append(new LiteralText(level.name()).formatted(formatting));
-			text.append(new LiteralText(": " + ParameterizedMessage.format(message, params)));
+			var text = Text.of(clazz.getSimpleName() + '/').copy();
+			text.append(Text.of(level.name()).copy().formatted(formatting));
+			text.append(Text.of(": " + ParameterizedMessage.format(message, params)));
 
 			WARNINGS.add(text);
 		}

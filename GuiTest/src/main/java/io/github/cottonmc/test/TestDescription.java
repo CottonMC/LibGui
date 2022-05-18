@@ -4,7 +4,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
@@ -29,7 +29,7 @@ public class TestDescription extends SyncedGuiDescription {
 		WItemSlot slot = WItemSlot.of(blockInventory, 0, 4, 1);
 		root.add(slot, 0, 1);
 
-		WButton buttonA = new WButton(new LiteralText("Send Message"));
+		WButton buttonA = new WButton(Text.of("Send Message"));
 
 		buttonA.setOnClick(() -> {
 			ScreenNetworking.of(this, NetworkSide.CLIENT).send(TEST_MESSAGE, buf -> {});
@@ -38,15 +38,15 @@ public class TestDescription extends SyncedGuiDescription {
 
 		root.add(buttonA, 0, 3, 4, 1);
 
-		WButton buttonB = new WButton(new LiteralText("Show Warnings"));
+		WButton buttonB = new WButton(Text.of("Show Warnings"));
 		buttonB.setOnClick(() -> slot.setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))));
 
 		root.add(buttonB, 5, 3, 4, 1);
-		root.add(new WButton(new LiteralText("Button C")), 0, 5, 4, 1);
-		root.add(new WButton(new LiteralText("Button D")), 5, 5, 4, 1);
-		root.add(new WTextField(new LiteralText("Type something...")).setMaxLength(64), 0, 7, 5, 1);
+		root.add(new WButton(Text.of("Button C")), 0, 5, 4, 1);
+		root.add(new WButton(Text.of("Button D")), 5, 5, 4, 1);
+		root.add(new WTextField(Text.of("Type something...")).setMaxLength(64), 0, 7, 5, 1);
 
-		root.add(new WLabel(new LiteralText("Large slot:")), 0, 9);
+		root.add(new WLabel(Text.of("Large slot:")), 0, 9);
 		root.add(WItemSlot.outputOf(blockInventory, 0), 4, 9);
 
 		root.add(WItemSlot.of(blockInventory, 7).setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))), 7, 9);

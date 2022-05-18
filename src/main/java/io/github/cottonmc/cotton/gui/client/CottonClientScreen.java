@@ -3,7 +3,6 @@ package io.github.cottonmc.cotton.gui.client;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -14,6 +13,7 @@ import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationHelper;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
@@ -44,7 +44,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	private final MouseInputHandler<CottonClientScreen> mouseInputHandler = new MouseInputHandler<>(this);
 	
 	public CottonClientScreen(GuiDescription description) {
-		this(new LiteralText(""), description);
+		this(Text.of(""), description);
 	}
 	
 	public CottonClientScreen(Text title, GuiDescription description) {

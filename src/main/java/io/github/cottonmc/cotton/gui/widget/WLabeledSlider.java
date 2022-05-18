@@ -2,11 +2,11 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 
@@ -14,6 +14,7 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -220,7 +221,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	@Override
 	public void addNarrations(NarrationMessageBuilder builder) {
 		if (getLabel() != null) {
-			builder.put(NarrationPart.TITLE, new TranslatableText(NarrationMessages.LABELED_SLIDER_TITLE_KEY, getLabel(), value, min, max));
+			builder.put(NarrationPart.TITLE, Text.translatable(NarrationMessages.LABELED_SLIDER_TITLE_KEY, getLabel(), value, min, max));
 			builder.put(NarrationPart.USAGE, NarrationMessages.SLIDER_USAGE);
 		} else {
 			super.addNarrations(builder);

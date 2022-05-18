@@ -1,19 +1,17 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
-import org.jetbrains.annotations.Nullable;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * A bar that displays int values from a {@link PropertyDelegate}.
@@ -205,13 +203,13 @@ public class WBar extends WWidget {
 		if (tooltipLabel != null) {
 			int value = (field >= 0) ? properties.get(field) : 0;
 			int valMax = (max >= 0) ? properties.get(max) : maxValue;
-			information.add(new TranslatableText(tooltipLabel, Integer.valueOf(value), Integer.valueOf(valMax)));
+			information.add(Text.translatable(tooltipLabel, Integer.valueOf(value), Integer.valueOf(valMax)));
 		}
 		if (tooltipTextComponent != null) {
 			try {
 				information.add(tooltipTextComponent);
 			} catch (Throwable t) {
-				information.add(new LiteralText(t.getLocalizedMessage()));
+				information.add(Text.of(t.getLocalizedMessage()));
 			}
 		}
 	}

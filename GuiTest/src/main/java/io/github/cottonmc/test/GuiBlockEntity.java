@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -36,7 +35,7 @@ public class GuiBlockEntity extends BlockEntity implements ImplementedInventory,
 
 	@Override
 	public Text getDisplayName() {
-		return new LiteralText("test title");
+		return Text.of("test title");
 	}
 
 	@Nullable

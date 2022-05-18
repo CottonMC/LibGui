@@ -1,21 +1,22 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.Tag;
-
-import com.google.common.collect.ImmutableList;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import net.minecraft.tag.TagKey;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 
 /**
  * A widget that displays an item or a list of items.
@@ -32,7 +33,7 @@ public class WItem extends WWidget {
 		setItems(items);
 	}
 
-	public WItem(Tag<? extends ItemConvertible> tag) {
+	public WItem(TagKey<Item> tag) {
 		this(getRenderStacks(tag));
 	}
 
@@ -106,10 +107,10 @@ public class WItem extends WWidget {
 	/**
 	 * Gets the render stacks ({@link Item#getStackForRender()}) of each item in a tag.
 	 */
-	private static List<ItemStack> getRenderStacks(Tag<? extends ItemConvertible> tag) {
+	private static List<ItemStack> getRenderStacks(TagKey<Item> tag) {
 		ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
-
-		for (ItemConvertible item : tag.values()) {
+		Iterable<RegistryEntry<Item>> iterable = () -> Registry.ITEM.getEntryList(tag).get().iterator();
+		for (RegistryEntry<Item> item : iterable) {
 			builder.add(new ItemStack(item));
 		}
 

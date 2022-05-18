@@ -6,7 +6,6 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -18,6 +17,7 @@ import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationHelper;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -41,7 +41,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	 * @since 5.2.0
 	 */
 	public CottonInventoryScreen(T description, PlayerInventory inventory) {
-		this(description, inventory, new LiteralText(""));
+		this(description, inventory, Text.of(""));
 	}
 
 	/**

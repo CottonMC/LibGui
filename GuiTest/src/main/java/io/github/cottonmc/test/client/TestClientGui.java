@@ -2,8 +2,9 @@ package io.github.cottonmc.test.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
@@ -31,11 +32,11 @@ public class TestClientGui extends LightweightGuiDescription {
 		WGridPanel root = new WGridPanel(22);
 		root.setInsets(Insets.ROOT_PANEL);
 		this.setRootPanel(root);
-		WLabel title = new WLabel(new LiteralText("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
+		WLabel title = new WLabel(Text.of("Client Test Gui"), WLabel.DEFAULT_TEXT_COLOR) {
 			@Environment(EnvType.CLIENT)
 			@Override
 			public void addTooltip(TooltipBuilder tooltip) {
-				tooltip.add(new LiteralText("Radical!"));
+				tooltip.add(Text.of("Radical!"));
 			}
 		};
 		WTiledSprite wood = new WTiledSprite(
@@ -65,21 +66,21 @@ public class TestClientGui extends LightweightGuiDescription {
 		data.add("Slime Island");
 		
 		BiConsumer<String, PortalDestination> configurator = (String s, PortalDestination destination) -> {
-			destination.label.setText(new LiteralText(s));
+			destination.label.setText(Text.Literal(s));
 			
 			int hash = s.hashCode();
 			Identifier sprite = ((hash & 0x01) == 0) ? PORTAL1 : PORTAL2;
 			destination.sprite.setImage(sprite);
 			
 			int cost = (hash >> 1) & 0x2FF;
-			destination.cost.setText(new LiteralText(""+cost+" XP"));
+			destination.cost.setText(Text.Literal(""+cost+" XP"));
 		};
 		WListPanel<String, PortalDestination> list = new WListPanel<String, PortalDestination>(data, PortalDestination.class, PortalDestination::new, configurator);
 		list.setListItemHeight(2*18);
 		list.setBackgroundPainter(PANEL);
 		root.add(list, 0, 2, 7, 6);
 		
-		root.add(new WButton(new LiteralText("Teleport")), 3,8,4,1);*/
+		root.add(new WButton(Text.Literal("Teleport")), 3,8,4,1);*/
 		WColorBox col = new WColorBox();
 		root.add(col, 3,2,1,3);
 		

@@ -1,19 +1,19 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.MathHelper;
+import java.util.function.IntConsumer;
+
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
-
-import java.util.function.IntConsumer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * A base class for slider widgets that can be used to select int values.
@@ -367,7 +367,7 @@ public abstract class WAbstractSlider extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void addNarrations(NarrationMessageBuilder builder) {
-		builder.put(NarrationPart.TITLE, new TranslatableText(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
+		builder.put(NarrationPart.TITLE, Text.translatable(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
 		builder.put(NarrationPart.USAGE, NarrationMessages.SLIDER_USAGE);
 	}
 

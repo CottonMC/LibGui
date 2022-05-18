@@ -2,7 +2,7 @@ package io.github.cottonmc.cotton.gui.impl.modmenu;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
@@ -20,7 +20,7 @@ public class ConfigGui extends LightweightGuiDescription {
 		root.setInsets(Insets.ROOT_PANEL);
 		setRootPanel(root);
 
-		WToggleButton darkmodeButton = new WToggleButton(new TranslatableText("option.libgui.darkmode")) {
+		WToggleButton darkmodeButton = new WToggleButton(Text.translatable("option.libgui.darkmode")) {
 			@Override
 			public void onToggle(boolean on) {
 				LibGuiClient.config.darkMode = on;
@@ -40,7 +40,7 @@ public class ConfigGui extends LightweightGuiDescription {
 		verticalSlider.setValueChangeListener(System.out::println);
 
 		WLabeledSlider horizontalSlider = new WLabeledSlider(0, 500);
-		horizontalSlider.setLabelUpdater(value -> new LiteralText(value + "!"));
+		horizontalSlider.setLabelUpdater(value -> Text.Literal(value + "!"));
 		horizontalSlider.setDraggingFinishedListener(() -> System.out.println("Mouse released"));
 		horizontalSlider.setValue(250);
 
@@ -50,7 +50,7 @@ public class ConfigGui extends LightweightGuiDescription {
 
 		root.add(new WKirbSprite(), 5, 4);
 		
-		WButton doneButton = new WButton(new TranslatableText("gui.done"));
+		WButton doneButton = new WButton(Text.translatable("gui.done"));
 		doneButton.setOnClick(()->{
 			MinecraftClient.getInstance().setScreen(previous);
 		});
