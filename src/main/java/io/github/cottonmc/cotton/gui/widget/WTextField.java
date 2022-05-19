@@ -261,8 +261,7 @@ public class WTextField extends WWidget {
 		buffer.vertex(model, x + width, y + height, 0).next();
 		buffer.vertex(model, x + width, y, 0).next();
 		buffer.vertex(model, x, y, 0).next();
-		buffer.end();
-		BufferRenderer.method_43433(buffer);
+		BufferRenderer.drawWithShader(buffer.end());
 		RenderSystem.disableColorLogicOp();
 		RenderSystem.enableTexture();
 	}
