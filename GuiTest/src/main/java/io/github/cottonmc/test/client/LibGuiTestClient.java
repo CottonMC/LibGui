@@ -2,8 +2,8 @@ package io.github.cottonmc.test.client;
 
 import com.mojang.brigadier.Command;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.text.Text;
@@ -20,7 +20,7 @@ import io.github.cottonmc.test.TestDescription;
 
 import java.util.function.Function;
 
-import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class LibGuiTestClient implements ClientModInitializer {
 
