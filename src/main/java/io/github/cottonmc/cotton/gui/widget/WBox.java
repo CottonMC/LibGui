@@ -58,7 +58,7 @@ public class WBox extends WPanelWithInsets {
 	public void add(WWidget widget, int width, int height) {
 		widget.setParent(this);
 		children.add(widget);
-		if (canResize()) {
+		if (widget.canResize()) {
 			widget.setSize(width, height);
 		}
 	}
