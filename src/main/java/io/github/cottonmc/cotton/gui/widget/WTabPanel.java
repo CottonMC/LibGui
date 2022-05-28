@@ -272,6 +272,11 @@ public class WTabPanel extends WPanel {
 		}
 
 		@Override
+		public boolean canResize() {
+			return true;
+		}
+
+		@Override
 		public boolean canFocus() {
 			return true;
 		}
