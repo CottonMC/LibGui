@@ -6,7 +6,6 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 
@@ -220,7 +219,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	@Override
 	public void addNarrations(NarrationMessageBuilder builder) {
 		if (getLabel() != null) {
-			builder.put(NarrationPart.TITLE, new TranslatableText(NarrationMessages.LABELED_SLIDER_TITLE_KEY, getLabel(), value, min, max));
+			builder.put(NarrationPart.TITLE, Text.translatable(NarrationMessages.LABELED_SLIDER_TITLE_KEY, getLabel(), value, min, max));
 			builder.put(NarrationPart.USAGE, NarrationMessages.SLIDER_USAGE);
 		} else {
 			super.addNarrations(builder);

@@ -1,9 +1,9 @@
 package io.github.cottonmc.cotton.gui.client;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -44,7 +44,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	private final MouseInputHandler<CottonClientScreen> mouseInputHandler = new MouseInputHandler<>(this);
 	
 	public CottonClientScreen(GuiDescription description) {
-		this(new LiteralText(""), description);
+		this(ScreenTexts.EMPTY, description);
 	}
 	
 	public CottonClientScreen(Text title, GuiDescription description) {

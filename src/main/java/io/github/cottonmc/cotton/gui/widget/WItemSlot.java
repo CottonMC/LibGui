@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
@@ -463,9 +462,9 @@ public class WItemSlot extends WWidget {
 		if (name != null) parts.add(name);
 
 		if (focusedSlot >= 0) {
-			parts.add(new TranslatableText(NarrationMessages.ITEM_SLOT_TITLE_KEY, focusedSlot + 1, slotsWide * slotsHigh));
+			parts.add(Text.translatable(NarrationMessages.ITEM_SLOT_TITLE_KEY, focusedSlot + 1, slotsWide * slotsHigh));
 		} else if (hoveredSlot >= 0) {
-			parts.add(new TranslatableText(NarrationMessages.ITEM_SLOT_TITLE_KEY, hoveredSlot + 1, slotsWide * slotsHigh));
+			parts.add(Text.translatable(NarrationMessages.ITEM_SLOT_TITLE_KEY, hoveredSlot + 1, slotsWide * slotsHigh));
 		}
 
 		builder.put(NarrationPart.TITLE, parts.toArray(new Text[0]));

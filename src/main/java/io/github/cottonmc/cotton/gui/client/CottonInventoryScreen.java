@@ -1,12 +1,12 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -41,7 +41,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	 * @since 5.2.0
 	 */
 	public CottonInventoryScreen(T description, PlayerInventory inventory) {
-		this(description, inventory, new LiteralText(""));
+		this(description, inventory, ScreenTexts.EMPTY);
 	}
 
 	/**

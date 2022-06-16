@@ -1,7 +1,7 @@
 package io.github.cottonmc.test.client;
 
 import net.minecraft.item.Items;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WBox;
@@ -20,12 +20,12 @@ public class ScrollingTestGui extends LightweightGuiDescription {
 		WBox box = new WBox(Axis.VERTICAL);
 
 		for (int i = 0; i < 20; i++) {
-			box.add(new WLabeledSlider(0, 10, new LiteralText("Slider #" + i)));
+			box.add(new WLabeledSlider(0, 10, Text.literal("Slider #" + i)));
 		}
 
 		box.add(new WButton(new ItemIcon(Items.APPLE)));
 
-		root.add(new WLabel(new LiteralText("Scrolling test")).setVerticalAlignment(VerticalAlignment.CENTER), 0, 0, 5, 2);
+		root.add(new WLabel(Text.literal("Scrolling test")).setVerticalAlignment(VerticalAlignment.CENTER), 0, 0, 5, 2);
 		root.add(new WScrollPanel(box), 0, 2, 5, 3);
 		root.validate(this);
 	}

@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
@@ -367,7 +367,7 @@ public abstract class WAbstractSlider extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void addNarrations(NarrationMessageBuilder builder) {
-		builder.put(NarrationPart.TITLE, new TranslatableText(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
+		builder.put(NarrationPart.TITLE, Text.translatable(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
 		builder.put(NarrationPart.USAGE, NarrationMessages.SLIDER_USAGE);
 	}
 
