@@ -2,7 +2,7 @@ package io.github.cottonmc.test.client;
 
 import com.mojang.brigadier.Command;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
@@ -39,14 +39,14 @@ public class LibGuiTestClient implements ClientModInitializer {
 		CottonHud.add(new WHudTest(), 10, -20, 10, 10);
 		CottonHud.add(new WLabel(Text.literal("Test label")), 10, -30, 10, 10);
 
-		ClientCommandManager.DISPATCHER.register(
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, commandRegistryAccess) -> dispatcher.register(
 				literal("libgui")
 						.then(literal("config").executes(openScreen(client -> new ConfigGui(client.currentScreen))))
 						.then(literal("tab").executes(openScreen(client -> new TabTestGui())))
 						.then(literal("scrolling").executes(openScreen(client -> new ScrollingTestGui())))
 						.then(literal("insets").executes(openScreen(client -> new InsetsTestGui())))
 						.then(literal("textfield").executes(openScreen(client -> new TextFieldTestGui())))
-		);
+		));
 	}
 
 	private static Command<FabricClientCommandSource> openScreen(Function<MinecraftClient, LightweightGuiDescription> screenFactory) {

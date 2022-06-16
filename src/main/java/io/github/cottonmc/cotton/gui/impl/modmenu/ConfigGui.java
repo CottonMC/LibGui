@@ -2,7 +2,7 @@ package io.github.cottonmc.cotton.gui.impl.modmenu;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ScreenTexts;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
