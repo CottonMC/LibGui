@@ -16,13 +16,14 @@ loom {
 	}
 }
 
-//configurations.modApi {
-//    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-//}
-
 repositories {
-	mavenLocal();
 	maven { url "https://server.bbkr.space/artifactory/libs-release" }
+	maven {
+		url = "https://maven.terraformersmc.com/releases"
+		content {
+			includeGroup "com.terraformersmc"
+		}
+	}
 }
 
 dependencies {
@@ -36,6 +37,9 @@ dependencies {
 	implementation project(path: ':', configuration: 'namedElements')
 	// TODO: Fix this in Loom (namedElements should expose remapped mod* dependencies)
 	modImplementation "io.github.cottonmc:Jankson-Fabric:${rootProject.jankson_version}"
+	modLocalRuntime("com.terraformersmc:modmenu:$rootProject.modmenu_version") {
+		exclude group: 'net.fabricmc.fabric-api'
+	}
 }
 
 processResources {
