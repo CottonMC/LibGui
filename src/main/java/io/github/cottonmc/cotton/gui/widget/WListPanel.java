@@ -7,7 +7,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -124,9 +123,9 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	}
 
 	@Override
-	public void setHost(@Nullable GuiDescription host) {
+	public void setHost(GuiDescription host) {
 		super.setHost(host);
-		if (host != null) setRequiredHosts(host);
+		setRequiredHosts(host);
 	}
 
 	private void setRequiredHosts(GuiDescription host) {

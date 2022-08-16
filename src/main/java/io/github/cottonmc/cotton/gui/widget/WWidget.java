@@ -386,14 +386,18 @@ public class WWidget {
 	}
 
 	/**
-	 * Sets the host of this widget without creating peers.
+	 * Sets the host of this widget and all its children without creating peers.
 	 *
 	 * @param host the new host
 	 * @see #host
 	 * @since 2.1.0
 	 */
-	public void setHost(@Nullable GuiDescription host) {
-		this.host = host;
+	public void setHost(GuiDescription host) {
+		if (host != null) {
+			this.host = host;
+		} else {
+			LOGGER.warn("Setting null host for {}", this);
+		}
 	}
 
 	/**

@@ -130,6 +130,14 @@ public abstract class WPanel extends WWidget {
 		}
 	}
 
+	@Override
+	public void setHost(GuiDescription host) {
+		super.setHost(host);
+		for (WWidget child : children) {
+			child.setHost(host);
+		}
+	}
+
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
