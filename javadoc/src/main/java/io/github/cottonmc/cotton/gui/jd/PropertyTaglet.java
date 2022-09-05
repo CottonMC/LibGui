@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeVisitor;
@@ -28,6 +30,7 @@ import javax.lang.model.util.SimpleTypeVisitor8;
 public class PropertyTaglet implements Taglet {
 	private static final Pattern PROPERTY_METHOD = Pattern.compile("^(.+)Property$");
 	private static final String OBSERVABLE_PROPERTY = "io.github.cottonmc.cotton.gui.widget.data.ObservableProperty";
+	private static final Set<Modifier> VISIBILITY_MODIFIERS = Set.of(Modifier.PUBLIC, Modifier.PROTECTED);
 	private DocTrees docTrees;
 
 	@Override
@@ -60,21 +63,29 @@ public class PropertyTaglet implements Taglet {
 		StringBuilder builder = new StringBuilder();
 
 		if (!myEntries.isEmpty()) {
+			builder.append("<section class=\"summary\"><ul class=\"summary-list\"><li><section class=\"property-summary\">");
+			builder.append("<h2>Property Summary</h2>");
 			builder.append("<div class=\"caption\"><span>Properties</span></div>");
-			builder.append("<div class=\"summary-table two-column-summary\">");
-			builder.append("<div class=\"table-header col-first\">Property</div>");
+			builder.append("<div class=\"summary-table three-column-summary\">");
+			builder.append("<div class=\"table-header col-first\">Modifier and Type</div>");
+			builder.append("<div class=\"table-header col-second\">Property</div>");
 			builder.append("<div class=\"table-header col-last\">Description</div>");
 
 			for (int i = 0; i < myEntries.size(); i++) {
 				PropertyEntry entry = myEntries.get(i);
 				String rowClass = (i % 2 == 0) ? "even-row-color" : "odd-row-color";
-				builder.append("<div class=\"col-first ").append(rowClass).append("\"><code><span class=\"member-name-link\">");
+				builder.append("<div class=\"col-first ").append(rowClass).append("\"><code>").append(entry.visibility);
+				if (!entry.type.isEmpty()) {
+					builder.append(' ').append(entry.type);
+				}
+				builder.append("</code></div>");
+				builder.append("<div class=\"col-second ").append(rowClass).append("\"><code><span class=\"member-name-link\">");
 				builder.append("<a href=\"#").append(entry.name).append("Property()\">").append(entry.name).append("</a>");
 				builder.append("</span></code></div>");
-				builder.append("<div class=\"col-last ").append(rowClass).append("\">").append(entry.doc).append("</div>");
+				builder.append("<div class=\"col-last block ").append(rowClass).append("\">").append(entry.doc).append("</div>");
 			}
 
-			builder.append("</div>");
+			builder.append("</div></section></li></ul></section>");
 		}
 
 		Map<String, List<PropertyEntry>> inheritedProperties = new LinkedHashMap<>();
@@ -103,8 +114,15 @@ public class PropertyTaglet implements Taglet {
 		return cl.getEnclosedElements().stream()
 				.filter(el -> el.getKind() == ElementKind.METHOD)
 				.map(el -> (ExecutableElement) el)
-				.filter(el -> el.getReturnType().accept(new ObservableTypeFilter(), null))
-				.map(el -> {
+				.map(Util.zip(el -> el.getReturnType().accept(new ObservableTypeProbe(), null)))
+				.filter(pair -> pair.second().isPresent())
+				.map(pair -> {
+					var el = pair.first();
+					Modifier visibility = el.getModifiers().stream()
+							.filter(VISIBILITY_MODIFIERS::contains)
+							.findAny()
+							.orElse(null);
+					if (visibility == null) return null; // no privates or package-privates
 					Matcher matcher = PROPERTY_METHOD.matcher(el.getSimpleName());
 
 					if (matcher.matches()) {
@@ -118,7 +136,7 @@ public class PropertyTaglet implements Taglet {
 								.filter(Objects::nonNull)
 								.findAny().orElse("");
 
-						return new PropertyEntry(matcher.group(1), doc);
+						return new PropertyEntry(visibility, pair.second().get(), matcher.group(1), doc);
 					}
 
 					return null;
@@ -148,24 +166,28 @@ public class PropertyTaglet implements Taglet {
 		cl.getInterfaces().forEach(itf -> itf.accept(typeVisitor, null));
 	}
 
-	private static final class ObservableTypeFilter extends SimpleTypeVisitor8<Boolean, Void> {
-		ObservableTypeFilter() {
-			super(false);
+	private static final class ObservableTypeProbe extends SimpleTypeVisitor8<Optional<String>, Void> {
+		ObservableTypeProbe() {
+			super(Optional.empty());
 		}
 
 		@Override
-		public Boolean visitDeclared(DeclaredType t, Void v) {
+		public Optional<String> visitDeclared(DeclaredType t, Void v) {
 			Element type = t.asElement();
 
-			if (type.getKind() == ElementKind.CLASS) {
-				return ((TypeElement) type).getQualifiedName().contentEquals(OBSERVABLE_PROPERTY);
+			if (type.getKind() == ElementKind.CLASS && ((TypeElement) type).getQualifiedName().contentEquals(OBSERVABLE_PROPERTY)) {
+				if (!t.getTypeArguments().isEmpty()) {
+					return Optional.of(t.getTypeArguments().get(0).toString());
+				} else {
+					return Optional.of("");
+				}
 			}
 
-			return false;
+			return Optional.empty();
 		}
 	}
 
-	private record PropertyEntry(String name, String doc) implements Comparable<PropertyEntry> {
+	private record PropertyEntry(Modifier visibility, String type, String name, String doc) implements Comparable<PropertyEntry> {
 		@Override
 		public int compareTo(PropertyEntry o) {
 			return name.compareTo(o.name);
