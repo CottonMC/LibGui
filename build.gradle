@@ -114,7 +114,7 @@ javadoc {
 	dependsOn project(':javadoc').tasks.jar
 
 	options {
-		// TODO: check again in 1.18 proper; links "https://maven.fabricmc.net/docs/yarn-$project.yarn_mappings"
+		links "https://maven.fabricmc.net/docs/yarn-$project.yarn_mappings"
 		links 'https://javadoc.io/doc/org.jetbrains/annotations/19.0.0'
 		taglets 'io.github.cottonmc.cotton.gui.jd.ExperimentalTaglet',
 				'io.github.cottonmc.cotton.gui.jd.PropertyTaglet'
