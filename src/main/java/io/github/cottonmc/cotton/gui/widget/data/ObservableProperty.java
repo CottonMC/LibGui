@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget.data;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -15,11 +14,9 @@ import java.util.Objects;
  * {@code <property name>Property}. For example, the {@code WWidget.hovered} property can be retrieved with
  * {@link io.github.cottonmc.cotton.gui.widget.WWidget#hoveredProperty() hoveredProperty()}.
  *
- * @experimental
  * @param <T> the contained value type
  * @since 4.2.0
  */
-@ApiStatus.Experimental
 // TODO: Add filters
 public final class ObservableProperty<T> implements ObservableView<T> {
 	private static final String DEFAULT_NAME = "<unnamed>";
