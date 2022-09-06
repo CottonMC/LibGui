@@ -15,6 +15,7 @@ import io.github.cottonmc.cotton.gui.impl.client.NarrationHelper;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 public class CottonClientScreen extends Screen implements CottonScreenImpl {
@@ -42,11 +43,11 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	protected WWidget lastResponder = null;
 
 	private final MouseInputHandler<CottonClientScreen> mouseInputHandler = new MouseInputHandler<>(this);
-	
+
 	public CottonClientScreen(GuiDescription description) {
 		this(ScreenTexts.EMPTY, description);
 	}
-	
+
 	public CottonClientScreen(Text title, GuiDescription description) {
 		super(title);
 		this.description = description;
@@ -57,7 +58,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	public GuiDescription getDescription() {
 		return description;
 	}
-	
+
 	@Override
 	public void init() {
 		super.init();
@@ -112,10 +113,10 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 			}
 		}
 	}
-	
+
 	private void paint(MatrixStack matrices, int mouseX, int mouseY) {
 		renderBackground(matrices);
-		
+
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
@@ -132,7 +133,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 			}
 		}
 	}
-	
+
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
 		paint(matrices, mouseX, mouseY);
@@ -149,8 +150,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
 		VisualLogger.render(matrices);
 	}
-	
-	
+
 	@Override
 	public void tick() {
 		super.tick();
@@ -161,60 +161,46 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		if (description.getRootPanel()==null) return super.mouseClicked(mouseX, mouseY, mouseButton);
-		WWidget focus = description.getFocus();
-		if (focus!=null) {
-			
-			int wx = focus.getAbsoluteX();
-			int wy = focus.getAbsoluteY();
-			
-			if (mouseX>=wx && mouseX<wx+focus.getWidth() && mouseY>=wy && mouseY<wy+focus.getHeight()) {
-				//Do nothing, focus will get the click soon
-			} else {
-				//Invalidate the component first
-				description.releaseFocus(focus);
-			}
-		}
-		
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
+		mouseInputHandler.checkFocus(containerX, containerY);
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return true;
 		mouseInputHandler.onMouseDown(containerX, containerY, mouseButton);
 
 		return true;
 	}
-	
+
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		if (description.getRootPanel()==null) return super.mouseReleased(mouseX, mouseY, mouseButton);
 		super.mouseReleased(mouseX, mouseY, mouseButton);
+
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
 		mouseInputHandler.onMouseUp(containerX, containerY, mouseButton);
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		if (description.getRootPanel()==null) return super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 		super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
-		
+
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
 		mouseInputHandler.onMouseDrag(containerX, containerY, mouseButton, deltaX, deltaY);
 
 		return true;
 	}
-	
+
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
-		
+		super.mouseScrolled(mouseX, mouseY, amount);
+
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
 		mouseInputHandler.onMouseScroll(containerX, containerY, amount);
@@ -224,7 +210,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
-		if (description.getRootPanel()==null) return;
+		super.mouseMoved(mouseX, mouseY);
 
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
@@ -233,30 +219,29 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
 	@Override
 	public boolean charTyped(char ch, int keyCode) {
-		if (description.getFocus()==null) return false;
+		if (description.getFocus()==null) return super.charTyped(ch, keyCode);
 		description.getFocus().onCharTyped(ch);
 		return true;
 	}
-	
+
 	@Override
 	public boolean keyPressed(int ch, int keyCode, int modifiers) {
-		if (super.keyPressed(ch, keyCode, modifiers)) return true;
-		if (description.getFocus()==null) return false;
-		description.getFocus().onKeyPressed(ch, keyCode, modifiers);
-		return true;
+		if (ch == GLFW.GLFW_KEY_ESCAPE || ch == GLFW.GLFW_KEY_TAB) {
+			// special hardcoded keys, these will never be delivered to widgets
+			return super.keyPressed(ch, keyCode, modifiers);
+		} else {
+			if (description.getFocus() == null) return super.keyPressed(ch, keyCode, modifiers);
+			description.getFocus().onKeyPressed(ch, keyCode, modifiers);
+			return true;
+		}
 	}
-	
+
 	@Override
 	public boolean keyReleased(int ch, int keyCode, int modifiers) {
-		if (description.getFocus()==null) return false;
+		if (description.getFocus()==null) return super.keyReleased(ch, keyCode, modifiers);
 		description.getFocus().onKeyReleased(ch, keyCode, modifiers);
 		return true;
 	}
-	
-	//@Override
-	//public Element getFocused() {
-		//return this;
-	//}
 
 	@Override
 	public void renderTextHover(MatrixStack matrices, @Nullable Style textStyle, int x, int y) {

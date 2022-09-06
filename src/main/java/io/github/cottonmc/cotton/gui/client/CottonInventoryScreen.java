@@ -177,61 +177,35 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		//...yeah, we're going to go ahead and override that.
 		return false;
 	}
-	
-	@Override
-	public boolean charTyped(char ch, int keyCode) {
-		if (description.getFocus()==null) return false;
-		description.getFocus().onCharTyped(ch);
-		return true;
-	}
-	
-	@Override
-	public boolean keyPressed(int ch, int keyCode, int modifiers) {
-		if (ch == GLFW.GLFW_KEY_ESCAPE || ch == GLFW.GLFW_KEY_TAB) {
-			// special hardcoded keys, these will never be delivered to widgets
-			return super.keyPressed(ch, keyCode, modifiers);
-		} else {
-			if (description.getFocus()==null) {
-				return super.keyPressed(ch, keyCode, modifiers);
-			} else {
-				description.getFocus().onKeyPressed(ch, keyCode, modifiers);
-				return true;
-			}
-		}
-	}
-	
-	@Override
-	public boolean keyReleased(int ch, int keyCode, int modifiers) {
-		if (description.getFocus()==null) return false;
-		description.getFocus().onKeyReleased(ch, keyCode, modifiers);
-		return true;
-	}
-	
+
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return result;
+		mouseInputHandler.checkFocus(containerX, containerY);
+		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return true;
 		mouseInputHandler.onMouseDown(containerX, containerY, mouseButton);
 
 		return true;
 	}
-	
+
 	@Override
-	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) { //Testing shows that STATE IS ACTUALLY BUTTON
+	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
 		super.mouseReleased(mouseX, mouseY, mouseButton);
+
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
 		mouseInputHandler.onMouseUp(containerX, containerY, mouseButton);
 
 		return true;
 	}
-	
+
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
 		super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
-		
+
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
 		mouseInputHandler.onMouseDrag(containerX, containerY, mouseButton, deltaX, deltaY);
@@ -241,7 +215,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		if (description.getRootPanel()==null) return super.mouseScrolled(mouseX, mouseY, amount);
+		super.mouseScrolled(mouseX, mouseY, amount);
 
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
@@ -252,11 +226,37 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
-		if (description.getRootPanel()==null) return;
+		super.mouseMoved(mouseX, mouseY);
 
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
 		mouseInputHandler.onMouseMove(containerX, containerY);
+	}
+
+	@Override
+	public boolean charTyped(char ch, int keyCode) {
+		if (description.getFocus()==null) return super.charTyped(ch, keyCode);
+		description.getFocus().onCharTyped(ch);
+		return true;
+	}
+
+	@Override
+	public boolean keyPressed(int ch, int keyCode, int modifiers) {
+		if (ch == GLFW.GLFW_KEY_ESCAPE || ch == GLFW.GLFW_KEY_TAB) {
+			// special hardcoded keys, these will never be delivered to widgets
+			return super.keyPressed(ch, keyCode, modifiers);
+		} else {
+			if (description.getFocus() == null) return super.keyPressed(ch, keyCode, modifiers);
+			description.getFocus().onKeyPressed(ch, keyCode, modifiers);
+			return true;
+		}
+	}
+
+	@Override
+	public boolean keyReleased(int ch, int keyCode, int modifiers) {
+		if (description.getFocus()==null) return super.keyReleased(ch, keyCode, modifiers);
+		description.getFocus().onKeyReleased(ch, keyCode, modifiers);
+		return true;
 	}
 
 	@Override

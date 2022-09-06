@@ -131,4 +131,22 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 
 		return current;
 	}
+
+	/**
+	 * Checks if the focus is not being hovered and releases it in that case.
+	 *
+	 * @param mouseX the mouse cursor's X coordinate in widget space
+	 * @param mouseY the mouse cursor's Y coordinate in widget space
+	 */
+	public void checkFocus(int mouseX, int mouseY) {
+		WWidget focus = screen.getDescription().getFocus();
+		if (focus != null) {
+			int wx = focus.getAbsoluteX();
+			int wy = focus.getAbsoluteY();
+
+			if (!focus.isWithinBounds(mouseX - wx, mouseY - wy)) {
+				screen.getDescription().releaseFocus(focus);
+			}
+		}
+	}
 }
