@@ -407,6 +407,11 @@ public class WItemSlot extends WWidget {
 		}
 	}
 
+	@Override
+	public void onFocusLost() {
+		focusedSlot = -1;
+	}
+
 	/**
 	 * Adds a change listener to this slot.
 	 * Does nothing if the listener is already registered.
