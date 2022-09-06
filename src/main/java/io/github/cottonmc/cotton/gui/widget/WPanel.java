@@ -104,11 +104,10 @@ public abstract class WPanel extends WWidget {
 		if (children.isEmpty()) return this;
 		for(int i=children.size()-1; i>=0; i--) { //Backwards so topmost widgets get priority
 			WWidget child = children.get(i);
-			if (    x>=child.getX() &&
-					y>=child.getY() &&
-					x<child.getX()+child.getWidth() &&
-					y<child.getY()+child.getHeight()) {
-				return child.hit(x-child.getX(), y-child.getY());
+			int wx = x - child.getX();
+			int wy = y - child.getY();
+			if (child.isWithinBounds(wx, wy)) {
+				return child.hit(wx, wy);
 			}
 		}
 		return this;
