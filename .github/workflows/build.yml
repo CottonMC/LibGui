@@ -19,3 +19,9 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build --stacktrace
+      - name: publish checkstyle report
+        uses: Juuxel/publish-checkstyle-report@v1
+        if: ${{ failure() }}
+        with:
+          reports: |
+            build/reports/checkstyle/*.xml
