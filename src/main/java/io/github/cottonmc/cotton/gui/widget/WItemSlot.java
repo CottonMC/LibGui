@@ -1,7 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -14,17 +12,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
-
-import net.minecraft.util.Identifier;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
