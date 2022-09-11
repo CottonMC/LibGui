@@ -44,6 +44,8 @@ public interface BackgroundPainter {
 
 	/**
 	 * The {@code SLOT} background painter draws item slots or slot-like widgets.
+	 *
+	 * <p>For {@linkplain WItemSlot item slots}, this painter uses {@link WItemSlot#SLOT_TEXTURE libgui:textures/widget/item_slot.png}.
 	 */
 	public static BackgroundPainter SLOT = (matrices, left, top, panel) -> {
 		if (!(panel instanceof WItemSlot)) {
@@ -53,31 +55,24 @@ public interface BackgroundPainter {
 			for(int x = 0; x < slot.getWidth()/18; ++x) {
 				for(int y = 0; y < slot.getHeight()/18; ++y) {
 					int index = x + y * (slot.getWidth() / 18);
-					int lo = 0xB8000000;
-					int bg = 0x4C000000;
-					//this will cause a slightly discolored bottom border on vanilla backgrounds but it's necessary for color support, it shouldn't be *too* visible unless you're looking for it
-					int hi = 0xB8FFFFFF;
+					float px = 1 / 64f;
 					if (slot.isBigSlot()) {
-						ScreenDrawing.drawBeveledPanel(matrices, (x * 18) + left - 4, (y * 18) + top - 4, 26, 26,
-								lo, bg, hi);
+						int sx = (x * 18) + left - 4;
+						int sy = (y * 18) + top - 4;
+						ScreenDrawing.texturedRect(matrices, sx, sy, 26, 26, WItemSlot.SLOT_TEXTURE,
+								18 * px, 0, 44 * px, 26 * px, 0xFF_FFFFFF);
 						if (slot.getFocusedSlot() == index) {
-							int sx = (x * 18) + left - 4;
-							int sy = (y * 18) + top - 4;
-							ScreenDrawing.coloredRect(matrices, sx,          sy,          26,     1,      0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(matrices, sx,          sy + 1,      1,      26 - 1, 0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(matrices, sx + 26 - 1, sy + 1,      1,      26 - 1, 0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(matrices, sx + 1,      sy + 26 - 1, 26 - 1, 1,      0xFF_FFFFA0);
+							ScreenDrawing.texturedRect(matrices, sx, sy, 26, 26, WItemSlot.SLOT_TEXTURE,
+									18 * px, 26 * px, 44 * px, 52 * px, 0xFF_FFFFFF);
 						}
 					} else {
-						ScreenDrawing.drawBeveledPanel(matrices, (x * 18) + left, (y * 18) + top, 16+2, 16+2,
-								lo, bg, hi);
+						int sx = (x * 18) + left;
+						int sy = (y * 18) + top;
+						ScreenDrawing.texturedRect(matrices, sx, sy, 18, 18, WItemSlot.SLOT_TEXTURE,
+								0, 0, 18 * px, 18 * px, 0xFF_FFFFFF);
 						if (slot.getFocusedSlot() == index) {
-							int sx = (x * 18) + left;
-							int sy = (y * 18) + top;
-							ScreenDrawing.coloredRect(matrices, sx,          sy,          18,     1,      0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(matrices, sx,          sy + 1,      1,      18 - 1, 0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(matrices, sx + 18 - 1, sy + 1,      1,      18 - 1, 0xFF_FFFFA0);
-							ScreenDrawing.coloredRect(matrices, sx + 1,      sy + 18 - 1, 18 - 1, 1,      0xFF_FFFFA0);
+							ScreenDrawing.texturedRect(matrices, sx, sy, 18, 18, WItemSlot.SLOT_TEXTURE,
+									0, 26 * px, 18 * px, 44 * px, 0xFF_FFFFFF);
 						}
 					}
 				}

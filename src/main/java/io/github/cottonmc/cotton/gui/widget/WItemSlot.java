@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -20,6 +22,9 @@ import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
+
+import net.minecraft.util.Identifier;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -65,6 +70,13 @@ import java.util.function.Predicate;
  * </pre>
  */
 public class WItemSlot extends WWidget {
+	/**
+	 * The default texture of item slots and {@link BackgroundPainter#SLOT}.
+	 *
+	 * @since 6.2.0
+	 */
+	public static final Identifier SLOT_TEXTURE = new Identifier(LibGuiCommon.MOD_ID, "textures/widget/item_slot.png");
+
 	private static final VisualLogger LOGGER = new VisualLogger(WItemSlot.class);
 	private final List<ValidatedSlot> peers = new ArrayList<>();
 	@Nullable
