@@ -21,12 +21,16 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -44,6 +48,7 @@ public class WTabPanel extends WPanel {
 	private static final int ICON_SIZE = 16;
 	private final WBox tabRibbon = new WBox(Axis.HORIZONTAL).setSpacing(1);
 	private final List<WTab> tabWidgets = new ArrayList<>();
+	private final Map<Tab, WTab> tabWidgetsByData = new HashMap<>();
 	private final WCardPanel mainPanel = new WCardPanel();
 
 	/**
@@ -74,6 +79,7 @@ public class WTabPanel extends WPanel {
 		}
 
 		tabWidgets.add(tabWidget);
+		tabWidgetsByData.put(tab, tabWidget);
 		tabRibbon.add(tabWidget, TAB_WIDTH, TAB_HEIGHT + TAB_PADDING);
 		mainPanel.add(tab.getWidget());
 	}
@@ -88,6 +94,62 @@ public class WTabPanel extends WPanel {
 		Tab.Builder builder = new Tab.Builder(widget);
 		configurator.accept(builder);
 		add(builder.build());
+	}
+
+	/**
+	 * {@return the currently open tab's data}
+	 * @since 6.3.0
+	 */
+	public Tab getSelectedTab() {
+		return ((WTab) mainPanel.getSelectedCard()).data;
+	}
+
+	/**
+	 * Sets the currently open tab to the provided {@link Tab}.
+	 *
+	 * @param tab the tab to open, cannot be null
+	 * @return this tab panel
+	 * @throws NoSuchElementException if the tab is not in this panel
+	 * @since 6.3.0
+	 */
+	@Contract("null -> fail; _ -> this")
+	public WTabPanel setSelectedTab(Tab tab) {
+		Objects.requireNonNull(tab, "tab");
+		WTab widget = tabWidgetsByData.get(tab);
+
+		if (widget == null) {
+			throw new NoSuchElementException("Trying to select unknown tab " + tab);
+		}
+
+		return setSelectedIndex(tabWidgets.indexOf(widget));
+	}
+
+	/**
+	 * {@return the index of the currently open tab}
+	 * @since 6.3.0
+	 */
+	public int getSelectedIndex() {
+		return mainPanel.getSelectedIndex();
+	}
+
+	/**
+	 * Sets the currently open tab by its index.
+	 *
+	 * @param tabIndex the 0-based index of the tab to select, in order of adding
+	 * @return this tab panel
+	 * @throws IndexOutOfBoundsException if the tab index is invalid for this tab panel
+	 * @since 6.3.0
+	 */
+	@Contract("_ -> this")
+	public WTabPanel setSelectedIndex(int tabIndex) {
+		mainPanel.setSelectedIndex(tabIndex);
+
+		for (int i = 0; i < tabWidgets.size(); i++) {
+			tabWidgets.get(i).selected = (i == tabIndex);
+		}
+
+		layout();
+		return this;
 	}
 
 	@Override
@@ -288,12 +350,7 @@ public class WTabPanel extends WPanel {
 
 			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
-			for (WTab tab : tabWidgets) {
-				tab.selected = (tab == this);
-			}
-
-			mainPanel.setSelectedCard(data.getWidget());
-			WTabPanel.this.layout();
+			setSelectedIndex(tabWidgets.indexOf(this));
 			return InputResult.PROCESSED;
 		}
 
