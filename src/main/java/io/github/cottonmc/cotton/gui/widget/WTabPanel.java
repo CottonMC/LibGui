@@ -144,12 +144,20 @@ public class WTabPanel extends WPanel {
 	public WTabPanel setSelectedIndex(int tabIndex) {
 		mainPanel.setSelectedIndex(tabIndex);
 
-		for (int i = 0; i < tabWidgets.size(); i++) {
+		for (int i = 0; i < getTabCount(); i++) {
 			tabWidgets.get(i).selected = (i == tabIndex);
 		}
 
 		layout();
 		return this;
+	}
+
+	/**
+	 * {@return the number of tabs in this tab panel}
+	 * @since 6.3.0
+	 */
+	public int getTabCount() {
+		return tabWidgets.size();
 	}
 
 	@Override
