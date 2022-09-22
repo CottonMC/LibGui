@@ -18,7 +18,12 @@ configurations {
 }
 
 repositories {
-	maven { url "https://server.bbkr.space/artifactory/libs-release" }
+	maven {
+		url "https://server.bbkr.space/artifactory/libs-release"
+		content {
+			includeGroup "io.github.cottonmc"
+		}
+	}
 	maven {
 		url = "https://maven.terraformersmc.com/releases"
 		content {
