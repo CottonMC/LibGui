@@ -52,8 +52,7 @@ dependencies {
 	modImplementation "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
 
-	// Using modApi instead of api because of https://github.com/FabricMC/fabric-loom/issues/200
-	include modApi("io.github.juuxel:libninepatch:${project.libninepatch_version}")
+	include api("io.github.juuxel:libninepatch:${project.libninepatch_version}")
 
 	modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
