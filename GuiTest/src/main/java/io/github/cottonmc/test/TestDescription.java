@@ -1,5 +1,7 @@
 package io.github.cottonmc.test;
 
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -42,7 +44,8 @@ public class TestDescription extends SyncedGuiDescription {
 		buttonB.setOnClick(() -> slot.setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))));
 
 		root.add(buttonB, 5, 3, 4, 1);
-		root.add(new WButton(Text.literal("Button C")), 0, 5, 4, 1);
+		TextureIcon testIcon = new TextureIcon(new Texture(new Identifier("libgui-test", "icon.png")));
+		root.add(new WButton(testIcon, Text.literal("Button C")), 0, 5, 4, 1);
 		root.add(new WButton(Text.literal("Button D")), 5, 5, 4, 1);
 		root.add(new WTextField(Text.literal("Type something...")).setMaxLength(64), 0, 7, 5, 1);
 

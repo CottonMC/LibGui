@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -22,10 +24,15 @@ import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
 	private static final Identifier DARK_WIDGETS_LOCATION = new Identifier("libgui", "textures/widget/dark_widgets.png");
+	public static final Insets DEFAULT_ICON_INSETS = new Insets(2,2);
+	private static final int BUTTON_HEIGHT = 20;
 
-	private Text label;
+	@Nullable private Text label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
+
+	protected int iconSize = 16;
+	protected Insets iconInsets = DEFAULT_ICON_INSETS;
 	private boolean enabled = true;
 	protected HorizontalAlignment alignment = HorizontalAlignment.CENTER;
 	
@@ -36,7 +43,7 @@ public class WButton extends WWidget {
 	 * Constructs a button with no label and no icon.
 	 */
 	public WButton() {
-		
+		this(null, null);
 	}
 
 	/**
@@ -46,7 +53,7 @@ public class WButton extends WWidget {
 	 * @since 2.2.0
 	 */
 	public WButton(Icon icon) {
-		this.icon = icon;
+		this(icon, null);
 	}
 
 	/**
@@ -55,7 +62,7 @@ public class WButton extends WWidget {
 	 * @param label the label
 	 */
 	public WButton(Text label) {
-		this.label = label;
+		this(null, label);
 	}
 
 	/**
@@ -65,9 +72,14 @@ public class WButton extends WWidget {
 	 * @param label the label
 	 * @since 2.2.0
 	 */
-	public WButton(Icon icon, Text label) {
+	public WButton(@Nullable Icon icon, @Nullable Text label) {
 		this.icon = icon;
 		this.label = label;
+		this.height = BUTTON_HEIGHT;
+
+		if (this.icon != null && this.label != null) {
+			this.setAlignment(HorizontalAlignment.LEFT);
+		}
 	}
 	
 	@Override
@@ -92,21 +104,21 @@ public class WButton extends WWidget {
 		}
 		
 		float px = 1/256f;
-		float buttonLeft = 0 * px;
-		float buttonTop = (46 + (state*20)) * px;
+		float pxButtonLeft = 0 * px;
+		float pxButtonTop = (46 + (state*getHeight())) * px;
 		int halfWidth = getWidth()/2;
 		if (halfWidth>198) halfWidth=198;
-		float buttonWidth = halfWidth*px;
-		float buttonHeight = 20*px;
+		float pxButtonWidth = halfWidth*px;
+		float pxButtonHeight = getHeight()*px;
 		
 		float buttonEndLeft = (200-(getWidth()/2)) * px;
 
 		Identifier texture = getTexture();
-		ScreenDrawing.texturedRect(matrices, x, y, getWidth()/2, 20, texture, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFFFFFF);
-		ScreenDrawing.texturedRect(matrices, x+(getWidth()/2), y, getWidth()/2, 20, texture, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(matrices, x, y, getWidth()/2, getHeight(), texture, pxButtonLeft, pxButtonTop, pxButtonLeft+pxButtonWidth, pxButtonTop+pxButtonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(matrices, x+(getWidth()/2), y, getWidth()/2, getHeight(), texture, buttonEndLeft, pxButtonTop, 200*px, pxButtonTop+pxButtonHeight, 0xFFFFFFFF);
 
 		if (icon != null) {
-			icon.paint(matrices, x + 1, y + 1, 16);
+			icon.paint(matrices, x + iconInsets.left(), y + iconInsets.top(), iconSize);
 		}
 		
 		if (label!=null) {
@@ -117,14 +129,17 @@ public class WButton extends WWidget {
 				color = 0xFFFFA0;
 			}*/
 
-			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? 18 : 0;
+			int xOffset = 0;
+			if (icon != null && alignment == HorizontalAlignment.LEFT) {
+				xOffset = iconInsets.left() + iconSize + iconInsets.right();
+			}
 			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	
 	@Override
 	public void setSize(int x, int y) {
-		super.setSize(x, 20);
+		super.setSize(x, BUTTON_HEIGHT);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -198,6 +213,16 @@ public class WButton extends WWidget {
 		this.alignment = alignment;
 		return this;
 	}
+
+	public Insets getIconInsets() {
+		return iconInsets;
+	}
+
+	public WButton setIconInsets(Insets iconInsets) {
+		this.iconInsets = iconInsets;
+		return this;
+	}
+
 
 	/**
 	 * Gets the icon of this button.
