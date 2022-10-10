@@ -27,7 +27,6 @@ public class WButton extends WWidget {
 	@Nullable private Text label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
-
 	protected int iconSize = 16;
 	private boolean enabled = true;
 	protected HorizontalAlignment alignment = HorizontalAlignment.CENTER;
