@@ -1,7 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.widget.data.Insets;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -24,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
 	private static final Identifier DARK_WIDGETS_LOCATION = new Identifier("libgui", "textures/widget/dark_widgets.png");
-	public static final Insets DEFAULT_ICON_INSETS = new Insets(2,2);
 	private static final int BUTTON_HEIGHT = 20;
 
 	@Nullable private Text label;
@@ -32,7 +29,6 @@ public class WButton extends WWidget {
 	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
 
 	protected int iconSize = 16;
-	protected Insets iconInsets = DEFAULT_ICON_INSETS;
 	private boolean enabled = true;
 	protected HorizontalAlignment alignment = HorizontalAlignment.CENTER;
 	
@@ -43,7 +39,7 @@ public class WButton extends WWidget {
 	 * Constructs a button with no label and no icon.
 	 */
 	public WButton() {
-		this(null, null);
+
 	}
 
 	/**
@@ -75,11 +71,6 @@ public class WButton extends WWidget {
 	public WButton(@Nullable Icon icon, @Nullable Text label) {
 		this.icon = icon;
 		this.label = label;
-		this.height = BUTTON_HEIGHT;
-
-		if (this.icon != null && this.label != null) {
-			this.setAlignment(HorizontalAlignment.LEFT);
-		}
 	}
 	
 	@Override
@@ -104,21 +95,21 @@ public class WButton extends WWidget {
 		}
 		
 		float px = 1/256f;
-		float pxButtonLeft = 0 * px;
-		float pxButtonTop = (46 + (state*getHeight())) * px;
+		float buttonLeft = 0 * px;
+		float buttonTop = (46 + (state*20)) * px;
 		int halfWidth = getWidth()/2;
 		if (halfWidth>198) halfWidth=198;
-		float pxButtonWidth = halfWidth*px;
-		float pxButtonHeight = getHeight()*px;
+		float buttonWidth = halfWidth*px;
+		float buttonHeight = 20*px;
 		
-		float buttonEndLeft = (200-(getWidth()/2)) * px;
+		float buttonEndLeft = (200-((float)getWidth()/2)) * px;
 
 		Identifier texture = getTexture();
-		ScreenDrawing.texturedRect(matrices, x, y, getWidth()/2, getHeight(), texture, pxButtonLeft, pxButtonTop, pxButtonLeft+pxButtonWidth, pxButtonTop+pxButtonHeight, 0xFFFFFFFF);
-		ScreenDrawing.texturedRect(matrices, x+(getWidth()/2), y, getWidth()/2, getHeight(), texture, buttonEndLeft, pxButtonTop, 200*px, pxButtonTop+pxButtonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(matrices, x, y, getWidth()/2, 20, texture, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(matrices, x+(getWidth()/2), y, getWidth()/2, 20, texture, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
 
 		if (icon != null) {
-			icon.paint(matrices, x + iconInsets.left(), y + iconInsets.top(), iconSize);
+			icon.paint(matrices, x+2, y+(BUTTON_HEIGHT-iconSize)/2, iconSize);
 		}
 		
 		if (label!=null) {
@@ -129,10 +120,7 @@ public class WButton extends WWidget {
 				color = 0xFFFFA0;
 			}*/
 
-			int xOffset = 0;
-			if (icon != null && alignment == HorizontalAlignment.LEFT) {
-				xOffset = iconInsets.left() + iconSize + iconInsets.right();
-			}
+			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? 2+iconSize+2 : 0;
 			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
@@ -196,7 +184,7 @@ public class WButton extends WWidget {
 		return this;
 	}
 
-	public Text getLabel() {
+	public @Nullable Text getLabel() {
 		return label;
 	}
 
@@ -214,12 +202,25 @@ public class WButton extends WWidget {
 		return this;
 	}
 
-	public Insets getIconInsets() {
-		return iconInsets;
+	/**
+	 * Gets the current height / width of the icon.
+	 *
+	 * @return the current height / width of the icon
+	 * @since 6.4.0
+	 */
+	public int getIconSize() {
+		return iconSize;
 	}
 
-	public WButton setIconInsets(Insets iconInsets) {
-		this.iconInsets = iconInsets;
+	/**
+	 * Sets the new size of the icon.
+	 *
+	 * @param iconSize the new height and width of the icon
+	 * @return this button
+	 * @since 6.4.0
+	 */
+	public WButton setIconSize(int iconSize) {
+		this.iconSize = iconSize;
 		return this;
 	}
 
