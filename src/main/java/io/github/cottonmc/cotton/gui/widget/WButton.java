@@ -39,7 +39,7 @@ public class WButton extends WWidget {
 	 * Constructs a button with no label and no icon.
 	 */
 	public WButton() {
-
+		
 	}
 
 	/**
