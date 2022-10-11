@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class WButton extends WWidget {
 	private static final Identifier DARK_WIDGETS_LOCATION = new Identifier("libgui", "textures/widget/dark_widgets.png");
 	private static final int BUTTON_HEIGHT = 20;
+	private static final int ICON_SPACING = 2;
 
 	@Nullable private Text label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
@@ -47,8 +48,8 @@ public class WButton extends WWidget {
 	 * @param icon the icon
 	 * @since 2.2.0
 	 */
-	public WButton(Icon icon) {
-		this(icon, null);
+	public WButton(@Nullable Icon icon) {
+		this.icon = icon;
 	}
 
 	/**
@@ -56,8 +57,8 @@ public class WButton extends WWidget {
 	 *
 	 * @param label the label
 	 */
-	public WButton(Text label) {
-		this(null, label);
+	public WButton(@Nullable Text label) {
+		this.label = label;
 	}
 
 	/**
@@ -101,14 +102,14 @@ public class WButton extends WWidget {
 		float buttonWidth = halfWidth*px;
 		float buttonHeight = 20*px;
 		
-		float buttonEndLeft = (200-((float)getWidth()/2)) * px;
+		float buttonEndLeft = (200-(getWidth()/2)) * px;
 
 		Identifier texture = getTexture();
 		ScreenDrawing.texturedRect(matrices, x, y, getWidth()/2, 20, texture, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFFFFFF);
 		ScreenDrawing.texturedRect(matrices, x+(getWidth()/2), y, getWidth()/2, 20, texture, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
 
 		if (icon != null) {
-			icon.paint(matrices, x+2, y+(BUTTON_HEIGHT-iconSize)/2, iconSize);
+			icon.paint(matrices, x+ICON_SPACING, y+(BUTTON_HEIGHT-iconSize)/2, iconSize);
 		}
 		
 		if (label!=null) {
@@ -119,7 +120,7 @@ public class WButton extends WWidget {
 				color = 0xFFFFA0;
 			}*/
 
-			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? 2+iconSize+2 : 0;
+			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING+iconSize+ICON_SPACING : 0;
 			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
@@ -222,7 +223,6 @@ public class WButton extends WWidget {
 		this.iconSize = iconSize;
 		return this;
 	}
-
 
 	/**
 	 * Gets the icon of this button.
