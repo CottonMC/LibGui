@@ -22,10 +22,17 @@ import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
 	private static final Identifier DARK_WIDGETS_LOCATION = new Identifier("libgui", "textures/widget/dark_widgets.png");
+	private static final int BUTTON_HEIGHT = 20;
+	private static final int ICON_SPACING = 2;
 
-	private Text label;
+	@Nullable private Text label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
 	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
+	/**
+	 * The size (width/height) of this button's icon in pixels.
+	 * @since 6.4.0
+	 */
+	protected int iconSize = 16;
 	private boolean enabled = true;
 	protected HorizontalAlignment alignment = HorizontalAlignment.CENTER;
 	
@@ -45,7 +52,7 @@ public class WButton extends WWidget {
 	 * @param icon the icon
 	 * @since 2.2.0
 	 */
-	public WButton(Icon icon) {
+	public WButton(@Nullable Icon icon) {
 		this.icon = icon;
 	}
 
@@ -54,7 +61,7 @@ public class WButton extends WWidget {
 	 *
 	 * @param label the label
 	 */
-	public WButton(Text label) {
+	public WButton(@Nullable Text label) {
 		this.label = label;
 	}
 
@@ -65,7 +72,7 @@ public class WButton extends WWidget {
 	 * @param label the label
 	 * @since 2.2.0
 	 */
-	public WButton(Icon icon, Text label) {
+	public WButton(@Nullable Icon icon, @Nullable Text label) {
 		this.icon = icon;
 		this.label = label;
 	}
@@ -106,7 +113,7 @@ public class WButton extends WWidget {
 		ScreenDrawing.texturedRect(matrices, x+(getWidth()/2), y, getWidth()/2, 20, texture, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
 
 		if (icon != null) {
-			icon.paint(matrices, x + 1, y + 1, 16);
+			icon.paint(matrices, x+ICON_SPACING, y+(BUTTON_HEIGHT-iconSize)/2, iconSize);
 		}
 		
 		if (label!=null) {
@@ -117,14 +124,14 @@ public class WButton extends WWidget {
 				color = 0xFFFFA0;
 			}*/
 
-			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? 18 : 0;
+			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING+iconSize+ICON_SPACING : 0;
 			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	
 	@Override
 	public void setSize(int x, int y) {
-		super.setSize(x, 20);
+		super.setSize(x, BUTTON_HEIGHT);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -181,7 +188,7 @@ public class WButton extends WWidget {
 		return this;
 	}
 
-	public Text getLabel() {
+	public @Nullable Text getLabel() {
 		return label;
 	}
 
@@ -196,6 +203,28 @@ public class WButton extends WWidget {
 
 	public WButton setAlignment(HorizontalAlignment alignment) {
 		this.alignment = alignment;
+		return this;
+	}
+
+	/**
+	 * Gets the current height / width of the icon.
+	 *
+	 * @return the current height / width of the icon
+	 * @since 6.4.0
+	 */
+	public int getIconSize() {
+		return iconSize;
+	}
+
+	/**
+	 * Sets the new size of the icon.
+	 *
+	 * @param iconSize the new height and width of the icon
+	 * @return this button
+	 * @since 6.4.0
+	 */
+	public WButton setIconSize(int iconSize) {
+		this.iconSize = iconSize;
 		return this;
 	}
 

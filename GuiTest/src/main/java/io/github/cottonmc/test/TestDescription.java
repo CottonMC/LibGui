@@ -15,6 +15,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WTextField;
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
 
 public class TestDescription extends SyncedGuiDescription {
@@ -42,7 +43,8 @@ public class TestDescription extends SyncedGuiDescription {
 		buttonB.setOnClick(() -> slot.setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))));
 
 		root.add(buttonB, 5, 3, 4, 1);
-		root.add(new WButton(Text.literal("Button C")), 0, 5, 4, 1);
+		TextureIcon testIcon = new TextureIcon(new Texture(new Identifier("libgui-test", "icon.png")));
+		root.add(new WButton(testIcon, Text.literal("Button C")), 0, 5, 4, 1);
 		root.add(new WButton(Text.literal("Button D")), 5, 5, 4, 1);
 		root.add(new WTextField(Text.literal("Type something...")).setMaxLength(64), 0, 7, 5, 1);
 
