@@ -1,6 +1,7 @@
 package io.github.cottonmc.test.client;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -20,6 +21,7 @@ import io.github.cottonmc.test.TestDescription;
 
 import java.util.function.Function;
 
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class LibGuiTestClient implements ClientModInitializer {
@@ -46,6 +48,15 @@ public class LibGuiTestClient implements ClientModInitializer {
 						.then(literal("scrolling").executes(openScreen(client -> new ScrollingTestGui())))
 						.then(literal("insets").executes(openScreen(client -> new InsetsTestGui())))
 						.then(literal("textfield").executes(openScreen(client -> new TextFieldTestGui())))
+						.then(literal("paddings")
+								.then(argument("horizontal", IntegerArgumentType.integer(0))
+										.then(argument("vertical", IntegerArgumentType.integer(0))
+												.executes(context -> {
+													var hori = IntegerArgumentType.getInteger(context, "horizontal");
+													var vert = IntegerArgumentType.getInteger(context, "vertical");
+													return openScreen(client -> new PaddingTestGui(hori, vert)).run(context);
+												}))))
+
 		));
 	}
 
