@@ -7,7 +7,6 @@ import io.github.cottonmc.cotton.gui.widget.data.Insets;
  * A panel that positions children in a grid.
  */
 public class WGridPanel extends WPanelWithInsets {
-
 	private static final VisualLogger LOGGER = new VisualLogger(WGridPanel.class);
 
 	/**
@@ -29,17 +28,14 @@ public class WGridPanel extends WPanelWithInsets {
 	/**
 	 * Constructs a grid panel with the default grid size.
 	 */
-	public WGridPanel() {
-	}
+	public WGridPanel() {}
 
 	/**
 	 * Constructs a grid panel with a custom grid size.
 	 *
 	 * @param gridSize the grid size in pixels
 	 */
-	public WGridPanel(int gridSize) {
-		this.grid = gridSize;
-	}
+	public WGridPanel(int gridSize) { this.grid = gridSize; }
 
 
 	/**
@@ -50,13 +46,14 @@ public class WGridPanel extends WPanelWithInsets {
 	 * @param horizontalGap the horizontal gap between grid cells
 	 * @param verticalGap the vertical gap between grid cells
 	 */
-	public void setGaps(int horizontalGap, int verticalGap) {
+	public WGridPanel setGaps(int horizontalGap, int verticalGap) {
 		if (!this.children.isEmpty()) {
 			LOGGER.warn("You can only change gaps before adding children to a WGridPanel");
-			return;
+			return this;
 		}
 		this.horizontalGap = horizontalGap;
 		this.verticalGap = verticalGap;
+		return this;
 	}
 
 
