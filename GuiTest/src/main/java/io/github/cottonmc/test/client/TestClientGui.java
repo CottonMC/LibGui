@@ -134,7 +134,16 @@ public class TestClientGui extends LightweightGuiDescription {
 	public static class WColorBox extends WWidget {
 		protected int color = 0xFF_FFFFFF;
 		public WColorBox() {}
-		
+
+		public WColorBox(int col) {
+			this.color = col;
+		}
+
+		@Override
+		public boolean canResize() {
+			return true;
+		}
+
 		public void setColor(int col) {
 			this.color = col;
 		}
