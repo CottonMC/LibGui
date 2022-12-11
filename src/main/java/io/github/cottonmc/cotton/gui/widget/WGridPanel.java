@@ -17,11 +17,13 @@ public class WGridPanel extends WPanelWithInsets {
 
 	/**
 	 * The horizontal gap between two grid cells.
+	 * @since 6.4.0
 	 */
 	protected int horizontalGap = 0;
 
 	/**
 	 * The vertical gap between two grid cells.
+	 * @since 6.4.0
 	 */
 	protected int verticalGap = 0;
 
@@ -45,6 +47,7 @@ public class WGridPanel extends WPanelWithInsets {
 	 *
 	 * @param horizontalGap the horizontal gap between grid cells
 	 * @param verticalGap the vertical gap between grid cells
+	 * @since 6.4.0
 	 */
 	public WGridPanel setGaps(int horizontalGap, int verticalGap) {
 		if (!this.children.isEmpty()) {
