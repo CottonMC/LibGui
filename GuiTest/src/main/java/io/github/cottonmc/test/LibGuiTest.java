@@ -11,11 +11,11 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,25 +34,25 @@ public class LibGuiTest implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		Registry.register(Registry.ITEM, new Identifier(MODID, "client_gui"), new GuiItem());
+		Registry.register(Registries.ITEM, new Identifier(MODID, "client_gui"), new GuiItem());
 		
 		GUI_BLOCK = new GuiBlock();
-		Registry.register(Registry.BLOCK, new Identifier(MODID, "gui"), GUI_BLOCK);
-		GUI_BLOCK_ITEM = new BlockItem(GUI_BLOCK, new Item.Settings().group(ItemGroup.MISC));
-		Registry.register(Registry.ITEM, new Identifier(MODID, "gui"), GUI_BLOCK_ITEM);
+		Registry.register(Registries.BLOCK, new Identifier(MODID, "gui"), GUI_BLOCK);
+		GUI_BLOCK_ITEM = new BlockItem(GUI_BLOCK, new Item.Settings());
+		Registry.register(Registries.ITEM, new Identifier(MODID, "gui"), GUI_BLOCK_ITEM);
 		NO_BLOCK_INVENTORY_BLOCK = new NoBlockInventoryBlock(AbstractBlock.Settings.copy(Blocks.STONE));
-		Registry.register(Registry.BLOCK, new Identifier(MODID, "no_block_inventory"), NO_BLOCK_INVENTORY_BLOCK);
-		Registry.register(Registry.ITEM, new Identifier(MODID, "no_block_inventory"), new BlockItem(NO_BLOCK_INVENTORY_BLOCK, new Item.Settings().group(ItemGroup.MISC)));
+		Registry.register(Registries.BLOCK, new Identifier(MODID, "no_block_inventory"), NO_BLOCK_INVENTORY_BLOCK);
+		Registry.register(Registries.ITEM, new Identifier(MODID, "no_block_inventory"), new BlockItem(NO_BLOCK_INVENTORY_BLOCK, new Item.Settings()));
 		GUI_BLOCKENTITY_TYPE = FabricBlockEntityTypeBuilder.create(GuiBlockEntity::new, GUI_BLOCK).build(null);
-		Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "gui"), GUI_BLOCKENTITY_TYPE);
+		Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MODID, "gui"), GUI_BLOCKENTITY_TYPE);
 		
 		GUI_SCREEN_HANDLER_TYPE = new ScreenHandlerType<>((int syncId, PlayerInventory inventory) -> {
 			return new TestDescription(GUI_SCREEN_HANDLER_TYPE, syncId, inventory, ScreenHandlerContext.EMPTY);
 		});
-		Registry.register(Registry.SCREEN_HANDLER, new Identifier(MODID, "gui"), GUI_SCREEN_HANDLER_TYPE);
+		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "gui"), GUI_SCREEN_HANDLER_TYPE);
 
 		REALLY_SIMPLE_SCREEN_HANDLER_TYPE = new ScreenHandlerType<>(ReallySimpleDescription::new);
-		Registry.register(Registry.SCREEN_HANDLER, new Identifier(MODID, "really_simple"), REALLY_SIMPLE_SCREEN_HANDLER_TYPE);
+		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "really_simple"), REALLY_SIMPLE_SCREEN_HANDLER_TYPE);
 
 		Optional<ModContainer> containerOpt = FabricLoader.getInstance().getModContainer("jankson");
 		if (containerOpt.isPresent()) {
