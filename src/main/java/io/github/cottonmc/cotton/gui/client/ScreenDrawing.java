@@ -13,12 +13,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix4f;
 
 import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 /**
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.
@@ -140,13 +140,13 @@ public class ScreenDrawing {
 		RenderSystem.enableBlend();
 		RenderSystem.setShaderTexture(0, texture);
 		RenderSystem.setShaderColor(r, g, b, opacity);
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 		buffer.vertex(model, x,         y + height, 0).texture(u1, v2).next();
 		buffer.vertex(model, x + width, y + height, 0).texture(u2, v2).next();
 		buffer.vertex(model, x + width, y,          0).texture(u2, v1).next();
 		buffer.vertex(model, x,         y,          0).texture(u1, v1).next();
-		BufferRenderer.drawWithShader(buffer.end());
+		BufferRenderer.drawWithGlobalProgram(buffer.end());
 		RenderSystem.disableBlend();
 	}
 

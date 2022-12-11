@@ -24,13 +24,13 @@
 	},
 	"depends": {
 		"java": ">=17",
-		"fabricloader": ">=0.13.3",
+		"fabricloader": ">=0.14.11",
 		"fabric-api-base": ">=0.4.4",
 		"fabric-lifecycle-events-v1": "^2.0.2",
 		"fabric-networking-api-v1": "^1.0.21",
 		"fabric-rendering-v1": "^1.10.7",
-		"minecraft": ">=1.19",
-		"jankson": "^4.0.0",
+		"minecraft": ">=1.19.3",
+		"jankson": "^5.0.0",
 		"libninepatch": "^1.1.0"
 	},
 	"suggests": {
