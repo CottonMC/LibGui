@@ -65,7 +65,7 @@ public class WItem extends WWidget {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		ItemRenderer renderer = mc.getItemRenderer();
 		renderer.zOffset = 100f;
-		renderer.renderInGui(items.get(current), x + getWidth() / 2 - 9, y + getHeight() / 2 - 9);
+		renderer.renderInGui(items.get(current), x + getWidth() / 2 - 8, y + getHeight() / 2 - 8);
 		renderer.zOffset = 0f;
 	}
 
