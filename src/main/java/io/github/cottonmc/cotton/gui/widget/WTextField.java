@@ -268,6 +268,7 @@ public class WTextField extends WWidget {
 		BufferRenderer.draw(buffer);
 		RenderSystem.disableColorLogicOp();
 		RenderSystem.enableTexture();
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	public WTextField setTextPredicate(Predicate<String> predicate_1) {
