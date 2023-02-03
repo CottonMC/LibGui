@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.impl.client;
 
-import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -15,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-
-import org.lwjgl.opengl.GL11;
 
 public class TextureRegion extends ResourceTexture {
 	@NotNull
@@ -39,7 +36,6 @@ public class TextureRegion extends ResourceTexture {
 
 	private void registerAndLoad() {
 		String regionID = this.location.getPath() + "-" + imageRegion.getIdString();
-		System.out.println("registering region id: " + regionID);
 		MinecraftClient.getInstance().getTextureManager().registerTexture(new Identifier("tex-region", regionID), this);
 	}
 
@@ -95,12 +91,8 @@ public class TextureRegion extends ResourceTexture {
 			int widthPx = (int) (this.width * image.getWidth());
 			int heightPx = (int) (this.height * image.getHeight());
 
-			System.out.println("preparing glid: " + texture.getGlId() + " | width: " + widthPx + " | height: " + heightPx);
 			TextureUtil.prepareImage(texture.getGlId(), 0, widthPx, heightPx);
-			System.out.println("uploading... offset: " + xPx + "," + yPx + " | width: " + widthPx + " | height: " + heightPx);
-			// TODO fix offset.
 			image.upload(0, 0, 0, xPx, yPx, widthPx, heightPx, false, false, false, false);
-			System.out.println("upload done.");
 		}
 
 		@Override
