@@ -31,7 +31,7 @@
 		"fabric-rendering-v1": "^1.10.7",
 		"minecraft": ">=1.19.3",
 		"jankson": "^5.0.0",
-		"libninepatch": "^1.1.0"
+		"libninepatch": "^2.0.0"
 	},
 	"suggests": {
 		"flamingo": "*"

@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
  * to fill the area between the corners. By default, the texture is tiled.
  *
  * <p>Nine-patch background painters can be created using {@link BackgroundPainter#createNinePatch(Identifier)},
- * {@link #createNinePatch(Texture, Consumer)}, or with the constructor directly. The latter two let you customise
+ * {@link #createNinePatch(Texture, int, int, int, int, Consumer)}, or with the constructor directly. The latter two let you customise
  * the look of the background more finely.
  *
  * <p>{@code NinePatchBackgroundPainter} has a customizable padding that can be applied.
@@ -29,13 +30,13 @@ import java.util.function.Consumer;
  */
 @Environment(EnvType.CLIENT)
 public final class NinePatchBackgroundPainter implements BackgroundPainter {
-	private final NinePatch<Identifier> ninePatch;
+	private final NinePatch<AbstractTexture> ninePatch;
 	private int topPadding = 0;
 	private int leftPadding = 0;
 	private int bottomPadding = 0;
 	private int rightPadding = 0;
 
-	public NinePatchBackgroundPainter(NinePatch<Identifier> ninePatch) {
+	public NinePatchBackgroundPainter(NinePatch<AbstractTexture> ninePatch) {
 		this.ninePatch = ninePatch;
 	}
 

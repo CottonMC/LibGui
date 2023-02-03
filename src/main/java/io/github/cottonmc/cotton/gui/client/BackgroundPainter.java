@@ -1,14 +1,15 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+import io.github.cottonmc.cotton.gui.impl.client.TextureRegion;
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import juuxel.libninepatch.NinePatch;
-import juuxel.libninepatch.TextureRegion;
 
 import java.util.function.Consumer;
 
@@ -120,13 +121,18 @@ public interface BackgroundPainter {
 	 * @see NinePatchBackgroundPainter
 	 */
 	public static NinePatchBackgroundPainter createNinePatch(Identifier texture) {
-		return createNinePatch(new Texture(texture), builder -> builder.cornerSize(4).cornerUv(0.25f));
+		return createNinePatch(new Texture(texture), 16, 16, 4, 4,
+				builder -> builder.cornerSize(4).tileSize(8));
 	}
 
 	/**
 	 * Creates a new nine-patch background painter with a custom configuration.
 	 *
 	 * @param texture      the background painter texture
+	 * @param textureWidth width of the full texture in pixels
+	 * @param textureHeight height of the full texture in pixels
+	 * @param cornerXPixels width of the corner in pixels
+	 * @param cornerYPixels height of the corner in pixels
 	 * @param configurator a consumer that configures the {@link NinePatch.Builder}
 	 * @return the created nine-patch background painter
 	 * @since 4.0.0
@@ -134,9 +140,36 @@ public interface BackgroundPainter {
 	 * @see NinePatch.Builder
 	 * @see NinePatchBackgroundPainter
 	 */
-	public static NinePatchBackgroundPainter createNinePatch(Texture texture, Consumer<NinePatch.Builder<Identifier>> configurator) {
-		TextureRegion<Identifier> region = new TextureRegion<>(texture.image(), texture.u1(), texture.v1(), texture.u2(), texture.v2());
-		var builder = NinePatch.builder(region);
+	public static NinePatchBackgroundPainter createNinePatch(Texture texture,
+															 int textureWidth, int textureHeight,
+															 int cornerXPixels, int cornerYPixels,
+															 Consumer<NinePatch.Builder<AbstractTexture>> configurator) {
+		float cornerWidth = ((float) cornerXPixels) / textureWidth;
+		float cornerHeight = ((float) cornerYPixels) / textureHeight;
+
+		float centerWidth = ((float) (textureWidth - (2 * cornerXPixels))) / textureWidth;
+		float centerHeight = ((float) (textureHeight - (2 * cornerYPixels))) / textureHeight;
+
+		float x0 = texture.u1();
+		float x1 = texture.u1() + cornerWidth;
+		float x2 = texture.u2() - cornerWidth;
+
+		float y0 = texture.v1();
+		float y1 = texture.v1() + cornerHeight;
+		float y2 = texture.v2() - cornerHeight;
+
+		NinePatch.Builder<AbstractTexture> builder = NinePatch.builder(AbstractTexture.class,
+				new TextureRegion(texture.image(), x0, y0, cornerWidth, cornerHeight),
+				new TextureRegion(texture.image(), x1, y0, centerWidth, cornerHeight),
+				new TextureRegion(texture.image(), x2, y0, cornerWidth, cornerHeight),
+				new TextureRegion(texture.image(), x0, y1, cornerWidth, centerHeight),
+				new TextureRegion(texture.image(), x1, y1, centerWidth, centerHeight),
+				new TextureRegion(texture.image(), x2, y1, cornerWidth, centerHeight),
+				new TextureRegion(texture.image(), x0, y2, cornerWidth, cornerHeight),
+				new TextureRegion(texture.image(), x1, y2, centerWidth, cornerHeight),
+				new TextureRegion(texture.image(), x2, y2, cornerWidth, cornerHeight)
+		);
+
 		configurator.accept(builder);
 		return new NinePatchBackgroundPainter(builder.build());
 	}

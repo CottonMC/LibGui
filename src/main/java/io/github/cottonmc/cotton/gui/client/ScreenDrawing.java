@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import com.mojang.blaze3d.platform.GlConst;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
@@ -9,6 +11,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
@@ -139,6 +142,50 @@ public class ScreenDrawing {
 		Matrix4f model = matrices.peek().getPositionMatrix();
 		RenderSystem.enableBlend();
 		RenderSystem.setShaderTexture(0, texture);
+		RenderSystem.setShaderColor(r, g, b, opacity);
+		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+		buffer.vertex(model, x,         y + height, 0).texture(u1, v2).next();
+		buffer.vertex(model, x + width, y + height, 0).texture(u2, v2).next();
+		buffer.vertex(model, x + width, y,          0).texture(u2, v1).next();
+		buffer.vertex(model, x,         y,          0).texture(u1, v1).next();
+		BufferRenderer.drawWithGlobalProgram(buffer.end());
+		RenderSystem.disableBlend();
+	}
+
+	/**
+	 * Draws a textured rectangle.
+	 *
+	 * @param matrices   the rendering matrix stack
+	 * @param x          the x coordinate of the box on-screen
+	 * @param y          the y coordinate of the box on-screen
+	 * @param width      the width of the box on-screen
+	 * @param height     the height of the box on-screen
+	 * @param texture    the Identifier for the texture
+	 * @param u1         the left edge of the texture
+	 * @param v1         the top edge of the texture
+	 * @param u2         the right edge of the texture
+	 * @param v2         the bottom edge of the texture
+	 * @param color      a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
+	 * @param opacity    opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
+	 * @param glWrapMode wrap mode (see https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml)
+	 * @since 2.0.0
+	 */
+	public static void texturedRectTiled(MatrixStack matrices, int x, int y, int width, int height, AbstractTexture texture, float u1, float v1, float u2, float v2, int color, float opacity, int glWrapMode) {
+		if (width <= 0) width = 1;
+		if (height <= 0) height = 1;
+
+		float r = (color >> 16 & 255) / 255.0F;
+		float g = (color >> 8 & 255) / 255.0F;
+		float b = (color & 255) / 255.0F;
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
+		Matrix4f model = matrices.peek().getPositionMatrix();
+		RenderSystem.enableBlend();
+		RenderSystem.setShaderTexture(0, texture.getGlId());
+		texture.bindTexture();
+		GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_S, glWrapMode);
+		GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_T, glWrapMode);
 		RenderSystem.setShaderColor(r, g, b, opacity);
 		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
