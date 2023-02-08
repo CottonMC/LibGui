@@ -78,16 +78,18 @@ public class WBox extends WPanelWithInsets {
 		int dimension = axis.choose(insets.left(), insets.top());
 
 		// Set position offset from alignment along the box axis
-		if (axis == Axis.HORIZONTAL && horizontalAlignment != HorizontalAlignment.LEFT) {
-			int widgetWidth = spacing * (children.size() - 1);
-			for (WWidget child : children) {
-				widgetWidth += child.getWidth();
-			}
+		if (axis == Axis.HORIZONTAL) {
+			if (horizontalAlignment != HorizontalAlignment.LEFT) {
+				int widgetWidth = spacing * (children.size() - 1);
+				for (WWidget child : children) {
+					widgetWidth += child.getWidth();
+				}
 
-			if (horizontalAlignment == HorizontalAlignment.CENTER) {
-				dimension = (getWidth() - widgetWidth) / 2;
-			} else { // right
-				dimension = getWidth() - widgetWidth;
+				if (horizontalAlignment == HorizontalAlignment.CENTER) {
+					dimension = (getWidth() - widgetWidth) / 2;
+				} else { // right
+					dimension = getWidth() - widgetWidth;
+				}
 			}
 		} else if (verticalAlignment != VerticalAlignment.TOP) {
 			int widgetHeight = spacing * (children.size() - 1);
