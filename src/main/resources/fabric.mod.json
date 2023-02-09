@@ -22,6 +22,7 @@
 		"client": ["io.github.cottonmc.cotton.gui.impl.client.LibGuiClient"],
 		"modmenu": ["io.github.cottonmc.cotton.gui.impl.modmenu.ModMenuSupport"]
 	},
+	"mixins": ["mixins.libgui.json"],
 	"depends": {
 		"java": ">=17",
 		"fabricloader": ">=0.14.11",
