@@ -4,8 +4,8 @@
 		"srcrgb": "srcalpha",
 		"dstrgb": "1-srcalpha"
 	},
-	"vertex": "libgui_tiled",
-	"fragment": "libgui_tiled",
+	"vertex": "libgui:tiled",
+	"fragment": "libgui:tiled",
 	"attributes": ["Position"],
 	"samplers": [{ "name": "Sampler0" }],
 	"uniforms": [
