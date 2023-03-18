@@ -109,7 +109,7 @@ jar {
 
 checkstyle {
 	configFile = file('checkstyle.xml')
-	toolVersion = '8.36.2'
+	toolVersion = '10.9.2'
 }
 
 evaluationDependsOn(':javadoc')
