@@ -8,20 +8,26 @@ import net.minecraft.util.Identifier;
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 public final class LibGuiShaders {
-	private static @Nullable ShaderProgram tiled;
+	private static @Nullable ShaderProgram tiledRectangle;
 
 	static void register() {
 		CoreShaderRegistrationCallback.EVENT.register(context -> {
 			// Register our core shaders.
 			// The tiled shaders is used for performant tiled texture rendering.
-			context.register(new Identifier(LibGuiCommon.MOD_ID, "tiled"), VertexFormats.POSITION, program -> tiled = program);
+			context.register(new Identifier(LibGuiCommon.MOD_ID, "tiled_rectangle"), VertexFormats.POSITION, program -> tiledRectangle = program);
 		});
 	}
 
-	public static ShaderProgram getTiled() {
-		return Objects.requireNonNull(tiled, "Shader 'libgui_tiled' not initialised!");
+	private static ShaderProgram assertPresent(ShaderProgram program, String name) {
+		if (program == null) {
+			throw new NullPointerException("Shader libgui:" + name + " not initialised!");
+		}
+
+		return program;
+	}
+
+	public static ShaderProgram getTiledRectangle() {
+		return assertPresent(tiledRectangle, "tiled_rectangle");
 	}
 }
