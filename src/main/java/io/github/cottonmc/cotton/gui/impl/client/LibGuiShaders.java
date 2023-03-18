@@ -14,7 +14,7 @@ public final class LibGuiShaders {
 	static void register() {
 		CoreShaderRegistrationCallback.EVENT.register(context -> {
 			// Register our core shaders.
-			// The tiled shaders is used for performant tiled texture rendering.
+			// The tiled rectangle shader is used for performant tiled texture rendering.
 			context.register(new Identifier(LibGuiCommon.MOD_ID, "tiled_rectangle"), VertexFormats.POSITION, program -> tiledRectangle = program);
 		});
 	}
