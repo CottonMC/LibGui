@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget.icon;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -46,16 +45,12 @@ public class ItemIcon implements Icon {
 		// TODO: Make this not ignore the actual matrices
 		MinecraftClient client = MinecraftClient.getInstance();
 		ItemRenderer renderer = client.getItemRenderer();
-		MatrixStack modelViewMatrices = RenderSystem.getModelViewStack();
-
 		float scale = size != 16 ? ((float) size / 16f) : 1f;
 
-		modelViewMatrices.push();
-		modelViewMatrices.translate(x, y, 0);
-		modelViewMatrices.scale(scale, scale, 1);
-		RenderSystem.applyModelViewMatrix();
-		renderer.renderInGui(stack, 0, 0);
-		modelViewMatrices.pop();
-		RenderSystem.applyModelViewMatrix();
+		matrices.push();
+		matrices.translate(x, y, 0);
+		matrices.scale(scale, scale, 1);
+		renderer.renderInGui(matrices, stack, 0, 0);
+		matrices.pop();
 	}
 }

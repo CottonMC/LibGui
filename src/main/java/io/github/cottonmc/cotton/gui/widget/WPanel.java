@@ -7,7 +7,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -154,73 +153,6 @@ public abstract class WPanel extends WWidget {
 	@Override
 	public void tick() {
 		for(WWidget child : children) child.tick();
-	}
-
-	@Nullable
-	@Override
-	public WWidget cycleFocus(boolean lookForwards) {
-		return cycleFocus(lookForwards, null);
-	}
-
-	/**
-	 * Cycles the focus inside this panel.
-	 *
-	 * @param lookForwards whether this should cycle forwards (true) or backwards (false)
-	 * @param pivot        the widget that should be cycled around (can be null for beginning / end)
-	 * @return the next focused widget, or null if should exit to the parent panel
-	 * @since 2.0.0
-	 */
-	@Nullable
-	public WWidget cycleFocus(boolean lookForwards, @Nullable WWidget pivot) {
-		if (pivot == null) {
-			if (lookForwards) {
-				for (WWidget child : children) {
-					WWidget result = checkFocusCycling(lookForwards, child);
-					if (result != null) return result;
-				}
-			} else if (!children.isEmpty()) {
-				for (int i = children.size() - 1; i >= 0; i--) {
-					WWidget child = children.get(i);
-					WWidget result = checkFocusCycling(lookForwards, child);
-					if (result != null) return result;
-				}
-			}
-		} else {
-			int currentIndex = children.indexOf(pivot);
-
-			if (currentIndex == -1) { // outside widget
-				currentIndex = lookForwards ? 0 : children.size() - 1;
-			}
-
-			if (lookForwards) {
-				if (currentIndex < children.size() - 1) {
-					for (int i = currentIndex + 1; i < children.size(); i++) {
-						WWidget child = children.get(i);
-						WWidget result = checkFocusCycling(lookForwards, child);
-						if (result != null) return result;
-					}
-				}
-			} else { // look forwards = false
-				if (currentIndex > 0) {
-					for (int i = currentIndex - 1; i >= 0; i--) {
-						WWidget child = children.get(i);
-						WWidget result = checkFocusCycling(lookForwards, child);
-						if (result != null) return result;
-					}
-				}
-			}
-		}
-
-		return null;
-	}
-
-	@Nullable
-	private WWidget checkFocusCycling(boolean lookForwards, WWidget child) {
-		if (child.canFocus() || child instanceof WPanel) {
-			return child.cycleFocus(lookForwards);
-		}
-
-		return null;
 	}
 
 	@Override

@@ -252,8 +252,7 @@ public class WTextField extends WWidget {
 		BufferBuilder buffer = tessellator.getBuffer();
 		Matrix4f model = matrices.peek().getPositionMatrix();
 		RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
-		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-		RenderSystem.disableTexture();
+		RenderSystem.setShader(GameRenderer::getPositionProgram);
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
@@ -263,7 +262,6 @@ public class WTextField extends WWidget {
 		buffer.vertex(model, x, y, 0).next();
 		BufferRenderer.drawWithGlobalProgram(buffer.end());
 		RenderSystem.disableColorLogicOp();
-		RenderSystem.enableTexture();
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
@@ -364,8 +362,9 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onCharTyped(char ch) {
+	public InputResult onCharTyped(char ch) {
 		insertText(ch + "");
+		return InputResult.PROCESSED;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -457,19 +456,19 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onKeyPressed(int ch, int key, int modifiers) {
-		if (!isEditable()) return;
+	public InputResult onKeyPressed(int ch, int key, int modifiers) {
+		if (!isEditable()) return InputResult.IGNORED;
 
 		if (Screen.isCopy(ch)) {
 			copySelection();
-			return;
+			return InputResult.PROCESSED;
 		} else if (Screen.isPaste(ch)) {
 			paste();
-			return;
+			return InputResult.PROCESSED;
 		} else if (Screen.isSelectAll(ch)) {
 			select = 0;
 			cursor = text.length();
-			return;
+			return InputResult.PROCESSED;
 		}
 
 		switch (ch) {
@@ -489,8 +488,13 @@ public class WTextField extends WWidget {
 				}
 				cursor = text.length();
 			}
+			default -> {
+				return InputResult.IGNORED;
+			}
 		}
 		scrollCursorIntoView();
+
+		return InputResult.PROCESSED;
 	}
 
 	@Override

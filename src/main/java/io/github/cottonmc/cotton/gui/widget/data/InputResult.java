@@ -2,7 +2,7 @@ package io.github.cottonmc.cotton.gui.widget.data;
 
 /**
  * Specifies whether an input event was ignored or processed.
- * Used for mouse input events.
+ * Used for mouse and keyboard input events.
  *
  * @since 4.0.0
  */

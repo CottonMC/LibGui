@@ -22,15 +22,16 @@
 		"client": ["io.github.cottonmc.cotton.gui.impl.client.LibGuiClient"],
 		"modmenu": ["io.github.cottonmc.cotton.gui.impl.modmenu.ModMenuSupport"]
 	},
+	"mixins": ["mixins.libgui.json"],
 	"depends": {
 		"java": ">=17",
-		"fabricloader": ">=0.14.11",
+		"fabricloader": ">=0.14.17",
 		"fabric-api-base": ">=0.4.4",
 		"fabric-lifecycle-events-v1": "^2.0.2",
 		"fabric-networking-api-v1": "^1.0.21",
-		"fabric-rendering-v1": "^1.13.0",
-		"minecraft": ">=1.19.3",
-		"jankson": "^5.0.0",
+		"fabric-rendering-v1": "^2.1.0",
+		"minecraft": ">=1.19.4",
+		"jankson": "^5.0.1",
 		"libninepatch": "^1.2.0"
 	},
 	"suggests": {

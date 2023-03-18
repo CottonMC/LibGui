@@ -475,8 +475,8 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		}
 
 		@Override
-		public void close(PlayerEntity player) {
-			super.close(player);
+		public void onClosed(PlayerEntity player) {
+			super.onClosed(player);
 			if (blockInventory != null) blockInventory.onClose(player);
 		}
 	//}

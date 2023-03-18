@@ -13,6 +13,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
@@ -48,10 +50,10 @@ public class LibGuiTest implements ModInitializer {
 		
 		GUI_SCREEN_HANDLER_TYPE = new ScreenHandlerType<>((int syncId, PlayerInventory inventory) -> {
 			return new TestDescription(GUI_SCREEN_HANDLER_TYPE, syncId, inventory, ScreenHandlerContext.EMPTY);
-		});
+		}, FeatureSet.of(FeatureFlags.VANILLA));
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "gui"), GUI_SCREEN_HANDLER_TYPE);
 
-		REALLY_SIMPLE_SCREEN_HANDLER_TYPE = new ScreenHandlerType<>(ReallySimpleDescription::new);
+		REALLY_SIMPLE_SCREEN_HANDLER_TYPE = new ScreenHandlerType<>(ReallySimpleDescription::new, FeatureSet.of(FeatureFlags.VANILLA));
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "really_simple"), REALLY_SIMPLE_SCREEN_HANDLER_TYPE);
 
 		Optional<ModContainer> containerOpt = FabricLoader.getInstance().getModContainer("jankson");

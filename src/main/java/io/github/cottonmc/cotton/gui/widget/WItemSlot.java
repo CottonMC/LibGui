@@ -21,6 +21,9 @@ import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import io.github.cottonmc.cotton.gui.widget.data.Rect2i;
+import io.github.cottonmc.cotton.gui.widget.focus.Focus;
+import io.github.cottonmc.cotton.gui.widget.focus.FocusHandler;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +33,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * A widget that displays an item that can be interacted with.
@@ -92,6 +96,42 @@ public class WItemSlot extends WWidget {
 	private int hoveredSlot = -1;
 	private Predicate<ItemStack> filter = ValidatedSlot.DEFAULT_ITEM_FILTER;
 	private final Set<ChangeListener> listeners = new HashSet<>();
+	private final FocusHandler<Integer> focusHandler = new FocusHandler<>() {
+		@Override
+		public boolean isFocused(Focus<Integer> focus) {
+			return focusedSlot == focus.key();
+		}
+
+		@Override
+		public void setFocused(Focus<Integer> focus) {
+			focusedSlot = focus.key();
+		}
+
+		@Override
+		public Stream<Focus<Integer>> foci() {
+			Stream.Builder<Focus<Integer>> builder = Stream.builder();
+			int index = 0;
+
+			for (int y = 0; y < slotsHigh; y++) {
+				for (int x = 0; x < slotsWide; x++) {
+					int slotX = x * 18;
+					int slotY = y * 18;
+					int size = 18;
+
+					if (big) {
+						slotX -= 4;
+						slotY -= 4;
+						size = 26;
+					}
+
+					builder.add(new Focus<>(index, new Rect2i(slotX, slotY, size, size)));
+					index++;
+				}
+			}
+
+			return builder.build();
+		}
+	};
 
 	public WItemSlot(Inventory inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
 		this();
@@ -311,14 +351,17 @@ public class WItemSlot extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onKeyPressed(int ch, int key, int modifiers) {
+	public InputResult onKeyPressed(int ch, int key, int modifiers) {
 		if (isActivationKey(ch) && host instanceof ScreenHandler && focusedSlot >= 0) {
 			ScreenHandler handler = (ScreenHandler) host;
 			MinecraftClient client = MinecraftClient.getInstance();
 
 			ValidatedSlot peer = peers.get(focusedSlot);
 			client.interactionManager.clickSlot(handler.syncId, peer.id, 0, SlotActionType.PICKUP, client.player);
+			return InputResult.PROCESSED;
 		}
+
+		return InputResult.IGNORED;
 	}
 
 	/**
@@ -396,24 +439,8 @@ public class WItemSlot extends WWidget {
 
 	@Nullable
 	@Override
-	public WWidget cycleFocus(boolean lookForwards) {
-		if (focusedSlot < 0) {
-			focusedSlot = lookForwards ? 0 : (slotsWide * slotsHigh - 1);
-			return this;
-		}
-
-		if (lookForwards) {
-			focusedSlot++;
-			if (focusedSlot >= slotsWide * slotsHigh) {
-				focusedSlot = -1;
-				return null;
-			} else {
-				return this;
-			}
-		} else {
-			focusedSlot--;
-			return focusedSlot >= 0 ? this : null;
-		}
+	public FocusHandler<?> getFocusHandler() {
+		return focusHandler;
 	}
 
 	@Override

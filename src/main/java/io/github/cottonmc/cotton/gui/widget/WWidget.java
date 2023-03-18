@@ -11,6 +11,7 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
+import io.github.cottonmc.cotton.gui.widget.focus.FocusHandler;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -237,25 +238,31 @@ public class WWidget {
 	 * Notifies this widget that a character has been typed. This method is subject to key repeat,
 	 * and may be called for characters that do not directly have a corresponding keyboard key.
 	 * @param ch the character typed
+	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public void onCharTyped(char ch) {
+	public InputResult onCharTyped(char ch) {
+		return InputResult.IGNORED;
 	}
 
 	/**
 	 * Notifies this widget that a key has been pressed.
 	 * @param key the GLFW scancode of the key
+	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public void onKeyPressed(int ch, int key, int modifiers) {
+	public InputResult onKeyPressed(int ch, int key, int modifiers) {
+		return InputResult.IGNORED;
 	}
 
 	/**
 	 * Notifies this widget that a key has been released
 	 * @param key the GLFW scancode of the key
+	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public void onKeyReleased(int ch, int key, int modifiers) {
+	public InputResult onKeyReleased(int ch, int key, int modifiers) {
+		return InputResult.IGNORED;
 	}
 
 	/** Notifies this widget that it has gained focus */
@@ -422,17 +429,15 @@ public class WWidget {
 	public void tick() {}
 
 	/**
-	 * Cycles the focus inside this widget.
+	 * Returns the focus handler of this widget. The focus
+	 * handler provides the focusable areas of this widget,
+	 * and applies cycling through them.
 	 *
-	 * <p>If this widget is not focusable, returns null.
-	 *
-	 * @param lookForwards whether this should cycle forwards (true) or backwards (false)
-	 * @return the next focused widget, or null if should exit to the parent panel
-	 * @since 2.0.0
+	 * @return the focus handler, or {@code null} if not available
+	 * @since 7.0.0
 	 */
-	@Nullable
-	public WWidget cycleFocus(boolean lookForwards) {
-		return canFocus() ? (isFocused() ? null : this) : null;
+	public @Nullable FocusHandler<?> getFocusHandler() {
+		return canFocus() ? FocusHandler.simple(this) : null;
 	}
 
 	/**

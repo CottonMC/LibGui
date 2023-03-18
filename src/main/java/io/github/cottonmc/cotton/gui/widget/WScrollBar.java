@@ -205,7 +205,7 @@ public class WScrollBar extends WWidget {
 	}
 
 	@Override
-	public void onKeyPressed(int ch, int key, int modifiers) {
+	public InputResult onKeyPressed(int ch, int key, int modifiers) {
 		WAbstractSlider.Direction direction = axis == Axis.HORIZONTAL
 				? WAbstractSlider.Direction.RIGHT
 				: WAbstractSlider.Direction.DOWN;
@@ -214,11 +214,15 @@ public class WScrollBar extends WWidget {
 			if (value < getMaxScrollValue()) {
 				value++;
 			}
+			return InputResult.PROCESSED;
 		} else if (WAbstractSlider.isDecreasingKey(ch, direction)) {
 			if (value > 0) {
 				value--;
 			}
+			return InputResult.PROCESSED;
 		}
+
+		return InputResult.IGNORED;
 	}
 
 	@Environment(EnvType.CLIENT)

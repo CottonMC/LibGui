@@ -319,7 +319,7 @@ public abstract class WAbstractSlider extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onKeyPressed(int ch, int key, int modifiers) {
+	public InputResult onKeyPressed(int ch, int key, int modifiers) {
 		boolean valueChanged = false;
 		if (modifiers == 0) {
 			if (isDecreasingKey(ch, direction) && value > min) {
@@ -343,15 +343,20 @@ public abstract class WAbstractSlider extends WWidget {
 			onValueChanged(value);
 			pendingDraggingFinishedFromKeyboard = true;
 		}
+
+		return InputResult.of(valueChanged);
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onKeyReleased(int ch, int key, int modifiers) {
+	public InputResult onKeyReleased(int ch, int key, int modifiers) {
 		if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch, direction) || isIncreasingKey(ch, direction))) {
 			if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
 			pendingDraggingFinishedFromKeyboard = false;
+			return InputResult.PROCESSED;
 		}
+
+		return InputResult.IGNORED;
 	}
 
 	/**
