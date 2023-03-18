@@ -8,6 +8,7 @@ package io.github.cottonmc.cotton.gui.widget.data;
  * @param y      the Y coordinate
  * @param width  the horizontal size
  * @param height the vertical size
+ * @since 7.0.0
  */
 public record Rect2i(int x, int y, int width, int height) {
 }

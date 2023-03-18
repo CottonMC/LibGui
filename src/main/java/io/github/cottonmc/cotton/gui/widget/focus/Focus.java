@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * @param key  the key
  * @param area the focusable area in widget space
  * @param <K>  the key type
+ * @since 7.0.0
  */
 public record Focus<K>(K key, Rect2i area) {
 	/**

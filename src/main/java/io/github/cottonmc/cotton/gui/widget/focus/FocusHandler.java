@@ -10,6 +10,7 @@ import java.util.stream.Stream;
  * Each instance should be specific to one widget.
  *
  * @param <K> the focus key type
+ * @since 7.0.0
  */
 public interface FocusHandler<K> {
 	/**
