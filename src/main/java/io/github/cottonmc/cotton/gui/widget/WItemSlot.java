@@ -23,7 +23,7 @@ import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Rect2i;
 import io.github.cottonmc.cotton.gui.widget.focus.Focus;
-import io.github.cottonmc.cotton.gui.widget.focus.FocusHandler;
+import io.github.cottonmc.cotton.gui.widget.focus.FocusModel;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,7 +96,7 @@ public class WItemSlot extends WWidget {
 	private int hoveredSlot = -1;
 	private Predicate<ItemStack> filter = ValidatedSlot.DEFAULT_ITEM_FILTER;
 	private final Set<ChangeListener> listeners = new HashSet<>();
-	private final FocusHandler<Integer> focusHandler = new FocusHandler<>() {
+	private final FocusModel<Integer> focusModel = new FocusModel<>() {
 		@Override
 		public boolean isFocused(Focus<Integer> focus) {
 			return focusedSlot == focus.key();
@@ -439,8 +439,8 @@ public class WItemSlot extends WWidget {
 
 	@Nullable
 	@Override
-	public FocusHandler<?> getFocusHandler() {
-		return focusHandler;
+	public FocusModel<?> getFocusModel() {
+		return focusModel;
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
-import io.github.cottonmc.cotton.gui.widget.focus.FocusHandler;
+import io.github.cottonmc.cotton.gui.widget.focus.FocusModel;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -429,15 +429,19 @@ public class WWidget {
 	public void tick() {}
 
 	/**
-	 * Returns the focus handler of this widget. The focus
-	 * handler provides the focusable areas of this widget,
-	 * and applies cycling through them.
+	 * Returns the focus model of this widget. The focus
+	 * model provides the focusable areas of this widget,
+	 * and handles switching through them.
 	 *
-	 * @return the focus handler, or {@code null} if not available
+	 * <p>If this widget {@linkplain #canFocus() can focus}, it should return
+	 * a nonnull focus model. The default implementation returns
+	 * {@link FocusModel#simple FocusModel.simple(this)} when the widget can be focused.
+	 *
+	 * @return the focus model, or {@code null} if not available
 	 * @since 7.0.0
 	 */
-	public @Nullable FocusHandler<?> getFocusHandler() {
-		return canFocus() ? FocusHandler.simple(this) : null;
+	public @Nullable FocusModel<?> getFocusModel() {
+		return canFocus() ? FocusModel.simple(this) : null;
 	}
 
 	/**

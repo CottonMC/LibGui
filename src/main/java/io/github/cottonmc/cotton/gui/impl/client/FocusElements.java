@@ -10,7 +10,7 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Rect2i;
 import io.github.cottonmc.cotton.gui.widget.focus.Focus;
-import io.github.cottonmc.cotton.gui.widget.focus.FocusHandler;
+import io.github.cottonmc.cotton.gui.widget.focus.FocusModel;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -33,10 +33,10 @@ public final class FocusElements {
 	}
 
 	private static Stream<FocusElement<?>> fromFoci(WWidget widget) {
-		@Nullable FocusHandler<?> focusHandler = widget.getFocusHandler();
-		if (focusHandler == null) return Stream.empty();
+		@Nullable FocusModel<?> focusModel = widget.getFocusModel();
+		if (focusModel == null) return Stream.empty();
 
-		return focusHandler.foci().map(focus -> new LeafFocusElement(widget, focus));
+		return focusModel.foci().map(focus -> new LeafFocusElement(widget, focus));
 	}
 
 	public sealed interface FocusElement<W extends WWidget> extends Element {
@@ -52,7 +52,7 @@ public final class FocusElements {
 
 				if (focus != null) {
 					widget.requestFocus();
-					((FocusHandler<Object>) widget.getFocusHandler()).setFocused((Focus<Object>) focus);
+					((FocusModel<Object>) widget.getFocusModel()).setFocused((Focus<Object>) focus);
 				}
 			} else {
 				widget.releaseFocus();
@@ -63,9 +63,9 @@ public final class FocusElements {
 		@Override
 		public boolean isFocused() {
 			if (widget.isFocused()) {
-				FocusHandler<Object> focusHandler = (FocusHandler<Object>) widget.getFocusHandler();
-				if (focusHandler != null) {
-					return focusHandler.isFocused((Focus<Object>) focus);
+				FocusModel<Object> focusModel = (FocusModel<Object>) widget.getFocusModel();
+				if (focusModel != null) {
+					return focusModel.isFocused((Focus<Object>) focus);
 				}
 			}
 

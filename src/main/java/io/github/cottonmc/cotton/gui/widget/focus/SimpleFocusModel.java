@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-record SimpleFocusHandler(WWidget widget, Rect2i area) implements FocusHandler<@Nullable Void> {
+record SimpleFocusModel(WWidget widget, Rect2i area) implements FocusModel<@Nullable Void> {
 	@Override
 	public boolean isFocused(Focus<@Nullable Void> focus) {
 		return widget.isFocused();
