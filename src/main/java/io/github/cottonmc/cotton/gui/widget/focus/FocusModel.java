@@ -11,6 +11,8 @@ import java.util.stream.Stream;
  *
  * @param <K> the focus key type
  * @since 7.0.0
+ * @see #simple(WWidget) FocusModel.simple()
+ * @see SimpleKeyedFocusModel
  */
 public interface FocusModel<K> {
 	/**
