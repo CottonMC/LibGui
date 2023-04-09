@@ -16,7 +16,6 @@ import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.test.client.TestClientGui;
 
 public class GuiItem extends Item {
-
 	public GuiItem() {
 		super(new Item.Settings().rarity(Rarity.EPIC));
 	}
@@ -27,7 +26,7 @@ public class GuiItem extends Item {
 			openScreen(); // In its own method to prevent class loading issues
 		}
 		
-		return new TypedActionResult<ItemStack>(ActionResult.SUCCESS, (hand==Hand.MAIN_HAND) ? player.getMainHandStack() : player.getOffHandStack());
+		return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
 	}
 
 	@Environment(EnvType.CLIENT)
