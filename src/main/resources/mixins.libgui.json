@@ -3,8 +3,10 @@
 	"minVersion": "0.8",
 	"compatibilityLevel": "JAVA_17",
 	"package": "io.github.cottonmc.cotton.gui.impl.mixin",
+	"plugin": "io.github.cottonmc.cotton.gui.impl.LibGuiMixinPlugin",
 
 	"client": [
+		"client.MinecraftClientMixin",
 		"client.ScreenAccessor"
 	],
 
