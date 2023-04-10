@@ -18,6 +18,7 @@ import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.test.LibGuiTest;
 import io.github.cottonmc.test.ReallySimpleDescription;
 import io.github.cottonmc.test.TestDescription;
+import io.github.cottonmc.test.TestItemDescription;
 
 import java.util.function.Function;
 
@@ -35,6 +36,11 @@ public class LibGuiTestClient implements ClientModInitializer {
 
 		HandledScreens.<ReallySimpleDescription, CottonInventoryScreen<ReallySimpleDescription>>register(
 				LibGuiTest.REALLY_SIMPLE_SCREEN_HANDLER_TYPE,
+				CottonInventoryScreen::new
+		);
+
+		HandledScreens.<TestItemDescription, CottonInventoryScreen<TestItemDescription>>register(
+				LibGuiTest.ITEM_SCREEN_HANDLER_TYPE,
 				CottonInventoryScreen::new
 		);
 

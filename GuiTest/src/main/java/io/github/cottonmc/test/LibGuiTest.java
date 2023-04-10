@@ -2,13 +2,16 @@ package io.github.cottonmc.test;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -32,6 +35,7 @@ public class LibGuiTest implements ModInitializer {
 	public static BlockItem GUI_BLOCK_ITEM;
 	public static BlockEntityType<GuiBlockEntity> GUI_BLOCKENTITY_TYPE;
 	public static ScreenHandlerType<TestDescription> GUI_SCREEN_HANDLER_TYPE;
+	public static ScreenHandlerType<TestItemDescription> ITEM_SCREEN_HANDLER_TYPE;
 	public static ScreenHandlerType<ReallySimpleDescription> REALLY_SIMPLE_SCREEN_HANDLER_TYPE;
 
 	@Override
@@ -52,6 +56,12 @@ public class LibGuiTest implements ModInitializer {
 			return new TestDescription(GUI_SCREEN_HANDLER_TYPE, syncId, inventory, ScreenHandlerContext.EMPTY);
 		}, FeatureSet.of(FeatureFlags.VANILLA));
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "gui"), GUI_SCREEN_HANDLER_TYPE);
+		ITEM_SCREEN_HANDLER_TYPE = new ExtendedScreenHandlerType<>((syncId, inventory, buf) -> {
+			var equipmentSlot = buf.readEnumConstant(EquipmentSlot.class);
+			StackReference handStack = StackReference.of(inventory.player, equipmentSlot);
+			return new TestItemDescription(syncId, inventory, handStack);
+		});
+		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "item_gui"), ITEM_SCREEN_HANDLER_TYPE);
 
 		REALLY_SIMPLE_SCREEN_HANDLER_TYPE = new ScreenHandlerType<>(ReallySimpleDescription::new, FeatureSet.of(FeatureFlags.VANILLA));
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "really_simple"), REALLY_SIMPLE_SCREEN_HANDLER_TYPE);
