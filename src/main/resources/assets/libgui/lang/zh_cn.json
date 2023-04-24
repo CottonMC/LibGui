@@ -1,4 +1,17 @@
- {
-"options.libgui.libgui_settings": "LibGui设置",
-"option.libgui.darkmode": "暗黑模式"
+{
+  "options.libgui.libgui_settings": "LibGui设置",
+  "option.libgui.darkmode": "深色模式",
+  "widget.libgui.item_slot.narration.title": "物品槽:%s/%s",
+  "widget.libgui.labeled_slider.narration.title": "%s滑块,当前值为:%s,区间范围为:%s到%s",
+  "widget.libgui.scroll_bar.narration.title": "滚动条",
+  "widget.libgui.slider.narration.title": "滑块,当前值为:%s,区间范围为:%s到%s",
+  "widget.libgui.slider.narration.usage": "拖动滑块或使用方向键调整值",
+  "widget.libgui.tab.narration.title": "标签页",
+  "widget.libgui.tab.narration.position": "标签页:%s/%s",
+  "widget.libgui.text_field.narration.title": "文本框:%s",
+  "widget.libgui.text_field.narration.suggestion": "建议:%s",
+  "widget.libgui.toggle_button.narration.unnamed": "开关按钮:%s",
+  "widget.libgui.toggle_button.narration.named": "开关按钮:%s(%s)",
+  "widget.libgui.toggle_button.narration.on": "开",
+  "widget.libgui.toggle_button.narration.off": "关"
 }
