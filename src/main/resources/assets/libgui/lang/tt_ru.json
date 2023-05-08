@@ -1,0 +1,17 @@
+{
+  "options.libgui.libgui_settings": "LibGui көйләүләре",
+  "option.libgui.darkmode": "Караңгы тема",
+  "widget.libgui.item_slot.narration.title": "%2$s предметның слотыннан %1$s слоты",
+  "widget.libgui.labeled_slider.narration.title": "%1$s шудыргычы: %3$s һәм %4$s арасындагы %2$s позициясенә",
+  "widget.libgui.scroll_bar.narration.title": "Шудыргыч",
+  "widget.libgui.slider.narration.title": "Шудыргыч: %2$s һәм %3$s арасындагы %1$s позициясенә",
+  "widget.libgui.slider.narration.usage": "Күчерү ярдәмендә яки ук төймәләре белән шудырыгыз",
+  "widget.libgui.tab.narration.title": "%s сайланмасы",
+  "widget.libgui.tab.narration.position": "%2$s сайланмадан %1$s сайланма",
+  "widget.libgui.text_field.narration.title": "Текст кыры: %s",
+  "widget.libgui.text_field.narration.suggestion": "Тәкъдим: %s",
+  "widget.libgui.toggle_button.narration.unnamed": "Төймә күчерү: %s",
+  "widget.libgui.toggle_button.narration.named": "Төймә күчерү: %s (%s)",
+  "widget.libgui.toggle_button.narration.on": "Кушык",
+  "widget.libgui.toggle_button.narration.off": "Сүнек"
+}
