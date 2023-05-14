@@ -100,7 +100,7 @@ public class WTextField extends WWidget {
 			// Call change listener
 			if (onChanged != null) onChanged.accept(this.text);
 			// Reset cursor if needed
-			if (cursor >= this.text.length()) cursor = this.text.length() - 1;
+			cursor = clampCursor(cursor);
 			return true;
 		}
 
@@ -130,8 +130,12 @@ public class WTextField extends WWidget {
 		super.setSize(x, 20);
 	}
 
+	private int clampCursor(int cursor) {
+		return MathHelper.clamp(cursor, 0, text.length());
+	}
+
 	public void setCursorPos(int location) {
-		this.cursor = MathHelper.clamp(location, 0, this.text.length());
+		this.cursor = clampCursor(location);
 		scrollCursorIntoView();
 	}
 
@@ -168,8 +172,7 @@ public class WTextField extends WWidget {
 
 		//Tidy some things
 		if (select > text.length()) select = text.length();
-		if (cursor < 0) cursor = 0;
-		if (cursor > text.length()) cursor = text.length();
+		cursor = clampCursor(cursor);
 
 		int start = Math.min(select, cursor);
 		int end = Math.max(select, cursor);
@@ -407,7 +410,7 @@ public class WTextField extends WWidget {
 		int right = Math.max(cursor, select);
 		if (setTextWithResult(text.substring(0, left) + text.substring(right))) {
 			select = -1;
-			cursor = left;
+			cursor = clampCursor(left);
 			scrollCursorIntoView();
 		}
 	}
@@ -415,13 +418,13 @@ public class WTextField extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private void delete(int modifiers, boolean backwards) {
 		if (select == -1 || select == cursor) {
-			select = skipCharaters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, backwards ? -1 : 1);
+			select = skipCharacters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, backwards ? -1 : 1);
 		}
 		deleteSelection();
 	}
 
 	@Environment(EnvType.CLIENT)
-	private int skipCharaters(boolean skipMany, int direction) {
+	private int skipCharacters(boolean skipMany, int direction) {
 		if (direction != -1 && direction != 1) return cursor;
 		int position = cursor;
 		while (true) {
@@ -443,13 +446,13 @@ public class WTextField extends WWidget {
 	public void onDirectionalKey(int direction, int modifiers) {
 		if ((GLFW.GLFW_MOD_SHIFT & modifiers) != 0) {
 			if (select == -1 || select == cursor) select = cursor;
-			cursor = skipCharaters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, direction);
+			cursor = skipCharacters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, direction);
 		} else {
 			if (select != -1) {
 				cursor = direction < 0 ? Math.min(cursor, select) : Math.max(cursor, select);
 				select = -1;
 			} else {
-				cursor = skipCharaters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, direction);
+				cursor = skipCharacters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, direction);
 			}
 		}
 	}
