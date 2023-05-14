@@ -12,8 +12,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nullable;
-
 public class GuiBlockEntity extends BlockEntity implements ImplementedInventory, NamedScreenHandlerFactory {
 	static final int INVENTORY_SIZE = 8;
 	
@@ -38,7 +36,6 @@ public class GuiBlockEntity extends BlockEntity implements ImplementedInventory,
 		return Text.literal("test title");
 	}
 
-	@Nullable
 	@Override
 	public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
 		return new TestDescription(LibGuiTest.GUI_SCREEN_HANDLER_TYPE, syncId, inv, ScreenHandlerContext.create(world, pos));

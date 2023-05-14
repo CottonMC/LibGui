@@ -16,6 +16,29 @@ group = project.maven_group
 sourceSets {
 	javadoc {
 	}
+
+	testMod {
+		compileClasspath += main.compileClasspath
+		runtimeClasspath += main.runtimeClasspath
+	}
+}
+
+loom {
+	createRemapConfigurations(sourceSets.testMod)
+
+	runs {
+		testModClient {
+			client()
+			name = 'Test Mod Client'
+			source sourceSets.testMod
+		}
+
+		testModServer {
+			server()
+			name = 'Test Mod Server'
+			source sourceSets.testMod
+		}
+	}
 }
 
 repositories {
@@ -63,6 +86,13 @@ dependencies {
 	modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
 	}
+
+	// Test mod dependencies
+	testModImplementation sourceSets.main.output
+	modTestModImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modTestModRuntimeOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
+		exclude group: 'net.fabricmc.fabric-api'
+	}
 }
 
 processResources {
@@ -106,14 +136,10 @@ jar {
 	from "CREDITS.txt", "LICENSE"
 }
 
-allprojects {
-	apply plugin: 'checkstyle'
-
-	checkstyle {
-		configFile = rootProject.file('checkstyle.xml')
-		configProperties = [suppressions: rootProject.file('checkstyle.suppressions.xml').absolutePath]
-		toolVersion = '10.9.2'
-	}
+checkstyle {
+	configFile = rootProject.file('checkstyle.xml')
+	configProperties = [suppressions: rootProject.file('checkstyle.suppressions.xml').absolutePath]
+	toolVersion = '10.9.2'
 }
 
 def javadocBuildJar = tasks.register('javadocBuildJar', Jar) {

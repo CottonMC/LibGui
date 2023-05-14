@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "libgui-test",
+	"version": "1",
+	"name": "LibGui Test",
+	"description": "Some example Guis to shake out errors",
+	"authors": [
+		"Falkreon"
+	],
+	"contact": {
+		"sources": "https://github.com/CottonMC/LibGUI"
+	},
+	"license": "MIT",
+	"icon": "assets/libgui-test/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.cottonmc.test.LibGuiTest"
+		],
+		"client": [
+			"io.github.cottonmc.test.client.LibGuiTestClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.4.0",
+		"libgui": "*",
+		"jankson": "*",
+		"fabric": "*"
+	}
+}
