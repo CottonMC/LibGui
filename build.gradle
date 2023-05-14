@@ -107,9 +107,14 @@ jar {
 	from "CREDITS.txt", "LICENSE"
 }
 
-checkstyle {
-	configFile = file('checkstyle.xml')
-	toolVersion = '10.9.2'
+allprojects {
+	apply plugin: 'checkstyle'
+
+	checkstyle {
+		configFile = rootProject.file('checkstyle.xml')
+		configProperties = [suppressions: rootProject.file('checkstyle.suppressions.xml').absolutePath]
+		toolVersion = '10.9.2'
+	}
 }
 
 evaluationDependsOn(':javadoc')

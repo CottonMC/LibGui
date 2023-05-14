@@ -8,6 +8,7 @@ insert_final_newline = true
 
 [*.java]
 ij_java_imports_layout = com.mojang.**,net.fabricmc.**,net.minecraft.**,|,*,|,javax.**,java.**,|,$*
+ij_java_layout_static_imports_separately = false
 ij_java_class_count_to_use_import_on_demand = 1000
 
 # This seems to be needed so that IDEA properly uses tabs in json files.

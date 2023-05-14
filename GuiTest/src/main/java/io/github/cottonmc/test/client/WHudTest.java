@@ -2,7 +2,6 @@ package io.github.cottonmc.test.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
 import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
