@@ -63,6 +63,7 @@ public class LibGuiTestClient implements ClientModInitializer {
 													return openScreen(client -> new PaddingTestGui(hori, vert)).run(context);
 												}))))
 						.then(literal("#182").executes(openScreen(client -> new Issue182TestGui())))
+						.then(literal("#196").executes(openScreen(client -> new Issue196TestGui())))
 		));
 	}
 
