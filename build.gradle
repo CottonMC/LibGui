@@ -13,8 +13,9 @@ archivesBaseName = project.archives_base_name
 version = "$project.mod_version+$project.minecraft_version"
 group = project.maven_group
 
-configurations {
-	javadocClasspath
+sourceSets {
+	javadoc {
+	}
 }
 
 repositories {
@@ -62,8 +63,6 @@ dependencies {
 	modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
 	}
-
-	javadocClasspath project(':javadoc')
 }
 
 processResources {
@@ -117,17 +116,21 @@ allprojects {
 	}
 }
 
-evaluationDependsOn(':javadoc')
+def javadocBuildJar = tasks.register('javadocBuildJar', Jar) {
+	destinationDirectory = file('build/devlibs')
+	archiveClassifier = 'javadoc-build'
+	from sourceSets.javadoc.output
+}
 
 javadoc {
-	dependsOn project(':javadoc').tasks.jar
+	dependsOn javadocBuildJar
 
 	options {
 		links "https://maven.fabricmc.net/docs/yarn-$project.yarn_mappings"
 		links 'https://javadoc.io/doc/org.jetbrains/annotations/19.0.0'
 		taglets 'io.github.cottonmc.cotton.gui.jd.ExperimentalTaglet',
 				'io.github.cottonmc.cotton.gui.jd.PropertyTaglet'
-		tagletPath project(':javadoc').tasks.jar.outputs.files.singleFile
+		tagletPath javadocBuildJar.get().archiveFile.get().asFile
 	}
 
 	exclude("**/impl/**")
