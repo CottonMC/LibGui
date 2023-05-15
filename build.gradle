@@ -41,6 +41,15 @@ loom {
 	}
 }
 
+// Work around https://github.com/FabricMC/fabric-loom/issues/890.
+afterEvaluate {
+	for (def config : [configurations.apiElements, configurations.runtimeElements]) {
+		def parents = new HashSet<>(config.extendsFrom)
+		parents.removeIf { it.name.startsWith 'modTestMod' }
+		config.extendsFrom = parents
+	}
+}
+
 repositories {
 	maven {
 		url "https://server.bbkr.space/artifactory/libs-release"
