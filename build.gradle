@@ -163,6 +163,23 @@ publishing {
 	publications {
 		maven(MavenPublication) {
 			from components.java
+			pom {
+				name = "LibGui"
+				description = "Minecraft GUI Library"
+				url = "https://github.com/CottonMC/LibGui"
+				licenses {
+					license {
+						name = "MIT"
+						url = "https://github.com/CottonMC/LibGui/blob/HEAD/LICENSE"
+					}
+				}
+				developers {
+					developer {
+						name = "CottonMC"
+						url = "https://github.com/CottonMC"
+					}
+				}
+			}
 		}
 	}
 
