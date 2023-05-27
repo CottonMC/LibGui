@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
@@ -568,5 +569,28 @@ public class WWidget {
 	@Environment(EnvType.CLIENT)
 	public static boolean isActivationKey(int ch) {
 		return ch == GLFW.GLFW_KEY_ENTER || ch == GLFW.GLFW_KEY_KP_ENTER || ch == GLFW.GLFW_KEY_SPACE;
+	}
+
+	/**
+	 * Checks if this widget should be rendered in dark mode.
+	 *
+	 * <p>If the widget has a host that {@linkplain GuiDescription#isDarkMode() forces dark mode},
+	 * the forced value is used. Otherwise, this method returns {@link LibGui#isDarkMode()}.
+	 *
+	 * <p>{@linkplain #paint Painting} should respect this value for general-purpose widgets
+	 * intended for use in multiple different GUIs.
+	 *
+	 * @return {@code true} if this widget should be rendered in dark mode, {@code false} otherwise
+	 * @since 7.1.0
+	 */
+	@Environment(EnvType.CLIENT)
+	public boolean shouldRenderInDarkMode() {
+		var globalDarkMode = LibGui.isDarkMode();
+
+		if (host != null) {
+			return host.isDarkMode().orElse(globalDarkMode);
+		}
+
+		return globalDarkMode;
 	}
 }

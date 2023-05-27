@@ -6,7 +6,6 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.util.math.MatrixStack;
 
-import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
@@ -42,7 +41,9 @@ public class WScrollBar extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		if (LibGui.isDarkMode()) {
+		boolean darkMode = shouldRenderInDarkMode();
+
+		if (darkMode) {
 			ScreenDrawing.drawBeveledPanel(matrices, x, y, width, height, 0xFF_212121, 0xFF_2F2F2F, 0xFF_5D5D5D);
 		} else {
 			ScreenDrawing.drawBeveledPanel(matrices, x, y, width, height, 0xFF_373737, 0xFF_8B8B8B, 0xFF_FFFFFF);
@@ -53,7 +54,7 @@ public class WScrollBar extends WWidget {
 		int top, middle, bottom;
 
 		if (sliding) {
-			if (LibGui.isDarkMode()) {
+			if (darkMode) {
 				top = 0xFF_6C6C6C;
 				middle = 0xFF_2F2F2F;
 				bottom = 0xFF_212121;
@@ -63,7 +64,7 @@ public class WScrollBar extends WWidget {
 				bottom = 0xFF_555555;
 			}
 		} else if (isWithinBounds(mouseX, mouseY)) {
-			if (LibGui.isDarkMode()) {
+			if (darkMode) {
 				top = 0xFF_5F6A9D;
 				middle = 0xFF_323F6E;
 				bottom = 0xFF_0B204A;
@@ -73,7 +74,7 @@ public class WScrollBar extends WWidget {
 				bottom = 0xFF_343E75;
 			}
 		} else {
-			if (LibGui.isDarkMode()) {
+			if (darkMode) {
 				top = 0xFF_6C6C6C;
 				middle = 0xFF_414141;
 				bottom = 0xFF_212121;

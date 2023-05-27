@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
@@ -31,7 +30,7 @@ public class WKirbSprite extends WWidget {
 	private long lastFrame;
 
 	public WKirbSprite() {
-		state = (LibGui.isDarkMode()) ? State.ASLEEP : State.AWAKE;
+		state = (shouldRenderInDarkMode()) ? State.ASLEEP : State.AWAKE;
 	}
 
 	public void schedule(int[] frames) {
@@ -59,7 +58,7 @@ public class WKirbSprite extends WWidget {
 		long now = System.nanoTime() / 1_000_000L;
 
 		if (pendingFrames.isEmpty()) {
-			if (LibGui.isDarkMode()) {
+			if (shouldRenderInDarkMode()) {
 				state = switch (state) {
 					case AWAKE -> State.FALLING_ASLEEP;
 					case FALLING_ASLEEP -> State.ASLEEP;

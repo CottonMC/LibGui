@@ -143,7 +143,7 @@ public interface BackgroundPainter {
 
 	/**
 	 * Creates a background painter that uses either the {@code light} or the {@code dark} background painter
-	 * depending on the current setting.
+	 * depending on the {@linkplain WWidget#shouldRenderInDarkMode current setting}.
 	 *
 	 * @param light the light mode background painter
 	 * @param dark the dark mode background painter
@@ -152,7 +152,7 @@ public interface BackgroundPainter {
 	 */
 	public static BackgroundPainter createLightDarkVariants(BackgroundPainter light, BackgroundPainter dark) {
 		return (matrices, left, top, panel) -> {
-			if (LibGui.isDarkMode()) dark.paintBackground(matrices, left, top, panel);
+			if (panel.shouldRenderInDarkMode()) dark.paintBackground(matrices, left, top, panel);
 			else light.paintBackground(matrices, left, top, panel);
 		};
 	}

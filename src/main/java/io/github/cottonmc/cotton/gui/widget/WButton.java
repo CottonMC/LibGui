@@ -12,7 +12,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -108,7 +107,7 @@ public class WButton extends WWidget {
 		
 		float buttonEndLeft = (200-(getWidth()/2)) * px;
 
-		Identifier texture = getTexture();
+		Identifier texture = getTexture(this);
 		ScreenDrawing.texturedRect(matrices, x, y, getWidth()/2, 20, texture, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFFFFFF);
 		ScreenDrawing.texturedRect(matrices, x+(getWidth()/2), y, getWidth()/2, 20, texture, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
 
@@ -269,7 +268,7 @@ public class WButton extends WWidget {
 	}
 
 	@Environment(EnvType.CLIENT)
-	static Identifier getTexture() {
-		return LibGui.isDarkMode() ? DARK_WIDGETS_LOCATION : ClickableWidget.WIDGETS_TEXTURE;
+	static Identifier getTexture(WWidget widget) {
+		return widget.shouldRenderInDarkMode() ? DARK_WIDGETS_LOCATION : ClickableWidget.WIDGETS_TEXTURE;
 	}
 }

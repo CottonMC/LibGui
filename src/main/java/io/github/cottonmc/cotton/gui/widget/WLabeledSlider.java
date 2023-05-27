@@ -210,7 +210,7 @@ public class WLabeledSlider extends WAbstractSlider {
 		float buttonHeight = 20 * px;
 		float buttonEndLeft = (200 - halfWidth) * px;
 
-		Identifier texture = WButton.getTexture();
+		Identifier texture = WButton.getTexture(this);
 		ScreenDrawing.texturedRect(matrices, x, y, halfWidth, 20, texture, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
 		ScreenDrawing.texturedRect(matrices, x + halfWidth, y, halfWidth, 20, texture, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
 	}

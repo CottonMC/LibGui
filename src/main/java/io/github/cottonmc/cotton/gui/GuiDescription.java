@@ -2,6 +2,7 @@ package io.github.cottonmc.cotton.gui;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.screen.PropertyDelegate;
 
 import io.github.cottonmc.cotton.gui.widget.WPanel;
@@ -143,4 +144,19 @@ public interface GuiDescription {
 	 * @since 4.0.0
 	 */
 	void setTitlePos(Vec2i titlePos);
+
+	/**
+	 * Checks whether dark mode is used for this GUI description.
+	 *
+	 * @return <ul>
+	 *     <li>{@link TriState#TRUE} to force dark mode
+	 *     <li>{@link TriState#FALSE} to force light mode
+	 *     <li>{@link TriState#DEFAULT} to use the {@linkplain io.github.cottonmc.cotton.gui.client.LibGui#isDarkMode()
+	 *     global dark mode setting}
+	 * </ul>
+	 * @since 7.1.0
+	 */
+	default TriState isDarkMode() {
+		return TriState.DEFAULT;
+	}
 }

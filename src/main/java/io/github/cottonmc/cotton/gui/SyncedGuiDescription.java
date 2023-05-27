@@ -99,7 +99,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	}
 	
 	public int getTitleColor() {
-		return (world.isClient && LibGui.isDarkMode()) ? darkTitleColor : titleColor;
+		return (world.isClient && isDarkMode().orElse(LibGui.isDarkMode())) ? darkTitleColor : titleColor;
 	}
 	
 	public SyncedGuiDescription setRootPanel(WPanel panel) {

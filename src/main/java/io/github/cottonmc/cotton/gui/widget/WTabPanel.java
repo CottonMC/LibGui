@@ -13,7 +13,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
@@ -404,7 +403,7 @@ public class WTabPanel extends WPanel {
 				HorizontalAlignment align = (icon != null) ? HorizontalAlignment.LEFT : HorizontalAlignment.CENTER;
 
 				int color;
-				if (LibGui.isDarkMode()) {
+				if (shouldRenderInDarkMode()) {
 					color = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 				} else {
 					color = selected ? WLabel.DEFAULT_TEXT_COLOR : 0xEEEEEE;

@@ -64,6 +64,7 @@ public class LibGuiTestClient implements ClientModInitializer {
 												}))))
 						.then(literal("#182").executes(openScreen(client -> new Issue182TestGui())))
 						.then(literal("#196").executes(openScreen(client -> new Issue196TestGui())))
+						.then(literal("darkmode").executes(openScreen(client -> new DarkModeTestGui())))
 		));
 	}
 
