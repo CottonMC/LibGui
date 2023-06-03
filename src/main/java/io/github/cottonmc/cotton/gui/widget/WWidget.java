@@ -3,9 +3,9 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.LibGui;
@@ -319,15 +319,15 @@ public class WWidget {
 	/**
 	 * Paints this widget.
 	 *
-	 * @param matrices the rendering matrix stack
-	 * @param x        this widget's X coordinate on the screen
-	 * @param y        this widget's Y coordinate on the screen
-	 * @param mouseX   the X coordinate of the cursor
-	 * @param mouseY   the X coordinate of the cursor
+	 * @param context the draw context
+	 * @param x       this widget's X coordinate on the screen
+	 * @param y       this widget's Y coordinate on the screen
+	 * @param mouseX  the X coordinate of the cursor
+	 * @param mouseY  the X coordinate of the cursor
 	 * @since 2.0.0
 	 */
 	@Environment(EnvType.CLIENT)
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 	}
 
 	/**
@@ -347,20 +347,21 @@ public class WWidget {
 	 * Internal method to render tooltip data. This requires an overridden {@link #addTooltip(TooltipBuilder)
 	 * addTooltip} method to insert data into the tooltip - without this, the method returns early because of no work.
 	 *
-	 * @param x  the X coordinate of this widget on screen
-	 * @param y  the Y coordinate of this widget on screen
-	 * @param tX the X coordinate of the tooltip
-	 * @param tY the Y coordinate of the tooltip
+	 * @param context the draw context
+	 * @param x       the X coordinate of this widget on screen
+	 * @param y       the Y coordinate of this widget on screen
+	 * @param tX      the X coordinate of the tooltip
+	 * @param tY      the Y coordinate of the tooltip
 	 */
 	@Environment(EnvType.CLIENT)
-	public void renderTooltip(MatrixStack matrices, int x, int y, int tX, int tY) {
+	public void renderTooltip(DrawContext context, int x, int y, int tX, int tY) {
 		TooltipBuilder builder = new TooltipBuilder();
 		addTooltip(builder);
 
 		if (builder.size() == 0) return;
 
-		Screen screen = MinecraftClient.getInstance().currentScreen;
-		screen.renderOrderedTooltip(matrices, builder.lines, tX+x, tY+y);
+		var client = MinecraftClient.getInstance();
+		context.drawTooltip(client.textRenderer, builder.lines, HoveredTooltipPositioner.INSTANCE, tX + x, tY + y);
 	}
 
 	/**
@@ -498,7 +499,7 @@ public class WWidget {
 	 *
 	 * <p>Hovering is used by LibGui itself mostly for narration support.
 	 * For rendering, it might be preferable that you check the mouse coordinates in
-	 * {@link #paint(MatrixStack, int, int, int, int) paint()} directly.
+	 * {@link #paint(DrawContext, int, int, int, int) paint()} directly.
 	 * That lets you react to different parts of the widget being hovered over.
 	 *
 	 * @return the {@code hovered} property

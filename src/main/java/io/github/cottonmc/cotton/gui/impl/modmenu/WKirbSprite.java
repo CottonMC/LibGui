@@ -2,7 +2,7 @@ package io.github.cottonmc.cotton.gui.impl.modmenu;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -54,7 +54,7 @@ public class WKirbSprite extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		long now = System.nanoTime() / 1_000_000L;
 
 		if (pendingFrames.isEmpty()) {
@@ -81,7 +81,7 @@ public class WKirbSprite extends WWidget {
 		}
 
 		float offset = KIRB_WIDTH * currentFrame;
-		ScreenDrawing.texturedRect(matrices, x, y + 8, 32, 32, KIRB, offset, 0, offset + KIRB_WIDTH, 1, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(context, x, y + 8, 32, 32, KIRB, offset, 0, offset + KIRB_WIDTH, 1, 0xFFFFFFFF);
 
 		long elapsed = now - lastFrame;
 		currentFrameTime += elapsed;

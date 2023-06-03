@@ -2,8 +2,7 @@ package io.github.cottonmc.cotton.gui.widget.icon;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,15 +40,13 @@ public class ItemIcon implements Icon {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int size) {
-		MinecraftClient client = MinecraftClient.getInstance();
-		ItemRenderer renderer = client.getItemRenderer();
+	public void paint(DrawContext context, int x, int y, int size) {
 		float scale = size != 16 ? ((float) size / 16f) : 1f;
-
+		MatrixStack matrices = context.getMatrices();
 		matrices.push();
 		matrices.translate(x, y, 0);
 		matrices.scale(scale, scale, 1);
-		renderer.renderInGui(matrices, stack, 0, 0);
+		context.drawItemWithoutEntity(stack, 0, 0);
 		matrices.pop();
 	}
 }

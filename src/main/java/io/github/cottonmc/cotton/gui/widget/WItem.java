@@ -3,9 +3,7 @@ package io.github.cottonmc.cotton.gui.widget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -59,12 +57,9 @@ public class WItem extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		RenderSystem.enableDepthTest();
-
-		MinecraftClient mc = MinecraftClient.getInstance();
-		ItemRenderer renderer = mc.getItemRenderer();
-		renderer.renderInGui(matrices, items.get(current), x + getWidth() / 2 - 8, y + getHeight() / 2 - 8);
+		context.drawItemWithoutEntity(items.get(current), x + getWidth() / 2 - 8, y + getHeight() / 2 - 8);
 	}
 
 	/**

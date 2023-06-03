@@ -2,8 +2,6 @@ package io.github.cottonmc.cotton.gui.impl.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Style;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
@@ -17,6 +15,4 @@ public interface CottonScreenImpl {
 	WWidget getLastResponder();
 
 	void setLastResponder(@Nullable WWidget lastResponder);
-
-	void renderTextHover(MatrixStack matrices, @Nullable Style textStyle, int x, int y);
 }

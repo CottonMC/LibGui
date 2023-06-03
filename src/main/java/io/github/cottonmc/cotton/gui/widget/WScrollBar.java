@@ -2,9 +2,9 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.util.math.MatrixStack;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
@@ -40,13 +40,13 @@ public class WScrollBar extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		boolean darkMode = shouldRenderInDarkMode();
 
 		if (darkMode) {
-			ScreenDrawing.drawBeveledPanel(matrices, x, y, width, height, 0xFF_212121, 0xFF_2F2F2F, 0xFF_5D5D5D);
+			ScreenDrawing.drawBeveledPanel(context, x, y, width, height, 0xFF_212121, 0xFF_2F2F2F, 0xFF_5D5D5D);
 		} else {
-			ScreenDrawing.drawBeveledPanel(matrices, x, y, width, height, 0xFF_373737, 0xFF_8B8B8B, 0xFF_FFFFFF);
+			ScreenDrawing.drawBeveledPanel(context, x, y, width, height, 0xFF_373737, 0xFF_8B8B8B, 0xFF_FFFFFF);
 		}
 		if (maxValue<=0) return;
 
@@ -86,16 +86,16 @@ public class WScrollBar extends WWidget {
 		}
 
 		if (axis==Axis.HORIZONTAL) {
-			ScreenDrawing.drawBeveledPanel(matrices, x+1+getHandlePosition(), y+1, getHandleSize(), height-2, top, middle, bottom);
+			ScreenDrawing.drawBeveledPanel(context, x+1+getHandlePosition(), y+1, getHandleSize(), height-2, top, middle, bottom);
 
 			if (isFocused()) {
-				drawBeveledOutline(matrices, x+1+getHandlePosition(), y+1, getHandleSize(), height-2, 0xFF_FFFFA7, 0xFF_8C8F39);
+				drawBeveledOutline(context, x+1+getHandlePosition(), y+1, getHandleSize(), height-2, 0xFF_FFFFA7, 0xFF_8C8F39);
 			}
 		} else {
-			ScreenDrawing.drawBeveledPanel(matrices, x+1, y+1+getHandlePosition(), width-2, getHandleSize(), top, middle, bottom);
+			ScreenDrawing.drawBeveledPanel(context, x+1, y+1+getHandlePosition(), width-2, getHandleSize(), top, middle, bottom);
 
 			if (isFocused()) {
-				drawBeveledOutline(matrices, x+1, y+1+getHandlePosition(), width-2, getHandleSize(), 0xFF_FFFFA7, 0xFF_8C8F39);
+				drawBeveledOutline(context, x+1, y+1+getHandlePosition(), width-2, getHandleSize(), 0xFF_FFFFA7, 0xFF_8C8F39);
 			}
 		}
 	}
@@ -110,11 +110,11 @@ public class WScrollBar extends WWidget {
 		return true;
 	}
 
-	private static void drawBeveledOutline(MatrixStack matrices, int x, int y, int width, int height, int topleft, int bottomright) {
-		ScreenDrawing.coloredRect(matrices, x,             y,              width,     1,          topleft); //Top shadow
-		ScreenDrawing.coloredRect(matrices, x,             y + 1,          1,         height - 1, topleft); //Left shadow
-		ScreenDrawing.coloredRect(matrices, x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
-		ScreenDrawing.coloredRect(matrices, x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
+	private static void drawBeveledOutline(DrawContext context, int x, int y, int width, int height, int topleft, int bottomright) {
+		ScreenDrawing.coloredRect(context, x,             y,              width,     1,          topleft); //Top shadow
+		ScreenDrawing.coloredRect(context, x,             y + 1,          1,         height - 1, topleft); //Left shadow
+		ScreenDrawing.coloredRect(context, x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
+		ScreenDrawing.coloredRect(context, x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
 	}
 
 	/**

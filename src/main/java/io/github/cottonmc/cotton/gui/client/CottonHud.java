@@ -23,7 +23,7 @@ public final class CottonHud {
 	private static final Map<WWidget, Positioner> positioners = new HashMap<>();
 
 	static {
-		HudRenderCallback.EVENT.register((matrices, tickDelta) -> {
+		HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
 			Window window = MinecraftClient.getInstance().getWindow();
 			int hudWidth = window.getScaledWidth();
 			int hudHeight = window.getScaledHeight();
@@ -33,7 +33,7 @@ public final class CottonHud {
 					positioner.reposition(widget, hudWidth, hudHeight);
 				}
 
-				widget.paint(matrices, widget.getX(), widget.getY(), -1, -1);
+				widget.paint(drawContext, widget.getX(), widget.getY(), -1, -1);
 			}
 		});
 

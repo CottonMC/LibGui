@@ -94,6 +94,7 @@ dependencies {
 
 	modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
+		exclude group: 'net.fabricmc', module: 'fabric-loader'
 	}
 
 	// Test mod dependencies
@@ -101,6 +102,7 @@ dependencies {
 	modTestModImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modTestModRuntimeOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
 		exclude group: 'net.fabricmc.fabric-api'
+		exclude group: 'net.fabricmc', module: 'fabric-loader'
 	}
 }
 
