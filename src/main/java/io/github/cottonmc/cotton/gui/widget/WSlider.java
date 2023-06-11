@@ -2,7 +2,7 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
@@ -48,9 +48,9 @@ public class WSlider extends WAbstractSlider {
 	@SuppressWarnings("SuspiciousNameCombination")
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter != null) {
-			backgroundPainter.paintBackground(matrices, x, y, this);
+			backgroundPainter.paintBackground(context, x, y, this);
 		} else {
 			float px = 1 / 32f;
 			// thumbX/Y: thumb position in widget-space
@@ -67,9 +67,9 @@ public class WSlider extends WAbstractSlider {
 						: Math.round(coordToValueRatio * (value - min));
 				thumbXOffset = 0;
 
-				ScreenDrawing.texturedRect(matrices, trackX, y + 1, TRACK_WIDTH, 1, texture, 16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(matrices, trackX, y + 2, TRACK_WIDTH, height - 2, texture, 16*px, 1*px, 22*px, 2*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(matrices, trackX, y + height, TRACK_WIDTH, 1, texture, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(context, trackX, y + 1, TRACK_WIDTH, 1, texture, 16*px, 0*px, 22*px, 1*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(context, trackX, y + 2, TRACK_WIDTH, height - 2, texture, 16*px, 1*px, 22*px, 2*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(context, trackX, y + height, TRACK_WIDTH, 1, texture, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
 				thumbX = direction == Direction.LEFT
@@ -78,18 +78,18 @@ public class WSlider extends WAbstractSlider {
 				thumbY = height / 2 - THUMB_SIZE / 2;
 				thumbXOffset = 8;
 
-				ScreenDrawing.texturedRect(matrices, x, trackY, 1, TRACK_WIDTH, texture, 16*px, 3*px, 17*px, 9*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(matrices, x + 1, trackY, width - 2, TRACK_WIDTH, texture, 17*px, 3*px, 18*px, 9*px, 0xFFFFFFFF);
-				ScreenDrawing.texturedRect(matrices, x + width - 1, trackY, 1, TRACK_WIDTH, texture, 18*px, 3*px, 19*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(context, x, trackY, 1, TRACK_WIDTH, texture, 16*px, 3*px, 17*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(context, x + 1, trackY, width - 2, TRACK_WIDTH, texture, 17*px, 3*px, 18*px, 9*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(context, x + width - 1, trackY, 1, TRACK_WIDTH, texture, 18*px, 3*px, 19*px, 9*px, 0xFFFFFFFF);
 			}
 
 			// thumbState values:
 			// 0: default, 1: dragging, 2: hovered
 			int thumbState = dragging ? 1 : (mouseX >= thumbX && mouseX <= thumbX + THUMB_SIZE && mouseY >= thumbY && mouseY <= thumbY + THUMB_SIZE ? 2 : 0);
-			ScreenDrawing.texturedRect(matrices, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(context, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
 
 			if (thumbState == 0 && isFocused()) {
-				ScreenDrawing.texturedRect(matrices, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, 0*px, 24*px, 8*px, 32*px, 0xFFFFFFFF);
+				ScreenDrawing.texturedRect(context, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, 0*px, 24*px, 8*px, 32*px, 0xFFFFFFFF);
 			}
 		}
 	}

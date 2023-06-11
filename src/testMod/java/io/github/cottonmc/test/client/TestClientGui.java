@@ -2,7 +2,7 @@ package io.github.cottonmc.test.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -149,8 +149,8 @@ public class TestClientGui extends LightweightGuiDescription {
 		}
 		
 		@Override
-		public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-			ScreenDrawing.coloredRect(matrices, x, y, this.getWidth(), this.getHeight(), color);
+		public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+			ScreenDrawing.coloredRect(context, x, y, this.getWidth(), this.getHeight(), color);
 		}
 	}
 }

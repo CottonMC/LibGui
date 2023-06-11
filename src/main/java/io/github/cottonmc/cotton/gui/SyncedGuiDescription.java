@@ -71,7 +71,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		super(type, syncId);
 		this.blockInventory = null;
 		this.playerInventory = playerInventory;
-		this.world = playerInventory.player.world;
+		this.world = playerInventory.player.getWorld();
 		this.propertyDelegate = null;//new ArrayPropertyDelegate(1);
 	}
 
@@ -88,7 +88,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		super(type, syncId);
 		this.blockInventory = blockInventory;
 		this.playerInventory = playerInventory;
-		this.world = playerInventory.player.world;
+		this.world = playerInventory.player.getWorld();
 		this.propertyDelegate = propertyDelegate;
 		if (propertyDelegate!=null && propertyDelegate.size()>0) this.addProperties(propertyDelegate);
 		if (blockInventory != null) blockInventory.onOpen(playerInventory.player);

@@ -1,11 +1,10 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
@@ -124,41 +123,41 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		}
 	}
 
-	private void paint(MatrixStack matrices, int mouseX, int mouseY) {
-		renderBackground(matrices);
+	private void paint(DrawContext context, int mouseX, int mouseY) {
+		renderBackground(context);
 
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
 				Scissors.refreshScissors();
-				root.paint(matrices, left, top, mouseX-left, mouseY-top);
+				root.paint(context, left, top, mouseX-left, mouseY-top);
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				Scissors.checkStackIsEmpty();
 			}
 
 			if (getTitle() != null && description.isTitleVisible()) {
 				int width = description.getRootPanel().getWidth();
-				ScreenDrawing.drawString(matrices, getTitle().asOrderedText(), description.getTitleAlignment(), left + titleX, top + titleY, width - 2 * titleX, description.getTitleColor());
+				ScreenDrawing.drawString(context, getTitle().asOrderedText(), description.getTitleAlignment(), left + titleX, top + titleY, width - 2 * titleX, description.getTitleColor());
 			}
 		}
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
-		paint(matrices, mouseX, mouseY);
+	public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
+		paint(context, mouseX, mouseY);
 		
-		super.render(matrices, mouseX, mouseY, partialTicks);
+		super.render(context, mouseX, mouseY, partialTicks);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				WWidget hitChild = root.hit(mouseX-left, mouseY-top);
-				if (hitChild!=null) hitChild.renderTooltip(matrices, left, top, mouseX-left, mouseY-top);
+				if (hitChild!=null) hitChild.renderTooltip(context, left, top, mouseX-left, mouseY-top);
 			}
 		}
 
-		VisualLogger.render(matrices);
+		VisualLogger.render(context);
 	}
 
 	@Override
@@ -255,11 +254,6 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		}
 
 		return super.keyReleased(ch, keyCode, modifiers);
-	}
-
-	@Override
-	public void renderTextHover(MatrixStack matrices, @Nullable Style textStyle, int x, int y) {
-		renderTextHoverEffect(matrices, textStyle, x, y);
 	}
 
 	@Override

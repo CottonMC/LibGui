@@ -2,9 +2,9 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -160,7 +160,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		int aWidth = axis == Axis.HORIZONTAL ? width : height;
 		int aHeight = axis == Axis.HORIZONTAL ? height : width;
 		int rotMouseX = axis == Axis.HORIZONTAL
@@ -168,13 +168,14 @@ public class WLabeledSlider extends WAbstractSlider {
 				: (direction == Direction.UP ? height - mouseY : mouseY);
 		int rotMouseY = axis == Axis.HORIZONTAL ? mouseY : mouseX;
 
+		var matrices = context.getMatrices();
 		matrices.push();
 		matrices.translate(x, y, 0);
 		if (axis == Axis.VERTICAL) {
 			matrices.translate(0, height, 0);
 			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(270));
 		}
-		drawButton(matrices, 0, 0, 0, aWidth);
+		drawButton(context, 0, 0, 0, aWidth);
 
 		// 1: regular, 2: hovered, 0: disabled/dragging
 		int thumbX = Math.round(coordToValueRatio * (value - min));
@@ -184,23 +185,23 @@ public class WLabeledSlider extends WAbstractSlider {
 		boolean hovering = rotMouseX >= thumbX && rotMouseX <= thumbX + thumbWidth && rotMouseY >= thumbY && rotMouseY <= thumbY + thumbHeight;
 		int thumbState = dragging || hovering ? 2 : 1;
 
-		drawButton(matrices, thumbX, thumbY, thumbState, thumbWidth);
+		drawButton(context, thumbX, thumbY, thumbState, thumbWidth);
 
 		if (thumbState == 1 && isFocused()) {
 			float px = 1 / 32f;
-			ScreenDrawing.texturedRect(matrices, thumbX, thumbY, thumbWidth, thumbHeight, WSlider.LIGHT_TEXTURE, 24*px, 0*px, 32*px, 20*px, 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(context, thumbX, thumbY, thumbWidth, thumbHeight, WSlider.LIGHT_TEXTURE, 24*px, 0*px, 32*px, 20*px, 0xFFFFFFFF);
 		}
 
 		if (label != null) {
 			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
-			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
+			ScreenDrawing.drawStringWithShadow(context, label.asOrderedText(), labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
 		matrices.pop();
 	}
 
 	// state = 1: regular, 2: hovered, 0: disabled/dragging
 	@Environment(EnvType.CLIENT)
-	private void drawButton(MatrixStack matrices, int x, int y, int state, int width) {
+	private void drawButton(DrawContext context, int x, int y, int state, int width) {
 		float px = 1 / 256f;
 		float buttonLeft = 0 * px;
 		float buttonTop = (46 + (state * 20)) * px;
@@ -211,8 +212,8 @@ public class WLabeledSlider extends WAbstractSlider {
 		float buttonEndLeft = (200 - halfWidth) * px;
 
 		Identifier texture = WButton.getTexture(this);
-		ScreenDrawing.texturedRect(matrices, x, y, halfWidth, 20, texture, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
-		ScreenDrawing.texturedRect(matrices, x + halfWidth, y, halfWidth, 20, texture, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(context, x, y, halfWidth, 20, texture, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(context, x + halfWidth, y, halfWidth, 20, texture, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
 	}
 
 	@Environment(EnvType.CLIENT)

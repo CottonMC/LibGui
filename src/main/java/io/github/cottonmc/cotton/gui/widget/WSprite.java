@@ -2,7 +2,7 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -182,9 +182,9 @@ public class WSprite extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		if (singleImage) {
-			paintFrame(matrices, x, y, frames[0]);
+			paintFrame(context, x, y, frames[0]);
 		} else {
 			//grab the system time at the very start of the frame.
 			long now = System.nanoTime() / 1_000_000L;
@@ -194,7 +194,7 @@ public class WSprite extends WWidget {
 			if (!inBounds) currentFrame = 0;
 			//assemble and draw the frame calculated last iteration.
 			Texture currentFrameTex = frames[currentFrame];
-			paintFrame(matrices, x, y, currentFrameTex);
+			paintFrame(context, x, y, currentFrameTex);
 
 			//calculate how much time has elapsed since the last animation change, and change the frame if necessary.
 			long elapsed = now - lastFrame;
@@ -216,13 +216,13 @@ public class WSprite extends WWidget {
 	/**
 	 * Paints a single frame for this sprite.
 	 *
-	 * @param matrices the rendering matrix stack
-	 * @param x        the X coordinate to draw it at
-	 * @param y        the Y coordinate to draw it at
-	 * @param texture  the texture to draw
+	 * @param context the draw context
+	 * @param x       the X coordinate to draw it at
+	 * @param y       the Y coordinate to draw it at
+	 * @param texture the texture to draw
 	 */
 	@Environment(EnvType.CLIENT)
-	protected void paintFrame(MatrixStack matrices, int x, int y, Texture texture) {
-		ScreenDrawing.texturedRect(matrices, x, y, getWidth(), getHeight(), texture, tint);
+	protected void paintFrame(DrawContext context, int x, int y, Texture texture) {
+		ScreenDrawing.texturedRect(context, x, y, getWidth(), getHeight(), texture, tint);
 	}
 }

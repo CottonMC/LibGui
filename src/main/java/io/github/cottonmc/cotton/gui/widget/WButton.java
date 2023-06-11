@@ -3,11 +3,11 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -88,7 +88,7 @@ public class WButton extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		boolean hovered = (mouseX>=0 && mouseY>=0 && mouseX<getWidth() && mouseY<getHeight());
 		int state = 1; //1=regular. 2=hovered. 0=disabled.
 		if (!enabled) {
@@ -108,11 +108,11 @@ public class WButton extends WWidget {
 		float buttonEndLeft = (200-(getWidth()/2)) * px;
 
 		Identifier texture = getTexture(this);
-		ScreenDrawing.texturedRect(matrices, x, y, getWidth()/2, 20, texture, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFFFFFF);
-		ScreenDrawing.texturedRect(matrices, x+(getWidth()/2), y, getWidth()/2, 20, texture, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(context, x, y, getWidth()/2, 20, texture, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFFFFFF);
+		ScreenDrawing.texturedRect(context, x+(getWidth()/2), y, getWidth()/2, 20, texture, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
 
 		if (icon != null) {
-			icon.paint(matrices, x+ICON_SPACING, y+(BUTTON_HEIGHT-iconSize)/2, iconSize);
+			icon.paint(context, x+ICON_SPACING, y+(BUTTON_HEIGHT-iconSize)/2, iconSize);
 		}
 		
 		if (label!=null) {
@@ -124,7 +124,7 @@ public class WButton extends WWidget {
 			}*/
 
 			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING+iconSize+ICON_SPACING : 0;
-			ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawStringWithShadow(context, label.asOrderedText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	

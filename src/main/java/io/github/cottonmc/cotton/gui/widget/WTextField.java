@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
@@ -15,7 +16,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -185,35 +185,35 @@ public class WTextField extends WWidget {
 	}
 
 	@Environment(EnvType.CLIENT)
-	protected void renderBox(MatrixStack matrices, int x, int y) {
+	protected void renderBox(DrawContext context, int x, int y) {
 		int borderColor = this.isFocused() ? BORDER_COLOR_SELECTED : BORDER_COLOR_UNSELECTED;
-		ScreenDrawing.coloredRect(matrices, x - 1, y - 1, width + 2, height + 2, borderColor);
-		ScreenDrawing.coloredRect(matrices, x, y, width, height, BACKGROUND_COLOR);
+		ScreenDrawing.coloredRect(context, x - 1, y - 1, width + 2, height + 2, borderColor);
+		ScreenDrawing.coloredRect(context, x, y, width, height, BACKGROUND_COLOR);
 	}
 
 	@Environment(EnvType.CLIENT)
-	protected void renderText(MatrixStack matrices, int x, int y, String visibleText) {
+	protected void renderText(DrawContext context, int x, int y, String visibleText) {
 		int textColor = this.editable ? this.enabledColor : this.disabledColor;
-		this.font.drawWithShadow(matrices, visibleText, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, textColor);
+		context.drawText(font, visibleText, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, textColor, true);
 	}
 
 	@Environment(EnvType.CLIENT)
-	protected void renderCursor(MatrixStack matrices, int x, int y, String visibleText) {
+	protected void renderCursor(DrawContext context, int x, int y, String visibleText) {
 		if (this.tickCount / 6 % 2 == 0) return;
 		if (this.cursor < this.scrollOffset) return;
 		if (this.cursor > this.scrollOffset + visibleText.length()) return;
 		int cursorOffset = this.font.getWidth(visibleText.substring(0, this.cursor - this.scrollOffset));
-		ScreenDrawing.coloredRect(matrices, x + TEXT_PADDING_X + cursorOffset, y + CURSOR_PADDING_Y, 1, CURSOR_HEIGHT, CURSOR_COLOR);
+		ScreenDrawing.coloredRect(context, x + TEXT_PADDING_X + cursorOffset, y + CURSOR_PADDING_Y, 1, CURSOR_HEIGHT, CURSOR_COLOR);
 	}
 
 	@Environment(EnvType.CLIENT)
-	protected void renderSuggestion(MatrixStack matrices, int x, int y) {
+	protected void renderSuggestion(DrawContext context, int x, int y) {
 		if (this.suggestion == null) return;
-		this.font.drawWithShadow(matrices, this.suggestion, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, this.suggestionColor);
+		context.drawText(font, suggestion, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, this.suggestionColor, true);
 	}
 
 	@Environment(EnvType.CLIENT)
-	protected void renderSelection(MatrixStack matrices, int x, int y, String visibleText) {
+	protected void renderSelection(DrawContext context, int x, int y, String visibleText) {
 		if (select == cursor || select == -1) return;
 
 		int textLength = visibleText.length();
@@ -229,31 +229,31 @@ public class WTextField extends WWidget {
 		int leftCaret = font.getWidth(visibleText.substring(0, normalizedLeft));
 		int selectionWidth = font.getWidth(visibleText.substring(normalizedLeft, normalizedRight));
 
-		invertedRect(matrices, x + TEXT_PADDING_X + leftCaret, y + CURSOR_PADDING_Y, selectionWidth, CURSOR_HEIGHT);
+		invertedRect(context, x + TEXT_PADDING_X + leftCaret, y + CURSOR_PADDING_Y, selectionWidth, CURSOR_HEIGHT);
 	}
 
 	@Environment(EnvType.CLIENT)
-	protected void renderTextField(MatrixStack matrices, int x, int y) {
+	protected void renderTextField(DrawContext context, int x, int y) {
 		if (this.font == null) this.font = MinecraftClient.getInstance().textRenderer;
 
 		checkScrollOffset();
 		String visibleText = font.trimToWidth(this.text.substring(this.scrollOffset), this.width - 2 * TEXT_PADDING_X);
-		renderBox(matrices, x, y);
-		renderText(matrices, x, y, visibleText);
+		renderBox(context, x, y);
+		renderText(context, x, y, visibleText);
 		if (this.text.isEmpty() && !this.isFocused()) {
-			renderSuggestion(matrices, x, y);
+			renderSuggestion(context, x, y);
 		}
 		if (this.isFocused()) {
-			renderCursor(matrices, x, y, visibleText);
+			renderCursor(context, x, y, visibleText);
 		}
-		renderSelection(matrices, x, y, visibleText);
+		renderSelection(context, x, y, visibleText);
 	}
 
 	@Environment(EnvType.CLIENT)
-	private void invertedRect(MatrixStack matrices, int x, int y, int width, int height) {
+	private void invertedRect(DrawContext context, int x, int y, int width, int height) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
-		Matrix4f model = matrices.peek().getPositionMatrix();
+		Matrix4f model = context.getMatrices().peek().getPositionMatrix();
 		RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
 		RenderSystem.setShader(GameRenderer::getPositionProgram);
 		RenderSystem.enableColorLogicOp();
@@ -332,8 +332,8 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		renderTextField(matrices, x, y);
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+		renderTextField(context, x, y);
 	}
 
 	@Environment(EnvType.CLIENT)

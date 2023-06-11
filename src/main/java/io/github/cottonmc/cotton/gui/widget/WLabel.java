@@ -4,10 +4,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -62,7 +62,7 @@ public class WLabel extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		TextRenderer renderer = mc.textRenderer;
 		int yOffset = switch (verticalAlignment) {
@@ -71,10 +71,10 @@ public class WLabel extends WWidget {
 			case TOP -> 0;
 		};
 
-		ScreenDrawing.drawString(matrices, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
+		ScreenDrawing.drawString(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
 
 		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
-		ScreenDrawing.drawTextHover(matrices, hoveredTextStyle, x + mouseX, y + mouseY);
+		ScreenDrawing.drawTextHover(context, hoveredTextStyle, x + mouseX, y + mouseY);
 	}
 
 	@Environment(EnvType.CLIENT)

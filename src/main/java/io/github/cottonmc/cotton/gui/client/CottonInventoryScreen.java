@@ -1,14 +1,13 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
@@ -274,17 +273,17 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	}
 
 	@Override
-	protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
+	protected void drawBackground(DrawContext context, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
-	private void paint(MatrixStack matrices, int mouseX, int mouseY) {
-		renderBackground(matrices);
+	private void paint(DrawContext context, int mouseX, int mouseY) {
+		renderBackground(context);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
 				Scissors.refreshScissors();
-				root.paint(matrices, x, y, mouseX-x, mouseY-y);
+				root.paint(context, x, y, mouseX-x, mouseY-y);
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				Scissors.checkStackIsEmpty();
 			}
@@ -292,29 +291,29 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	}
 	
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
-		paint(matrices, mouseX, mouseY);
+	public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
+		paint(context, mouseX, mouseY);
 		
-		super.render(matrices, mouseX, mouseY, partialTicks);
+		super.render(context, mouseX, mouseY, partialTicks);
 		DiffuseLighting.disableGuiDepthLighting(); //Needed because super.render leaves dirty state
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				WWidget hitChild = root.hit(mouseX-x, mouseY-y);
-				if (hitChild!=null) hitChild.renderTooltip(matrices, x, y, mouseX-x, mouseY-y);
+				if (hitChild!=null) hitChild.renderTooltip(context, x, y, mouseX-x, mouseY-y);
 			}
 		}
 		
-		drawMouseoverTooltip(matrices, mouseX, mouseY); //Draws the itemstack tooltips
-		VisualLogger.render(matrices);
+		drawMouseoverTooltip(context, mouseX, mouseY); //Draws the itemstack tooltips
+		VisualLogger.render(context);
 	}
 
 	@Override
-	protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+	protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
 		if (description != null && description.isTitleVisible()) {
 			int width = description.getRootPanel().getWidth();
-			ScreenDrawing.drawString(matrices, getTitle().asOrderedText(), description.getTitleAlignment(), titleX, titleY, width - 2 * titleX, description.getTitleColor());
+			ScreenDrawing.drawString(context, getTitle().asOrderedText(), description.getTitleAlignment(), titleX, titleY, width - 2 * titleX, description.getTitleColor());
 		}
 
 		// Don't draw the player inventory label as it's drawn by the widget itself
@@ -329,11 +328,6 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 				root.tick();
 			}
 		}
-	}
-
-	@Override
-	public void renderTextHover(MatrixStack matrices, @Nullable Style textStyle, int x, int y) {
-		renderTextHoverEffect(matrices, textStyle, x, y);
 	}
 
 	@Override

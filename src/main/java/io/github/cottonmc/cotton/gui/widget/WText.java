@@ -4,9 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -85,7 +85,7 @@ public class WText extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		if (wrappedLines == null || wrappingScheduled) {
 			wrapLines();
 			wrappingScheduled = false;
@@ -103,11 +103,11 @@ public class WText extends WWidget {
 			OrderedText line = wrappedLines.get(i);
 			int c = shouldRenderInDarkMode() ? darkmodeColor : color;
 
-			ScreenDrawing.drawString(matrices, line, horizontalAlignment, x, y + yOffset + i * font.fontHeight, width, c);
+			ScreenDrawing.drawString(context, line, horizontalAlignment, x, y + yOffset + i * font.fontHeight, width, c);
 		}
 
 		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
-		ScreenDrawing.drawTextHover(matrices, hoveredTextStyle, x + mouseX, y + mouseY);
+		ScreenDrawing.drawTextHover(context, hoveredTextStyle, x + mouseX, y + mouseY);
 	}
 
 	@Environment(EnvType.CLIENT)

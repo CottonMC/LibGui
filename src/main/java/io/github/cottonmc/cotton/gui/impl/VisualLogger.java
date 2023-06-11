@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -53,7 +53,7 @@ public final class VisualLogger {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void render(MatrixStack matrices) {
+	public static void render(DrawContext context) {
 		var client = MinecraftClient.getInstance();
 		var textRenderer = client.textRenderer;
 		int width = client.getWindow().getScaledWidth();
@@ -67,8 +67,8 @@ public final class VisualLogger {
 		int y = 0;
 
 		for (var line : lines) {
-			ScreenDrawing.coloredRect(matrices, 2, 2 + y, textRenderer.getWidth(line), fontHeight, 0x88_000000);
-			ScreenDrawing.drawString(matrices, line, 2, 2 + y, 0xFF_FFFFFF);
+			ScreenDrawing.coloredRect(context, 2, 2 + y, textRenderer.getWidth(line), fontHeight, 0x88_000000);
+			ScreenDrawing.drawString(context, line, 2, 2 + y, 0xFF_FFFFFF);
 			y += fontHeight;
 		}
 	}

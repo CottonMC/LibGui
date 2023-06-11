@@ -2,7 +2,7 @@ package io.github.cottonmc.cotton.gui.widget.icon;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -79,7 +79,7 @@ public class TextureIcon implements Icon {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int size) {
-		ScreenDrawing.texturedRect(matrices, x, y, size, size, texture, color, opacity);
+	public void paint(DrawContext context, int x, int y, int size) {
+		ScreenDrawing.texturedRect(context, x, y, size, size, texture, color, opacity);
 	}
 }

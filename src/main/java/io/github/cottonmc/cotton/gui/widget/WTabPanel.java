@@ -4,10 +4,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -374,7 +374,7 @@ public class WTabPanel extends WPanel {
 
 		@Environment(EnvType.CLIENT)
 		@Override
-		public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+		public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 			TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
 			Text title = data.getTitle();
 			Icon icon = data.getIcon();
@@ -389,9 +389,9 @@ public class WTabPanel extends WPanel {
 				}
 			}
 
-			(selected ? Painters.SELECTED_TAB : Painters.UNSELECTED_TAB).paintBackground(matrices, x, y, this);
+			(selected ? Painters.SELECTED_TAB : Painters.UNSELECTED_TAB).paintBackground(context, x, y, this);
 			if (isFocused()) {
-				(selected ? Painters.SELECTED_TAB_FOCUS_BORDER : Painters.UNSELECTED_TAB_FOCUS_BORDER).paintBackground(matrices, x, y, this);
+				(selected ? Painters.SELECTED_TAB_FOCUS_BORDER : Painters.UNSELECTED_TAB_FOCUS_BORDER).paintBackground(context, x, y, this);
 			}
 
 			int iconX = 6;
@@ -409,11 +409,11 @@ public class WTabPanel extends WPanel {
 					color = selected ? WLabel.DEFAULT_TEXT_COLOR : 0xEEEEEE;
 				}
 
-				ScreenDrawing.drawString(matrices, title.asOrderedText(), align, x + titleX, y + titleY, width, color);
+				ScreenDrawing.drawString(context, title.asOrderedText(), align, x + titleX, y + titleY, width, color);
 			}
 
 			if (icon != null) {
-				icon.paint(matrices, x + iconX, y + (height - TAB_PADDING - ICON_SIZE) / 2, ICON_SIZE);
+				icon.paint(context, x + iconX, y + (height - TAB_PADDING - ICON_SIZE) / 2, ICON_SIZE);
 			}
 		}
 

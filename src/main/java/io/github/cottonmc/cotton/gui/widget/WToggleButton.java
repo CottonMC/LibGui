@@ -3,10 +3,10 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -104,14 +104,14 @@ public class WToggleButton extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-		ScreenDrawing.texturedRect(matrices, x, y, 18, 18, isOn ? onImage : offImage, 0xFFFFFFFF);
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+		ScreenDrawing.texturedRect(context, x, y, 18, 18, isOn ? onImage : offImage, 0xFFFFFFFF);
 		if (isFocused()) {
-			ScreenDrawing.texturedRect(matrices, x, y, 18, 18, focusImage, 0xFFFFFFFF);
+			ScreenDrawing.texturedRect(context, x, y, 18, 18, focusImage, 0xFFFFFFFF);
 		}
 
 		if (label!=null) {
-			ScreenDrawing.drawString(matrices, label.asOrderedText(), x + 22, y+6, shouldRenderInDarkMode() ? darkmodeColor : color);
+			ScreenDrawing.drawString(context, label.asOrderedText(), x + 22, y+6, shouldRenderInDarkMode() ? darkmodeColor : color);
 		}
 	}
 	

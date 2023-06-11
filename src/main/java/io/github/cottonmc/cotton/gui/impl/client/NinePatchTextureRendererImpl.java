@@ -3,12 +3,12 @@ package io.github.cottonmc.cotton.gui.impl.client;
 import com.mojang.blaze3d.systems.RenderCall;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.ShaderProgram;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -19,20 +19,20 @@ import org.joml.Matrix4f;
 /**
  * An implementation of LibNinePatch's {@link ContextualTextureRenderer} for identifiers.
  */
-public enum NinePatchTextureRendererImpl implements ContextualTextureRenderer<Identifier, MatrixStack> {
+public enum NinePatchTextureRendererImpl implements ContextualTextureRenderer<Identifier, DrawContext> {
 	INSTANCE;
 
 	@Override
-	public void draw(Identifier texture, MatrixStack matrices, int x, int y, int width, int height, float u1, float v1, float u2, float v2) {
-		ScreenDrawing.texturedRect(matrices, x, y, width, height, texture, u1, v1, u2, v2, 0xFF_FFFFFF);
+	public void draw(Identifier texture, DrawContext context, int x, int y, int width, int height, float u1, float v1, float u2, float v2) {
+		ScreenDrawing.texturedRect(context, x, y, width, height, texture, u1, v1, u2, v2, 0xFF_FFFFFF);
 	}
 
 	@Override
-	public void drawTiled(Identifier texture, MatrixStack matrices, int x, int y, int regionWidth, int regionHeight, int tileWidth, int tileHeight, float u1, float v1, float u2, float v2) {
+	public void drawTiled(Identifier texture, DrawContext context, int x, int y, int regionWidth, int regionHeight, int tileWidth, int tileHeight, float u1, float v1, float u2, float v2) {
 		RenderSystem.setShader(LibGuiShaders::getTiledRectangle);
 		RenderSystem.setShaderTexture(0, texture);
 		RenderSystem.setShaderColor(1, 1, 1, 1);
-		Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
+		Matrix4f positionMatrix = context.getMatrices().peek().getPositionMatrix();
 		onRenderThread(() -> {
 			@Nullable ShaderProgram program = RenderSystem.getShader();
 			if (program != null) {

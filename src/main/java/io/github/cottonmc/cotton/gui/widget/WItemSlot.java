@@ -3,9 +3,9 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -427,13 +427,13 @@ public class WItemSlot extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter != null) {
-			backgroundPainter.paintBackground(matrices, x, y, this);
+			backgroundPainter.paintBackground(context, x, y, this);
 		}
 
 		if (icon != null) {
-			icon.paint(matrices, x + 1, y + 1, 16);
+			icon.paint(context, x + 1, y + 1, 16);
 		}
 	}
 
