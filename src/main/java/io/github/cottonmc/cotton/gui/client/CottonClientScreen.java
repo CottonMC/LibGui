@@ -139,7 +139,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
 			if (getTitle() != null && description.isTitleVisible()) {
 				int width = description.getRootPanel().getWidth();
-				ScreenDrawing.drawString(matrices, getTitle().asOrderedText(), description.getTitleAlignment(), left + titleX, top + titleY, width - titleX, description.getTitleColor());
+				ScreenDrawing.drawString(matrices, getTitle().asOrderedText(), description.getTitleAlignment(), left + titleX, top + titleY, width - 2 * titleX, description.getTitleColor());
 			}
 		}
 	}

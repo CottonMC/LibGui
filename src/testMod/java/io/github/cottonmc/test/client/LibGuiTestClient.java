@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
@@ -65,13 +66,18 @@ public class LibGuiTestClient implements ClientModInitializer {
 						.then(literal("#182").executes(openScreen(client -> new Issue182TestGui())))
 						.then(literal("#196").executes(openScreen(client -> new Issue196TestGui())))
 						.then(literal("darkmode").executes(openScreen(client -> new DarkModeTestGui())))
+						.then(literal("titlealignment").executes(openScreen(Text.literal("test title"), client -> new TitleAlignmentTestGui())))
 		));
 	}
 
 	private static Command<FabricClientCommandSource> openScreen(Function<MinecraftClient, LightweightGuiDescription> screenFactory) {
+		return openScreen(ScreenTexts.EMPTY, screenFactory);
+	}
+
+	private static Command<FabricClientCommandSource> openScreen(Text title, Function<MinecraftClient, LightweightGuiDescription> screenFactory) {
 		return context -> {
 			var client = context.getSource().getClient();
-			client.send(() -> client.setScreen(new CottonClientScreen(screenFactory.apply(client))));
+			client.send(() -> client.setScreen(new CottonClientScreen(title, screenFactory.apply(client))));
 			return Command.SINGLE_SUCCESS;
 		};
 	}
