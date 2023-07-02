@@ -49,4 +49,9 @@ public abstract class WPanelWithInsets extends WPanel {
 
 		return this;
 	}
+
+	@Override
+	protected void expandToFit(WWidget w) {
+		expandToFit(w, insets);
+	}
 }
