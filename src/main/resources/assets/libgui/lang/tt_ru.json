@@ -1,4 +1,5 @@
 {
+  "modmenu.descriptionTranslation.libgui": "Fabric өчен җиңел челтәр нигезендә интерфейслар",
   "options.libgui.libgui_settings": "LibGui көйләүләре",
   "option.libgui.darkmode": "Караңгы тема",
   "widget.libgui.item_slot.narration.title": "%2$s предметның слотыннан %1$s слоты",
