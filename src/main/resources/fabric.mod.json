@@ -31,7 +31,7 @@
 		"fabric-networking-api-v1": "^1.0.21",
 		"fabric-rendering-v1": "^3.0.6",
 		"minecraft": ">=1.20-rc.1",
-		"jankson": "^5.0.1",
+		"jankson": "^6.0.0",
 		"libninepatch": "^1.2.0"
 	},
 	"suggests": {
