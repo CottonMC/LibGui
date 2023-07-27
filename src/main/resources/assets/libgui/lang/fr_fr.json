@@ -1,4 +1,17 @@
 {
-	"options.libgui.libgui_settings": "Paramètres de LibGui",
-	"option.libgui.darkmode": "Mode sombre"
+  "options.libgui.libgui_settings": "Paramètres de LibGui",
+  "option.libgui.darkmode": "Mode sombre",
+  "widget.libgui.item_slot.narration.title": "Emplacement %s sur %s",
+  "widget.libgui.labeled_slider.narration.title": "%s slider: at %s between %s and %s",
+  "widget.libgui.scroll_bar.narration.title": "Barre de défilement",
+  "widget.libgui.slider.narration.title": "Curseur: à %s entre %s et %s",
+  "widget.libgui.slider.narration.usage": "Déplacer en tirant ou avec les flêches directionnelles",
+  "widget.libgui.tab.narration.title": "Onglet %s",
+  "widget.libgui.tab.narration.position": "Onglet %s sur %s",
+  "widget.libgui.text_field.narration.title": "Champ textuel: %s",
+  "widget.libgui.text_field.narration.suggestion": "Suggestion: %s",
+  "widget.libgui.toggle_button.narration.unnamed": "Bouton à bascule: %s",
+  "widget.libgui.toggle_button.narration.named": "Bouton à bascule: %s (%s)",
+  "widget.libgui.toggle_button.narration.on": "Activé",
+  "widget.libgui.toggle_button.narration.off": "Désactivé"
 } 
