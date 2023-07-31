@@ -37,12 +37,12 @@ public class ValidatedSlot extends Slot {
 	
 	@Override
 	public boolean canInsert(ItemStack stack) {
-		return insertingAllowed && inventory.isValid(slotNumber, stack) && inputFilter.test(stack); // works fine
+		return insertingAllowed && inventory.isValid(slotNumber, stack) && inputFilter.test(stack);
 	}
 	
 	@Override
 	public boolean canTakeItems(PlayerEntity player) {
-		return takingAllowed && inventory.canPlayerUse(player) && outputFilter.test(getStack()); // doesn't
+		return takingAllowed && inventory.canPlayerUse(player) && outputFilter.test(getStack());
 	}
 	
 	@Override
