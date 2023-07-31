@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 public class ValidatedSlot extends Slot {
 	/**
-	 * The default {@linkplain #setFilter(Predicate) item filter} that allows all items.
+	 * The default {@linkplain #setInputFilter(Predicate)  item filter} that allows all items.
 	 *
 	 * @since 5.1.1
 	 */
@@ -24,7 +24,8 @@ public class ValidatedSlot extends Slot {
 	private final int slotNumber;
 	private boolean insertingAllowed = true;
 	private boolean takingAllowed = true;
-	private Predicate<ItemStack> filter = DEFAULT_ITEM_FILTER;
+	private Predicate<ItemStack> inputFilter = DEFAULT_ITEM_FILTER;
+	private Predicate<ItemStack> outputFilter = DEFAULT_ITEM_FILTER;
 	protected final Multimap<WItemSlot, WItemSlot.ChangeListener> listeners = HashMultimap.create();
 	private boolean visible = true;
 
@@ -36,12 +37,12 @@ public class ValidatedSlot extends Slot {
 	
 	@Override
 	public boolean canInsert(ItemStack stack) {
-		return insertingAllowed && inventory.isValid(slotNumber, stack) && filter.test(stack);
+		return insertingAllowed && inventory.isValid(slotNumber, stack) && inputFilter.test(stack); // works fine
 	}
 	
 	@Override
 	public boolean canTakeItems(PlayerEntity player) {
-		return takingAllowed && inventory.canPlayerUse(player);
+		return takingAllowed && inventory.canPlayerUse(player) && outputFilter.test(getStack()); // doesn't
 	}
 	
 	@Override
@@ -116,23 +117,63 @@ public class ValidatedSlot extends Slot {
 	}
 
 	/**
+	 * Gets the item stack input filter of this slot.
+	 *
+	 * @return the item input filter
+	 */
+	public Predicate<ItemStack> getInputFilter() {
+		return inputFilter;
+	}
+
+	/**
+	 * Sets the item stack input filter of this slot.
+	 *
+	 * @param inputFilter the new item input filter
+	 */
+	public void setInputFilter(Predicate<ItemStack> inputFilter) {
+		this.inputFilter = inputFilter;
+	}
+
+	/**
+	 * Gets the item stack output filter of this slot.
+	 *
+	 * @return the item output filter
+	 */
+	public Predicate<ItemStack> getOutputFilter() {
+		return outputFilter;
+	}
+
+	/**
+	 * Sets the item stack output filter of this slot.
+	 *
+	 * @param outputFilter the new item output filter
+	 */
+	public void setOutputFilter(Predicate<ItemStack> outputFilter) {
+		this.outputFilter = outputFilter;
+	}
+
+	/**
 	 * Gets the item stack filter of this slot.
 	 *
 	 * @return the item filter
+	 * @deprecated Replaced by {@link #getInputFilter()}
 	 * @since 2.0.0
 	 */
+	@Deprecated
 	public Predicate<ItemStack> getFilter() {
-		return filter;
+		return inputFilter;
 	}
 
 	/**
 	 * Sets the item stack filter of this slot.
 	 *
 	 * @param filter the new item filter
+	 * @deprecated Replaced by {@link #setInputFilter(Predicate)}
 	 * @since 2.0.0
 	 */
+	@Deprecated
 	public void setFilter(Predicate<ItemStack> filter) {
-		this.filter = filter;
+		setInputFilter(filter);
 	}
 
 	/**

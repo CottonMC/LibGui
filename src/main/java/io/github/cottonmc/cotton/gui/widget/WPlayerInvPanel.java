@@ -14,10 +14,10 @@ import org.jetbrains.annotations.Nullable;
  * A player inventory widget that has a visually separate hotbar.
  */
 public class WPlayerInvPanel extends WPlainPanel {
-	private final WItemSlot inv;
-	private final WItemSlot hotbar;
+	protected final WItemSlot inv;
+	protected final WItemSlot hotbar;
 	@Nullable
-	private final WWidget label;
+	protected final WWidget label;
 
 	/**
 	 * Constructs a player inventory panel with a label.
