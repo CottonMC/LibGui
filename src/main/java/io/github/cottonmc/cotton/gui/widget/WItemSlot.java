@@ -458,6 +458,7 @@ public class WItemSlot extends WWidget {
 	 * @deprecated Replaced by {@link #getInputFilter()}
 	 * @since 2.0.0
 	 */
+	@Deprecated
 	public Predicate<ItemStack> getFilter() {
 		return inputFilter;
 	}
@@ -470,6 +471,7 @@ public class WItemSlot extends WWidget {
 	 * @deprecated Replaced by {@link #setInputFilter(Predicate)}
 	 * @since 2.0.0
 	 */
+	@Deprecated
 	public WItemSlot setFilter(Predicate<ItemStack> filter) {
 		return setInputFilter(filter);
 	}

@@ -40,10 +40,7 @@ public class TestDescription extends SyncedGuiDescription {
 		root.add(buttonA, 0, 3, 4, 1);
 
 		WButton buttonB = new WButton(Text.literal("Show Warnings"));
-		buttonB.setOnClick(() -> {
-			slot.setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png")));
-		});
-
+		buttonB.setOnClick(() -> slot.setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))));
 
 		root.add(buttonB, 5, 3, 4, 1);
 		TextureIcon testIcon = new TextureIcon(new Texture(new Identifier("libgui-test", "icon.png")));
@@ -56,12 +53,7 @@ public class TestDescription extends SyncedGuiDescription {
 		root.add(new WLabel(Text.literal("Large Glass-only output:")), 0, 9);
 		root.add(WItemSlot.outputOf(blockInventory, 0).setOutputFilter(stack -> stack.isOf(Items.GLASS)), 4, 9);
 
-		root.add(
-			WItemSlot.of(blockInventory, 7)
-				.setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png")))
-				.setInputFilter(stack -> stack.isOf(Items.SADDLE)),
-			7, 9
-		);
+		root.add(WItemSlot.of(blockInventory, 7).setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))).setInputFilter(stack -> stack.isOf(Items.SADDLE)), 7, 10);
 
 		root.add(createPlayerInventoryPanel(), 0, 11);
 		System.out.println(root.toString());
