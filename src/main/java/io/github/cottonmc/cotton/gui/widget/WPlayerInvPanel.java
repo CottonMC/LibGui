@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,10 +14,29 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * A player inventory widget that has a visually separate hotbar.
+ *
+ * @see SyncedGuiDescription#createPlayerInventoryPanel()
  */
 public class WPlayerInvPanel extends WPlainPanel {
-	protected final WItemSlot inv;
+	/**
+	 * A 9 by 3 {@link WItemSlot} that represents the player's inventory.
+	 *
+	 * @see PlayerInventory
+	 */
+	protected final WItemSlot inventory;
+	/**
+	 * A 9 by 1 {@link WItemSlot} that represents the player's hotbar.
+	 *
+	 * @see PlayerInventory
+	 */
 	protected final WItemSlot hotbar;
+	/**
+	 * The label seen above {@link WPlayerInvPanel#inventory}.
+	 *
+	 * <p> In vanilla and {@link WPlayerInvPanel#WPlayerInvPanel(PlayerInventory)}, this label is always 'Inventory'
+	 *
+	 * @see #createInventoryLabel(PlayerInventory) 
+	 */
 	@Nullable
 	protected final WWidget label;
 
@@ -55,14 +76,14 @@ public class WPlayerInvPanel extends WPlainPanel {
 			y += label.getHeight();
 		}
 
-		inv = WItemSlot.ofPlayerStorage(playerInventory);
+		inventory = WItemSlot.ofPlayerStorage(playerInventory);
 		hotbar = new WItemSlot(playerInventory, 0, 9, 1, false) {
 			@Override
 			protected Text getNarrationName() {
 				return NarrationMessages.Vanilla.HOTBAR;
 			}
 		};
-		this.add(inv, 0, y);
+		this.add(inventory, 0, y);
 		this.add(hotbar, 0, y + 58);
 	}
 
@@ -94,7 +115,7 @@ public class WPlayerInvPanel extends WPlainPanel {
 	@Override
 	public WPanel setBackgroundPainter(BackgroundPainter painter) {
 		super.setBackgroundPainter(null);
-		inv.setBackgroundPainter(painter);
+		inventory.setBackgroundPainter(painter);
 		hotbar.setBackgroundPainter(painter);
 		return this;
 	}
