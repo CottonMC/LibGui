@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 public class ValidatedSlot extends Slot {
 	/**
-	 * The default {@linkplain #setInputFilter(Predicate)  item filter} that allows all items.
+	 * The default {@linkplain #setInputFilter(Predicate) item filter} that allows all items.
 	 *
 	 * @since 5.1.1
 	 */
