@@ -1,5 +1,11 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.client.NinePatchBackgroundPainter;
+
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
@@ -10,6 +16,10 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+
+import net.minecraft.util.Identifier;
+
+import static io.github.cottonmc.cotton.gui.client.BackgroundPainter.createNinePatch;
 
 public class WScrollBar extends WWidget {
 	private static final int SCROLLING_SPEED = 4;
@@ -22,6 +32,28 @@ public class WScrollBar extends WWidget {
 	protected int anchor = -1;
 	protected int anchorValue = -1;
 	protected boolean sliding = false;
+	private static final BackgroundPainter background = BackgroundPainter.createLightDarkVariants(
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_background.png")),
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_background.png"))
+	);
+
+	private static final BackgroundPainter scrollBar = BackgroundPainter.createLightDarkVariants(
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar.png")),
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar.png"))
+	);
+
+	private static final BackgroundPainter scrollBarPressed = BackgroundPainter.createLightDarkVariants(
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed.png")),
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_pressed.png"))
+	);
+
+	private static final BackgroundPainter scrollBarHovered = BackgroundPainter.createLightDarkVariants(
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered.png")),
+			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_hovered.png"))
+	);
+
+	private static final NinePatchBackgroundPainter focus = createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/scroll_bar_focus.png"));
+
 
 	/**
 	 * Constructs a horizontal scroll bar.
@@ -41,61 +73,40 @@ public class WScrollBar extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-		boolean darkMode = shouldRenderInDarkMode();
+		background.paintBackground(context, x, y, this);
 
-		if (darkMode) {
-			ScreenDrawing.drawBeveledPanel(context, x, y, width, height, 0xFF_212121, 0xFF_2F2F2F, 0xFF_5D5D5D);
-		} else {
-			ScreenDrawing.drawBeveledPanel(context, x, y, width, height, 0xFF_373737, 0xFF_8B8B8B, 0xFF_FFFFFF);
-		}
-		if (maxValue<=0) return;
+		BackgroundPainter scrollBarPainter = scrollBar;
 
-		// Handle colors
-		int top, middle, bottom;
+		if (maxValue <= 0) return;
 
 		if (sliding) {
-			if (darkMode) {
-				top = 0xFF_6C6C6C;
-				middle = 0xFF_2F2F2F;
-				bottom = 0xFF_212121;
-			} else {
-				top = 0xFF_FFFFFF;
-				middle = 0xFF_8B8B8B;
-				bottom = 0xFF_555555;
-			}
+			scrollBarPainter = scrollBarPressed;
 		} else if (isWithinBounds(mouseX, mouseY)) {
-			if (darkMode) {
-				top = 0xFF_5F6A9D;
-				middle = 0xFF_323F6E;
-				bottom = 0xFF_0B204A;
-			} else {
-				top = 0xFF_CFD0F7;
-				middle = 0xFF_8791C7;
-				bottom = 0xFF_343E75;
-			}
-		} else {
-			if (darkMode) {
-				top = 0xFF_6C6C6C;
-				middle = 0xFF_414141;
-				bottom = 0xFF_212121;
-			} else {
-				top = 0xFF_FFFFFF;
-				middle = 0xFF_C6C6C6;
-				bottom = 0xFF_555555;
-			}
+			scrollBarPainter = scrollBarHovered;
 		}
 
-		if (axis==Axis.HORIZONTAL) {
-			ScreenDrawing.drawBeveledPanel(context, x+1+getHandlePosition(), y+1, getHandleSize(), height-2, top, middle, bottom);
+		WWidget widget = new WWidget() {
+			@Override
+			public boolean shouldRenderInDarkMode() {
+				return WScrollBar.this.shouldRenderInDarkMode();
+			}
+		};
+
+		if (axis == Axis.HORIZONTAL) {
+			widget.setSize(getHandleSize(), height - 2);
+
+			scrollBarPainter.paintBackground(context, x + 1 + getHandlePosition(), y + 1, widget);
 
 			if (isFocused()) {
-				drawBeveledOutline(context, x+1+getHandlePosition(), y+1, getHandleSize(), height-2, 0xFF_FFFFA7, 0xFF_8C8F39);
+				focus.paintBackground(context, x + 1 + getHandlePosition(), y + 1, widget);
 			}
 		} else {
-			ScreenDrawing.drawBeveledPanel(context, x+1, y+1+getHandlePosition(), width-2, getHandleSize(), top, middle, bottom);
+			widget.setSize(width-2, getHandleSize());
+
+			scrollBarPainter.paintBackground(context, x+1, y+1+getHandlePosition(), widget);
 
 			if (isFocused()) {
-				drawBeveledOutline(context, x+1, y+1+getHandlePosition(), width-2, getHandleSize(), 0xFF_FFFFA7, 0xFF_8C8F39);
+				focus.paintBackground(context, x+1, y+1+getHandlePosition(), widget);
 			}
 		}
 	}
@@ -109,7 +120,7 @@ public class WScrollBar extends WWidget {
 	public boolean canFocus() {
 		return true;
 	}
-
+	@Deprecated
 	private static void drawBeveledOutline(DrawContext context, int x, int y, int width, int height, int topleft, int bottomright) {
 		ScreenDrawing.coloredRect(context, x,             y,              width,     1,          topleft); //Top shadow
 		ScreenDrawing.coloredRect(context, x,             y + 1,          1,         height - 1, topleft); //Left shadow
