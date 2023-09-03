@@ -8,11 +8,12 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.NinePatchBackgroundPainter;
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
+import io.github.cottonmc.cotton.gui.impl.client.NinePatchTextureRendererImpl;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import juuxel.libninepatch.NinePatch;
 
 import static io.github.cottonmc.cotton.gui.client.BackgroundPainter.createNinePatch;
 
@@ -46,42 +47,39 @@ public class WScrollBar extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-		Painters.background.paintBackground(context, x, y, this);
+		var matrices = context.getMatrices();
 
-		BackgroundPainter scrollBarPainter = Painters.scrollBar;
+		Painters.BACKGROUND.paintBackground(context, x, y, this);
+
+		NinePatch<Identifier> painter = (shouldRenderInDarkMode() ? Painters.SCROLL_BAR_DARK : Painters.SCROLL_BAR);
 
 		if (maxValue <= 0) return;
 
 		if (sliding) {
-			scrollBarPainter = Painters.scrollBarPressed;
+			painter = (shouldRenderInDarkMode() ? Painters.SCROLL_BAR_PRESSED_DARK : Painters.SCROLL_BAR_PRESSED);
 		} else if (isWithinBounds(mouseX, mouseY)) {
-			scrollBarPainter = Painters.scrollBarHovered;
+			painter = (shouldRenderInDarkMode() ? Painters.SCROLL_BAR_HOVERED_DARK : Painters.SCROLL_BAR_HOVERED);
 		}
 
-		WWidget widget = new WWidget() {
-			@Override
-			public boolean shouldRenderInDarkMode() {
-				return WScrollBar.this.shouldRenderInDarkMode();
-			}
-		};
+		matrices.push();
 
 		if (axis == Axis.HORIZONTAL) {
-			widget.setSize(getHandleSize(), height - 2);
-
-			scrollBarPainter.paintBackground(context, x + 1 + getHandlePosition(), y + 1, widget);
+			matrices.translate(x + 1 + getHandlePosition(), y + 1, 0);
+			painter.draw(NinePatchTextureRendererImpl.INSTANCE, context, getHandleSize(), height - 2);
 
 			if (isFocused()) {
-				Painters.focus.paintBackground(context, x + 1 + getHandlePosition(), y + 1, widget);
+				Painters.FOCUS.draw(NinePatchTextureRendererImpl.INSTANCE, context, getHandleSize(), height - 2);
 			}
 		} else {
-			widget.setSize(width - 2, getHandleSize());
-
-			scrollBarPainter.paintBackground(context, x + 1, y + 1 + getHandlePosition(), widget);
+			matrices.translate(x + 1, y + 1 + getHandlePosition(), 0);
+			painter.draw(NinePatchTextureRendererImpl.INSTANCE, context, width - 2, getHandleSize());
 
 			if (isFocused()) {
-				Painters.focus.paintBackground(context, x + 1, y + 1 + getHandlePosition(), widget);
+				Painters.FOCUS.draw(NinePatchTextureRendererImpl.INSTANCE, context, width - 2, getHandleSize());
 			}
 		}
+
+		matrices.pop();
 	}
 
 	@Override
@@ -259,26 +257,16 @@ public class WScrollBar extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	final static class Painters {
-		static final BackgroundPainter background = BackgroundPainter.createLightDarkVariants(
-				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_background.png")),
-				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_background.png"))
+		static final NinePatch<Identifier> SCROLL_BAR = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/scroll_bar.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/scroll_bar_dark.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_PRESSED = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/scroll_bar_pressed.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_PRESSED_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/scroll_bar_pressed_dark.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_HOVERED = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/scroll_bar_hovered.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_HOVERED_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/scroll_bar_hovered_dark.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final BackgroundPainter BACKGROUND = BackgroundPainter.createLightDarkVariants(
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/background.png")),
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/background_dark.png"))
 		);
-
-		static final BackgroundPainter scrollBar = BackgroundPainter.createLightDarkVariants(
-				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar.png")),
-				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar.png"))
-		);
-
-		static final BackgroundPainter scrollBarPressed = BackgroundPainter.createLightDarkVariants(
-				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed.png")),
-				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_pressed.png"))
-		);
-
-		static final BackgroundPainter scrollBarHovered = BackgroundPainter.createLightDarkVariants(
-				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered.png")),
-				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_hovered.png"))
-		);
-
-		static final NinePatchBackgroundPainter focus = createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/scroll_bar_focus.png"));
+		static final NinePatch<Identifier> FOCUS = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/focus.png")).cornerSize(4).cornerUv(0.25f).build();
 	}
 }
