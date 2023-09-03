@@ -1,23 +1,18 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.LibGui;
-import io.github.cottonmc.cotton.gui.client.NinePatchBackgroundPainter;
-
-import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.util.Identifier;
 
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.client.NinePatchBackgroundPainter;
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
-
-import net.minecraft.util.Identifier;
 
 import static io.github.cottonmc.cotton.gui.client.BackgroundPainter.createNinePatch;
 
@@ -32,28 +27,6 @@ public class WScrollBar extends WWidget {
 	protected int anchor = -1;
 	protected int anchorValue = -1;
 	protected boolean sliding = false;
-	private static final BackgroundPainter background = BackgroundPainter.createLightDarkVariants(
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_background.png")),
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_background.png"))
-	);
-
-	private static final BackgroundPainter scrollBar = BackgroundPainter.createLightDarkVariants(
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar.png")),
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar.png"))
-	);
-
-	private static final BackgroundPainter scrollBarPressed = BackgroundPainter.createLightDarkVariants(
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed.png")),
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_pressed.png"))
-	);
-
-	private static final BackgroundPainter scrollBarHovered = BackgroundPainter.createLightDarkVariants(
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered.png")),
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_hovered.png"))
-	);
-
-	private static final NinePatchBackgroundPainter focus = createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/scroll_bar_focus.png"));
-
 
 	/**
 	 * Constructs a horizontal scroll bar.
@@ -73,16 +46,16 @@ public class WScrollBar extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-		background.paintBackground(context, x, y, this);
+		Painters.background.paintBackground(context, x, y, this);
 
-		BackgroundPainter scrollBarPainter = scrollBar;
+		BackgroundPainter scrollBarPainter = Painters.scrollBar;
 
 		if (maxValue <= 0) return;
 
 		if (sliding) {
-			scrollBarPainter = scrollBarPressed;
+			scrollBarPainter = Painters.scrollBarPressed;
 		} else if (isWithinBounds(mouseX, mouseY)) {
-			scrollBarPainter = scrollBarHovered;
+			scrollBarPainter = Painters.scrollBarHovered;
 		}
 
 		WWidget widget = new WWidget() {
@@ -98,15 +71,15 @@ public class WScrollBar extends WWidget {
 			scrollBarPainter.paintBackground(context, x + 1 + getHandlePosition(), y + 1, widget);
 
 			if (isFocused()) {
-				focus.paintBackground(context, x + 1 + getHandlePosition(), y + 1, widget);
+				Painters.focus.paintBackground(context, x + 1 + getHandlePosition(), y + 1, widget);
 			}
 		} else {
-			widget.setSize(width-2, getHandleSize());
+			widget.setSize(width - 2, getHandleSize());
 
-			scrollBarPainter.paintBackground(context, x+1, y+1+getHandlePosition(), widget);
+			scrollBarPainter.paintBackground(context, x + 1, y + 1 + getHandlePosition(), widget);
 
 			if (isFocused()) {
-				focus.paintBackground(context, x+1, y+1+getHandlePosition(), widget);
+				Painters.focus.paintBackground(context, x + 1, y + 1 + getHandlePosition(), widget);
 			}
 		}
 	}
@@ -120,44 +93,37 @@ public class WScrollBar extends WWidget {
 	public boolean canFocus() {
 		return true;
 	}
-	@Deprecated
-	private static void drawBeveledOutline(DrawContext context, int x, int y, int width, int height, int topleft, int bottomright) {
-		ScreenDrawing.coloredRect(context, x,             y,              width,     1,          topleft); //Top shadow
-		ScreenDrawing.coloredRect(context, x,             y + 1,          1,         height - 1, topleft); //Left shadow
-		ScreenDrawing.coloredRect(context, x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
-		ScreenDrawing.coloredRect(context, x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
-	}
 
 	/**
-	 * Gets the on-axis size of the scrollbar handle in gui pixels 
+	 * Gets the on-axis size of the scrollbar handle in gui pixels
 	 */
 	public int getHandleSize() {
-		float percentage = (window>=maxValue) ? 1f : window / (float)maxValue;
-		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
-		int result = (int)(percentage*bar);
-		if (result<6) result = 6;
+		float percentage = (window >= maxValue) ? 1f : window / (float) maxValue;
+		int bar = (axis == Axis.HORIZONTAL) ? width - 2 : height - 2;
+		int result = (int) (percentage * bar);
+		if (result < 6) result = 6;
 		return result;
 	}
-	
+
 	/**
 	 * Gets the number of pixels the scrollbar handle is able to move along its track from one end to the other.
 	 */
 	public int getMovableDistance() {
-		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
-		return bar-getHandleSize();
+		int bar = (axis == Axis.HORIZONTAL) ? width - 2 : height - 2;
+		return bar - getHandleSize();
 	}
-	
+
 	public int pixelsToValues(int pixels) {
 		int bar = getMovableDistance();
-		float percent = pixels / (float)bar;
-		return (int)(percent*(maxValue-window));
+		float percent = pixels / (float) bar;
+		return (int) (percent * (maxValue - window));
 	}
 
 	public int getHandlePosition() {
-		float percent = value / (float)Math.max(maxValue-window, 1);
-		return (int)(percent * getMovableDistance());
+		float percent = value / (float) Math.max(maxValue - window, 1);
+		return (int) (percent * getMovableDistance());
 	}
-	
+
 	/**
 	 * Gets the maximum scroll value achievable; this will typically be the maximum value minus the
 	 * window size
@@ -169,17 +135,17 @@ public class WScrollBar extends WWidget {
 	protected void adjustSlider(int x, int y) {
 
 		int delta = 0;
-		if (axis==Axis.HORIZONTAL) {
-			delta = x-anchor;
+		if (axis == Axis.HORIZONTAL) {
+			delta = x - anchor;
 		} else {
-			delta = y-anchor;
+			delta = y - anchor;
 		}
 
 		int valueDelta = pixelsToValues(delta);
 		int valueNew = anchorValue + valueDelta;
 
-		if (valueNew>getMaxScrollValue()) valueNew = getMaxScrollValue();
-		if (valueNew<0) valueNew = 0;
+		if (valueNew > getMaxScrollValue()) valueNew = getMaxScrollValue();
+		if (valueNew < 0) valueNew = 0;
 		this.value = valueNew;
 	}
 
@@ -188,7 +154,7 @@ public class WScrollBar extends WWidget {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
 		requestFocus();
 
-		if (axis==Axis.HORIZONTAL) {
+		if (axis == Axis.HORIZONTAL) {
 			anchor = x;
 			anchorValue = value;
 		} else {
@@ -278,10 +244,10 @@ public class WScrollBar extends WWidget {
 	 * and adjusts it if needed.
 	 */
 	protected void checkValue() {
-		if (this.value>maxValue-window) {
-			this.value = maxValue-window;
+		if (this.value > maxValue - window) {
+			this.value = maxValue - window;
 		}
-		if (this.value<0) this.value = 0;
+		if (this.value < 0) this.value = 0;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -289,5 +255,30 @@ public class WScrollBar extends WWidget {
 	public void addNarrations(NarrationMessageBuilder builder) {
 		builder.put(NarrationPart.TITLE, NarrationMessages.SCROLL_BAR_TITLE);
 		builder.put(NarrationPart.USAGE, NarrationMessages.SLIDER_USAGE);
+	}
+
+	@Environment(EnvType.CLIENT)
+	final static class Painters {
+		static final BackgroundPainter background = BackgroundPainter.createLightDarkVariants(
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_background.png")),
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_background.png"))
+		);
+
+		static final BackgroundPainter scrollBar = BackgroundPainter.createLightDarkVariants(
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar.png")),
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar.png"))
+		);
+
+		static final BackgroundPainter scrollBarPressed = BackgroundPainter.createLightDarkVariants(
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed.png")),
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_pressed.png"))
+		);
+
+		static final BackgroundPainter scrollBarHovered = BackgroundPainter.createLightDarkVariants(
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered.png")),
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/dark/scroll_bar_hovered.png"))
+		);
+
+		static final NinePatchBackgroundPainter focus = createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/gui/scroll_bar/scroll_bar_focus.png"));
 	}
 }
