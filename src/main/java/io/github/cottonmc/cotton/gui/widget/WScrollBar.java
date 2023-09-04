@@ -48,17 +48,18 @@ public class WScrollBar extends WWidget {
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		var matrices = context.getMatrices();
+		boolean darkMode = shouldRenderInDarkMode();
 
 		Painters.BACKGROUND.paintBackground(context, x, y, this);
 
-		NinePatch<Identifier> painter = (shouldRenderInDarkMode() ? Painters.SCROLL_BAR_DARK : Painters.SCROLL_BAR);
+		NinePatch<Identifier> painter = (darkMode ? Painters.SCROLL_BAR_DARK : Painters.SCROLL_BAR);
 
 		if (maxValue <= 0) return;
 
 		if (sliding) {
-			painter = (shouldRenderInDarkMode() ? Painters.SCROLL_BAR_PRESSED_DARK : Painters.SCROLL_BAR_PRESSED);
+			painter = (darkMode ? Painters.SCROLL_BAR_PRESSED_DARK : Painters.SCROLL_BAR_PRESSED);
 		} else if (isWithinBounds(mouseX, mouseY)) {
-			painter = (shouldRenderInDarkMode() ? Painters.SCROLL_BAR_HOVERED_DARK : Painters.SCROLL_BAR_HOVERED);
+			painter = (darkMode ? Painters.SCROLL_BAR_HOVERED_DARK : Painters.SCROLL_BAR_HOVERED);
 		}
 
 		matrices.push();
