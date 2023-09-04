@@ -258,14 +258,14 @@ public class WScrollBar extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	final static class Painters {
-		static final NinePatch<Identifier> SCROLL_BAR = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_light.png")).cornerSize(4).cornerUv(0.25f).build();
 		static final NinePatch<Identifier> SCROLL_BAR_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_dark.png")).cornerSize(4).cornerUv(0.25f).build();
-		static final NinePatch<Identifier> SCROLL_BAR_PRESSED = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_PRESSED = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_light.png")).cornerSize(4).cornerUv(0.25f).build();
 		static final NinePatch<Identifier> SCROLL_BAR_PRESSED_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_dark.png")).cornerSize(4).cornerUv(0.25f).build();
-		static final NinePatch<Identifier> SCROLL_BAR_HOVERED = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_HOVERED = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_light.png")).cornerSize(4).cornerUv(0.25f).build();
 		static final NinePatch<Identifier> SCROLL_BAR_HOVERED_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_dark.png")).cornerSize(4).cornerUv(0.25f).build();
 		static final BackgroundPainter BACKGROUND = BackgroundPainter.createLightDarkVariants(
-				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/background.png")),
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/background_light.png")),
 				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/background_dark.png"))
 		);
 		static final NinePatch<Identifier> FOCUS = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/focus.png")).cornerSize(4).cornerUv(0.25f).build();
