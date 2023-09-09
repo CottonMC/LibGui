@@ -6,7 +6,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import org.jetbrains.annotations.Nullable;
@@ -14,19 +13,21 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A player inventory widget that has a visually separate hotbar.
  *
- * @see SyncedGuiDescription#createPlayerInventoryPanel()
+ * @see io.github.cottonmc.cotton.gui.SyncedGuiDescription#createPlayerInventoryPanel()
  */
 public class WPlayerInvPanel extends WPlainPanel {
 	/**
 	 * A 9 by 3 {@link WItemSlot} that represents the player's inventory.
 	 *
 	 * @see PlayerInventory
+	 * @since 8.1.0
 	 */
 	protected final WItemSlot inventory;
 	/**
 	 * A 9 by 1 {@link WItemSlot} that represents the player's hotbar.
 	 *
 	 * @see PlayerInventory
+	 * @since 8.1.0
 	 */
 	protected final WItemSlot hotbar;
 	/**
@@ -34,7 +35,8 @@ public class WPlayerInvPanel extends WPlainPanel {
 	 *
 	 * <p> In vanilla and {@link WPlayerInvPanel#WPlayerInvPanel(PlayerInventory)}, this label is always 'Inventory'
 	 *
-	 * @see #createInventoryLabel(PlayerInventory) 
+	 * @see #createInventoryLabel(PlayerInventory)
+	 * @since 8.1.0
 	 */
 	@Nullable
 	protected final WWidget label;

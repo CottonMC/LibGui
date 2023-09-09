@@ -120,6 +120,7 @@ public class ValidatedSlot extends Slot {
 	 * Gets the item stack input filter of this slot.
 	 *
 	 * @return the item input filter
+	 * @since 8.1.0
 	 */
 	public Predicate<ItemStack> getInputFilter() {
 		return inputFilter;
@@ -129,6 +130,7 @@ public class ValidatedSlot extends Slot {
 	 * Sets the item stack input filter of this slot.
 	 *
 	 * @param inputFilter the new item input filter
+	 * @since 8.1.0
 	 */
 	public void setInputFilter(Predicate<ItemStack> inputFilter) {
 		this.inputFilter = inputFilter;
@@ -138,6 +140,7 @@ public class ValidatedSlot extends Slot {
 	 * Gets the item stack output filter of this slot.
 	 *
 	 * @return the item output filter
+	 * @since 8.1.0
 	 */
 	public Predicate<ItemStack> getOutputFilter() {
 		return outputFilter;
@@ -147,6 +150,7 @@ public class ValidatedSlot extends Slot {
 	 * Sets the item stack output filter of this slot.
 	 *
 	 * @param outputFilter the new item output filter
+	 * @since 8.1.0
 	 */
 	public void setOutputFilter(Predicate<ItemStack> outputFilter) {
 		this.outputFilter = outputFilter;
@@ -159,7 +163,7 @@ public class ValidatedSlot extends Slot {
 	 * @deprecated Replaced by {@link #getInputFilter()}
 	 * @since 2.0.0
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public Predicate<ItemStack> getFilter() {
 		return inputFilter;
 	}
@@ -171,7 +175,7 @@ public class ValidatedSlot extends Slot {
 	 * @deprecated Replaced by {@link #setInputFilter(Predicate)}
 	 * @since 2.0.0
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public void setFilter(Predicate<ItemStack> filter) {
 		setInputFilter(filter);
 	}

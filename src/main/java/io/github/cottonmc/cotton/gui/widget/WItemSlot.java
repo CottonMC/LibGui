@@ -409,6 +409,7 @@ public class WItemSlot extends WWidget {
 	 * Gets the item stack input filter of this slot.
 	 *
 	 * @return the item input filter
+	 * @since 8.1.0
 	 */
 	public Predicate<ItemStack> getInputFilter() {
 		return inputFilter;
@@ -419,6 +420,7 @@ public class WItemSlot extends WWidget {
 	 *
 	 * @param inputFilter the new item input filter
 	 * @return this item slot
+	 * @since 8.1.0
 	 */
 	public WItemSlot setInputFilter(Predicate<ItemStack> inputFilter) {
 		this.inputFilter = inputFilter;
@@ -432,6 +434,7 @@ public class WItemSlot extends WWidget {
 	 * Gets the item stack output filter of this slot.
 	 *
 	 * @return the item output filter
+	 * @since 8.1.0
 	 */
 	public Predicate<ItemStack> getOutputFilter() {
 		return outputFilter;
@@ -442,6 +445,7 @@ public class WItemSlot extends WWidget {
 	 *
 	 * @param outputFilter the new item output filter
 	 * @return this item slot
+	 * @since 8.1.0
 	 */
 	public WItemSlot setOutputFilter(Predicate<ItemStack> outputFilter) {
 		this.outputFilter = outputFilter;
@@ -458,7 +462,7 @@ public class WItemSlot extends WWidget {
 	 * @deprecated Replaced by {@link #getInputFilter()}
 	 * @since 2.0.0
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public Predicate<ItemStack> getFilter() {
 		return inputFilter;
 	}
@@ -471,7 +475,7 @@ public class WItemSlot extends WWidget {
 	 * @deprecated Replaced by {@link #setInputFilter(Predicate)}
 	 * @since 2.0.0
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public WItemSlot setFilter(Predicate<ItemStack> filter) {
 		return setInputFilter(filter);
 	}
