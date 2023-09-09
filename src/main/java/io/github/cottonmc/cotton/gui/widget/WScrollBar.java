@@ -94,35 +94,35 @@ public class WScrollBar extends WWidget {
 	}
 
 	/**
-	 * Gets the on-axis size of the scrollbar handle in gui pixels
+	 * Gets the on-axis size of the scrollbar handle in gui pixels 
 	 */
 	public int getHandleSize() {
-		float percentage = (window >= maxValue) ? 1f : window / (float) maxValue;
-		int bar = (axis == Axis.HORIZONTAL) ? width - 2 : height - 2;
-		int result = (int) (percentage * bar);
-		if (result < 6) result = 6;
+		float percentage = (window>=maxValue) ? 1f : window / (float)maxValue;
+		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
+		int result = (int)(percentage*bar);
+		if (result<6) result = 6;
 		return result;
 	}
-
+	
 	/**
 	 * Gets the number of pixels the scrollbar handle is able to move along its track from one end to the other.
 	 */
 	public int getMovableDistance() {
-		int bar = (axis == Axis.HORIZONTAL) ? width - 2 : height - 2;
-		return bar - getHandleSize();
+		int bar = (axis==Axis.HORIZONTAL) ? width-2 : height-2;
+		return bar-getHandleSize();
 	}
-
+	
 	public int pixelsToValues(int pixels) {
 		int bar = getMovableDistance();
-		float percent = pixels / (float) bar;
-		return (int) (percent * (maxValue - window));
+		float percent = pixels / (float)bar;
+		return (int)(percent*(maxValue-window));
 	}
 
 	public int getHandlePosition() {
-		float percent = value / (float) Math.max(maxValue - window, 1);
-		return (int) (percent * getMovableDistance());
+		float percent = value / (float)Math.max(maxValue-window, 1);
+		return (int)(percent * getMovableDistance());
 	}
-
+	
 	/**
 	 * Gets the maximum scroll value achievable; this will typically be the maximum value minus the
 	 * window size
@@ -134,17 +134,17 @@ public class WScrollBar extends WWidget {
 	protected void adjustSlider(int x, int y) {
 
 		int delta = 0;
-		if (axis == Axis.HORIZONTAL) {
-			delta = x - anchor;
+		if (axis==Axis.HORIZONTAL) {
+			delta = x-anchor;
 		} else {
-			delta = y - anchor;
+			delta = y-anchor;
 		}
 
 		int valueDelta = pixelsToValues(delta);
 		int valueNew = anchorValue + valueDelta;
 
-		if (valueNew > getMaxScrollValue()) valueNew = getMaxScrollValue();
-		if (valueNew < 0) valueNew = 0;
+		if (valueNew>getMaxScrollValue()) valueNew = getMaxScrollValue();
+		if (valueNew<0) valueNew = 0;
 		this.value = valueNew;
 	}
 
@@ -153,7 +153,7 @@ public class WScrollBar extends WWidget {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
 		requestFocus();
 
-		if (axis == Axis.HORIZONTAL) {
+		if (axis==Axis.HORIZONTAL) {
 			anchor = x;
 			anchorValue = value;
 		} else {
@@ -243,10 +243,10 @@ public class WScrollBar extends WWidget {
 	 * and adjusts it if needed.
 	 */
 	protected void checkValue() {
-		if (this.value > maxValue - window) {
-			this.value = maxValue - window;
+		if (this.value>maxValue-window) {
+			this.value = maxValue-window;
 		}
-		if (this.value < 0) this.value = 0;
+		if (this.value<0) this.value = 0;
 	}
 
 	@Environment(EnvType.CLIENT)
