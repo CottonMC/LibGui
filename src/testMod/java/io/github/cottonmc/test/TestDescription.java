@@ -48,23 +48,15 @@ public class TestDescription extends SyncedGuiDescription {
 		root.add(new WButton(Text.literal("Button D")), 5, 5, 4, 1);
 		root.add(new WTextField(Text.literal("Type something...")).setMaxLength(64), 0, 7, 5, 1);
 
-		root.add(new WLabel(Text.literal("Large slot:")), 0, 9);
-		root.add(WItemSlot.outputOf(blockInventory, 0), 4, 9);
+		root.add(new WLabel(Text.literal("Large Glass-only output:")), 0, 9);
+		root.add(WItemSlot.outputOf(blockInventory, 0).setOutputFilter(stack -> stack.isOf(Items.GLASS)), 4, 9);
 
-		root.add(WItemSlot.of(blockInventory, 7).setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))), 7, 9);
+		root.add(WItemSlot.of(blockInventory, 7).setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))).setInputFilter(stack -> stack.isOf(Items.SADDLE)), 7, 10);
 
 		root.add(createPlayerInventoryPanel(), 0, 11);
 		System.out.println(root.toString());
 
 		this.getRootPanel().validate(this);
-
-		getRootPanel().streamChildren()
-				.forEach(child -> {
-					if (child instanceof WItemSlot wis) {
-						// Prevent apples from entering the item slots
-						wis.setFilter(stack -> !stack.isOf(Items.APPLE));
-					}
-				});
 
 		ScreenNetworking.of(this, NetworkSide.SERVER).receive(TEST_MESSAGE, buf -> {
 			System.out.println("Received on the server!");

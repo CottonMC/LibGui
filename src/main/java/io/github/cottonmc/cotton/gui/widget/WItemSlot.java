@@ -46,13 +46,16 @@ import java.util.stream.Stream;
  * between the player and the widget.
  *
  * <h2>Filters</h2>
- * Item slots can have filters that check whether a player is allowed to insert an item or not.
- * The filter can be set with {@link #setFilter(Predicate)}. For example:
+ * Item slots can have filters that check whether a player is allowed to insert or take out an item or not.
+ * The filters can be set with {@link #setInputFilter(Predicate)} and {@link #setOutputFilter(Predicate)}. For example:
  *
  * <pre>
  * {@code
- * // Only sand in this slot!
- * slot.setFilter(stack -> stack.getItem() == Items.SAND);
+ * // Only sand can be placed on this slot
+ * slot.setInputFilter(stack -> stack.isOf(Items.SAND));
+ *
+ * // Everything except glass can be taken out of this slot
+ * slot.setOutputFilter(stack -> !stack.isOf(Items.GLASS));
  * }
  * </pre>
  *
@@ -94,7 +97,8 @@ public class WItemSlot extends WWidget {
 	private boolean takingAllowed = true;
 	private int focusedSlot = -1;
 	private int hoveredSlot = -1;
-	private Predicate<ItemStack> filter = ValidatedSlot.DEFAULT_ITEM_FILTER;
+	private Predicate<ItemStack> inputFilter = ValidatedSlot.DEFAULT_ITEM_FILTER;
+	private Predicate<ItemStack> outputFilter = ValidatedSlot.DEFAULT_ITEM_FILTER;
 	private final Set<ChangeListener> listeners = new HashSet<>();
 	private final FocusModel<Integer> focusModel = new FocusModel<>() {
 		@Override
@@ -338,7 +342,8 @@ public class WItemSlot extends WWidget {
 				ValidatedSlot slot = createSlotPeer(inventory, index, this.getAbsoluteX() + (x * 18) + 1, this.getAbsoluteY() + (y * 18) + 1);
 				slot.setInsertingAllowed(insertingAllowed);
 				slot.setTakingAllowed(takingAllowed);
-				slot.setFilter(filter);
+				slot.setInputFilter(inputFilter);
+				slot.setOutputFilter(outputFilter);
 				for (ChangeListener listener : listeners) {
 					slot.addChangeListener(this, listener);
 				}
@@ -401,13 +406,61 @@ public class WItemSlot extends WWidget {
 	}
 
 	/**
+	 * Gets the item stack input filter of this slot.
+	 *
+	 * @return the item input filter
+	 */
+	public Predicate<ItemStack> getInputFilter() {
+		return inputFilter;
+	}
+
+	/**
+	 * Sets the item input filter of this item slot.
+	 *
+	 * @param inputFilter the new item input filter
+	 * @return this item slot
+	 */
+	public WItemSlot setInputFilter(Predicate<ItemStack> inputFilter) {
+		this.inputFilter = inputFilter;
+		for (ValidatedSlot peer : peers) {
+			peer.setInputFilter(inputFilter);
+		}
+		return this;
+	}
+
+	/**
+	 * Gets the item stack output filter of this slot.
+	 *
+	 * @return the item output filter
+	 */
+	public Predicate<ItemStack> getOutputFilter() {
+		return outputFilter;
+	}
+
+	/**
+	 * Sets the item output filter of this item slot.
+	 *
+	 * @param outputFilter the new item output filter
+	 * @return this item slot
+	 */
+	public WItemSlot setOutputFilter(Predicate<ItemStack> outputFilter) {
+		this.outputFilter = outputFilter;
+		for (ValidatedSlot peer : peers) {
+			peer.setOutputFilter(outputFilter);
+		}
+		return this;
+	}
+
+	/**
 	 * Gets the item filter of this item slot.
 	 *
 	 * @return the item filter
+	 * @deprecated Replaced by {@link #getInputFilter()}
 	 * @since 2.0.0
 	 */
+	@Deprecated
 	public Predicate<ItemStack> getFilter() {
-		return filter;
+		return inputFilter;
 	}
 
 	/**
@@ -415,14 +468,12 @@ public class WItemSlot extends WWidget {
 	 *
 	 * @param filter the new item filter
 	 * @return this item slot
+	 * @deprecated Replaced by {@link #setInputFilter(Predicate)}
 	 * @since 2.0.0
 	 */
+	@Deprecated
 	public WItemSlot setFilter(Predicate<ItemStack> filter) {
-		this.filter = filter;
-		for (ValidatedSlot peer : peers) {
-			peer.setFilter(filter);
-		}
-		return this;
+		return setInputFilter(filter);
 	}
 
 	@Environment(EnvType.CLIENT)
