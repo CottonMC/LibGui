@@ -223,12 +223,12 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		super.mouseScrolled(mouseX, mouseY, amount);
+	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+		super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-		mouseInputHandler.onMouseScroll(containerX, containerY, amount);
+		mouseInputHandler.onMouseScroll(containerX, containerY, horizontalAmount, verticalAmount);
 
 		return true;
 	}
@@ -275,8 +275,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	@Override
 	protected void drawBackground(DrawContext context, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
-	private void paint(DrawContext context, int mouseX, int mouseY) {
-		renderBackground(context);
+	private void paint(DrawContext context, int mouseX, int mouseY, float delta) {
+		renderBackground(context, mouseX, mouseY, delta);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
@@ -292,7 +292,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
-		paint(context, mouseX, mouseY);
+		paint(context, mouseX, mouseY, partialTicks);
 		
 		super.render(context, mouseX, mouseY, partialTicks);
 		DiffuseLighting.disableGuiDepthLighting(); //Needed because super.render leaves dirty state

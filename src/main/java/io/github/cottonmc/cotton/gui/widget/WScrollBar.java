@@ -228,8 +228,8 @@ public class WScrollBar extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onMouseScroll(int x, int y, double amount) {
-		setValue(getValue() + (int) -amount * SCROLLING_SPEED);
+	public InputResult onMouseScroll(int x, int y, double horizontalAmount, double verticalAmount) {
+		setValue(getValue() + (int) (horizontalAmount - verticalAmount) * SCROLLING_SPEED);
 		return InputResult.PROCESSED;
 	}
 

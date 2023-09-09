@@ -7,7 +7,9 @@
 
 	"client": [
 		"client.MinecraftClientMixin",
-		"client.ScreenAccessor"
+		"client.PressableWidgetAccessor",
+		"client.ScreenAccessor",
+		"client.SliderWidgetAccessor"
 	],
 
 	"injectors": {

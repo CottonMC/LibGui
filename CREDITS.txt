@@ -1,1 +1,1 @@
-- Dark-mode button textures (dark_widgets.png) are adapted from Roughly Enough Items by shedaniel, licensed under MIT
+- Dark-mode button textures (button*_dark.png) are adapted from Roughly Enough Items by shedaniel, licensed under MIT

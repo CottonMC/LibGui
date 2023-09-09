@@ -143,12 +143,19 @@ public class WScrollPanel extends WClippedPanel {
 	}
 
 	@Override
-	public InputResult onMouseScroll(int x, int y, double amount) {
-		if (hasVerticalScrollbar()) {
-			return verticalScrollBar.onMouseScroll(0, 0, amount);
+	public InputResult onMouseScroll(int x, int y, double horizontalAmount, double verticalAmount) {
+		var horizontalResult = InputResult.IGNORED;
+		var verticalResult = InputResult.IGNORED;
+
+		if (hasHorizontalScrollbar()) {
+			horizontalResult = horizontalScrollBar.onMouseScroll(x, y, horizontalAmount, 0);
 		}
 
-		return InputResult.IGNORED;
+		if (hasVerticalScrollbar()) {
+			verticalResult = verticalScrollBar.onMouseScroll(0, 0, 0, verticalAmount);
+		}
+
+		return horizontalResult.or(verticalResult);
 	}
 
 	@Override

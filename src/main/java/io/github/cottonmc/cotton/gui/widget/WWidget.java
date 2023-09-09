@@ -212,13 +212,14 @@ public class WWidget {
 	/**
 	 * Notifies this widget that the mouse has been scrolled inside its bounds.
 	 *
-	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
-	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
-	 * @param amount The scrolled amount. Positive values are up and negative values are down.
+	 * @param x                The X coordinate of the event, in widget-space (0 is the left edge of this widget)
+	 * @param y                The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
+	 * @param horizontalAmount The scrolled horizontal amount. Positive values are right and negative values are left.
+	 * @param verticalAmount   The scrolled vertical amount. Positive values are up and negative values are down.
 	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public InputResult onMouseScroll(int x, int y, double amount) {
+	public InputResult onMouseScroll(int x, int y, double horizontalAmount, double verticalAmount) {
 		return InputResult.IGNORED;
 	}
 
