@@ -32,8 +32,8 @@ public interface BackgroundPainter {
 	/**
 	 * The {@code VANILLA} background painter draws a vanilla-like GUI panel using nine-patch textures.
 	 *
-	 * <p>This background painter uses {@code libgui:textures/widget/panel_light.png} as the light texture and
-	 * {@code libgui:textures/widget/panel_dark.png} as the dark texture.
+	 * <p>This background painter uses {@code libgui:textures/gui/sprites/widget/panel_light.png} as the light texture and
+	 * {@code libgui:textures/gui/sprites/widget/panel_dark.png} as the dark texture.
 	 *
 	 * <p>This background painter is the default painter for root panels.
 	 * 	 * You can override {@link io.github.cottonmc.cotton.gui.GuiDescription#addPainters()} to customize the painter yourself.
