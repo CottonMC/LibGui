@@ -41,5 +41,4 @@ public class ScrollBarTestGui extends LightweightGuiDescription {
 	public TriState isDarkMode() {
 		return TriState.of(darkMode);
 	}
-
 }

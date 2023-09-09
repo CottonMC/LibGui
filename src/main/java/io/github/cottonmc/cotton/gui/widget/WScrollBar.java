@@ -257,7 +257,7 @@ public class WScrollBar extends WWidget {
 	}
 
 	@Environment(EnvType.CLIENT)
-	final static class Painters {
+	static final class Painters {
 		static final NinePatch<Identifier> SCROLL_BAR = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_light.png")).cornerSize(4).cornerUv(0.25f).build();
 		static final NinePatch<Identifier> SCROLL_BAR_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_dark.png")).cornerSize(4).cornerUv(0.25f).build();
 		static final NinePatch<Identifier> SCROLL_BAR_PRESSED = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_light.png")).cornerSize(4).cornerUv(0.25f).build();
