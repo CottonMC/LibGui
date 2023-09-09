@@ -5,11 +5,17 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.util.Identifier;
 
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
+import io.github.cottonmc.cotton.gui.impl.client.NinePatchTextureRendererImpl;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import juuxel.libninepatch.NinePatch;
+
+import static io.github.cottonmc.cotton.gui.client.BackgroundPainter.createNinePatch;
 
 public class WScrollBar extends WWidget {
 	private static final int SCROLLING_SPEED = 4;
@@ -41,63 +47,40 @@ public class WScrollBar extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+		var matrices = context.getMatrices();
 		boolean darkMode = shouldRenderInDarkMode();
 
-		if (darkMode) {
-			ScreenDrawing.drawBeveledPanel(context, x, y, width, height, 0xFF_212121, 0xFF_2F2F2F, 0xFF_5D5D5D);
-		} else {
-			ScreenDrawing.drawBeveledPanel(context, x, y, width, height, 0xFF_373737, 0xFF_8B8B8B, 0xFF_FFFFFF);
-		}
-		if (maxValue<=0) return;
+		Painters.BACKGROUND.paintBackground(context, x, y, this);
 
-		// Handle colors
-		int top, middle, bottom;
+		NinePatch<Identifier> painter = (darkMode ? Painters.SCROLL_BAR_DARK : Painters.SCROLL_BAR);
+
+		if (maxValue <= 0) return;
 
 		if (sliding) {
-			if (darkMode) {
-				top = 0xFF_6C6C6C;
-				middle = 0xFF_2F2F2F;
-				bottom = 0xFF_212121;
-			} else {
-				top = 0xFF_FFFFFF;
-				middle = 0xFF_8B8B8B;
-				bottom = 0xFF_555555;
-			}
+			painter = (darkMode ? Painters.SCROLL_BAR_PRESSED_DARK : Painters.SCROLL_BAR_PRESSED);
 		} else if (isWithinBounds(mouseX, mouseY)) {
-			if (darkMode) {
-				top = 0xFF_5F6A9D;
-				middle = 0xFF_323F6E;
-				bottom = 0xFF_0B204A;
-			} else {
-				top = 0xFF_CFD0F7;
-				middle = 0xFF_8791C7;
-				bottom = 0xFF_343E75;
+			painter = (darkMode ? Painters.SCROLL_BAR_HOVERED_DARK : Painters.SCROLL_BAR_HOVERED);
+		}
+
+		matrices.push();
+
+		if (axis == Axis.HORIZONTAL) {
+			matrices.translate(x + 1 + getHandlePosition(), y + 1, 0);
+			painter.draw(NinePatchTextureRendererImpl.INSTANCE, context, getHandleSize(), height - 2);
+
+			if (isFocused()) {
+				Painters.FOCUS.draw(NinePatchTextureRendererImpl.INSTANCE, context, getHandleSize(), height - 2);
 			}
 		} else {
-			if (darkMode) {
-				top = 0xFF_6C6C6C;
-				middle = 0xFF_414141;
-				bottom = 0xFF_212121;
-			} else {
-				top = 0xFF_FFFFFF;
-				middle = 0xFF_C6C6C6;
-				bottom = 0xFF_555555;
+			matrices.translate(x + 1, y + 1 + getHandlePosition(), 0);
+			painter.draw(NinePatchTextureRendererImpl.INSTANCE, context, width - 2, getHandleSize());
+
+			if (isFocused()) {
+				Painters.FOCUS.draw(NinePatchTextureRendererImpl.INSTANCE, context, width - 2, getHandleSize());
 			}
 		}
 
-		if (axis==Axis.HORIZONTAL) {
-			ScreenDrawing.drawBeveledPanel(context, x+1+getHandlePosition(), y+1, getHandleSize(), height-2, top, middle, bottom);
-
-			if (isFocused()) {
-				drawBeveledOutline(context, x+1+getHandlePosition(), y+1, getHandleSize(), height-2, 0xFF_FFFFA7, 0xFF_8C8F39);
-			}
-		} else {
-			ScreenDrawing.drawBeveledPanel(context, x+1, y+1+getHandlePosition(), width-2, getHandleSize(), top, middle, bottom);
-
-			if (isFocused()) {
-				drawBeveledOutline(context, x+1, y+1+getHandlePosition(), width-2, getHandleSize(), 0xFF_FFFFA7, 0xFF_8C8F39);
-			}
-		}
+		matrices.pop();
 	}
 
 	@Override
@@ -108,13 +91,6 @@ public class WScrollBar extends WWidget {
 	@Override
 	public boolean canFocus() {
 		return true;
-	}
-
-	private static void drawBeveledOutline(DrawContext context, int x, int y, int width, int height, int topleft, int bottomright) {
-		ScreenDrawing.coloredRect(context, x,             y,              width,     1,          topleft); //Top shadow
-		ScreenDrawing.coloredRect(context, x,             y + 1,          1,         height - 1, topleft); //Left shadow
-		ScreenDrawing.coloredRect(context, x + width - 1, y + 1,          1,         height - 1, bottomright); //Right hilight
-		ScreenDrawing.coloredRect(context, x + 1,         y + height - 1, width - 1, 1,          bottomright); //Bottom hilight
 	}
 
 	/**
@@ -278,5 +254,20 @@ public class WScrollBar extends WWidget {
 	public void addNarrations(NarrationMessageBuilder builder) {
 		builder.put(NarrationPart.TITLE, NarrationMessages.SCROLL_BAR_TITLE);
 		builder.put(NarrationPart.USAGE, NarrationMessages.SLIDER_USAGE);
+	}
+
+	@Environment(EnvType.CLIENT)
+	static final class Painters {
+		static final NinePatch<Identifier> SCROLL_BAR = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_light.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_dark.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_PRESSED = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_light.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_PRESSED_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_dark.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_HOVERED = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_light.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final NinePatch<Identifier> SCROLL_BAR_HOVERED_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_dark.png")).cornerSize(4).cornerUv(0.25f).build();
+		static final BackgroundPainter BACKGROUND = BackgroundPainter.createLightDarkVariants(
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/background_light.png")),
+				createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/background_dark.png"))
+		);
+		static final NinePatch<Identifier> FOCUS = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/focus.png")).cornerSize(4).cornerUv(0.25f).build();
 	}
 }

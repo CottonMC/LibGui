@@ -53,6 +53,7 @@ public class LibGuiTestClient implements ClientModInitializer {
 						.then(literal("config").executes(openScreen(client -> new ConfigGui(client.currentScreen))))
 						.then(literal("tab").executes(openScreen(client -> new TabTestGui())))
 						.then(literal("scrolling").executes(openScreen(client -> new ScrollingTestGui())))
+						.then(literal("scrollbar").executes(openScreen(client -> new ScrollBarTestGui())))
 						.then(literal("insets").executes(openScreen(client -> new InsetsTestGui())))
 						.then(literal("textfield").executes(openScreen(client -> new TextFieldTestGui())))
 						.then(literal("paddings")
