@@ -1,19 +1,17 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.impl.client.WidgetTextures;
-import io.github.cottonmc.cotton.gui.impl.mixin.client.SliderWidgetAccessor;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
+import io.github.cottonmc.cotton.gui.impl.client.WidgetTextures;
+import io.github.cottonmc.cotton.gui.impl.mixin.client.SliderWidgetAccessor;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import org.jetbrains.annotations.Nullable;
