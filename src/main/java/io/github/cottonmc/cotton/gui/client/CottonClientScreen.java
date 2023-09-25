@@ -124,7 +124,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	}
 
 	private void paint(DrawContext context, int mouseX, int mouseY) {
-		renderBackground(context);
+		renderBackground(context, mouseX, mouseY, client.getTickDelta());
 
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
@@ -146,9 +146,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
 		paint(context, mouseX, mouseY);
-		
-		super.render(context, mouseX, mouseY, partialTicks);
-		
+
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
@@ -207,12 +205,12 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		super.mouseScrolled(mouseX, mouseY, amount);
+	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+		super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		mouseInputHandler.onMouseScroll(containerX, containerY, amount);
+		mouseInputHandler.onMouseScroll(containerX, containerY, horizontalAmount);
 
 		return true;
 	}

@@ -223,12 +223,12 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		super.mouseScrolled(mouseX, mouseY, amount);
+	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+		super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 
 		int containerX = (int)mouseX-x;
 		int containerY = (int)mouseY-y;
-		mouseInputHandler.onMouseScroll(containerX, containerY, amount);
+		mouseInputHandler.onMouseScroll(containerX, containerY, horizontalAmount);
 
 		return true;
 	}
@@ -276,8 +276,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	protected void drawBackground(DrawContext context, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
 	private void paint(DrawContext context, int mouseX, int mouseY) {
-		renderBackground(context);
-		
+		renderBackground(context, mouseX, mouseY, client.getTickDelta());
+
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {

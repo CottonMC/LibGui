@@ -64,19 +64,19 @@ repositories {
 		}
 	}
 }
+// True: module classes are used in public API classes/methods/fields
+def fabricApiModules = [
+	'fabric-api-base': true,
+	'fabric-lifecycle-events-v1': false,
+	'fabric-networking-api-v1': true,
+	'fabric-rendering-v1': false,
+]
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// True: module classes are used in public API classes/methods/fields
-	def fabricApiModules = [
-			'fabric-api-base': true,
-			'fabric-lifecycle-events-v1': false,
-			'fabric-networking-api-v1': true,
-			'fabric-rendering-v1': false,
-	]
 	fabricApiModules.forEach { module, api ->
 		def dependency = fabricApi.module(module, project.fabric_version)
 
@@ -108,9 +108,16 @@ dependencies {
 
 processResources {
 	inputs.property "version", project.version
+	inputs.property "loader_version", project.loader_version
+	fabricApiModules.forEach {module, api ->
+		inputs.property "${module.replace("-", "_")}_version", fabricApi.moduleVersion(module, project.fabric_version)
+	}
+	inputs.property "minecraft_version", project.minecraft_version
+	inputs.property "jankson_version", project.jankson_version.split("\\+")[0]
+	inputs.property "libninepatch_version", project.libninepatch_version
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand inputs.properties
 	}
 }
 

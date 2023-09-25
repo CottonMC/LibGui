@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
 	private static final Identifier DARK_WIDGETS_LOCATION = new Identifier("libgui", "textures/widget/dark_widgets.png");
+	private static final Identifier BRIGHT_WIDGETS_LOCATION = new Identifier("libgui", "textures/widget/widgets.png");
 	private static final int BUTTON_HEIGHT = 20;
 	private static final int ICON_SPACING = 2;
 
@@ -269,6 +270,6 @@ public class WButton extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	static Identifier getTexture(WWidget widget) {
-		return widget.shouldRenderInDarkMode() ? DARK_WIDGETS_LOCATION : ClickableWidget.WIDGETS_TEXTURE;
+		return widget.shouldRenderInDarkMode() ? DARK_WIDGETS_LOCATION : BRIGHT_WIDGETS_LOCATION;
 	}
 }

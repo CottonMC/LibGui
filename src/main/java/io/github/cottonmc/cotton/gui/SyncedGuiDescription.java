@@ -158,7 +158,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			}
 
 			if (slotStack.isEmpty()) {
-				slot.setStack(ItemStack.EMPTY);
+				slot.setStackNoCallbacks(ItemStack.EMPTY);
 			} else {
 				slot.markDirty();
 			}
@@ -193,9 +193,9 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		ItemStack curSlotStack = slot.getStack();
 		if (curSlotStack.isEmpty() && slot.canInsert(toInsert)) {
 			if (toInsert.getCount() > slot.getMaxItemCount(toInsert)) {
-				slot.setStack(toInsert.split(slot.getMaxItemCount(toInsert)));
+				slot.setStackNoCallbacks(toInsert.split(slot.getMaxItemCount(toInsert)));
 			} else {
-				slot.setStack(toInsert.split(toInsert.getCount()));
+				slot.setStackNoCallbacks(toInsert.split(toInsert.getCount()));
 			}
 
 			slot.markDirty();
