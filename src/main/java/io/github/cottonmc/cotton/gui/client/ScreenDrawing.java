@@ -194,6 +194,7 @@ public class ScreenDrawing {
 		buffer.vertex(model, x,         y,          0).texture(u1, v1).next();
 		BufferRenderer.drawWithGlobalProgram(buffer.end());
 		RenderSystem.disableBlend();
+		RenderSystem.setShaderColor(1, 1, 1, 1);
 	}
 
 	/**
