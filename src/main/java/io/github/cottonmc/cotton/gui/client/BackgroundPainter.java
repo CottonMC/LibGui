@@ -10,6 +10,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import juuxel.libninepatch.NinePatch;
 import juuxel.libninepatch.TextureRegion;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -31,8 +32,8 @@ public interface BackgroundPainter {
 	/**
 	 * The {@code VANILLA} background painter draws a vanilla-like GUI panel using nine-patch textures.
 	 *
-	 * <p>This background painter uses {@code libgui:textures/widget/panel_light.png} as the light texture and
-	 * {@code libgui:textures/widget/panel_dark.png} as the dark texture.
+	 * <p>This background painter uses {@code libgui:textures/gui/sprites/widget/panel_light.png} as the light texture and
+	 * {@code libgui:textures/gui/sprites/widget/panel_dark.png} as the dark texture.
 	 *
 	 * <p>This background painter is the default painter for root panels.
 	 * 	 * You can override {@link io.github.cottonmc.cotton.gui.GuiDescription#addPainters()} to customize the painter yourself.
@@ -40,8 +41,8 @@ public interface BackgroundPainter {
 	 * @since 1.5.0
 	 */
 	public static BackgroundPainter VANILLA = createLightDarkVariants(
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/panel_light.png")),
-			createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/panel_dark.png"))
+			createGuiSprite(new Identifier(LibGuiCommon.MOD_ID, "widget/panel_light")),
+			createGuiSprite(new Identifier(LibGuiCommon.MOD_ID, "widget/panel_dark"))
 	);
 
 	/**
@@ -157,5 +158,20 @@ public interface BackgroundPainter {
 			if (panel.shouldRenderInDarkMode()) dark.paintBackground(context, left, top, panel);
 			else light.paintBackground(context, left, top, panel);
 		};
+	}
+
+	/**
+	 * Creates a background painter that uses a texture from the GUI atlas.
+	 *
+	 * <p>This method can be used to draw tiled or nine-slice GUI sprites from resource packs
+	 * as a simpler and more data-driven alternative to {@link #createNinePatch(Identifier)}.
+	 *
+	 * @param texture the texture ID
+	 * @return a new background painter that uses a GUI sprite
+	 * @since 9.0.0
+	 */
+	static BackgroundPainter createGuiSprite(Identifier texture) {
+		Objects.requireNonNull(texture, "Texture cannot be null");
+		return (context, left, top, panel) -> context.drawGuiTexture(texture, left, top, panel.getWidth(), panel.getHeight());
 	}
 }

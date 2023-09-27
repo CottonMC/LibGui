@@ -183,13 +183,13 @@ public abstract class WAbstractSlider extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onMouseScroll(int x, int y, double amount) {
+	public InputResult onMouseScroll(int x, int y, double horizontalAmount, double verticalAmount) {
 		if (direction == Direction.LEFT || direction == Direction.DOWN) {
-			amount = -amount;
+			verticalAmount = -verticalAmount;
 		}
 
 		int previous = value;
-		value = MathHelper.clamp(value + (int) Math.signum(amount) * MathHelper.ceil(valueToCoordRatio * Math.abs(amount) * 2), min, max);
+		value = MathHelper.clamp(value + (int) Math.signum(verticalAmount) * MathHelper.ceil(valueToCoordRatio * Math.abs(verticalAmount) * 2), min, max);
 
 		if (previous != value) {
 			onValueChanged(value);

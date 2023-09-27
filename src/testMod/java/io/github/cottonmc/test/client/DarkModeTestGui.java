@@ -28,6 +28,7 @@ public final class DarkModeTestGui extends LightweightGuiDescription {
 		root.add(new WButton(Text.literal("Button B")), 0, 1, 3, 1);
 		root.add(new WText(Text.literal("Text")), 0, 2, 3, 1);
 		root.add(new WLabeledSlider(1, 100, Text.literal("Slider A")), 3, 0, 3, 1);
+		root.add(new WLabeledSlider(1, 100, Axis.VERTICAL, Text.literal("Slider B")), 6, 0, 1, 3);
 		root.add(new WSlider(1, 100, Axis.HORIZONTAL), 3, 1, 3, 1);
 		root.add(new WLabel(Text.literal("Label")), 3, 2, 3, 1);
 		root.add(new WScrollBar(Axis.HORIZONTAL), 0, 3, 3, 1);

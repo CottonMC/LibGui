@@ -11,6 +11,18 @@ public enum InputResult {
 	IGNORED;
 
 	/**
+	 * Combines this input result with another.
+	 * The combination is {@link #PROCESSED} is at least one of the inputs is.
+	 *
+	 * @param other the other input result
+	 * @return the combined input result
+	 * @since 9.0.0
+	 */
+	public InputResult or(InputResult other) {
+		return this == IGNORED && other == IGNORED ? IGNORED : PROCESSED;
+	}
+
+	/**
 	 * Gets the corresponding input result for a {@code processed} boolean.
 	 *
 	 * @param processed whether an input event was processed

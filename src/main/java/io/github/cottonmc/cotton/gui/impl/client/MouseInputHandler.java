@@ -85,10 +85,10 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 		}
 	}
 
-	public void onMouseScroll(int containerX, int containerY, double amount) {
+	public void onMouseScroll(int containerX, int containerY, double horizontalAmount, double verticalAmount) {
 		runTree(
 				screen.getDescription().getRootPanel().hit(containerX, containerY),
-				widget -> widget.onMouseScroll(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(), amount)
+				widget -> widget.onMouseScroll(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(), horizontalAmount, verticalAmount)
 		);
 	}
 

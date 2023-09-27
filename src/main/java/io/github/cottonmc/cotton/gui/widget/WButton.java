@@ -4,23 +4,23 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
+import io.github.cottonmc.cotton.gui.impl.client.WidgetTextures;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
-	private static final Identifier DARK_WIDGETS_LOCATION = new Identifier("libgui", "textures/widget/dark_widgets.png");
 	private static final int BUTTON_HEIGHT = 20;
 	private static final int ICON_SPACING = 2;
 
@@ -89,27 +89,9 @@ public class WButton extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-		boolean hovered = (mouseX>=0 && mouseY>=0 && mouseX<getWidth() && mouseY<getHeight());
-		int state = 1; //1=regular. 2=hovered. 0=disabled.
-		if (!enabled) {
-			state = 0;
-		} else if (hovered || isFocused()) {
-			state = 2;
-		}
-		
-		float px = 1/256f;
-		float buttonLeft = 0 * px;
-		float buttonTop = (46 + (state*20)) * px;
-		int halfWidth = getWidth()/2;
-		if (halfWidth>198) halfWidth=198;
-		float buttonWidth = halfWidth*px;
-		float buttonHeight = 20*px;
-		
-		float buttonEndLeft = (200-(getWidth()/2)) * px;
-
-		Identifier texture = getTexture(this);
-		ScreenDrawing.texturedRect(context, x, y, getWidth()/2, 20, texture, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFFFFFF);
-		ScreenDrawing.texturedRect(context, x+(getWidth()/2), y, getWidth()/2, 20, texture, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFFFFFF);
+		boolean hovered = isWithinBounds(mouseX, mouseY);
+		ButtonTextures textures = WidgetTextures.getButtonTextures(shouldRenderInDarkMode());
+		context.drawGuiTexture(textures.get(enabled, hovered || isFocused()), x, y, getWidth(), getHeight());
 
 		if (icon != null) {
 			icon.paint(context, x+ICON_SPACING, y+(BUTTON_HEIGHT-iconSize)/2, iconSize);
@@ -265,10 +247,5 @@ public class WButton extends WWidget {
 				builder.put(NarrationPart.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_HOVERED);
 			}
 		}
-	}
-
-	@Environment(EnvType.CLIENT)
-	static Identifier getTexture(WWidget widget) {
-		return widget.shouldRenderInDarkMode() ? DARK_WIDGETS_LOCATION : ClickableWidget.WIDGETS_TEXTURE;
 	}
 }

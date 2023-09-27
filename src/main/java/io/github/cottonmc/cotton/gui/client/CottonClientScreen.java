@@ -123,10 +123,13 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		}
 	}
 
-	private void paint(DrawContext context, int mouseX, int mouseY) {
-		renderBackground(context);
+	private void paint(DrawContext context, int mouseX, int mouseY, float delta) {
+		renderBackground(context, mouseX, mouseY, delta);
 
 		if (description!=null) {
+			context.getMatrices().push();
+			context.getMatrices().translate(0f, 0f, 0.01f);
+
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -140,12 +143,14 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 				int width = description.getRootPanel().getWidth();
 				ScreenDrawing.drawString(context, getTitle().asOrderedText(), description.getTitleAlignment(), left + titleX, top + titleY, width - 2 * titleX, description.getTitleColor());
 			}
+
+			context.getMatrices().pop();
 		}
 	}
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
-		paint(context, mouseX, mouseY);
+		paint(context, mouseX, mouseY, partialTicks);
 		
 		super.render(context, mouseX, mouseY, partialTicks);
 		
@@ -207,12 +212,12 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		super.mouseScrolled(mouseX, mouseY, amount);
+	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+		super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 
 		int containerX = (int)mouseX-left;
 		int containerY = (int)mouseY-top;
-		mouseInputHandler.onMouseScroll(containerX, containerY, amount);
+		mouseInputHandler.onMouseScroll(containerX, containerY, horizontalAmount, verticalAmount);
 
 		return true;
 	}
