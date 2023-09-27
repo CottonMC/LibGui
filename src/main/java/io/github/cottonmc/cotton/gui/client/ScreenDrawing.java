@@ -132,8 +132,8 @@ public class ScreenDrawing {
 					if (Float.isInfinite(fullWidth) || Float.isInfinite(fullHeight)) break outer;
 
 					// Calculate the offset left/top coordinates.
-					int xo = x - (int) (fullWidth * texture.u1());
-					int yo = y - (int) (fullHeight * texture.v1());
+					float xo = x - fullWidth * Math.min(texture.u1(), texture.u2());
+					float yo = y - fullHeight * Math.min(texture.v1(), texture.v2());
 
 					MatrixStack matrices = context.getMatrices();
 					matrices.push();

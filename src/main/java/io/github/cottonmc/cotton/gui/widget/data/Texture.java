@@ -45,6 +45,8 @@ import java.util.Objects;
  * and they need to be drawn with specific {@code Texture}-accepting methods
  * or {@link net.minecraft.client.gui.DrawContext}.
  *
+ * <p>GUI sprite textures don't currently support flipping the texture by flipping UV coordinates.
+ *
  * @param image the image of this texture
  * @param type  the type of this texture
  * @param u1 the start U-coordinate, between 0 and 1
