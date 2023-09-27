@@ -281,11 +281,14 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
+				context.getMatrices().push();
+				context.getMatrices().translate(0f, 0f, 0.01f);
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
 				Scissors.refreshScissors();
 				root.paint(context, x, y, mouseX-x, mouseY-y);
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				Scissors.checkStackIsEmpty();
+				context.getMatrices().pop();
 			}
 		}
 	}
