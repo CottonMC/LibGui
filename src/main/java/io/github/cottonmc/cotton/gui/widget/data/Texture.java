@@ -14,8 +14,10 @@ import java.util.Objects;
  * <p>GUI sprites can use their full range of features such as tiling, stretching and nine-slice drawing modes,
  * while standalone textures are only drawn stretched.
  *
- * <p>The format of the image ID depends on the type:
+ * <p>The format of the image ID depends on the type. See the documentation of the individual type constants and
+ * the table below for details.
  * <table>
+ *     <caption>Image IDs for each texture type</caption>
  *     <thead>
  *         <tr>
  *             <th>Type</th>
