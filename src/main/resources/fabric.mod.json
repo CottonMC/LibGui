@@ -30,7 +30,7 @@
 		"fabric-lifecycle-events-v1": "^2.0.2",
 		"fabric-networking-api-v1": "^3.0.5",
 		"fabric-rendering-v1": "^3.0.6",
-		"minecraft": ">=1.20.2-beta.2",
+		"minecraft": ">=1.20.2",
 		"jankson": "^6.0.0",
 		"libninepatch": "^1.2.0"
 	},
