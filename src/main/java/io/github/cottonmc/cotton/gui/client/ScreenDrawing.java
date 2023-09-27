@@ -9,6 +9,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
@@ -105,7 +106,54 @@ public class ScreenDrawing {
 	 * @since 3.0.0
 	 */
 	public static void texturedRect(DrawContext context, int x, int y, int width, int height, Texture texture, int color, float opacity) {
-		texturedRect(context, x, y, width, height, texture.image(), texture.u1(), texture.v1(), texture.u2(), texture.v2(), color, opacity);
+		switch (texture.type()) {
+			// Standalone textures: convert into ID + UVs
+			case STANDALONE -> texturedRect(context, x, y, width, height, texture.image(), texture.u1(), texture.v1(), texture.u2(), texture.v2(), color, opacity);
+
+			// GUI sprites: Work more carefully as we need to support tiling/nine-slice
+			case GUI_SPRITE -> {
+				float r = (color >> 16 & 255) / 255.0F;
+				float g = (color >> 8 & 255) / 255.0F;
+				float b = (color & 255) / 255.0F;
+				RenderSystem.setShaderColor(r, g, b, opacity);
+
+				outer: if (texture.u1() == 0 && texture.u2() == 1 && texture.v1() == 0 && texture.v2() == 1) {
+					// If we're drawing the full texture, just let vanilla do it.
+					context.drawGuiTexture(texture.image(), x, y, width, height);
+				} else {
+					// If we're only drawing a region, draw the full texture in a larger size and clip it
+					// to only show the requested region.
+					float fullWidth = width / Math.abs(texture.u2() - texture.u1());
+					float fullHeight = height / Math.abs(texture.v2() - texture.v1());
+
+					// u1 == u2 or v1 == v2, we don't care about these situations.
+					if (Float.isInfinite(fullWidth) || Float.isInfinite(fullHeight)) break outer;
+
+					// Calculate the offset left/top coordinates.
+					int xo = x - (int) (fullWidth * texture.u1());
+					int yo = y - (int) (fullHeight * texture.v1());
+
+					MatrixStack matrices = context.getMatrices();
+					matrices.push();
+					matrices.translate(xo, yo, 0);
+
+					// Note: scale instead of drawing a (fullWidth, fullHeight) rectangle so that edges of nine-slice
+					// rectangles etc. are drawn scaled too. This matches the behavior of standalone textures.
+					matrices.scale(fullWidth / width, fullHeight / height, 1);
+
+					// Clip to the wanted area on the screen...
+					try (var frame = Scissors.push(x, y, width, height)) {
+						// ...and draw the texture.
+						context.drawGuiTexture(texture.image(), 0, 0, width, height);
+					}
+
+					matrices.pop();
+				}
+
+				// Don't let the color cause tinting to other draw calls.
+				RenderSystem.setShaderColor(1, 1, 1, 1);
+			}
+		}
 	}
 
 	/**

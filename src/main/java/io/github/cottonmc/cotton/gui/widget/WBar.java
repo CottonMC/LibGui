@@ -162,7 +162,8 @@ public class WBar extends WWidget {
 				int top = y + getHeight();
 				top -= barSize;
 				if (bar != null) {
-					ScreenDrawing.texturedRect(context, left, top, getWidth(), barSize, bar.image(), bar.u1(), MathHelper.lerp(percent, bar.v2(), bar.v1()), bar.u2(), bar.v2(), 0xFFFFFFFF);
+					Texture clipped = bar.withUv(bar.u1(), MathHelper.lerp(percent, bar.v2(), bar.v1()), bar.u2(), bar.v2());
+					ScreenDrawing.texturedRect(context, left, top, getWidth(), barSize, clipped, 0xFFFFFFFF);
 				} else {
 					ScreenDrawing.coloredRect(context, left, top, getWidth(), barSize, ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
@@ -170,7 +171,8 @@ public class WBar extends WWidget {
 
 			case RIGHT -> {
 				if (bar != null) {
-					ScreenDrawing.texturedRect(context, x, y, barSize, getHeight(), bar.image(), bar.u1(), bar.v1(), MathHelper.lerp(percent, bar.u1(), bar.u2()), bar.v2(), 0xFFFFFFFF);
+					Texture clipped = bar.withUv(bar.u1(), bar.v1(), MathHelper.lerp(percent, bar.u1(), bar.u2()), bar.v2());
+					ScreenDrawing.texturedRect(context, x, y, barSize, getHeight(), clipped, 0xFFFFFFFF);
 				} else {
 					ScreenDrawing.coloredRect(context, x, y, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
@@ -178,7 +180,8 @@ public class WBar extends WWidget {
 
 			case DOWN -> {
 				if (bar != null) {
-					ScreenDrawing.texturedRect(context, x, y, getWidth(), barSize, bar.image(), bar.u1(), bar.v1(), bar.u2(), MathHelper.lerp(percent, bar.v1(), bar.v2()), 0xFFFFFFFF);
+					Texture clipped = bar.withUv(bar.u1(), bar.v1(), bar.u2(), MathHelper.lerp(percent, bar.v1(), bar.v2()));
+					ScreenDrawing.texturedRect(context, x, y, getWidth(), barSize, clipped, 0xFFFFFFFF);
 				} else {
 					ScreenDrawing.coloredRect(context, x, y, getWidth(), barSize, ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}
@@ -189,7 +192,8 @@ public class WBar extends WWidget {
 				int top = y;
 				left -= barSize;
 				if (bar != null) {
-					ScreenDrawing.texturedRect(context, left, top, barSize, getHeight(), bar.image(), MathHelper.lerp(percent, bar.u2(), bar.u1()), bar.v1(), bar.u2(), bar.v2(), 0xFFFFFFFF);
+					Texture clipped = bar.withUv(MathHelper.lerp(percent, bar.u2(), bar.u1()), bar.v1(), bar.u2(), bar.v2());
+					ScreenDrawing.texturedRect(context, left, top, barSize, getHeight(), clipped, 0xFFFFFFFF);
 				} else {
 					ScreenDrawing.coloredRect(context, left, top, barSize, getHeight(), ScreenDrawing.colorAtOpacity(0xFFFFFF, 0.5f));
 				}

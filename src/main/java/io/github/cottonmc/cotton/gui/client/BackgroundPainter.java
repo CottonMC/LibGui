@@ -129,6 +129,9 @@ public interface BackgroundPainter {
 	/**
 	 * Creates a new nine-patch background painter with a custom configuration.
 	 *
+	 * <p>This method cannot be used for {@linkplain Texture.Type#GUI_SPRITE GUI sprites}. Instead, you can use the
+	 * vanilla nine-slice mechanism or use a standalone texture referring to the same file.
+	 *
 	 * @param texture      the background painter texture
 	 * @param configurator a consumer that configures the {@link NinePatch.Builder}
 	 * @return the created nine-patch background painter
@@ -136,8 +139,13 @@ public interface BackgroundPainter {
 	 * @see NinePatch
 	 * @see NinePatch.Builder
 	 * @see NinePatchBackgroundPainter
+	 * @throws IllegalArgumentException when the texture is not {@linkplain Texture.Type#STANDALONE standalone}
 	 */
 	public static NinePatchBackgroundPainter createNinePatch(Texture texture, Consumer<NinePatch.Builder<Identifier>> configurator) {
+		if (texture.type() != Texture.Type.STANDALONE) {
+			throw new IllegalArgumentException("Non-standalone texture " + texture + " cannot be used for nine-patch");
+		}
+
 		TextureRegion<Identifier> region = new TextureRegion<>(texture.image(), texture.u1(), texture.v1(), texture.u2(), texture.v2());
 		var builder = NinePatch.builder(region);
 		configurator.accept(builder);
