@@ -115,7 +115,9 @@ public class ScreenDrawing {
 				float r = (color >> 16 & 255) / 255.0F;
 				float g = (color >> 8 & 255) / 255.0F;
 				float b = (color & 255) / 255.0F;
-				RenderSystem.setShaderColor(r, g, b, opacity);
+				float a = (color >> 24 & 255) / 255.0F;
+				RenderSystem.enableBlend();
+				RenderSystem.setShaderColor(r, g, b, opacity * a);
 
 				outer: if (texture.u1() == 0 && texture.u2() == 1 && texture.v1() == 0 && texture.v2() == 1) {
 					// If we're drawing the full texture, just let vanilla do it.
@@ -150,6 +152,7 @@ public class ScreenDrawing {
 					matrices.pop();
 				}
 
+				RenderSystem.disableBlend();
 				// Don't let the color cause tinting to other draw calls.
 				RenderSystem.setShaderColor(1, 1, 1, 1);
 			}
@@ -180,12 +183,13 @@ public class ScreenDrawing {
 		float r = (color >> 16 & 255) / 255.0F;
 		float g = (color >> 8 & 255) / 255.0F;
 		float b = (color & 255) / 255.0F;
+		float a = (color >> 24 & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		Matrix4f model = context.getMatrices().peek().getPositionMatrix();
 		RenderSystem.enableBlend();
 		RenderSystem.setShaderTexture(0, texture);
-		RenderSystem.setShaderColor(r, g, b, opacity);
+		RenderSystem.setShaderColor(r, g, b, opacity * a);
 		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 		buffer.vertex(model, x,         y + height, 0).texture(u1, v2).next();
