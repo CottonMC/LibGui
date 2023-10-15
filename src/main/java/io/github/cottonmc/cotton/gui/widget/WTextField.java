@@ -374,6 +374,7 @@ public class WTextField extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public InputResult onCharTyped(char ch) {
+		if (!isEditable()) return InputResult.IGNORED;
 		insertText(ch + "");
 		return InputResult.PROCESSED;
 	}
