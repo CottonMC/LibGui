@@ -21,7 +21,6 @@ import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
-	private static final int BUTTON_HEIGHT = 20;
 	private static final int ICON_SPACING = 2;
 
 	@Nullable private Text label;
@@ -94,7 +93,7 @@ public class WButton extends WWidget {
 		context.drawGuiTexture(textures.get(enabled, hovered || isFocused()), x, y, getWidth(), getHeight());
 
 		if (icon != null) {
-			icon.paint(context, x+ICON_SPACING, y+(BUTTON_HEIGHT-iconSize)/2, iconSize);
+			icon.paint(context, x+ICON_SPACING, y+(getHeight()-iconSize)/2, iconSize);
 		}
 		
 		if (label!=null) {
@@ -106,15 +105,10 @@ public class WButton extends WWidget {
 			}*/
 
 			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING+iconSize+ICON_SPACING : 0;
-			ScreenDrawing.drawStringWithShadow(context, label.asOrderedText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
+			ScreenDrawing.drawStringWithShadow(context, label.asOrderedText(), alignment, x + xOffset, y + ((getHeight() - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
 		}
 	}
 	
-	@Override
-	public void setSize(int x, int y) {
-		super.setSize(x, BUTTON_HEIGHT);
-	}
-
 	@Environment(EnvType.CLIENT)
 	@Override
 	public InputResult onClick(int x, int y, int button) {
