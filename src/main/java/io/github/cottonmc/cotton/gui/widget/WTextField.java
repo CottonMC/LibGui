@@ -37,7 +37,8 @@ public class WTextField extends WWidget {
 	public static final int CURSOR_HEIGHT = 12;
 
 	@Environment(EnvType.CLIENT)
-	private TextRenderer font;
+	@Nullable
+	private TextRenderer textRenderer;
 
 	private String text = "";
 	private int maxLength = 16;
@@ -148,7 +149,14 @@ public class WTextField extends WWidget {
 	}
 
 	@Environment(EnvType.CLIENT)
+	private TextRenderer getTextRenderer() {
+		return textRenderer != null ? textRenderer : (textRenderer = MinecraftClient.getInstance().textRenderer);
+	}
+
+	@Environment(EnvType.CLIENT)
 	public void scrollCursorIntoView() {
+		TextRenderer font = getTextRenderer();
+
 		if (scrollOffset > cursor) {
 			scrollOffset = cursor;
 		}
@@ -161,7 +169,7 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	private void checkScrollOffset() {
-		int rightMostScrollOffset = text.length() - font.trimToWidth(text, width - TEXT_PADDING_X * 2, true).length();
+		int rightMostScrollOffset = text.length() - getTextRenderer().trimToWidth(text, width - TEXT_PADDING_X * 2, true).length();
 		scrollOffset = Math.min(rightMostScrollOffset, scrollOffset);
 	}
 
@@ -194,7 +202,7 @@ public class WTextField extends WWidget {
 	@Environment(EnvType.CLIENT)
 	protected void renderText(DrawContext context, int x, int y, String visibleText) {
 		int textColor = this.editable ? this.enabledColor : this.disabledColor;
-		context.drawText(font, visibleText, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, textColor, true);
+		context.drawText(getTextRenderer(), visibleText, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, textColor, true);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -202,14 +210,14 @@ public class WTextField extends WWidget {
 		if (this.tickCount / 6 % 2 == 0) return;
 		if (this.cursor < this.scrollOffset) return;
 		if (this.cursor > this.scrollOffset + visibleText.length()) return;
-		int cursorOffset = this.font.getWidth(visibleText.substring(0, this.cursor - this.scrollOffset));
+		int cursorOffset = getTextRenderer().getWidth(visibleText.substring(0, this.cursor - this.scrollOffset));
 		ScreenDrawing.coloredRect(context, x + TEXT_PADDING_X + cursorOffset, y + CURSOR_PADDING_Y, 1, CURSOR_HEIGHT, CURSOR_COLOR);
 	}
 
 	@Environment(EnvType.CLIENT)
 	protected void renderSuggestion(DrawContext context, int x, int y) {
 		if (this.suggestion == null) return;
-		context.drawText(font, suggestion, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, this.suggestionColor, true);
+		context.drawText(getTextRenderer(), suggestion, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, this.suggestionColor, true);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -226,6 +234,7 @@ public class WTextField extends WWidget {
 		int normalizedLeft = Math.max(scrollOffset, left) - scrollOffset;
 		int normalizedRight = Math.min(scrollOffset + textLength, right) - scrollOffset;
 
+		TextRenderer font = getTextRenderer();
 		int leftCaret = font.getWidth(visibleText.substring(0, normalizedLeft));
 		int selectionWidth = font.getWidth(visibleText.substring(normalizedLeft, normalizedRight));
 
@@ -234,10 +243,8 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	protected void renderTextField(DrawContext context, int x, int y) {
-		if (this.font == null) this.font = MinecraftClient.getInstance().textRenderer;
-
 		checkScrollOffset();
-		String visibleText = font.trimToWidth(this.text.substring(this.scrollOffset), this.width - 2 * TEXT_PADDING_X);
+		String visibleText = getTextRenderer().trimToWidth(this.text.substring(this.scrollOffset), this.width - 2 * TEXT_PADDING_X);
 		renderBox(context, x, y);
 		renderText(context, x, y, visibleText);
 		if (this.text.isEmpty() && !this.isFocused()) {
@@ -351,6 +358,7 @@ public class WTextField extends WWidget {
 		int lastPos = 0;
 		checkScrollOffset();
 		String string = text.substring(scrollOffset);
+		TextRenderer font = getTextRenderer();
 		for (int i = 0; i < string.length(); i++) {
 			int w = font.getWidth(string.charAt(i) + "");
 			if (lastPos + w >= clickX) {
