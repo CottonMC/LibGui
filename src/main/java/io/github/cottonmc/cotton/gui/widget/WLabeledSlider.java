@@ -76,15 +76,6 @@ public class WLabeledSlider extends WAbstractSlider {
 		this.label = label;
 	}
 
-	@Override
-	public void setSize(int x, int y) {
-		if (axis == Axis.HORIZONTAL) {
-			super.setSize(x, 20);
-		} else {
-			super.setSize(20, y);
-		}
-	}
-
 	/**
 	 * Gets the current label of this slider.
 	 *
