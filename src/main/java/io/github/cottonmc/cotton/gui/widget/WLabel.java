@@ -3,7 +3,6 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -13,6 +12,7 @@ import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.LibGuiConfig;
+import io.github.cottonmc.cotton.gui.impl.client.TextAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
@@ -63,13 +63,7 @@ public class WLabel extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-		MinecraftClient mc = MinecraftClient.getInstance();
-		TextRenderer renderer = mc.textRenderer;
-		int yOffset = switch (verticalAlignment) {
-			case CENTER -> height / 2 - renderer.fontHeight / 2;
-			case BOTTOM -> height - renderer.fontHeight;
-			case TOP -> 0;
-		};
+		int yOffset = TextAlignment.getTextOffsetY(verticalAlignment, height, 1);
 
 		ScreenDrawing.drawString(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
 
@@ -102,7 +96,8 @@ public class WLabel extends WWidget {
 	@Nullable
 	public Style getTextStyleAt(int x, int y) {
 		if (isWithinBounds(x, y)) {
-			return MinecraftClient.getInstance().textRenderer.getTextHandler().getStyleAt(text, x);
+			int xOffset = TextAlignment.getTextOffsetX(horizontalAlignment, width, text.asOrderedText());
+			return MinecraftClient.getInstance().textRenderer.getTextHandler().getStyleAt(text, x - xOffset);
 		}
 		return null;
 	}

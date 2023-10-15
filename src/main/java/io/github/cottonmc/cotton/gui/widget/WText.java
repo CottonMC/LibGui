@@ -12,6 +12,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.impl.client.TextAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
@@ -73,11 +74,13 @@ public class WText extends WWidget {
 	@Nullable
 	public Style getTextStyleAt(int x, int y) {
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		int lineIndex = y / font.fontHeight;
+		int yOffset = TextAlignment.getTextOffsetY(verticalAlignment, height, wrappedLines.size());
+		int lineIndex = (y - yOffset) / font.fontHeight;
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
 			OrderedText line = wrappedLines.get(lineIndex);
-			return font.getTextHandler().getStyleAt(line, x);
+			int xOffset = TextAlignment.getTextOffsetX(horizontalAlignment, width, line);
+			return font.getTextHandler().getStyleAt(line, x - xOffset);
 		}
 
 		return null;
@@ -92,12 +95,7 @@ public class WText extends WWidget {
 		}
 
 		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-
-		int yOffset = switch (verticalAlignment) {
-			case CENTER -> height / 2 - font.fontHeight * wrappedLines.size() / 2;
-			case BOTTOM -> height - font.fontHeight * wrappedLines.size();
-			case TOP -> 0;
-		};
+		int yOffset = TextAlignment.getTextOffsetY(verticalAlignment, height, wrappedLines.size());
 
 		for (int i = 0; i < wrappedLines.size(); i++) {
 			OrderedText line = wrappedLines.get(i);
