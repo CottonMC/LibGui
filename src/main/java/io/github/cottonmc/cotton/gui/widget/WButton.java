@@ -25,7 +25,6 @@ public class WButton extends WWidget {
 
 	@Nullable private Text label;
 	protected int color = WLabel.DEFAULT_TEXT_COLOR;
-	protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
 	/**
 	 * The size (width/height) of this button's icon in pixels.
 	 * @since 6.4.0
