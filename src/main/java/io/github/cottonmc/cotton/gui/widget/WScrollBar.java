@@ -15,7 +15,8 @@ import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 
 public class WScrollBar extends WWidget {
 	private static final Identifier FOCUS_TEXTURE = new Identifier(LibGuiCommon.MOD_ID, "widget/scroll_bar/focus");
-	private static final int SCROLLING_SPEED = 4;
+	public static final int DEFAULT_SCROLLING_SPEED = 4;
+	private int scrollingSpeed = 4;
 
 	protected Axis axis = Axis.HORIZONTAL;
 	protected int value;
@@ -203,7 +204,7 @@ public class WScrollBar extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public InputResult onMouseScroll(int x, int y, double horizontalAmount, double verticalAmount) {
-		setValue(getValue() + (int) (horizontalAmount - verticalAmount) * SCROLLING_SPEED);
+		setValue(getValue() + (int) (horizontalAmount - verticalAmount) * scrollingSpeed);
 		return InputResult.PROCESSED;
 	}
 
@@ -225,6 +226,30 @@ public class WScrollBar extends WWidget {
 		this.maxValue = max;
 		checkValue();
 		return this;
+	}
+
+	/**
+	 * Sets the mouse scroll speed;
+	 * <p>
+	 * Default value: {@value #DEFAULT_SCROLLING_SPEED}
+	 * @param scrollingSpeed the scroll speed
+	 * @return this scroll bar
+	 */
+	public WScrollBar setScrollingSpeed(int scrollingSpeed) {
+		if(scrollingSpeed < 0) throw new IllegalArgumentException("Negative value for scrolling speed");
+		if(scrollingSpeed == 0) throw new IllegalArgumentException("Zero value for scrolling speed");
+
+		this.scrollingSpeed = scrollingSpeed;
+		return this;
+	}
+
+	/**
+	 * Gets the mouse scroll speed;
+	 * <p>
+	 * Default value: {@value #DEFAULT_SCROLLING_SPEED}
+	 */
+	public int getScrollingSpeed() {
+		return scrollingSpeed;
 	}
 
 	public int getWindow() {
