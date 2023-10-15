@@ -5,7 +5,10 @@ plugins {
 	id 'checkstyle'
 }
 
-archivesBaseName = project.archives_base_name
+base {
+	archivesName = project.archives_base_name
+}
+
 version = "$project.mod_version+$project.minecraft_version"
 group = project.maven_group
 
