@@ -51,6 +51,15 @@ public class WScrollPanel extends WClippedPanel {
 	}
 
 	/**
+	 * Returns this scroll panel's horizontal scroll bar.
+	 *
+	 * @return the horizontal scroll bar
+	 */
+	public WScrollBar getHorizontalScrollBar() {
+		return this.horizontalScrollBar;
+	}
+
+	/**
 	 * Returns whether this scroll panel has a horizontal scroll bar.
 	 *
 	 * @return true if there is a horizontal scroll bar,
@@ -68,6 +77,15 @@ public class WScrollPanel extends WClippedPanel {
 		}
 
 		return this;
+	}
+
+	/**
+	 * Returns this scroll panel's vertical scroll bar.
+	 *
+	 * @return the vertical scroll bar
+	 */
+	public WScrollBar getVerticalScrollBar() {
+		return this.verticalScrollBar;
 	}
 
 	/**
