@@ -9,6 +9,8 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 
+import java.util.Objects;
+
 /**
  * Similar to the JScrollPane in Swing, this widget represents a scrollable widget.
  *
@@ -51,6 +53,27 @@ public class WScrollPanel extends WClippedPanel {
 	}
 
 	/**
+	 * Returns this scroll panel's horizontal scroll bar.
+	 *
+	 * @return the horizontal scroll bar
+	 */
+	public WScrollBar getHorizontalScrollBar() {
+		return this.horizontalScrollBar;
+	}
+
+	/**
+	 * Sets this scroll panel's horizontal scroll bar.
+	 *
+	 * @param horizontalScrollBar the new horizontal scroll bar
+	 * @return this scroll panel
+	 * @throws NullPointerException if the horizontalScrollBar is null
+	 */
+	public WScrollPanel setHorizontalScrollBar(WScrollBar horizontalScrollBar) {
+		this.horizontalScrollBar = Objects.requireNonNull(horizontalScrollBar, "horizontalScrollBar");
+		return this;
+	}
+
+	/**
 	 * Returns whether this scroll panel has a horizontal scroll bar.
 	 *
 	 * @return true if there is a horizontal scroll bar,
@@ -67,6 +90,27 @@ public class WScrollPanel extends WClippedPanel {
 			layout();
 		}
 
+		return this;
+	}
+
+	/**
+	 * Returns this scroll panel's vertical scroll bar.
+	 *
+	 * @return the vertical scroll bar
+	 */
+	public WScrollBar getVerticalScrollBar() {
+		return this.verticalScrollBar;
+	}
+
+	/**
+	 * Sets this scroll panel's vertical scroll bar.
+	 *
+	 * @param verticalScrollBar the new vertical scroll bar
+	 * @return this scroll panel
+	 * @throws NullPointerException if the verticalScrollBar is null
+	 */
+	public WScrollPanel setVerticalScrollBar(WScrollBar verticalScrollBar) {
+		this.verticalScrollBar = Objects.requireNonNull(verticalScrollBar, "verticalScrollBar");
 		return this;
 	}
 
