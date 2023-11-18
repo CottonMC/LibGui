@@ -88,18 +88,6 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		}
 
 		super.paint(context, x, y, mouseX, mouseY);
-		/*
-		if (getBackgroundPainter()!=null) {
-			getBackgroundPainter().paintBackground(x, y, this);
-		} else {
-			ScreenDrawing.drawBeveledPanel(x, y, width, height);
-		}
-		
-		
-		
-		for(WWidget child : children) {
-			child.paintBackground(x + child.getX(), y + child.getY(), mouseX - child.getX(), mouseY - child.getY());
-		}*/
 	}
 
 	private W createChild() {
