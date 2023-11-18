@@ -51,10 +51,9 @@ public interface BackgroundPainter {
 	 * <p>For {@linkplain WItemSlot item slots}, this painter uses {@link WItemSlot#SLOT_TEXTURE libgui:textures/widget/item_slot.png}.
 	 */
 	public static BackgroundPainter SLOT = (context, left, top, panel) -> {
-		if (!(panel instanceof WItemSlot)) {
+		if (!(panel instanceof WItemSlot slot)) {
 			ScreenDrawing.drawBeveledPanel(context, left-1, top-1, panel.getWidth()+2, panel.getHeight()+2, 0xB8000000, 0x4C000000, 0xB8FFFFFF);
 		} else {
-			WItemSlot slot = (WItemSlot)panel;
 			for(int x = 0; x < slot.getWidth()/18; ++x) {
 				for(int y = 0; y < slot.getHeight()/18; ++y) {
 					int index = x + y * (slot.getWidth() / 18);

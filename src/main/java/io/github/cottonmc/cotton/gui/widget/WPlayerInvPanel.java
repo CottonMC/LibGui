@@ -124,8 +124,8 @@ public class WPlayerInvPanel extends WPlainPanel {
 	@Override
 	public void validate(GuiDescription c) {
 		super.validate(c);
-		if (c != null && label instanceof WLabel) {
-			((WLabel) label).setColor(c.getTitleColor());
+		if (c != null && label instanceof WLabel l) {
+			l.setColor(c.getTitleColor());
 		}
 	}
 }

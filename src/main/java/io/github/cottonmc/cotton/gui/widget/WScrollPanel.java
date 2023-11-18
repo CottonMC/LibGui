@@ -182,7 +182,7 @@ public class WScrollPanel extends WPanel {
 		horizontalScrollBar.setSize(this.width - offset, SCROLL_BAR_SIZE);
 		horizontalScrollBar.setLocation(0, this.height - horizontalScrollBar.getHeight());
 
-		if (widget instanceof WPanel) ((WPanel) widget).layout();
+		if (widget instanceof WPanel panel) panel.layout();
 		children.add(widget);
 		Insets insets = getInsets();
 		int x = insets.left() + (horizontal ? -horizontalScrollBar.getValue() : 0);

@@ -384,8 +384,7 @@ public class WItemSlot extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public InputResult onKeyPressed(int ch, int key, int modifiers) {
-		if (isActivationKey(ch) && host instanceof ScreenHandler && focusedSlot >= 0) {
-			ScreenHandler handler = (ScreenHandler) host;
+		if (isActivationKey(ch) && host instanceof ScreenHandler handler && focusedSlot >= 0) {
 			MinecraftClient client = MinecraftClient.getInstance();
 
 			ValidatedSlot peer = peers.get(focusedSlot);

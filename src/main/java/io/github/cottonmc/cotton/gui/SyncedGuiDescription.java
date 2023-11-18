@@ -259,8 +259,8 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		boolean inserted = false;
 		
 		for(Slot slot : slots) {
-			if (slot.inventory==inventory && slot instanceof ValidatedSlot) {
-				int index = ((ValidatedSlot)slot).getInventoryIndex();
+			if (slot.inventory == inventory && slot instanceof ValidatedSlot validated) {
+				int index = validated.getInventoryIndex();
 				if (PlayerInventory.isValidHotbarIndex(index)) {
 					hotbarSlots.add(slot);
 				} else {
@@ -393,8 +393,8 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			BlockState state = world.getBlockState(pos);
 			Block b = state.getBlock();
 
-			if (b instanceof InventoryProvider) {
-				Inventory inventory = ((InventoryProvider)b).getInventory(state, world, pos);
+			if (b instanceof InventoryProvider inventoryProvider) {
+				Inventory inventory = inventoryProvider.getInventory(state, world, pos);
 				if (inventory != null) {
 					return inventory;
 				}
@@ -402,13 +402,13 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 
 			BlockEntity be = world.getBlockEntity(pos);
 			if (be!=null) {
-				if (be instanceof InventoryProvider) {
-					Inventory inventory = ((InventoryProvider)be).getInventory(state, world, pos);
+				if (be instanceof InventoryProvider inventoryProvider) {
+					Inventory inventory = inventoryProvider.getInventory(state, world, pos);
 					if (inventory != null) {
 						return inventory;
 					}
-				} else if (be instanceof Inventory) {
-					return (Inventory)be;
+				} else if (be instanceof Inventory inventory) {
+					return inventory;
 				}
 			}
 
@@ -429,8 +429,8 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	public static PropertyDelegate getBlockPropertyDelegate(ScreenHandlerContext ctx) {
 		return ctx.get((world, pos) -> {
 			BlockEntity be = world.getBlockEntity(pos);
-			if (be!=null && be instanceof PropertyDelegateHolder) {
-				return ((PropertyDelegateHolder)be).getPropertyDelegate();
+			if (be instanceof PropertyDelegateHolder holder) {
+				return holder.getPropertyDelegate();
 			}
 			
 			return new ArrayPropertyDelegate(0);
@@ -453,8 +453,8 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	public static PropertyDelegate getBlockPropertyDelegate(ScreenHandlerContext ctx, int size) {
 		return ctx.get((world, pos) -> {
 			BlockEntity be = world.getBlockEntity(pos);
-			if (be!=null && be instanceof PropertyDelegateHolder) {
-				return ((PropertyDelegateHolder)be).getPropertyDelegate();
+			if (be instanceof PropertyDelegateHolder holder) {
+				return holder.getPropertyDelegate();
 			}
 
 			return new ArrayPropertyDelegate(size);
