@@ -124,8 +124,6 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	}
 
 	private void paint(DrawContext context, int mouseX, int mouseY, float delta) {
-		renderBackground(context, mouseX, mouseY, delta);
-
 		if (description!=null) {
 			context.getMatrices().push();
 			context.getMatrices().translate(0f, 0f, 0.01f);

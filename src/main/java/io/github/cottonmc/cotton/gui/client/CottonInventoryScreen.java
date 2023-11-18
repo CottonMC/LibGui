@@ -276,8 +276,6 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	protected void drawBackground(DrawContext context, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
 	
 	private void paint(DrawContext context, int mouseX, int mouseY, float delta) {
-		renderBackground(context, mouseX, mouseY, delta);
-		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
