@@ -88,6 +88,7 @@ public class WItemSlot extends WWidget {
 	private BackgroundPainter backgroundPainter = null;
 	@Nullable
 	private Icon icon = null;
+	private boolean iconOnlyPaintedForEmptySlots = true;
 	private Inventory inventory;
 	private int startIndex = 0;
 	private int slotsWide = 1;
@@ -247,6 +248,32 @@ public class WItemSlot extends WWidget {
 			LOGGER.warn("Setting icon {} for item slot {} with more than 1 slot ({})", icon, this, slotsWide * slotsHigh);
 		}
 
+		return this;
+	}
+
+	/**
+	 * Checks whether icons should be rendered when the first slot of this widget
+	 * contains an item.
+	 *
+	 * <p>This property is {@code true} by default.
+	 *
+	 * @return {@code true} if the icon should always be painted, {@code false} otherwise
+	 * @since 9.1.0
+	 */
+	public boolean isIconOnlyPaintedForEmptySlots() {
+		return iconOnlyPaintedForEmptySlots;
+	}
+
+	/**
+	 * Sets whether icons should be rendered when the first slot of this widget
+	 * contains an item.
+	 *
+	 * @param iconOnlyPaintedForEmptySlots {@code true} if the icon should always be painted, {@code false} otherwise
+	 * @return this item slot
+	 * @since 9.1.0
+	 */
+	public WItemSlot setIconOnlyPaintedForEmptySlots(boolean iconOnlyPaintedForEmptySlots) {
+		this.iconOnlyPaintedForEmptySlots = iconOnlyPaintedForEmptySlots;
 		return this;
 	}
 
@@ -487,7 +514,7 @@ public class WItemSlot extends WWidget {
 			backgroundPainter.paintBackground(context, x, y, this);
 		}
 
-		if (icon != null) {
+		if (icon != null && (iconOnlyPaintedForEmptySlots || inventory.getStack(startIndex).isEmpty())) {
 			icon.paint(context, x + 1, y + 1, 16);
 		}
 	}
