@@ -88,7 +88,7 @@ public class WItemSlot extends WWidget {
 	private BackgroundPainter backgroundPainter = null;
 	@Nullable
 	private Icon icon = null;
-	private boolean iconOnlyPaintedForEmptySlots = true;
+	private boolean iconOnlyPaintedForEmptySlots = false;
 	private Inventory inventory;
 	private int startIndex = 0;
 	private int slotsWide = 1;
