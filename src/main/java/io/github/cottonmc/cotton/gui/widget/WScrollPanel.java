@@ -6,8 +6,11 @@ import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.gui.DrawContext;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.client.Scissors;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
 
 import java.util.Objects;
 
@@ -16,7 +19,7 @@ import java.util.Objects;
  *
  * @since 2.0.0
  */
-public class WScrollPanel extends WClippedPanel {
+public class WScrollPanel extends WPanel {
 	private static final int SCROLL_BAR_SIZE = 8;
 	private final WWidget widget;
 
@@ -35,6 +38,8 @@ public class WScrollPanel extends WClippedPanel {
 
 	private int lastHorizontalScroll = -1;
 	private int lastVerticalScroll = -1;
+
+	private Insets insets = Insets.NONE;
 
 	/**
 	 * Creates a vertically scrolling panel.
@@ -147,7 +152,21 @@ public class WScrollPanel extends WClippedPanel {
 			lastVerticalScroll = verticalScrollBar.getValue();
 		}
 
-		super.paint(context, x, y, mouseX, mouseY);
+		BackgroundPainter backgroundPainter = getBackgroundPainter();
+		if (backgroundPainter != null) backgroundPainter.paintBackground(context, x, y, this);
+
+		Insets insets = getInsets();
+		for (WWidget child : children) {
+			if (child == widget) {
+				Scissors.push(x + insets.left(), y + insets.top(), width - insets.left() - insets.right(), height - insets.top() - insets.bottom());
+			}
+
+			child.paint(context, x + child.getX(), y + child.getY(), mouseX - child.getX(), mouseY - child.getY());
+
+			if (child == widget) {
+				Scissors.pop();
+			}
+		}
 	}
 
 	@Override
@@ -165,13 +184,14 @@ public class WScrollPanel extends WClippedPanel {
 
 		if (widget instanceof WPanel) ((WPanel) widget).layout();
 		children.add(widget);
-		int x = horizontal ? -horizontalScrollBar.getValue() : 0;
-		int y = vertical ? -verticalScrollBar.getValue() : 0;
+		Insets insets = getInsets();
+		int x = insets.left() + (horizontal ? -horizontalScrollBar.getValue() : 0);
+		int y = insets.top() + (vertical ? -verticalScrollBar.getValue() : 0);
 		widget.setLocation(x, y);
 
-		verticalScrollBar.setWindow(this.height - (horizontal ? SCROLL_BAR_SIZE : 0));
+		verticalScrollBar.setWindow(this.height - insets.top() - insets.bottom() - (horizontal ? SCROLL_BAR_SIZE : 0));
 		verticalScrollBar.setMaxValue(widget.getHeight());
-		horizontalScrollBar.setWindow(this.width - (vertical ? SCROLL_BAR_SIZE : 0));
+		horizontalScrollBar.setWindow(this.width - insets.left() - insets.right() - (vertical ? SCROLL_BAR_SIZE : 0));
 		horizontalScrollBar.setMaxValue(widget.getWidth());
 
 		if (vertical) children.add(verticalScrollBar);
@@ -212,5 +232,25 @@ public class WScrollPanel extends WClippedPanel {
 		this.horizontalScrollBar.validate(c);
 		this.verticalScrollBar.validate(c);
 		super.validate(c);
+	}
+
+	/**
+	 * {@return the layout insets used for the viewed widget}
+	 * @since 9.1.0
+	 */
+	public Insets getInsets() {
+		return insets;
+	}
+
+	/**
+	 * Sets the layout insets used for the viewed widget.
+	 *
+	 * @param insets the layout insets
+	 * @return this scroll panel
+	 * @since 9.1.0
+	 */
+	public WScrollPanel setInsets(Insets insets) {
+		this.insets = Objects.requireNonNull(insets, "Insets cannot be null");
+		return this;
 	}
 }
