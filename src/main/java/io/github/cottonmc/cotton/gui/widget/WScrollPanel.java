@@ -56,6 +56,7 @@ public class WScrollPanel extends WClippedPanel {
 	 * Returns this scroll panel's horizontal scroll bar.
 	 *
 	 * @return the horizontal scroll bar
+	 * @since 9.1.0
 	 */
 	public WScrollBar getHorizontalScrollBar() {
 		return this.horizontalScrollBar;
@@ -67,6 +68,7 @@ public class WScrollPanel extends WClippedPanel {
 	 * @param horizontalScrollBar the new horizontal scroll bar
 	 * @return this scroll panel
 	 * @throws NullPointerException if the horizontalScrollBar is null
+	 * @since 9.1.0
 	 */
 	public WScrollPanel setHorizontalScrollBar(WScrollBar horizontalScrollBar) {
 		this.horizontalScrollBar = Objects.requireNonNull(horizontalScrollBar, "horizontalScrollBar");
@@ -97,6 +99,7 @@ public class WScrollPanel extends WClippedPanel {
 	 * Returns this scroll panel's vertical scroll bar.
 	 *
 	 * @return the vertical scroll bar
+	 * @since 9.1.0
 	 */
 	public WScrollBar getVerticalScrollBar() {
 		return this.verticalScrollBar;
@@ -108,6 +111,7 @@ public class WScrollPanel extends WClippedPanel {
 	 * @param verticalScrollBar the new vertical scroll bar
 	 * @return this scroll panel
 	 * @throws NullPointerException if the verticalScrollBar is null
+	 * @since 9.1.0
 	 */
 	public WScrollPanel setVerticalScrollBar(WScrollBar verticalScrollBar) {
 		this.verticalScrollBar = Objects.requireNonNull(verticalScrollBar, "verticalScrollBar");
