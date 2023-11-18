@@ -110,7 +110,7 @@ public class WBox extends WPanelWithInsets {
 			if (axis == Axis.HORIZONTAL) {
 				int y = switch (verticalAlignment) {
 					case TOP -> insets.top();
-					case CENTER -> insets.top() + (getHeight() - insets.top() - insets.bottom() - child.getHeight()) / 2;
+					case CENTER -> insets.top() + (getHeight() - insets.height() - child.getHeight()) / 2;
 					case BOTTOM -> getHeight() - insets.bottom() - child.getHeight();
 				};
 
@@ -118,7 +118,7 @@ public class WBox extends WPanelWithInsets {
 			} else {
 				int x = switch (horizontalAlignment) {
 					case LEFT -> insets.left();
-					case CENTER -> insets.left() + (getWidth() - insets.left() - insets.right() - child.getWidth()) / 2;
+					case CENTER -> insets.left() + (getWidth() - insets.width() - child.getWidth()) / 2;
 					case RIGHT -> getWidth() - insets.right() - child.getWidth();
 				};
 

@@ -54,4 +54,26 @@ public record Insets(int top, int left, int bottom, int right) {
 	public Insets(int size) {
 		this(size, size, size, size);
 	}
+
+	/**
+	 * {@return the total width of these insets}
+	 *
+	 * <p>Equivalent to <code>{@link #left()} + {@link #right()}</code>.
+	 *
+	 * @since 9.1.0
+	 */
+	public int width() {
+		return left + right;
+	}
+
+	/**
+	 * {@return the total height of these insets}
+	 *
+	 * <p>Equivalent to <code>{@link #top()} + {@link #bottom()}</code>.
+	 *
+	 * @since 9.1.0
+	 */
+	public int height() {
+		return top + bottom;
+	}
 }

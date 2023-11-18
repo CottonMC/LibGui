@@ -40,7 +40,7 @@ public abstract class WPanelWithInsets extends WPanel {
 		Insets old = this.insets;
 		this.insets = Objects.requireNonNull(insets, "insets");
 
-		setSize(getWidth() - old.left() - old.right(), getHeight() - old.top() - old.bottom());
+		setSize(getWidth() - old.width(), getHeight() - old.height());
 
 		for (WWidget child : children) {
 			child.setLocation(child.getX() - old.left() + insets.left(), child.getY() - old.top() + insets.top());

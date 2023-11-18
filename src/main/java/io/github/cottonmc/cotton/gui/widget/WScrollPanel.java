@@ -158,7 +158,7 @@ public class WScrollPanel extends WPanel {
 		Insets insets = getInsets();
 		for (WWidget child : children) {
 			if (child == widget) {
-				Scissors.push(x + insets.left(), y + insets.top(), width - insets.left() - insets.right(), height - insets.top() - insets.bottom());
+				Scissors.push(x + insets.left(), y + insets.top(), width - insets.width(), height - insets.height());
 			}
 
 			child.paint(context, x + child.getX(), y + child.getY(), mouseX - child.getX(), mouseY - child.getY());
@@ -189,9 +189,9 @@ public class WScrollPanel extends WPanel {
 		int y = insets.top() + (vertical ? -verticalScrollBar.getValue() : 0);
 		widget.setLocation(x, y);
 
-		verticalScrollBar.setWindow(this.height - insets.top() - insets.bottom() - (horizontal ? SCROLL_BAR_SIZE : 0));
+		verticalScrollBar.setWindow(this.height - insets.height() - (horizontal ? SCROLL_BAR_SIZE : 0));
 		verticalScrollBar.setMaxValue(widget.getHeight());
-		horizontalScrollBar.setWindow(this.width - insets.left() - insets.right() - (vertical ? SCROLL_BAR_SIZE : 0));
+		horizontalScrollBar.setWindow(this.width - insets.width() - (vertical ? SCROLL_BAR_SIZE : 0));
 		horizontalScrollBar.setMaxValue(widget.getWidth());
 
 		if (vertical) children.add(verticalScrollBar);

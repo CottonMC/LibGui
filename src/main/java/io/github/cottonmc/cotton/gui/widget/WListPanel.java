@@ -173,7 +173,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 
 		Insets insets = getInsets();
 		int gap = getGap();
-		int layoutHeight = this.getHeight() - insets.top() - insets.bottom();
+		int layoutHeight = this.getHeight() - insets.height();
 		int cellsHigh = Math.max((layoutHeight + gap) / (cellHeight + gap), 1); // At least one cell is always visible
 
 		//System.out.println("Adding children...");
@@ -210,7 +210,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 
 				//At this point, w is nonnull and configured by d
 				if (w.canResize()) {
-					w.setSize(this.width - insets.left() - insets.right() - scrollBar.getWidth(), cellHeight);
+					w.setSize(this.width - insets.width() - scrollBar.getWidth(), cellHeight);
 				}
 				w.x = insets.left();
 				w.y = insets.top() + ((cellHeight + gap) * i);
