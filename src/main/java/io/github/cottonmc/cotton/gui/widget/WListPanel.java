@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.impl.Proxy;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
@@ -112,6 +113,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		} else {
 			requiresHost.add(child);
 		}
+		Proxy.proxy.addPainters(child);
 		return child;
 	}
 
@@ -125,6 +127,11 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 	public void setHost(GuiDescription host) {
 		super.setHost(host);
 		setRequiredHosts(host);
+	}
+
+	@Override
+	public void addPainters() {
+		// This is handled separately for our children.
 	}
 
 	private void setRequiredHosts(GuiDescription host) {

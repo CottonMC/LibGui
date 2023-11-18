@@ -7,6 +7,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonObject;
+import io.github.cottonmc.cotton.gui.impl.Proxy;
 import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
 import io.github.cottonmc.jankson.JanksonFactory;
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +33,7 @@ public class LibGuiClient implements ClientModInitializer {
 		});
 
 		LibGuiShaders.register();
+		Proxy.proxy = new ClientProxy();
 	}
 
 	public static LibGuiConfig loadConfig() {
