@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
-import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
+import io.github.cottonmc.cotton.gui.impl.client.CottonInventoryScreenImpl;
 import io.github.cottonmc.cotton.gui.impl.client.FocusElements;
 import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationHelper;
@@ -30,7 +30,7 @@ import org.lwjgl.opengl.GL11;
  *
  * @param <T> the description type
  */
-public class CottonInventoryScreen<T extends SyncedGuiDescription> extends HandledScreen<T> implements CottonScreenImpl {
+public class CottonInventoryScreen<T extends SyncedGuiDescription> extends HandledScreen<T> implements CottonInventoryScreenImpl {
 	private static final VisualLogger LOGGER = new VisualLogger(CottonInventoryScreen.class);
 	protected SyncedGuiDescription description;
 	@Nullable protected WWidget lastResponder = null;
@@ -274,27 +274,32 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 
 	@Override
 	protected void drawBackground(DrawContext context, float partialTicks, int mouseX, int mouseY) {} //This is just an AbstractContainerScreen thing; most Screens don't work this way.
-	
-	private void paint(DrawContext context, int mouseX, int mouseY, float delta) {
+
+	/**
+	 * Paints the GUI description of this screen.
+	 *
+	 * @param context the draw context
+	 * @param mouseX  the absolute X coordinate of the mouse cursor
+	 * @param mouseY  the absolute Y coordinate of the mouse cursor
+	 * @param delta   the tick delta
+	 * @since 9.2.0
+	 */
+	@Override
+	public void paintDescription(DrawContext context, int mouseX, int mouseY, float delta) {
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				context.getMatrices().push();
-				context.getMatrices().translate(0f, 0f, 0.01f);
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
 				Scissors.refreshScissors();
 				root.paint(context, x, y, mouseX-x, mouseY-y);
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				Scissors.checkStackIsEmpty();
-				context.getMatrices().pop();
 			}
 		}
 	}
 	
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
-		paint(context, mouseX, mouseY, partialTicks);
-		
 		super.render(context, mouseX, mouseY, partialTicks);
 		DiffuseLighting.disableGuiDepthLighting(); //Needed because super.render leaves dirty state
 		

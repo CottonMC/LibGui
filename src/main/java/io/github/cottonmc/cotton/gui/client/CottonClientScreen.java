@@ -125,9 +125,6 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
 	private void paint(DrawContext context, int mouseX, int mouseY, float delta) {
 		if (description!=null) {
-			context.getMatrices().push();
-			context.getMatrices().translate(0f, 0f, 0.01f);
-
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -141,16 +138,13 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 				int width = description.getRootPanel().getWidth();
 				ScreenDrawing.drawString(context, getTitle().asOrderedText(), description.getTitleAlignment(), left + titleX, top + titleY, width - 2 * titleX, description.getTitleColor());
 			}
-
-			context.getMatrices().pop();
 		}
 	}
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
-		paint(context, mouseX, mouseY, partialTicks);
-		
 		super.render(context, mouseX, mouseY, partialTicks);
+		paint(context, mouseX, mouseY, partialTicks);
 		
 		if (description!=null) {
 			WPanel root = description.getRootPanel();

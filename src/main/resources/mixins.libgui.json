@@ -6,6 +6,7 @@
 	"plugin": "io.github.cottonmc.cotton.gui.impl.LibGuiMixinPlugin",
 
 	"client": [
+		"client.HandledScreenMixin",
 		"client.MinecraftClientMixin",
 		"client.PressableWidgetAccessor",
 		"client.ScreenAccessor",
