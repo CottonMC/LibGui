@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
-import io.github.cottonmc.cotton.gui.impl.client.CottonInventoryScreenImpl;
+import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
 import io.github.cottonmc.cotton.gui.impl.client.FocusElements;
 import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationHelper;
@@ -30,7 +30,7 @@ import org.lwjgl.opengl.GL11;
  *
  * @param <T> the description type
  */
-public class CottonInventoryScreen<T extends SyncedGuiDescription> extends HandledScreen<T> implements CottonInventoryScreenImpl {
+public class CottonInventoryScreen<T extends SyncedGuiDescription> extends HandledScreen<T> implements CottonScreenImpl {
 	private static final VisualLogger LOGGER = new VisualLogger(CottonInventoryScreen.class);
 	protected SyncedGuiDescription description;
 	@Nullable protected WWidget lastResponder = null;
@@ -284,7 +284,6 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	 * @param delta   the tick delta
 	 * @since 9.2.0
 	 */
-	@Override
 	public void paintDescription(DrawContext context, int mouseX, int mouseY, float delta) {
 		if (description!=null) {
 			WPanel root = description.getRootPanel();

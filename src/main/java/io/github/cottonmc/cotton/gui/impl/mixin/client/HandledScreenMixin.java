@@ -3,7 +3,7 @@ package io.github.cottonmc.cotton.gui.impl.mixin.client;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
-import io.github.cottonmc.cotton.gui.impl.client.CottonInventoryScreenImpl;
+import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,7 +21,7 @@ abstract class HandledScreenMixin {
 			allow = 1
 	)
 	private void onSuperRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo info) {
-		if (this instanceof CottonInventoryScreenImpl cottonInventoryScreen) {
+		if ((Object) this instanceof CottonInventoryScreen<?> cottonInventoryScreen) {
 			cottonInventoryScreen.paintDescription(context, mouseX, mouseY, delta);
 		}
 	}
