@@ -71,6 +71,7 @@ public class LibGuiTestClient implements ClientModInitializer {
 						.then(literal("texture").executes(openScreen(client -> new TextureTestGui())))
 						.then(literal("textalignment").executes(openScreen(client -> new TextAlignmentTestGui())))
 						.then(literal("list").executes(openScreen(client -> new ListTestGui())))
+						.then(literal("ghosticon").executes(openScreen(client -> new GhostIconTestGui())))
 		));
 	}
 
