@@ -15,6 +15,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WTextField;
+import io.github.cottonmc.cotton.gui.widget.WToggleButton;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
 
@@ -49,7 +50,12 @@ public class TestDescription extends SyncedGuiDescription {
 		root.add(new WTextField(Text.literal("Type something...")).setMaxLength(64), 0, 7, 5, 1);
 
 		root.add(new WLabel(Text.literal("Large Glass-only output:")), 0, 9);
-		root.add(WItemSlot.outputOf(blockInventory, 0).setOutputFilter(stack -> stack.isOf(Items.GLASS)), 4, 9);
+		WItemSlot glassOutputSlot = WItemSlot.outputOf(blockInventory, 0).setOutputFilter(stack -> stack.isOf(Items.GLASS));
+		glassOutputSlot.setIcon(new TextureIcon(new Identifier("minecraft:textures/block/glass.png")));
+		root.add(glassOutputSlot, 4, 9);
+		WToggleButton glassIconToggle = new WToggleButton(Text.literal("Show glass icon only when empty?"));
+		glassIconToggle.setOnToggle(glassOutputSlot::setIconOnlyPaintedForEmptySlots);
+		root.add(glassIconToggle, 0, 10);
 
 		root.add(WItemSlot.of(blockInventory, 7).setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))).setInputFilter(stack -> stack.isOf(Items.SADDLE)), 7, 10);
 

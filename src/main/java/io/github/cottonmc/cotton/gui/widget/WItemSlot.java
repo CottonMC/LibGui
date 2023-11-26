@@ -513,7 +513,7 @@ public class WItemSlot extends WWidget {
 			backgroundPainter.paintBackground(context, x, y, this);
 		}
 
-		if (icon != null && (iconOnlyPaintedForEmptySlots || inventory.getStack(startIndex).isEmpty())) {
+		if (icon != null && (!iconOnlyPaintedForEmptySlots || inventory.getStack(startIndex).isEmpty())) {
 			icon.paint(context, x + 1, y + 1, 16);
 		}
 	}
