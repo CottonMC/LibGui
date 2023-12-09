@@ -85,7 +85,7 @@ public class WItemSlot extends WWidget {
 	private final List<ValidatedSlot> peers = new ArrayList<>();
 	@Nullable
 	@Environment(EnvType.CLIENT)
-	private BackgroundPainter backgroundPainter = null;
+	private BackgroundPainter backgroundPainter;
 	@Nullable
 	private Icon icon = null;
 	private Inventory inventory;
