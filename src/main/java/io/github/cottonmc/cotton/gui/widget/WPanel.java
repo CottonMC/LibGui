@@ -26,7 +26,7 @@ public abstract class WPanel extends WWidget {
 	 */
 	protected final List<WWidget> children = new WidgetList(this, new ArrayList<>());
 	@Environment(EnvType.CLIENT)
-	private BackgroundPainter backgroundPainter = null;
+	private BackgroundPainter backgroundPainter;
 
 	/**
 	 * Removes the widget from this panel.
