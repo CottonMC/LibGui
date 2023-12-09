@@ -25,7 +25,7 @@ public class WSlider extends WAbstractSlider {
 
 	@Environment(EnvType.CLIENT)
 	@Nullable
-	private BackgroundPainter backgroundPainter = null;
+	private BackgroundPainter backgroundPainter;
 
 	public WSlider(int min, int max, Axis axis) {
 		super(min, max, axis);
