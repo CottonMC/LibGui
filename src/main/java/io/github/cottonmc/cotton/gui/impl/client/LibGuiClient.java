@@ -28,8 +28,8 @@ public class LibGuiClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		config = loadConfig();
 
-		ClientPlayNetworking.registerGlobalReceiver(ScreenNetworkingImpl.SCREEN_MESSAGE_S2C, (client, networkHandler, buf, responseSender) -> {
-			ScreenNetworkingImpl.handle(client, client.player, buf);
+		ClientPlayNetworking.registerGlobalReceiver(ScreenNetworkingImpl.S2CScreenMessage.PACKET_ID, (payload, context) -> {
+			ScreenNetworkingImpl.handle(context.client(), context.player(), payload.data());
 		});
 
 		LibGuiShaders.register();
