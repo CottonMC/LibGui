@@ -56,12 +56,12 @@ public class LibGuiTest implements ModInitializer {
 			return new TestDescription(GUI_SCREEN_HANDLER_TYPE, syncId, inventory, ScreenHandlerContext.EMPTY);
 		}, FeatureSet.of(FeatureFlags.VANILLA));
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "gui"), GUI_SCREEN_HANDLER_TYPE);
-		ITEM_SCREEN_HANDLER_TYPE = new ExtendedScreenHandlerType<>((syncId, inventory, buf) -> {
+		/*ITEM_SCREEN_HANDLER_TYPE = new ExtendedScreenHandlerType<>((syncId, inventory, buf) -> {
 			var equipmentSlot = buf.readEnumConstant(EquipmentSlot.class);
 			StackReference handStack = StackReference.of(inventory.player, equipmentSlot);
 			return new TestItemDescription(syncId, inventory, handStack);
 		});
-		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "item_gui"), ITEM_SCREEN_HANDLER_TYPE);
+		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "item_gui"), ITEM_SCREEN_HANDLER_TYPE);*/
 
 		REALLY_SIMPLE_SCREEN_HANDLER_TYPE = new ScreenHandlerType<>(ReallySimpleDescription::new, FeatureSet.of(FeatureFlags.VANILLA));
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "really_simple"), REALLY_SIMPLE_SCREEN_HANDLER_TYPE);

@@ -21,7 +21,7 @@ public class NoBlockInventoryBlock extends Block implements NamedScreenHandlerFa
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
 		player.openHandledScreen(this);
 		return world.isClient ? ActionResult.SUCCESS : ActionResult.CONSUME;
 	}

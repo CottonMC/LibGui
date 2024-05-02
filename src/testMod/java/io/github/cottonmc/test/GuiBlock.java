@@ -1,5 +1,6 @@
 package io.github.cottonmc.test;
 
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -16,11 +17,11 @@ import net.minecraft.world.World;
 public class GuiBlock extends BlockWithEntity {
 
 	public GuiBlock() {
-		super(FabricBlockSettings.copy(Blocks.IRON_BLOCK));
+		super(Settings.copy(Blocks.IRON_BLOCK));
 	}
-	
+
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
 		player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
 		return ActionResult.SUCCESS;
 	}
@@ -33,5 +34,10 @@ public class GuiBlock extends BlockWithEntity {
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
+	}
+
+	@Override
+	protected MapCodec<? extends BlockWithEntity> getCodec() {
+		return null;
 	}
 }

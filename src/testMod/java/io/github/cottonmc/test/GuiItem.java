@@ -25,11 +25,11 @@ public class GuiItem extends Item {
 	
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		player.openHandledScreen(createScreenHandlerFactory(player, hand));
+		//player.openHandledScreen(createScreenHandlerFactory(player, hand));
 		return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
 	}
 
-	private NamedScreenHandlerFactory createScreenHandlerFactory(PlayerEntity player, Hand hand) {
+	/*private NamedScreenHandlerFactory createScreenHandlerFactory(PlayerEntity player, Hand hand) {
 		EquipmentSlot slot = switch (hand) {
 			case MAIN_HAND -> EquipmentSlot.MAINHAND;
 			case OFF_HAND -> EquipmentSlot.OFFHAND;
@@ -51,5 +51,5 @@ public class GuiItem extends Item {
 				buf.writeEnumConstant(slot);
 			}
 		};
-	}
+	}*/
 }
