@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -35,7 +34,7 @@ public class GuiItem extends Item {
 			case OFF_HAND -> EquipmentSlot.OFFHAND;
 		};
 		ItemStack stack = player.getStackInHand(hand);
-		return new ExtendedScreenHandlerFactory() {
+		return new ExtendedScreenHandlerFactory<EquipmentSlot>() {
 			@Override
 			public Text getDisplayName() {
 				return stack.getName();
@@ -47,8 +46,8 @@ public class GuiItem extends Item {
 			}
 
 			@Override
-			public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-				buf.writeEnumConstant(slot);
+			public EquipmentSlot getScreenOpeningData(ServerPlayerEntity player) {
+				return slot;
 			}
 		};
 	}

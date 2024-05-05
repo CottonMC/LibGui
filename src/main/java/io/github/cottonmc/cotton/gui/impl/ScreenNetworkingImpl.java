@@ -1,9 +1,14 @@
 package io.github.cottonmc.cotton.gui.impl;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
 
@@ -26,8 +31,34 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 	//   message: identifier
 	//   rest: buf
 
-	public static final Identifier SCREEN_MESSAGE_S2C = new Identifier(LibGuiCommon.MOD_ID, "screen_message_s2c");
-	public static final Identifier SCREEN_MESSAGE_C2S = new Identifier(LibGuiCommon.MOD_ID, "screen_message_c2s");
+	public record ScreenMessageData(int syncId, Identifier message, PacketByteBuf buf) {
+		public static final PacketCodec<RegistryByteBuf, ScreenMessageData> PACKET_CODEC = PacketCodec.tuple(
+			PacketCodecs.INTEGER, ScreenMessageData::syncId,
+			Identifier.PACKET_CODEC, ScreenMessageData::message,
+			PacketCodec.of(PacketByteBuf::writeBytes, packetBuf -> packetBuf.readBytes(PacketByteBufs.create())), ScreenMessageData::buf,
+			ScreenMessageData::new
+		);
+	}
+
+	public record S2CScreenMessage(ScreenMessageData data) implements CustomPayload {
+		public static final Id<S2CScreenMessage> PACKET_ID = new Id<>(new Identifier(LibGuiCommon.MOD_ID, "screen_message_s2c"));
+		public static final PacketCodec<RegistryByteBuf, S2CScreenMessage> PACKET_CODEC = ScreenMessageData.PACKET_CODEC.xmap(S2CScreenMessage::new, S2CScreenMessage::data);
+
+		@Override
+		public Id<? extends CustomPayload> getId() {
+			return PACKET_ID;
+		}
+	}
+
+	public record C2SScreenMessage(ScreenMessageData data) implements CustomPayload {
+		public static final Id<C2SScreenMessage> PACKET_ID = new Id<>(new Identifier(LibGuiCommon.MOD_ID, "screen_message_c2s"));
+		public static final PacketCodec<RegistryByteBuf, C2SScreenMessage> PACKET_CODEC = ScreenMessageData.PACKET_CODEC.xmap(C2SScreenMessage::new, C2SScreenMessage::data);
+
+		@Override
+		public Id<? extends CustomPayload> getId() {
+			return PACKET_ID;
+		}
+	}
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Map<SyncedGuiDescription, ScreenNetworkingImpl> instanceCache = new WeakHashMap<>();
@@ -58,51 +89,48 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		Objects.requireNonNull(writer, "writer");
 
 		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeVarInt(description.syncId);
-		buf.writeIdentifier(message);
 		writer.accept(buf);
-		description.getPacketSender().sendPacket(side == NetworkSide.SERVER ? SCREEN_MESSAGE_S2C : SCREEN_MESSAGE_C2S, buf);
+		ScreenMessageData data = new ScreenMessageData(description.syncId, message, buf);
+		description.getPacketSender().sendPacket(side == NetworkSide.SERVER ? new S2CScreenMessage(data) : new C2SScreenMessage(data));
 	}
 
 	public static void init() {
-		ServerPlayNetworking.registerGlobalReceiver(SCREEN_MESSAGE_C2S, (server, player, networkHandler, buf, responseSender) -> {
-			handle(server, player, buf);
+		PayloadTypeRegistry.playS2C().register(S2CScreenMessage.PACKET_ID, S2CScreenMessage.PACKET_CODEC);
+		PayloadTypeRegistry.playC2S().register(C2SScreenMessage.PACKET_ID, C2SScreenMessage.PACKET_CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(C2SScreenMessage.PACKET_ID, (payload, context) -> {
+			handle(context.player().server, context.player(), payload.data());
 		});
 	}
 
-	public static void handle(Executor executor, PlayerEntity player, PacketByteBuf buf) {
+	public static void handle(Executor executor, PlayerEntity player, ScreenMessageData data) {
 		ScreenHandler screenHandler = player.currentScreenHandler;
-
-		// Packet data
-		int syncId = buf.readVarInt();
-		Identifier messageId = buf.readIdentifier();
 
 		if (!(screenHandler instanceof SyncedGuiDescription)) {
 			LOGGER.error("Received message packet for screen handler {} which is not a SyncedGuiDescription", screenHandler);
 			return;
-		} else if (syncId != screenHandler.syncId) {
-			LOGGER.error("Received message for sync ID {}, current sync ID: {}", syncId, screenHandler.syncId);
+		} else if (data.syncId() != screenHandler.syncId) {
+			LOGGER.error("Received message for sync ID {}, current sync ID: {}", data.syncId(), screenHandler.syncId);
 			return;
 		}
 
 		ScreenNetworkingImpl networking = instanceCache.get(screenHandler);
 
 		if (networking != null) {
-			MessageReceiver receiver = networking.messages.get(messageId);
+			MessageReceiver receiver = networking.messages.get(data.message());
 
 			if (receiver != null) {
-				buf.retain();
+				data.buf().retain();
 				executor.execute(() -> {
 					try {
-						receiver.onMessage(buf);
+						receiver.onMessage(data.buf());
 					} catch (Exception e) {
-						LOGGER.error("Error handling screen message {} for {} on side {}", messageId, screenHandler, networking.side, e);
+						LOGGER.error("Error handling screen message {} for {} on side {}", data.message(), screenHandler, networking.side, e);
 					} finally {
-						buf.release();
+						data.buf().release();
 					}
 				});
 			} else {
-				LOGGER.warn("Message {} not registered for {} on side {}", messageId, screenHandler, networking.side);
+				LOGGER.warn("Message {} not registered for {} on side {}", data.message(), screenHandler, networking.side);
 			}
 		} else {
 			LOGGER.warn("GUI description {} does not use networking", screenHandler);
