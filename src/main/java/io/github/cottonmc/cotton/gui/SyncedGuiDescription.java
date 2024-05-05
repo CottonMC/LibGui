@@ -543,6 +543,14 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	}
 
 	/**
+	 * {@return the world of this GUI description's player}
+	 * @since 10.0.0
+	 */
+	public World getWorld() {
+		return world;
+	}
+
+	/**
 	 * Gets the network side this GUI description runs on.
 	 *
 	 * @return this GUI's network side

@@ -1,11 +1,14 @@
 package io.github.cottonmc.test;
 
+import com.mojang.datafixers.util.Unit;
+import com.mojang.serialization.Codec;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.Biome;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
@@ -21,7 +24,10 @@ import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
 
 public class TestDescription extends SyncedGuiDescription {
 	private static final Identifier TEST_MESSAGE = new Identifier("libgui", "test");
+	private static final Identifier TEST_REGISTRY_MESSAGE = new Identifier("libgui", "test_with_registry");
 	private static final Identifier UNREGISTERED_ON_SERVER = new Identifier("libgui", "unregistered_on_server");
+
+	private int messagesSent;
 
 	public TestDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
 		super(type, syncId, playerInventory, getBlockInventory(context, GuiBlockEntity.INVENTORY_SIZE), null);
@@ -34,8 +40,10 @@ public class TestDescription extends SyncedGuiDescription {
 		WButton buttonA = new WButton(Text.literal("Send Message"));
 
 		buttonA.setOnClick(() -> {
-			ScreenNetworking.of(this, NetworkSide.CLIENT).send(TEST_MESSAGE, buf -> {});
-			ScreenNetworking.of(this, NetworkSide.CLIENT).send(UNREGISTERED_ON_SERVER, buf -> {});
+			ScreenNetworking.of(this, NetworkSide.CLIENT).send(TEST_MESSAGE, Codec.INT, ++messagesSent);
+			var biome = world.getBiome(playerInventory.player.getBlockPos());
+			ScreenNetworking.of(this, NetworkSide.CLIENT).send(TEST_REGISTRY_MESSAGE, Biome.REGISTRY_CODEC, biome);
+			ScreenNetworking.of(this, NetworkSide.CLIENT).send(UNREGISTERED_ON_SERVER, Codec.unit(Unit.INSTANCE), Unit.INSTANCE);
 		});
 
 		root.add(buttonA, 0, 3, 4, 1);
@@ -64,8 +72,12 @@ public class TestDescription extends SyncedGuiDescription {
 
 		this.getRootPanel().validate(this);
 
-		ScreenNetworking.of(this, NetworkSide.SERVER).receive(TEST_MESSAGE, buf -> {
-			System.out.println("Received on the server!");
+		ScreenNetworking.of(this, NetworkSide.SERVER).receive(TEST_MESSAGE, Codec.INT, value -> {
+			System.out.println("Received on the server " + value + " times!");
+		});
+
+		ScreenNetworking.of(this, NetworkSide.SERVER).receive(TEST_REGISTRY_MESSAGE, Biome.REGISTRY_CODEC, value -> {
+			System.out.println("Received registry entry on the server: " + value);
 		});
 
 		try {

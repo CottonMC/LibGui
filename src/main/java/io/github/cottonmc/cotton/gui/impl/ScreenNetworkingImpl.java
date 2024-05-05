@@ -1,70 +1,60 @@
 package io.github.cottonmc.cotton.gui.impl;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Decoder;
+import com.mojang.serialization.Encoder;
+import com.mojang.serialization.Lifecycle;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.NbtSizeTracker;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
 import io.github.cottonmc.cotton.gui.networking.ScreenNetworking;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.concurrent.Executor;
-import java.util.function.Consumer;
 
 public class ScreenNetworkingImpl implements ScreenNetworking {
-	// Packet structure:
-	//   syncId: int
-	//   message: identifier
-	//   rest: buf
+	// Matches the one used in PacketCodecs.codec() etc
+	private static final long MAX_NBT_SIZE = 0x200000L;
 
-	public record ScreenMessageData(int syncId, Identifier message, PacketByteBuf buf) {
-		public static final PacketCodec<RegistryByteBuf, ScreenMessageData> PACKET_CODEC = PacketCodec.tuple(
-			PacketCodecs.INTEGER, ScreenMessageData::syncId,
-			Identifier.PACKET_CODEC, ScreenMessageData::message,
-			PacketCodec.of(PacketByteBuf::writeBytes, packetBuf -> packetBuf.readBytes(PacketByteBufs.create())), ScreenMessageData::buf,
-			ScreenMessageData::new
+	public record ScreenMessage(int syncId, Identifier message, NbtElement nbt) implements CustomPayload {
+		public static final Id<ScreenMessage> ID = new Id<>(new Identifier(LibGuiCommon.MOD_ID, "screen_message"));
+		public static final PacketCodec<RegistryByteBuf, ScreenMessage> CODEC = PacketCodec.tuple(
+			PacketCodecs.INTEGER, ScreenMessage::syncId,
+			Identifier.PACKET_CODEC, ScreenMessage::message,
+			PacketCodecs.nbt(() -> NbtSizeTracker.of(MAX_NBT_SIZE)), ScreenMessage::nbt,
+			ScreenMessage::new
 		);
-	}
-
-	public record S2CScreenMessage(ScreenMessageData data) implements CustomPayload {
-		public static final Id<S2CScreenMessage> PACKET_ID = new Id<>(new Identifier(LibGuiCommon.MOD_ID, "screen_message_s2c"));
-		public static final PacketCodec<RegistryByteBuf, S2CScreenMessage> PACKET_CODEC = ScreenMessageData.PACKET_CODEC.xmap(S2CScreenMessage::new, S2CScreenMessage::data);
 
 		@Override
 		public Id<? extends CustomPayload> getId() {
-			return PACKET_ID;
+			return ID;
 		}
 	}
 
-	public record C2SScreenMessage(ScreenMessageData data) implements CustomPayload {
-		public static final Id<C2SScreenMessage> PACKET_ID = new Id<>(new Identifier(LibGuiCommon.MOD_ID, "screen_message_c2s"));
-		public static final PacketCodec<RegistryByteBuf, C2SScreenMessage> PACKET_CODEC = ScreenMessageData.PACKET_CODEC.xmap(C2SScreenMessage::new, C2SScreenMessage::data);
-
-		@Override
-		public Id<? extends CustomPayload> getId() {
-			return PACKET_ID;
-		}
-	}
-
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LoggerFactory.getLogger(ScreenNetworkingImpl.class);
 	private static final Map<SyncedGuiDescription, ScreenNetworkingImpl> instanceCache = new WeakHashMap<>();
 
-	private final Map<Identifier, MessageReceiver> messages = new HashMap<>();
-	private SyncedGuiDescription description;
+	private final Map<Identifier, ReceiverData<?>> receivers = new HashMap<>();
+	private final SyncedGuiDescription description;
 	private final NetworkSide side;
 
 	private ScreenNetworkingImpl(SyncedGuiDescription description, NetworkSide side) {
@@ -72,68 +62,85 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		this.side = side;
 	}
 
-	public void receive(Identifier message, MessageReceiver receiver) {
+	private static RegistryOps<NbtElement> getRegistryOps(DynamicRegistryManager registryManager) {
+		return registryManager.getOps(NbtOps.INSTANCE);
+	}
+
+	@Override
+	public <D> void receive(Identifier message, Decoder<D> decoder, MessageReceiver<D> receiver) {
 		Objects.requireNonNull(message, "message");
+		Objects.requireNonNull(decoder, "decoder");
 		Objects.requireNonNull(receiver, "receiver");
 
-		if (!messages.containsKey(message)) {
-			messages.put(message, receiver);
+		if (!receivers.containsKey(message)) {
+			receivers.put(message, new ReceiverData<>(decoder, receiver));
 		} else {
 			throw new IllegalStateException("Message " + message + " on side " + side + " already registered");
 		}
 	}
 
 	@Override
-	public void send(Identifier message, Consumer<PacketByteBuf> writer) {
+	public <D> void send(Identifier message, Encoder<D> encoder, D data) {
 		Objects.requireNonNull(message, "message");
-		Objects.requireNonNull(writer, "writer");
+		Objects.requireNonNull(encoder, "encoder");
 
-		PacketByteBuf buf = PacketByteBufs.create();
-		writer.accept(buf);
-		ScreenMessageData data = new ScreenMessageData(description.syncId, message, buf);
-		description.getPacketSender().sendPacket(side == NetworkSide.SERVER ? new S2CScreenMessage(data) : new C2SScreenMessage(data));
+		var ops = getRegistryOps(description.getWorld().getRegistryManager());
+		NbtElement encoded = encoder.encodeStart(ops, data).getOrThrow();
+		ScreenMessage packet = new ScreenMessage(description.syncId, message, encoded);
+		description.getPacketSender().sendPacket(packet);
 	}
 
 	public static void init() {
-		PayloadTypeRegistry.playS2C().register(S2CScreenMessage.PACKET_ID, S2CScreenMessage.PACKET_CODEC);
-		PayloadTypeRegistry.playC2S().register(C2SScreenMessage.PACKET_ID, C2SScreenMessage.PACKET_CODEC);
-		ServerPlayNetworking.registerGlobalReceiver(C2SScreenMessage.PACKET_ID, (payload, context) -> {
-			handle(context.player().server, context.player(), payload.data());
+		PayloadTypeRegistry.playS2C().register(ScreenMessage.ID, ScreenMessage.CODEC);
+		PayloadTypeRegistry.playC2S().register(ScreenMessage.ID, ScreenMessage.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(ScreenMessage.ID, (payload, context) -> {
+			handle(context.player().server, context.player(), payload);
 		});
 	}
 
-	public static void handle(Executor executor, PlayerEntity player, ScreenMessageData data) {
+	public static void handle(Executor executor, PlayerEntity player, ScreenMessage packet) {
 		ScreenHandler screenHandler = player.currentScreenHandler;
 
 		if (!(screenHandler instanceof SyncedGuiDescription)) {
 			LOGGER.error("Received message packet for screen handler {} which is not a SyncedGuiDescription", screenHandler);
 			return;
-		} else if (data.syncId() != screenHandler.syncId) {
-			LOGGER.error("Received message for sync ID {}, current sync ID: {}", data.syncId(), screenHandler.syncId);
+		} else if (packet.syncId() != screenHandler.syncId) {
+			LOGGER.error("Received message for sync ID {}, current sync ID: {}", packet.syncId(), screenHandler.syncId);
 			return;
 		}
 
 		ScreenNetworkingImpl networking = instanceCache.get(screenHandler);
 
 		if (networking != null) {
-			MessageReceiver receiver = networking.messages.get(data.message());
-
-			if (receiver != null) {
-				data.buf().retain();
-				executor.execute(() -> {
-					try {
-						receiver.onMessage(data.buf());
-					} catch (Exception e) {
-						LOGGER.error("Error handling screen message {} for {} on side {}", data.message(), screenHandler, networking.side, e);
-					} finally {
-						data.buf().release();
-					}
-				});
+			ReceiverData<?> receiverData = networking.receivers.get(packet.message());
+			if (receiverData != null) {
+				processMessage(executor, player, packet, screenHandler, receiverData);
 			} else {
-				LOGGER.warn("Message {} not registered for {} on side {}", data.message(), screenHandler, networking.side);
+				LOGGER.error("Message {} not registered for {} on side {}", packet.message(), screenHandler, networking.side);
 			}
 		} else {
 			LOGGER.warn("GUI description {} does not use networking", screenHandler);
+		}
+	}
+
+	private static <D> void processMessage(Executor executor, PlayerEntity player, ScreenMessage packet, ScreenHandler description, ReceiverData<D> receiverData) {
+		var ops = getRegistryOps(player.getRegistryManager());
+		var result = receiverData.decoder().parse(ops, packet.nbt());
+
+		switch (result) {
+			case DataResult.Success(D data, Lifecycle lifecycle) -> executor.execute(() -> {
+				try {
+					receiverData.receiver().onMessage(data);
+				} catch (Exception e) {
+					LOGGER.error("Error handling screen message {} for {}", packet.message(), description, e);
+				}
+			});
+
+			case DataResult.Error<D> error -> LOGGER.error(
+				"Could not parse screen message {}: {}",
+				packet.message(),
+				error.message()
+			);
 		}
 	}
 
@@ -148,6 +155,9 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		}
 	}
 
+	private record ReceiverData<D>(Decoder<D> decoder, MessageReceiver<D> receiver) {
+	}
+
 	private static final class DummyNetworking extends ScreenNetworkingImpl {
 		static final DummyNetworking INSTANCE = new DummyNetworking();
 
@@ -156,12 +166,12 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		}
 
 		@Override
-		public void receive(Identifier message, MessageReceiver receiver) {
+		public <D> void receive(Identifier message, Decoder<D> decoder, MessageReceiver<D> receiver) {
 			// NO-OP
 		}
 
 		@Override
-		public void send(Identifier message, Consumer<PacketByteBuf> writer) {
+		public <D> void send(Identifier message, Encoder<D> encoder, D data) {
 			// NO-OP
 		}
 	}
