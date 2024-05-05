@@ -202,7 +202,7 @@ public class WSprite extends WWidget {
 			if (currentFrameTime >= frameTime) {
 				currentFrame++;
 				//if we've hit the end of the animation, go back to the beginning
-				if (currentFrame >= frames.length - 1) {
+				if (currentFrame >= frames.length) {
 					currentFrame = 0;
 				}
 				currentFrameTime = 0;
