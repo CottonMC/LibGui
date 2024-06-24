@@ -43,14 +43,12 @@ public enum NinePatchTextureRendererImpl implements ContextualTextureRenderer<Id
 			}
 		});
 
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
 		RenderSystem.enableBlend();
-		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-		buffer.vertex(positionMatrix, x, y, 0).next();
-		buffer.vertex(positionMatrix, x, y + regionHeight, 0).next();
-		buffer.vertex(positionMatrix, x + regionWidth, y + regionHeight, 0).next();
-		buffer.vertex(positionMatrix, x + regionWidth, y, 0).next();
+		BufferBuilder buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+		buffer.vertex(positionMatrix, x, y, 0);
+		buffer.vertex(positionMatrix, x, y + regionHeight, 0);
+		buffer.vertex(positionMatrix, x + regionWidth, y + regionHeight, 0);
+		buffer.vertex(positionMatrix, x + regionWidth, y, 0);
 		BufferRenderer.drawWithGlobalProgram(buffer.end());
 		RenderSystem.disableBlend();
 	}

@@ -40,30 +40,30 @@ public class LibGuiTest implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		Registry.register(Registries.ITEM, new Identifier(MODID, "client_gui"), new GuiItem());
+		Registry.register(Registries.ITEM, id("client_gui"), new GuiItem());
 		
 		GUI_BLOCK = new GuiBlock();
-		Registry.register(Registries.BLOCK, new Identifier(MODID, "gui"), GUI_BLOCK);
+		Registry.register(Registries.BLOCK, id("gui"), GUI_BLOCK);
 		GUI_BLOCK_ITEM = new BlockItem(GUI_BLOCK, new Item.Settings());
-		Registry.register(Registries.ITEM, new Identifier(MODID, "gui"), GUI_BLOCK_ITEM);
+		Registry.register(Registries.ITEM, id("gui"), GUI_BLOCK_ITEM);
 		NO_BLOCK_INVENTORY_BLOCK = new NoBlockInventoryBlock(AbstractBlock.Settings.copy(Blocks.STONE));
-		Registry.register(Registries.BLOCK, new Identifier(MODID, "no_block_inventory"), NO_BLOCK_INVENTORY_BLOCK);
-		Registry.register(Registries.ITEM, new Identifier(MODID, "no_block_inventory"), new BlockItem(NO_BLOCK_INVENTORY_BLOCK, new Item.Settings()));
+		Registry.register(Registries.BLOCK, id("no_block_inventory"), NO_BLOCK_INVENTORY_BLOCK);
+		Registry.register(Registries.ITEM, id("no_block_inventory"), new BlockItem(NO_BLOCK_INVENTORY_BLOCK, new Item.Settings()));
 		GUI_BLOCKENTITY_TYPE = BlockEntityType.Builder.create(GuiBlockEntity::new, GUI_BLOCK).build(null);
-		Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MODID, "gui"), GUI_BLOCKENTITY_TYPE);
+		Registry.register(Registries.BLOCK_ENTITY_TYPE, id("gui"), GUI_BLOCKENTITY_TYPE);
 		
 		GUI_SCREEN_HANDLER_TYPE = new ScreenHandlerType<>((int syncId, PlayerInventory inventory) -> {
 			return new TestDescription(GUI_SCREEN_HANDLER_TYPE, syncId, inventory, ScreenHandlerContext.EMPTY);
 		}, FeatureSet.of(FeatureFlags.VANILLA));
-		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "gui"), GUI_SCREEN_HANDLER_TYPE);
+		Registry.register(Registries.SCREEN_HANDLER, id("gui"), GUI_SCREEN_HANDLER_TYPE);
 		ITEM_SCREEN_HANDLER_TYPE = new ExtendedScreenHandlerType<>((syncId, inventory, slot) -> {
 			StackReference handStack = StackReference.of(inventory.player, slot);
 			return new TestItemDescription(syncId, inventory, handStack);
 		}, PacketCodecs.codec(EquipmentSlot.CODEC).cast());
-		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "item_gui"), ITEM_SCREEN_HANDLER_TYPE);
+		Registry.register(Registries.SCREEN_HANDLER, id("item_gui"), ITEM_SCREEN_HANDLER_TYPE);
 
 		REALLY_SIMPLE_SCREEN_HANDLER_TYPE = new ScreenHandlerType<>(ReallySimpleDescription::new, FeatureSet.of(FeatureFlags.VANILLA));
-		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MODID, "really_simple"), REALLY_SIMPLE_SCREEN_HANDLER_TYPE);
+		Registry.register(Registries.SCREEN_HANDLER, id("really_simple"), REALLY_SIMPLE_SCREEN_HANDLER_TYPE);
 
 		Optional<ModContainer> containerOpt = FabricLoader.getInstance().getModContainer("jankson");
 		if (containerOpt.isPresent()) {
@@ -87,4 +87,7 @@ public class LibGuiTest implements ModInitializer {
 		}
 	}
 
+	public static Identifier id(String path) {
+		return Identifier.of(MODID, path);
+	}
 }

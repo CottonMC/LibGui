@@ -3,9 +3,10 @@ package io.github.cottonmc.cotton.gui.impl.client;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.util.Identifier;
 
-import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.impl.mixin.client.PressableWidgetAccessor;
 import io.github.cottonmc.cotton.gui.impl.mixin.client.SliderWidgetAccessor;
+
+import static io.github.cottonmc.cotton.gui.impl.LibGuiCommon.id;
 
 public final class WidgetTextures {
 	private static final ButtonTextures LIGHT_LABELED_SLIDER_HANDLE = new ButtonTextures(
@@ -44,10 +45,6 @@ public final class WidgetTextures {
 
 	public static ScrollBarTextures getScrollBarTextures(boolean dark) {
 		return dark ? DARK_SCROLL_BAR : LIGHT_SCROLL_BAR;
-	}
-
-	private static Identifier id(String path) {
-		return new Identifier(LibGuiCommon.MOD_ID, path);
 	}
 
 	public record ScrollBarTextures(Identifier background, Identifier thumb, Identifier thumbPressed,

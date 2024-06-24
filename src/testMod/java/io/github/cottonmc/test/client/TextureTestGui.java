@@ -4,6 +4,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabeledSlider;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
@@ -21,9 +22,9 @@ public class TextureTestGui extends LightweightGuiDescription {
 	public TextureTestGui() {
 		WTabPanel root = new WTabPanel();
 
-		var panelSprite = new Texture(new Identifier("libgui:widget/panel_light"), Texture.Type.GUI_SPRITE);
-		var panelTexture = new Texture(new Identifier("libgui:textures/gui/sprites/widget/panel_light.png"), Texture.Type.STANDALONE);
-		var simpleSprite = new Texture(new Identifier("minecraft:icon/video_link"), Texture.Type.GUI_SPRITE);
+		var panelSprite = new Texture(LibGuiCommon.id("widget/panel_light"), Texture.Type.GUI_SPRITE);
+		var panelTexture = new Texture(LibGuiCommon.id("textures/gui/sprites/widget/panel_light.png"), Texture.Type.STANDALONE);
+		var simpleSprite = new Texture(Identifier.ofVanilla("icon/video_link"), Texture.Type.GUI_SPRITE);
 
 		root.add(createPanel(panelSprite), tab -> tab.icon(new TextureIcon(panelSprite)).tooltip(Text.literal("Nine-slice sprite")));
 		root.add(createPanel(simpleSprite), tab -> tab.icon(new TextureIcon(simpleSprite)).tooltip(Text.literal("Simple sprite")));

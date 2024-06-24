@@ -36,7 +36,7 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 	private static final long MAX_NBT_SIZE = 0x200000L;
 
 	public record ScreenMessage(int syncId, Identifier message, NbtElement nbt) implements CustomPayload {
-		public static final Id<ScreenMessage> ID = new Id<>(new Identifier(LibGuiCommon.MOD_ID, "screen_message"));
+		public static final Id<ScreenMessage> ID = new Id<>(LibGuiCommon.id("screen_message"));
 		public static final PacketCodec<RegistryByteBuf, ScreenMessage> CODEC = PacketCodec.tuple(
 			PacketCodecs.INTEGER, ScreenMessage::syncId,
 			Identifier.PACKET_CODEC, ScreenMessage::message,

@@ -14,7 +14,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 
 public class WScrollBar extends WWidget {
-	private static final Identifier FOCUS_TEXTURE = new Identifier(LibGuiCommon.MOD_ID, "widget/scroll_bar/focus");
+	private static final Identifier FOCUS_TEXTURE = LibGuiCommon.id("widget/scroll_bar/focus");
 
 	/**
 	 * The default {@linkplain #getScrollingSpeed() scrolling speed for mouse inputs}.

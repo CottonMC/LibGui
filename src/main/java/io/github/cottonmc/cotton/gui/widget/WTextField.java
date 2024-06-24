@@ -258,18 +258,16 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	private void invertedRect(DrawContext context, int x, int y, int width, int height) {
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
 		Matrix4f model = context.getMatrices().peek().getPositionMatrix();
 		RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
 		RenderSystem.setShader(GameRenderer::getPositionProgram);
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-		buffer.vertex(model, x, y + height, 0).next();
-		buffer.vertex(model, x + width, y + height, 0).next();
-		buffer.vertex(model, x + width, y, 0).next();
-		buffer.vertex(model, x, y, 0).next();
+		BufferBuilder buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+		buffer.vertex(model, x, y + height, 0);
+		buffer.vertex(model, x + width, y + height, 0);
+		buffer.vertex(model, x + width, y, 0);
+		buffer.vertex(model, x, y, 0);
 		BufferRenderer.drawWithGlobalProgram(buffer.end());
 		RenderSystem.disableColorLogicOp();
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

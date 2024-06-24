@@ -3,7 +3,6 @@ package io.github.cottonmc.cotton.gui.impl.client;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +14,7 @@ public final class LibGuiShaders {
 		CoreShaderRegistrationCallback.EVENT.register(context -> {
 			// Register our core shaders.
 			// The tiled rectangle shader is used for performant tiled texture rendering.
-			context.register(new Identifier(LibGuiCommon.MOD_ID, "tiled_rectangle"), VertexFormats.POSITION, program -> tiledRectangle = program);
+			context.register(LibGuiCommon.id("tiled_rectangle"), VertexFormats.POSITION, program -> tiledRectangle = program);
 		});
 	}
 

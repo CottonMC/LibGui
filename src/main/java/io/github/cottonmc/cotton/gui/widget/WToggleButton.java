@@ -22,9 +22,9 @@ import java.util.function.Consumer;
 
 public class WToggleButton extends WWidget {
 	// Default on/off images
-	protected static final Texture DEFAULT_OFF_IMAGE = new Texture(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/toggle_off.png"));
-	protected static final Texture DEFAULT_ON_IMAGE  = new Texture(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/toggle_on.png"));
-	protected static final Texture DEFAULT_FOCUS_IMAGE = new Texture(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/toggle_focus.png"));
+	protected static final Texture DEFAULT_OFF_IMAGE = new Texture(LibGuiCommon.id("textures/widget/toggle_off.png"));
+	protected static final Texture DEFAULT_ON_IMAGE  = new Texture(LibGuiCommon.id("textures/widget/toggle_on.png"));
+	protected static final Texture DEFAULT_FOCUS_IMAGE = new Texture(LibGuiCommon.id("textures/widget/toggle_focus.png"));
 
 	protected Texture onImage;
 	protected Texture offImage;

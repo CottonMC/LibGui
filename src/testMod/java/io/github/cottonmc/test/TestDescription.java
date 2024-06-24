@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
 import io.github.cottonmc.cotton.gui.networking.ScreenNetworking;
 import io.github.cottonmc.cotton.gui.widget.WButton;
@@ -23,9 +24,9 @@ import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
 
 public class TestDescription extends SyncedGuiDescription {
-	private static final Identifier TEST_MESSAGE = new Identifier("libgui", "test");
-	private static final Identifier TEST_REGISTRY_MESSAGE = new Identifier("libgui", "test_with_registry");
-	private static final Identifier UNREGISTERED_ON_SERVER = new Identifier("libgui", "unregistered_on_server");
+	private static final Identifier TEST_MESSAGE = LibGuiCommon.id("test");
+	private static final Identifier TEST_REGISTRY_MESSAGE = LibGuiCommon.id("test_with_registry");
+	private static final Identifier UNREGISTERED_ON_SERVER = LibGuiCommon.id("unregistered_on_server");
 
 	private int messagesSent;
 
@@ -49,23 +50,23 @@ public class TestDescription extends SyncedGuiDescription {
 		root.add(buttonA, 0, 3, 4, 1);
 
 		WButton buttonB = new WButton(Text.literal("Show Warnings"));
-		buttonB.setOnClick(() -> slot.setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))));
+		buttonB.setOnClick(() -> slot.setIcon(new TextureIcon(LibGuiTest.id("saddle.png"))));
 
 		root.add(buttonB, 5, 3, 4, 1);
-		TextureIcon testIcon = new TextureIcon(new Texture(new Identifier("libgui-test", "icon.png")));
+		TextureIcon testIcon = new TextureIcon(new Texture(LibGuiTest.id("icon.png")));
 		root.add(new WButton(testIcon, Text.literal("Button C")), 0, 5, 4, 1);
 		root.add(new WButton(Text.literal("Button D")), 5, 5, 4, 1);
 		root.add(new WTextField(Text.literal("Type something...")).setMaxLength(64), 0, 7, 5, 1);
 
 		root.add(new WLabel(Text.literal("Large Glass-only output:")), 0, 9);
 		WItemSlot glassOutputSlot = WItemSlot.outputOf(blockInventory, 0).setOutputFilter(stack -> stack.isOf(Items.GLASS));
-		glassOutputSlot.setIcon(new TextureIcon(new Identifier("minecraft:textures/block/glass.png")));
+		glassOutputSlot.setIcon(new TextureIcon(Identifier.ofVanilla("textures/block/glass.png")));
 		root.add(glassOutputSlot, 4, 9);
 		WToggleButton glassIconToggle = new WToggleButton(Text.literal("Show glass icon only when empty?"));
 		glassIconToggle.setOnToggle(glassOutputSlot::setIconOnlyPaintedForEmptySlots);
 		root.add(glassIconToggle, 0, 10);
 
-		root.add(WItemSlot.of(blockInventory, 7).setIcon(new TextureIcon(new Identifier("libgui-test", "saddle.png"))).setInputFilter(stack -> stack.isOf(Items.SADDLE)), 7, 10);
+		root.add(WItemSlot.of(blockInventory, 7).setIcon(new TextureIcon(LibGuiTest.id("saddle.png"))).setInputFilter(stack -> stack.isOf(Items.SADDLE)), 7, 10);
 
 		root.add(createPlayerInventoryPanel(), 0, 11);
 		System.out.println(root.toString());

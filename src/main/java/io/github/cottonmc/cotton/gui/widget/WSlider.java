@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 public class WSlider extends WAbstractSlider {
 	public static final int TRACK_WIDTH = 6;
 	public static final int THUMB_SIZE = 8;
-	public static final Identifier LIGHT_TEXTURE = new Identifier(LibGuiCommon.MOD_ID, "textures/widget/slider_light.png");
-	public static final Identifier DARK_TEXTURE = new Identifier(LibGuiCommon.MOD_ID, "textures/widget/slider_dark.png");
+	public static final Identifier LIGHT_TEXTURE = LibGuiCommon.id("textures/widget/slider_light.png");
+	public static final Identifier DARK_TEXTURE = LibGuiCommon.id("textures/widget/slider_dark.png");
 
 	@Environment(EnvType.CLIENT)
 	@Nullable

@@ -41,8 +41,8 @@ public interface BackgroundPainter {
 	 * @since 1.5.0
 	 */
 	public static BackgroundPainter VANILLA = createLightDarkVariants(
-			createGuiSprite(new Identifier(LibGuiCommon.MOD_ID, "widget/panel_light")),
-			createGuiSprite(new Identifier(LibGuiCommon.MOD_ID, "widget/panel_dark"))
+			createGuiSprite(LibGuiCommon.id("widget/panel_light")),
+			createGuiSprite(LibGuiCommon.id("widget/panel_dark"))
 	);
 
 	/**

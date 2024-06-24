@@ -12,7 +12,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import java.util.ArrayList;
 
 public class WKirbSprite extends WWidget {
-	private static final Identifier KIRB = new Identifier(LibGuiCommon.MOD_ID, "textures/widget/kirb.png");
+	private static final Identifier KIRB = LibGuiCommon.id("textures/widget/kirb.png");
 
 	private static final float PX = 1f/416f;
 	private static final float KIRB_WIDTH = 32*PX;
