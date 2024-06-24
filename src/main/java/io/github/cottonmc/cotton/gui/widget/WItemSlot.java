@@ -481,31 +481,6 @@ public class WItemSlot extends WWidget {
 		return this;
 	}
 
-	/**
-	 * Gets the item filter of this item slot.
-	 *
-	 * @return the item filter
-	 * @deprecated Replaced by {@link #getInputFilter()}
-	 * @since 2.0.0
-	 */
-	@Deprecated(forRemoval = true)
-	public Predicate<ItemStack> getFilter() {
-		return inputFilter;
-	}
-
-	/**
-	 * Sets the item filter of this item slot.
-	 *
-	 * @param filter the new item filter
-	 * @return this item slot
-	 * @deprecated Replaced by {@link #setInputFilter(Predicate)}
-	 * @since 2.0.0
-	 */
-	@Deprecated(forRemoval = true)
-	public WItemSlot setFilter(Predicate<ItemStack> filter) {
-		return setInputFilter(filter);
-	}
-
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {

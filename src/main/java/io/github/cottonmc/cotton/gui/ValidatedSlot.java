@@ -157,30 +157,6 @@ public class ValidatedSlot extends Slot {
 	}
 
 	/**
-	 * Gets the item stack filter of this slot.
-	 *
-	 * @return the item filter
-	 * @deprecated Replaced by {@link #getInputFilter()}
-	 * @since 2.0.0
-	 */
-	@Deprecated(forRemoval = true)
-	public Predicate<ItemStack> getFilter() {
-		return inputFilter;
-	}
-
-	/**
-	 * Sets the item stack filter of this slot.
-	 *
-	 * @param filter the new item filter
-	 * @deprecated Replaced by {@link #setInputFilter(Predicate)}
-	 * @since 2.0.0
-	 */
-	@Deprecated(forRemoval = true)
-	public void setFilter(Predicate<ItemStack> filter) {
-		setInputFilter(filter);
-	}
-
-	/**
 	 * Adds a change listener to this slot.
 	 * Does nothing if the listener is already registered.
 	 *
