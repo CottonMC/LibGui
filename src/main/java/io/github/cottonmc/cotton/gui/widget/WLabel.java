@@ -184,9 +184,9 @@ public class WLabel extends WWidget {
 	 * Checks whether shadows should be drawn for this label.
 	 * 
 	 * @return {@code true} shadows should be drawn, {@code false} otherwise
-	 * @since 11.0.1
+	 * @since 11.1.0
 	 */
-	public boolean areShadowsDrawn() {
+	public boolean getDrawShadows() {
 		return drawShadows;
 	}
 
@@ -195,7 +195,7 @@ public class WLabel extends WWidget {
 	 *
 	 * @param drawShadows {@code true} if shadows should be drawn, {@code false} otherwise
 	 * @return this label
-	 * @since 11.0.1
+	 * @since 11.1.0
 	 */
 	public WLabel setDrawShadows(boolean drawShadows) {
 		this.drawShadows = drawShadows;

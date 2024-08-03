@@ -30,6 +30,7 @@ public class WText extends WWidget {
 	protected Text text;
 	protected int color;
 	protected int darkmodeColor;
+	protected boolean drawShadows;
 	protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
 	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 	@Environment(EnvType.CLIENT)
@@ -101,7 +102,11 @@ public class WText extends WWidget {
 			OrderedText line = wrappedLines.get(i);
 			int c = shouldRenderInDarkMode() ? darkmodeColor : color;
 
-			ScreenDrawing.drawString(context, line, horizontalAlignment, x, y + yOffset + i * font.fontHeight, width, c);
+			if (getDrawShadows()) {
+				ScreenDrawing.drawStringWithShadow(context, line, horizontalAlignment, x, y + yOffset + i * font.fontHeight, width, c);
+			} else {
+				ScreenDrawing.drawString(context, line, horizontalAlignment, x, y + yOffset + i * font.fontHeight, width, c);
+			}
 		}
 
 		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
@@ -196,6 +201,28 @@ public class WText extends WWidget {
 	public WText setColor(int color, int darkmodeColor) {
 		setColor(color);
 		setDarkmodeColor(darkmodeColor);
+		return this;
+	}
+
+	/**
+	 * Checks whether shadows should be drawn for this label.
+	 * 
+	 * @return {@code true} shadows should be drawn, {@code false} otherwise
+	 * @since 11.1.0
+	 */
+	public boolean getDrawShadows() {
+		return drawShadows;
+	}
+
+	/**
+	 * Sets whether shadows should be drawn for this labbel.
+	 *
+	 * @param drawShadows {@code true} if shadows should be drawn, {@code false} otherwise
+	 * @return this label
+	 * @since 11.1.0
+	 */
+	public WLabel setDrawShadows(boolean drawShadows) {
+		this.drawShadows = drawShadows;
 		return this;
 	}
 
