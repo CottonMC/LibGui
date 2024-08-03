@@ -65,7 +65,11 @@ public class WLabel extends WWidget {
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		int yOffset = TextAlignment.getTextOffsetY(verticalAlignment, height, 1);
 
-		ScreenDrawing.drawString(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
+		if (areShadowsDrawn()) {
+			ScreenDrawing.drawStringWithShadow(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
+		} else {
+			ScreenDrawing.drawString(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
+		}
 
 		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
 		ScreenDrawing.drawTextHover(context, hoveredTextStyle, x + mouseX, y + mouseY);
@@ -173,6 +177,28 @@ public class WLabel extends WWidget {
 	public WLabel setColor(int color, int darkmodeColor) {
 		this.color = color;
 		this.darkmodeColor = darkmodeColor;
+		return this;
+	}
+
+	/**
+	 * Checks whether shadows should be drawn for this label.
+	 * 
+	 * @return {@code true} shadows should be drawn, {@code false} otherwise
+	 * @since 11.0.1
+	 */
+	public boolean areShadowsDrawn() {
+		return drawShadows;
+	}
+
+	/**
+	 * Sets whether shadows should be drawn for this labbel.
+	 *
+	 * @param drawShadows {@code true} if shadows should be drawn, {@code false} otherwise
+	 * @return this label
+	 * @since 11.0.1
+	 */
+	public WLabel setDrawShadows(boolean drawShadows) {
+		this.drawShadows = drawShadows;
 		return this;
 	}
 
