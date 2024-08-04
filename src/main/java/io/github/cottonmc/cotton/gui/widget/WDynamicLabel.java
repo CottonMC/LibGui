@@ -90,7 +90,7 @@ public class WDynamicLabel extends WWidget {
 	 * @return this label
 	 * @since 11.1.0
 	 */
-	public WLabel setDrawShadows(boolean drawShadows) {
+	public WDynamicLabel setDrawShadows(boolean drawShadows) {
 		this.drawShadows = drawShadows;
 		return this;
 	}

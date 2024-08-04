@@ -27,6 +27,7 @@ public class WLabel extends WWidget {
 	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 	protected int color;
 	protected int darkmodeColor;
+	protected boolean drawShadows;
 
 	/**
 	 * The default text color for light mode labels.
@@ -65,7 +66,7 @@ public class WLabel extends WWidget {
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		int yOffset = TextAlignment.getTextOffsetY(verticalAlignment, height, 1);
 
-		if (areShadowsDrawn()) {
+		if (getDrawShadows()) {
 			ScreenDrawing.drawStringWithShadow(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
 		} else {
 			ScreenDrawing.drawString(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);

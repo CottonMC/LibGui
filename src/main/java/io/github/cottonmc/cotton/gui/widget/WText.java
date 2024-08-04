@@ -221,7 +221,7 @@ public class WText extends WWidget {
 	 * @return this label
 	 * @since 11.1.0
 	 */
-	public WLabel setDrawShadows(boolean drawShadows) {
+	public WText setDrawShadows(boolean drawShadows) {
 		this.drawShadows = drawShadows;
 		return this;
 	}
