@@ -128,7 +128,7 @@ public class WText extends WWidget {
 	}
 
 	/**
-	 * Gets the text of this label.
+	 * Gets the text of this text widget.
 	 *
 	 * @return the text
 	 */
@@ -137,10 +137,10 @@ public class WText extends WWidget {
 	}
 
 	/**
-	 * Sets the text of this label.
+	 * Sets the text of this text widget.
 	 *
 	 * @param text the new text
-	 * @return this label
+	 * @return this text widget
 	 */
 	public WText setText(Text text) {
 		Objects.requireNonNull(text, "text is null");
@@ -151,7 +151,7 @@ public class WText extends WWidget {
 	}
 
 	/**
-	 * Gets the light mode color of this label.
+	 * Gets the light mode color of this text widget.
 	 *
 	 * @return the color
 	 */
@@ -160,7 +160,7 @@ public class WText extends WWidget {
 	}
 
 	/**
-	 * Sets the light mode color of this label.
+	 * Sets the light mode color of this text widget.
 	 *
 	 * @param color the new color
 	 * @return this text widget
@@ -171,7 +171,7 @@ public class WText extends WWidget {
 	}
 
 	/**
-	 * Gets the dark mode color of this label.
+	 * Gets the dark mode color of this text widget.
 	 *
 	 * @return the color
 	 * @since 2.0.0
@@ -181,7 +181,7 @@ public class WText extends WWidget {
 	}
 
 	/**
-	 * Sets the dark mode color of this label.
+	 * Sets the dark mode color of this text widget.
 	 *
 	 * @param darkmodeColor the new color
 	 * @return this text widget
@@ -192,7 +192,7 @@ public class WText extends WWidget {
 	}
 
 	/**
-	 * Sets the light and dark mode colors of this label.
+	 * Sets the light and dark mode colors of this text widget.
 	 *
 	 * @param color         the new light color
 	 * @param darkmodeColor the new dark color
@@ -205,7 +205,7 @@ public class WText extends WWidget {
 	}
 
 	/**
-	 * Checks whether shadows should be drawn for this label.
+	 * Checks whether shadows should be drawn for this text widget.
 	 * 
 	 * @return {@code true} shadows should be drawn, {@code false} otherwise
 	 * @since 11.1.0
@@ -215,10 +215,10 @@ public class WText extends WWidget {
 	}
 
 	/**
-	 * Sets whether shadows should be drawn for this labbel.
+	 * Sets whether shadows should be drawn for this text widget.
 	 *
 	 * @param drawShadows {@code true} if shadows should be drawn, {@code false} otherwise
-	 * @return this label
+	 * @return this text widget
 	 * @since 11.1.0
 	 */
 	public WText setDrawShadows(boolean drawShadows) {

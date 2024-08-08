@@ -192,7 +192,7 @@ public class WLabel extends WWidget {
 	}
 
 	/**
-	 * Sets whether shadows should be drawn for this labbel.
+	 * Sets whether shadows should be drawn for this label.
 	 *
 	 * @param drawShadows {@code true} if shadows should be drawn, {@code false} otherwise
 	 * @return this label
