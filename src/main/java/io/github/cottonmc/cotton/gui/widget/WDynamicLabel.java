@@ -21,6 +21,7 @@ public class WDynamicLabel extends WWidget {
 	protected HorizontalAlignment alignment = HorizontalAlignment.LEFT;
 	protected int color;
 	protected int darkmodeColor;
+	protected boolean drawShadows;
 
 	public static final int DEFAULT_TEXT_COLOR = 0x404040;
 	public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
@@ -39,7 +40,11 @@ public class WDynamicLabel extends WWidget {
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		String tr = text.get();
-		ScreenDrawing.drawString(context, tr, alignment, x, y, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
+		if (getDrawShadows()) {
+			ScreenDrawing.drawStringWithShadow(context, tr, alignment, x, y, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
+		} else {
+			ScreenDrawing.drawString(context, tr, alignment, x, y, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
+		}
 	}
 
 	@Override
@@ -65,6 +70,28 @@ public class WDynamicLabel extends WWidget {
 	public WDynamicLabel setColor(int color, int darkmodeColor) {
 		this.color = color;
 		this.darkmodeColor = darkmodeColor;
+		return this;
+	}
+
+	/**
+	 * Checks whether shadows should be drawn for this label.
+	 * 
+	 * @return {@code true} shadows should be drawn, {@code false} otherwise
+	 * @since 11.1.0
+	 */
+	public boolean getDrawShadows() {
+		return drawShadows;
+	}
+
+	/**
+	 * Sets whether shadows should be drawn for this label.
+	 *
+	 * @param drawShadows {@code true} if shadows should be drawn, {@code false} otherwise
+	 * @return this label
+	 * @since 11.1.0
+	 */
+	public WDynamicLabel setDrawShadows(boolean drawShadows) {
+		this.drawShadows = drawShadows;
 		return this;
 	}
 	
