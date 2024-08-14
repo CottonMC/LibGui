@@ -26,8 +26,10 @@ import io.github.cottonmc.cotton.gui.widget.focus.Focus;
 import io.github.cottonmc.cotton.gui.widget.focus.FocusModel;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -407,6 +409,25 @@ public class WItemSlot extends WWidget {
 	 */
 	protected ValidatedSlot createSlotPeer(Inventory inventory, int index, int x, int y) {
 		return new ValidatedSlot(inventory, index, x, y);
+	}
+
+	/**
+	 * {@return an unmodifiable list containing the current slot peers}
+	 *
+	 * @since 11.1.0
+	 */
+	public @UnmodifiableView List<? extends ValidatedSlot> getPeers() {
+		return Collections.unmodifiableList(peers);
+	}
+
+	/**
+	 * Gets the starting {@linkplain net.minecraft.screen.slot.Slot#id ID} for the slot peers.
+	 *
+	 * @return the starting ID for the slot peers, or -1 if this slot widget has no peers
+	 * @since 11.1.0
+	 */
+	public int getPeerStartId() {
+		return !peers.isEmpty() ? peers.getFirst().id : -1;
 	}
 
 	/**
