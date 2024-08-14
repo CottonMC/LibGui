@@ -10,8 +10,8 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.impl.client.LibGuiConfig;
 import io.github.cottonmc.cotton.gui.impl.client.TextAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
@@ -35,7 +35,7 @@ public class WLabel extends WWidget {
 	public static final int DEFAULT_TEXT_COLOR = 0x404040;
 
 	/**
-	 * The default text color for {@linkplain LibGuiConfig#darkMode dark mode} labels.
+	 * The default text color for {@linkplain LibGui#isDarkMode() dark mode} labels.
 	 */
 	public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
 
