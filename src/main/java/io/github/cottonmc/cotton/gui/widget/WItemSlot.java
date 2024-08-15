@@ -68,7 +68,7 @@ import java.util.stream.Stream;
  * <pre>
  * {@code
  * slot.addChangeListener((slot, inventory, index, stack) -> {
- *     if (stack.isEmpty() || stack.getCount() < stack.getMaxCount()) {
+ *     if (stack.isEmpty() || stack.getCount() < stack.getMaxCount()) {
  *         System.out.println("I'm not full yet!");
  *     }
  * });
