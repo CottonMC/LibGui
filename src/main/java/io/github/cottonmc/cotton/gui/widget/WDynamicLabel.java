@@ -4,8 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.impl.client.LibGuiConfig;
 import io.github.cottonmc.cotton.gui.impl.client.TextAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
@@ -33,7 +33,7 @@ public class WDynamicLabel extends WWidget {
 	public static final int DEFAULT_TEXT_COLOR = 0x404040;
 
 	/**
-	 * The default text color for {@linkplain LibGuiConfig#darkMode dark mode} labels.
+	 * The default text color for {@linkplain LibGui#isDarkMode() dark mode} labels.
 	 */
 	public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
 
