@@ -222,6 +222,42 @@ public class WItemSlot extends WWidget {
 		return true;
 	}
 
+	/**
+	 * {@return the inventory backing this slot}
+	 * @since 11.1.0
+	 */
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	/**
+	 * {@return the starting index of slots in the backing inventory}
+	 * @since 11.1.0
+	 */
+	public int getStartIndex() {
+		return startIndex;
+	}
+
+	/**
+	 * {@return the width of this slot widget in individual slots}
+	 * @since 11.1.0
+	 */
+	public int getSlotsWide() {
+		return slotsWide;
+	}
+
+	/**
+	 * {@return the height of this slot widget in individual slots}
+	 * @since 11.1.0
+	 */
+	public int getSlotsHigh() {
+		return slotsHigh;
+	}
+
+	/**
+	 * {@return whether this slot is a big slot}
+	 * Big slots are commonly used for crafting results and similar outputs.
+	 */
 	public boolean isBigSlot() {
 		return big;
 	}
