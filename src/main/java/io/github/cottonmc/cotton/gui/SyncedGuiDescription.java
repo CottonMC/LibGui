@@ -59,6 +59,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 
 	protected WWidget focus;
 	private Vec2i titlePos = new Vec2i(8, 6);
+	private boolean useDefaultRootBackground = true;
 
 	/**
 	 * Constructs a new synced GUI description without a block inventory or a property delegate.
@@ -123,11 +124,21 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	
 	@Environment(EnvType.CLIENT)
 	public void addPainters() {
-		if (this.rootPanel!=null && !fullscreen) {
+		if (this.rootPanel!=null && !fullscreen && getUseDefaultRootBackground()) {
 			this.rootPanel.setBackgroundPainter(BackgroundPainter.VANILLA);
 		}
 	}
-	
+
+	@Override
+	public boolean getUseDefaultRootBackground() {
+		return useDefaultRootBackground;
+	}
+
+	@Override
+	public void setUseDefaultRootBackground(boolean useDefaultRootBackground) {
+		this.useDefaultRootBackground = useDefaultRootBackground;
+	}
+
 	public void addSlotPeer(ValidatedSlot slot) {
 		this.addSlot(slot);
 	}

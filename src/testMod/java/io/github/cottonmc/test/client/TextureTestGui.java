@@ -30,12 +30,8 @@ public class TextureTestGui extends LightweightGuiDescription {
 		root.add(createPanel(simpleSprite), tab -> tab.icon(new TextureIcon(simpleSprite)).tooltip(Text.literal("Simple sprite")));
 		root.add(createPanel(panelTexture), tab -> tab.icon(new TextureIcon(panelTexture)).tooltip(Text.literal("Standalone")));
 		setRootPanel(root);
+		setUseDefaultRootBackground(false);
 		root.validate(this);
-	}
-
-	@Override
-	public void addPainters() {
-		// Remove tab panel background
 	}
 
 	private WPanel createPanel(Texture texture) {

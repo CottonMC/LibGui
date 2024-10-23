@@ -58,7 +58,26 @@ public interface GuiDescription {
 	/** Guis should use this method to add clientside styles and BackgroundPainters to their controls */
 	@Environment(EnvType.CLIENT)
 	public void addPainters();
-	
+
+	/**
+	 * Tests whether the root panel should get a {@linkplain io.github.cottonmc.cotton.gui.client.BackgroundPainter#VANILLA
+	 * vanilla background} in the default {@link #addPainters} implementations.
+	 *
+	 * @return {@code true} if the default background painter is applied, {@code false} otherwise
+	 * @since 12.0.0
+	 */
+	public boolean getUseDefaultRootBackground();
+
+	/**
+	 * Enables or disables the default {@linkplain io.github.cottonmc.cotton.gui.client.BackgroundPainter#VANILLA
+	 * vanilla background} for root panels.
+	 *
+	 * @param useDefaultRootBackground {@code true} if the default background painter is applied, {@code false} otherwise
+	 * @see #getUseDefaultRootBackground
+	 * @since 12.0.0
+	 */
+	public void setUseDefaultRootBackground(boolean useDefaultRootBackground);
+
 	/** Gets the object which manages the integer properties used by WBars and such. */
 	@Nullable
 	public PropertyDelegate getPropertyDelegate();
