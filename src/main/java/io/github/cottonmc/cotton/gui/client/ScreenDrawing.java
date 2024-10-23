@@ -173,7 +173,6 @@ public class ScreenDrawing {
 		buffer.vertex(model, x + width, y + height, 0).texture(u2, v2).color(color);
 		buffer.vertex(model, x + width, y,          0).texture(u2, v1).color(color);
 		buffer.vertex(model, x,         y,          0).texture(u1, v1).color(color);
-		context.draw();
 	}
 
 	/**
