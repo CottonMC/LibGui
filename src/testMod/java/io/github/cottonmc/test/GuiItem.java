@@ -13,19 +13,17 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Rarity;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class GuiItem extends Item {
-	public GuiItem() {
-		super(new Item.Settings().rarity(Rarity.EPIC));
+	public GuiItem(Settings settings) {
+		super(settings);
 	}
 	
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	public ActionResult use(World world, PlayerEntity player, Hand hand) {
 		player.openHandledScreen(createScreenHandlerFactory(player, hand));
-		return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
+		return ActionResult.SUCCESS;
 	}
 
 	private NamedScreenHandlerFactory createScreenHandlerFactory(PlayerEntity player, Hand hand) {

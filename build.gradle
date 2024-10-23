@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.6.+'
+	id 'fabric-loom' version '1.8.+'
 	id 'maven-publish'
 	id 'checkstyle'
 }

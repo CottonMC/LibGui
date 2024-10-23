@@ -1,19 +1,14 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
 
+import io.github.cottonmc.cotton.gui.impl.mixin.client.DrawContextAccessor;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import org.jetbrains.annotations.Nullable;
@@ -112,16 +107,9 @@ public class ScreenDrawing {
 
 			// GUI sprites: Work more carefully as we need to support tiling/nine-slice
 			case GUI_SPRITE -> {
-				float r = (color >> 16 & 255) / 255.0F;
-				float g = (color >> 8 & 255) / 255.0F;
-				float b = (color & 255) / 255.0F;
-				float a = (color >> 24 & 255) / 255.0F;
-				RenderSystem.enableBlend();
-				RenderSystem.setShaderColor(r, g, b, opacity * a);
-
 				outer: if (texture.u1() == 0 && texture.u2() == 1 && texture.v1() == 0 && texture.v2() == 1) {
 					// If we're drawing the full texture, just let vanilla do it.
-					context.drawGuiTexture(texture.image(), x, y, width, height);
+					context.drawGuiTexture(RenderLayer::getGuiTextured, texture.image(), x, y, width, height, color);
 				} else {
 					// If we're only drawing a region, draw the full texture in a larger size and clip it
 					// to only show the requested region.
@@ -144,17 +132,13 @@ public class ScreenDrawing {
 					matrices.scale(fullWidth / width, fullHeight / height, 1);
 
 					// Clip to the wanted area on the screen...
-					try (var frame = Scissors.push(x, y, width, height)) {
+					try (var frame = Scissors.push(context, x, y, width, height)) {
 						// ...and draw the texture.
-						context.drawGuiTexture(texture.image(), 0, 0, width, height);
+						context.drawGuiTexture(RenderLayer::getGuiTextured, texture.image(), 0, 0, width, height, color);
 					}
 
 					matrices.pop();
 				}
-
-				RenderSystem.disableBlend();
-				// Don't let the color cause tinting to other draw calls.
-				RenderSystem.setShaderColor(1, 1, 1, 1);
 			}
 		}
 	}
@@ -180,23 +164,16 @@ public class ScreenDrawing {
 		if (width <= 0) width = 1;
 		if (height <= 0) height = 1;
 
-		float r = (color >> 16 & 255) / 255.0F;
-		float g = (color >> 8 & 255) / 255.0F;
-		float b = (color & 255) / 255.0F;
 		float a = (color >> 24 & 255) / 255.0F;
+		color = colorAtOpacity(color, a * opacity);
 		Matrix4f model = context.getMatrices().peek().getPositionMatrix();
-		RenderSystem.enableBlend();
-		RenderSystem.setShaderTexture(0, texture);
-		RenderSystem.setShaderColor(r, g, b, opacity * a);
-		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-		BufferBuilder buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-		buffer.vertex(model, x,         y + height, 0).texture(u1, v2);
-		buffer.vertex(model, x + width, y + height, 0).texture(u2, v2);
-		buffer.vertex(model, x + width, y,          0).texture(u2, v1);
-		buffer.vertex(model, x,         y,          0).texture(u1, v1);
-		BufferRenderer.drawWithGlobalProgram(buffer.end());
-		RenderSystem.disableBlend();
-		RenderSystem.setShaderColor(1, 1, 1, 1);
+		var renderLayer = RenderLayer.getGuiTextured(texture);
+		var buffer = ((DrawContextAccessor) context).libgui$getVertexConsumers().getBuffer(renderLayer);
+		buffer.vertex(model, x,         y + height, 0).texture(u1, v2).color(color);
+		buffer.vertex(model, x + width, y + height, 0).texture(u2, v2).color(color);
+		buffer.vertex(model, x + width, y,          0).texture(u2, v1).color(color);
+		buffer.vertex(model, x,         y,          0).texture(u1, v1).color(color);
+		context.draw();
 	}
 
 	/**

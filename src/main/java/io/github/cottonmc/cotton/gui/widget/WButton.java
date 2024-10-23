@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -89,7 +90,7 @@ public class WButton extends WWidget {
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		boolean hovered = isWithinBounds(mouseX, mouseY);
 		ButtonTextures textures = WidgetTextures.getButtonTextures(shouldRenderInDarkMode());
-		context.drawGuiTexture(textures.get(enabled, hovered || isFocused()), x, y, getWidth(), getHeight());
+		context.drawGuiTexture(RenderLayer::getGuiTextured, textures.get(enabled, hovered || isFocused()), x, y, getWidth(), getHeight());
 
 		if (icon != null) {
 			icon.paint(context, x+ICON_SPACING, y+(getHeight()-iconSize)/2, iconSize);

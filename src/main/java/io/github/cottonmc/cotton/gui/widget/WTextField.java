@@ -6,13 +6,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
@@ -260,7 +260,7 @@ public class WTextField extends WWidget {
 	private void invertedRect(DrawContext context, int x, int y, int width, int height) {
 		Matrix4f model = context.getMatrices().peek().getPositionMatrix();
 		RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
-		RenderSystem.setShader(GameRenderer::getPositionProgram);
+		RenderSystem.setShader(ShaderProgramKeys.POSITION);
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
 		BufferBuilder buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);

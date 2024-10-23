@@ -158,7 +158,7 @@ public class WScrollPanel extends WPanel {
 		Insets insets = getInsets();
 		for (WWidget child : children) {
 			if (child == widget) {
-				Scissors.push(x + insets.left(), y + insets.top(), width - insets.width(), height - insets.height());
+				Scissors.push(context, x + insets.left(), y + insets.top(), width - insets.width(), height - insets.height());
 			}
 
 			child.paint(context, x + child.getX(), y + child.getY(), mouseX - child.getX(), mouseY - child.getY());

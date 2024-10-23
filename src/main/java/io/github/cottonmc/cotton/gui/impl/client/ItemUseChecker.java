@@ -35,7 +35,6 @@ public final class ItemUseChecker {
 
 		String hand = "class_1268";
 		String actionResult = "class_1269";
-		String typedActionResult = "class_1271";
 		String livingEntity = "class_1309";
 		String playerEntity = "class_1657";
 		String itemStack = "class_1799";
@@ -43,7 +42,7 @@ public final class ItemUseChecker {
 		String world = "class_1937";
 
 		// use
-		result.add(resolveItemMethod(resolver, "method_7836", typedActionResult, world, playerEntity, hand));
+		result.add(resolveItemMethod(resolver, "method_7836", actionResult, world, playerEntity, hand));
 		// useOnBlock
 		result.add(resolveItemMethod(resolver, "method_7884", actionResult, itemUsageContext));
 		// useOnEntity

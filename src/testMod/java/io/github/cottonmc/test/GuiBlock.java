@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -13,9 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class GuiBlock extends BlockWithEntity {
-
-	public GuiBlock() {
-		super(Settings.copy(Blocks.IRON_BLOCK));
+	public GuiBlock(Settings settings) {
+		super(settings);
 	}
 
 	@Override

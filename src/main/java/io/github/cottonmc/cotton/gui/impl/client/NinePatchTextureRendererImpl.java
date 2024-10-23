@@ -4,14 +4,10 @@ import com.mojang.blaze3d.systems.RenderCall;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.impl.mixin.client.DrawContextAccessor;
 import juuxel.libninepatch.ContextualTextureRenderer;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -29,9 +25,6 @@ public enum NinePatchTextureRendererImpl implements ContextualTextureRenderer<Id
 
 	@Override
 	public void drawTiled(Identifier texture, DrawContext context, int x, int y, int regionWidth, int regionHeight, int tileWidth, int tileHeight, float u1, float v1, float u2, float v2) {
-		RenderSystem.setShader(LibGuiShaders::getTiledRectangle);
-		RenderSystem.setShaderTexture(0, texture);
-		RenderSystem.setShaderColor(1, 1, 1, 1);
 		Matrix4f positionMatrix = context.getMatrices().peek().getPositionMatrix();
 		onRenderThread(() -> {
 			@Nullable ShaderProgram program = RenderSystem.getShader();
@@ -43,14 +36,14 @@ public enum NinePatchTextureRendererImpl implements ContextualTextureRenderer<Id
 			}
 		});
 
-		RenderSystem.enableBlend();
-		BufferBuilder buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		var renderLayer = LibGuiShaders.TILED_RECTANGLE_LAYER.apply(texture);
+		var buffer = ((DrawContextAccessor) context).libgui$getVertexConsumers().getBuffer(renderLayer);
 		buffer.vertex(positionMatrix, x, y, 0);
 		buffer.vertex(positionMatrix, x, y + regionHeight, 0);
 		buffer.vertex(positionMatrix, x + regionWidth, y + regionHeight, 0);
 		buffer.vertex(positionMatrix, x + regionWidth, y, 0);
-		BufferRenderer.drawWithGlobalProgram(buffer.end());
-		RenderSystem.disableBlend();
+		context.draw();
 	}
 
 	private static void onRenderThread(RenderCall renderCall) {
