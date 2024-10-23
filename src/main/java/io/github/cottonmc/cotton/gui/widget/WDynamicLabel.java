@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  */
 public class WDynamicLabel extends WWidget {
 	protected Supplier<String> text;
-	protected HorizontalAlignment alignment = HorizontalAlignment.LEFT;
+	protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
 	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 	protected int color;
 	protected int darkmodeColor;
@@ -66,9 +66,9 @@ public class WDynamicLabel extends WWidget {
 		String tr = text.get();
 
 		if (getDrawShadows()) {
-			ScreenDrawing.drawStringWithShadow(context, tr, alignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
+			ScreenDrawing.drawStringWithShadow(context, tr, horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
 		} else {
-			ScreenDrawing.drawString(context, tr, alignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
+			ScreenDrawing.drawString(context, tr, horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
 		}
 	}
 
@@ -153,10 +153,9 @@ public class WDynamicLabel extends WWidget {
 	 * Gets the horizontal text alignment of this label.
 	 *
 	 * @return the alignment
-	 * @since 11.1.0
 	 */
-	public HorizontalAlignment getAlignment() {
-		return alignment;
+	public HorizontalAlignment getHorizontalAlignment() {
+		return horizontalAlignment;
 	}
 	
 	/**
@@ -165,8 +164,8 @@ public class WDynamicLabel extends WWidget {
 	 * @param align the new text alignment
 	 * @return this label
 	 */
-	public WDynamicLabel setAlignment(HorizontalAlignment align) {
-		this.alignment = align;
+	public WDynamicLabel setHorizontalAlignment(HorizontalAlignment align) {
+		this.horizontalAlignment = align;
 		return this;
 	}
 
