@@ -4,10 +4,6 @@ plugins {
 	id 'checkstyle'
 }
 
-if(rootProject.file('private.gradle').exists()) { //Publishing details
-	apply from: 'private.gradle'
-}
-
 archivesBaseName = project.archives_base_name
 version = "$project.mod_version+$project.minecraft_version"
 group = project.maven_group
@@ -133,16 +129,15 @@ publishing {
 
 	// select the repositories you want to publish to
 	repositories {
-		if (project.hasProperty("artifactoryUsername")) {
+		def env = System.getenv()
+		if (env.MAVEN_URL) {
 			maven {
-				url = "https://server.bbkr.space/artifactory/libs-release/"
+				url = env.MAVEN_URL
 				credentials {
-					username = artifactoryUsername
-					password = artifactoryPassword
+					username = env.MAVEN_USERNAME
+					password = env.MAVEN_PASSWORD
 				}
 			}
-		} else {
-			println "Cannot configure artifactory; please define ext.artifactoryUsername and ext.artifactoryPassword before running publish"
 		}
 	}
 }
