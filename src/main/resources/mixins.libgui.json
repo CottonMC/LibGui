@@ -11,7 +11,8 @@
 		"client.MinecraftClientMixin",
 		"client.PressableWidgetAccessor",
 		"client.ScreenAccessor",
-		"client.SliderWidgetAccessor"
+		"client.SliderWidgetAccessor",
+		"client.TextFieldWidgetAccessor"
 	],
 
 	"injectors": {

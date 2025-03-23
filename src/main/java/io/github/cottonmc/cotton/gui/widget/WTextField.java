@@ -12,9 +12,9 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
-import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
+import io.github.cottonmc.cotton.gui.impl.mixin.client.TextFieldWidgetAccessor;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -41,9 +41,6 @@ public class WTextField extends WWidget {
 	private int enabledColor = 0xE0E0E0;
 	private int suggestionColor = 0x808080;
 
-	private static final int BACKGROUND_COLOR = 0xFF000000;
-	private static final int BORDER_COLOR_SELECTED = 0xFFFFFFA0;
-	private static final int BORDER_COLOR_UNSELECTED = 0xFFA0A0A0;
 	private static final int CURSOR_COLOR = 0xFFD0D0D0;
 
 	@Nullable
@@ -64,10 +61,6 @@ public class WTextField extends WWidget {
 	private Consumer<String> onChanged;
 
 	private Predicate<String> textPredicate;
-
-	@Environment(EnvType.CLIENT)
-	@Nullable
-	private BackgroundPainter backgroundPainter;
 
 	public WTextField() {
 	}
@@ -186,9 +179,8 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	protected void renderBox(DrawContext context, int x, int y) {
-		int borderColor = this.isFocused() ? BORDER_COLOR_SELECTED : BORDER_COLOR_UNSELECTED;
-		ScreenDrawing.coloredRect(context, x - 1, y - 1, width + 2, height + 2, borderColor);
-		ScreenDrawing.coloredRect(context, x, y, width, height, BACKGROUND_COLOR);
+		var texture = TextFieldWidgetAccessor.libgui$getTextures().get(isEditable(), isFocused());
+		context.drawGuiTexture(RenderLayer::getGuiTextured, texture, x - 1, y - 1, width + 2, height + 2);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -298,12 +290,6 @@ public class WTextField extends WWidget {
 
 	public WTextField setSuggestion(@Nullable Text suggestion) {
 		this.suggestion = suggestion;
-		return this;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public WTextField setBackgroundPainter(BackgroundPainter painter) {
-		this.backgroundPainter = painter;
 		return this;
 	}
 
