@@ -26,7 +26,7 @@ public final class TextAlignmentTestGui extends LightweightGuiDescription {
 		labelPanel.setInsets(Insets.ROOT_PANEL);
 		labelPanel.setGaps(0, 1);
 		Text labelStyled = Text.literal("world")
-				.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.of("test"))));
+				.styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.of("test"))));
 		Text labelText = Text.literal("hello, ").append(labelStyled);
 		WLabel label = new WLabel(labelText);
 		WLabeledSlider labelSliderH = forEnum(HorizontalAlignment.class, label::setHorizontalAlignment);
@@ -41,7 +41,7 @@ public final class TextAlignmentTestGui extends LightweightGuiDescription {
 		Text textText = IntStream.rangeClosed(1, 3)
 				.mapToObj(line -> {
 					Text textStyled = Text.literal("world").styled(style -> style
-							.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.of("test")))
+							.withHoverEvent(new HoverEvent.ShowText(Text.of("test")))
 							.withColor(Formatting.values()[line + 9])
 					);
 					return Text.literal("hell" + "o".repeat(line * 3) + ", ").append(textStyled).append("\n");

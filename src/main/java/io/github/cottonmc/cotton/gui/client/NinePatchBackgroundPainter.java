@@ -101,6 +101,7 @@ public final class NinePatchBackgroundPainter implements BackgroundPainter {
 		matrices.push();
 		matrices.translate(left - leftPadding, top - topPadding, 0);
 		ninePatch.draw(NinePatchTextureRendererImpl.INSTANCE, context, panel.getWidth() + leftPadding + rightPadding, panel.getHeight() + topPadding + bottomPadding);
+
 		matrices.pop();
 	}
 }

@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
@@ -58,7 +57,6 @@ public class WItem extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-		RenderSystem.enableDepthTest();
 		context.drawItemWithoutEntity(items.get(current), x + getWidth() / 2 - 8, y + getHeight() / 2 - 8);
 	}
 

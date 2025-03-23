@@ -1,21 +1,14 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -24,7 +17,6 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -238,7 +230,7 @@ public class WTextField extends WWidget {
 		int leftCaret = font.getWidth(visibleText.substring(0, normalizedLeft));
 		int selectionWidth = font.getWidth(visibleText.substring(normalizedLeft, normalizedRight));
 
-		invertedRect(context, x + TEXT_PADDING_X + leftCaret, y + CURSOR_PADDING_Y, selectionWidth, CURSOR_HEIGHT);
+		drawHighlight(context, x + TEXT_PADDING_X + leftCaret, y + CURSOR_PADDING_Y, selectionWidth, CURSOR_HEIGHT);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -257,20 +249,8 @@ public class WTextField extends WWidget {
 	}
 
 	@Environment(EnvType.CLIENT)
-	private void invertedRect(DrawContext context, int x, int y, int width, int height) {
-		Matrix4f model = context.getMatrices().peek().getPositionMatrix();
-		RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
-		RenderSystem.setShader(ShaderProgramKeys.POSITION);
-		RenderSystem.enableColorLogicOp();
-		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-		BufferBuilder buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-		buffer.vertex(model, x, y + height, 0);
-		buffer.vertex(model, x + width, y + height, 0);
-		buffer.vertex(model, x + width, y, 0);
-		buffer.vertex(model, x, y, 0);
-		BufferRenderer.drawWithGlobalProgram(buffer.end());
-		RenderSystem.disableColorLogicOp();
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+	private void drawHighlight(DrawContext context, int x, int y, int width, int height) {
+		context.fill(RenderLayer.getGuiTextHighlight(), x, y, x + width, y + height, 0xFF_0000FF);
 	}
 
 	public WTextField setTextPredicate(Predicate<String> predicate_1) {
