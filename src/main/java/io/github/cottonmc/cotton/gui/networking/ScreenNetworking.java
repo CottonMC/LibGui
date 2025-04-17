@@ -2,10 +2,13 @@ package io.github.cottonmc.cotton.gui.networking;
 
 import com.mojang.serialization.Decoder;
 import com.mojang.serialization.Encoder;
+import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
-import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
+import org.jetbrains.annotations.ApiStatus;
+
+import java.util.Objects;
 
 /**
  * {@code ScreenNetworking} handles screen-related network messages sent between the server and the client.
@@ -27,7 +30,7 @@ import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
  * private static final Identifier MESSAGE_ID = new Identifier("my_mod", "some_message");
  *
  * // Receiver
- * ScreenNetworking.of(this, NetworkSide.SERVER).receive(MESSAGE_ID, Codec.INT, data -> {
+ * getNetworking(NetworkSide.SERVER).receive(MESSAGE_ID, Codec.INT, data -> {
  * 	   // Example data: a lucky number as an int
  *     System.out.println("Your lucky number is " + data + "!");
  * });
@@ -43,6 +46,7 @@ import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
  *
  * @since 3.3.0
  */
+@ApiStatus.NonExtendable
 public interface ScreenNetworking {
 	/**
 	 * Gets a networking handler for the GUI description that is active on the specified side.
@@ -51,9 +55,12 @@ public interface ScreenNetworking {
 	 * @param networkSide the network side
 	 * @return the network handler
 	 * @throws NullPointerException if either parameter is null
+	 * @deprecated Use {@link SyncedGuiDescription#getNetworking(NetworkSide)} instead.
 	 */
+	@Deprecated(forRemoval = true, since = "13.1.0")
 	static ScreenNetworking of(SyncedGuiDescription description, NetworkSide networkSide) {
-		return ScreenNetworkingImpl.of(description, networkSide);
+		Objects.requireNonNull(description, "description");
+		return description.getNetworking(networkSide);
 	}
 
 	/**
@@ -83,6 +90,18 @@ public interface ScreenNetworking {
 	<D> void send(Identifier message, Encoder<D> encoder, D data);
 
 	/**
+	 * An event that is triggered when the networking handlers
+	 * on both sides are ready to send and receive messages.
+	 *
+	 * <p>For example, you can send initial GUI state to the client
+	 * in a server-side ready event listener.
+	 *
+	 * @return the event
+	 * @since 13.1.0
+	 */
+	Event<ReadyListener> getReadyEvent();
+
+	/**
 	 * A handler for received screen messages.
 	 *
 	 * @param <D> the message data type
@@ -95,5 +114,18 @@ public interface ScreenNetworking {
 		 * @param data the message data
 		 */
 		void onMessage(D data);
+	}
+
+	/**
+	 * A listener for {@link #getReadyEvent()}.
+	 */
+	@FunctionalInterface
+	interface ReadyListener {
+		/**
+		 * Called when the networking handlers have connected.
+		 *
+		 * @param screenNetworking the networking handler for the current side
+		 */
+		void onConnected(ScreenNetworking screenNetworking);
 	}
 }

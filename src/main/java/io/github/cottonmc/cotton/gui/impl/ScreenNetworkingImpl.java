@@ -1,9 +1,13 @@
 package io.github.cottonmc.cotton.gui.impl;
 
+import com.mojang.datafixers.util.Unit;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Decoder;
 import com.mojang.serialization.Encoder;
 import com.mojang.serialization.Lifecycle;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,12 +32,12 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.WeakHashMap;
 import java.util.concurrent.Executor;
 
 public class ScreenNetworkingImpl implements ScreenNetworking {
 	// Matches the one used in PacketCodecs.codec() etc
 	private static final long MAX_NBT_SIZE = 0x200000L;
+	public static final Identifier CLIENT_READY_MESSAGE_ID = LibGuiCommon.id("client_ready");
 
 	public record ScreenMessage(int syncId, Identifier message, NbtElement nbt) implements CustomPayload {
 		public static final Id<ScreenMessage> ID = new Id<>(LibGuiCommon.id("screen_message"));
@@ -51,15 +55,26 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 	}
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ScreenNetworkingImpl.class);
-	private static final Map<SyncedGuiDescription, ScreenNetworkingImpl> instanceCache = new WeakHashMap<>();
 
 	private final Map<Identifier, ReceiverData<?>> receivers = new HashMap<>();
 	private final SyncedGuiDescription description;
 	private final NetworkSide side;
+	private final Event<ReadyListener> readyEvent;
 
-	private ScreenNetworkingImpl(SyncedGuiDescription description, NetworkSide side) {
+	public ScreenNetworkingImpl(SyncedGuiDescription description, NetworkSide side) {
 		this.description = description;
 		this.side = side;
+		this.readyEvent = EventFactory.createArrayBacked(ReadyListener.class, listeners -> screenNetworking -> {
+			for (ReadyListener listener : listeners) {
+				listener.onConnected(screenNetworking);
+			}
+		});
+
+		if (side == NetworkSide.SERVER) {
+			receive(CLIENT_READY_MESSAGE_ID, Codec.unit(Unit.INSTANCE), data -> {
+				readyEvent.invoker().onConnected(this);
+			});
+		}
 	}
 
 	private static RegistryOps<NbtElement> getRegistryOps(DynamicRegistryManager registryManager) {
@@ -90,6 +105,11 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		description.getPacketSender().sendPacket(packet);
 	}
 
+	@Override
+	public Event<ReadyListener> getReadyEvent() {
+		return readyEvent;
+	}
+
 	public static void init() {
 		PayloadTypeRegistry.playS2C().register(ScreenMessage.ID, ScreenMessage.CODEC);
 		PayloadTypeRegistry.playC2S().register(ScreenMessage.ID, ScreenMessage.CODEC);
@@ -101,7 +121,7 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 	public static void handle(Executor executor, PlayerEntity player, ScreenMessage packet) {
 		ScreenHandler screenHandler = player.currentScreenHandler;
 
-		if (!(screenHandler instanceof SyncedGuiDescription)) {
+		if (!(screenHandler instanceof SyncedGuiDescription guiDescription)) {
 			LOGGER.error("Received message packet for screen handler {} which is not a SyncedGuiDescription", screenHandler);
 			return;
 		} else if (packet.syncId() != screenHandler.syncId) {
@@ -109,17 +129,12 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 			return;
 		}
 
-		ScreenNetworkingImpl networking = instanceCache.get(screenHandler);
-
-		if (networking != null) {
-			ReceiverData<?> receiverData = networking.receivers.get(packet.message());
-			if (receiverData != null) {
-				processMessage(executor, player, packet, screenHandler, receiverData);
-			} else {
-				LOGGER.error("Message {} not registered for {} on side {}", packet.message(), screenHandler, networking.side);
-			}
+		var networking = (ScreenNetworkingImpl) guiDescription.getNetworking(guiDescription.getNetworkSide());
+		ReceiverData<?> receiverData = networking.receivers.get(packet.message());
+		if (receiverData != null) {
+			processMessage(executor, player, packet, screenHandler, receiverData);
 		} else {
-			LOGGER.warn("GUI description {} does not use networking", screenHandler);
+			LOGGER.error("Message {} not registered for {} on side {}", packet.message(), screenHandler, networking.side);
 		}
 	}
 
@@ -144,24 +159,11 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		}
 	}
 
-	public static ScreenNetworking of(SyncedGuiDescription description, NetworkSide networkSide) {
-		Objects.requireNonNull(description, "description");
-		Objects.requireNonNull(networkSide, "networkSide");
-
-		if (description.getNetworkSide() == networkSide) {
-			return instanceCache.computeIfAbsent(description, it -> new ScreenNetworkingImpl(description, networkSide));
-		} else {
-			return DummyNetworking.INSTANCE;
-		}
-	}
-
 	private record ReceiverData<D>(Decoder<D> decoder, MessageReceiver<D> receiver) {
 	}
 
-	private static final class DummyNetworking extends ScreenNetworkingImpl {
-		static final DummyNetworking INSTANCE = new DummyNetworking();
-
-		private DummyNetworking() {
+	public static final class DummyNetworking extends ScreenNetworkingImpl {
+		public DummyNetworking() {
 			super(null, null);
 		}
 

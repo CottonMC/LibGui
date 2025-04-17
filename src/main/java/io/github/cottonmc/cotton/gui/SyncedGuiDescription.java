@@ -26,7 +26,9 @@ import net.minecraft.world.World;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
+import io.github.cottonmc.cotton.gui.networking.ScreenNetworking;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
@@ -38,6 +40,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Vec2i;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -61,6 +64,9 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	private Vec2i titlePos = new Vec2i(8, 6);
 	private boolean useDefaultRootBackground = true;
 
+	private final ScreenNetworkingImpl networking;
+	private final ScreenNetworkingImpl.DummyNetworking inactiveNetworking;
+
 	/**
 	 * Constructs a new synced GUI description without a block inventory or a property delegate.
 	 *
@@ -74,6 +80,8 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		this.playerInventory = playerInventory;
 		this.world = playerInventory.player.getWorld();
 		this.propertyDelegate = null;//new ArrayPropertyDelegate(1);
+		this.networking = new ScreenNetworkingImpl(this, getNetworkSide());
+		this.inactiveNetworking = new ScreenNetworkingImpl.DummyNetworking();
 	}
 
 	/**
@@ -91,6 +99,8 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		this.playerInventory = playerInventory;
 		this.world = playerInventory.player.getWorld();
 		this.propertyDelegate = propertyDelegate;
+		this.networking = new ScreenNetworkingImpl(this, getNetworkSide());
+		this.inactiveNetworking = new ScreenNetworkingImpl.DummyNetworking();
 		if (propertyDelegate!=null && propertyDelegate.size()>0) this.addProperties(propertyDelegate);
 		if (blockInventory != null) blockInventory.onOpen(playerInventory.player);
 	}
@@ -588,5 +598,20 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	@Environment(EnvType.CLIENT)
 	private PacketSender getClientPacketSender() {
 		return ClientPlayNetworking.getSender();
+	}
+
+	/**
+	 * Gets a networking handler for the GUI description that is active on the specified side.
+	 *
+	 * <p>If the network side doesn't match the {@linkplain #getNetworkSide() side of this GUI},
+	 * returns a no-op networking handler that is still safe to use.
+	 *
+	 * @param side the network side, cannot be null
+	 * @return the networking handler corresponding to the side
+	 * @since 13.1.0
+	 */
+	public final ScreenNetworking getNetworking(NetworkSide side) {
+		Objects.requireNonNull(side, "side");
+		return side == getNetworkSide() ? networking : inactiveNetworking;
 	}
 }

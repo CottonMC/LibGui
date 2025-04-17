@@ -1,5 +1,7 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import com.mojang.datafixers.util.Unit;
+import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -12,12 +14,15 @@ import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
+import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
 import io.github.cottonmc.cotton.gui.impl.client.FocusElements;
 import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationHelper;
 import io.github.cottonmc.cotton.gui.impl.mixin.client.ScreenAccessor;
+import io.github.cottonmc.cotton.gui.networking.NetworkSide;
+import io.github.cottonmc.cotton.gui.networking.ScreenNetworking;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
@@ -95,7 +100,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	 *   * "left" and "top" are now (1.15) "x" and "y". A bit less self-explanatory, I guess.
 	 * * coordinates start at 0,0 at the topleft of the screen.
 	 */
-	
+
 	@Override
 	public void init() {
 		super.init();
@@ -338,5 +343,14 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	@Override
 	protected void addElementNarrations(NarrationMessageBuilder builder) {
 		if (description != null) NarrationHelper.addNarrations(description.getRootPanel(), builder);
+	}
+
+	@Override
+	public void onDisplayed() {
+		if (description != null) {
+			ScreenNetworking networking = description.getNetworking(NetworkSide.CLIENT);
+			networking.getReadyEvent().invoker().onConnected(networking);
+			networking.send(ScreenNetworkingImpl.CLIENT_READY_MESSAGE_ID, Codec.unit(Unit.INSTANCE), Unit.INSTANCE);
+		}
 	}
 }
