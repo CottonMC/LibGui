@@ -85,7 +85,7 @@ public final class ObservableProperty<T> implements ObservableView<T> {
 		this.value = value;
 		hasValue = true;
 
-		if (oldValue != value) {
+		if (!Objects.equals(oldValue, value)) {
 			for (ChangeListener<? super T> listener : listeners) {
 				listener.onPropertyChange(this, oldValue, value);
 			}
