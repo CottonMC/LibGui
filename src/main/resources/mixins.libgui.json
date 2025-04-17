@@ -5,6 +5,9 @@
 	"package": "io.github.cottonmc.cotton.gui.impl.mixin",
 	"plugin": "io.github.cottonmc.cotton.gui.impl.LibGuiMixinPlugin",
 
+	"mixins": [
+		"ScreenHandlerAccessor"
+	],
 	"client": [
 		"client.DrawContextAccessor",
 		"client.HandledScreenMixin",

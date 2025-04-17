@@ -64,6 +64,7 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 	private final SyncedGuiDescription description;
 	private final NetworkSide side;
 	private final Event<ReadyListener> readyEvent;
+	private boolean ready = false;
 
 	public ScreenNetworkingImpl(SyncedGuiDescription description, NetworkSide side) {
 		this.description = description;
@@ -75,7 +76,7 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		});
 
 		if (side == NetworkSide.SERVER) {
-			receive(CLIENT_READY_MESSAGE_KEY, data -> readyEvent.invoker().onConnected(this));
+			receive(CLIENT_READY_MESSAGE_KEY, data -> markReady());
 		}
 	}
 
@@ -110,6 +111,15 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 	@Override
 	public Event<ReadyListener> getReadyEvent() {
 		return readyEvent;
+	}
+
+	public boolean isReady() {
+		return ready;
+	}
+
+	public void markReady() {
+		ready = true;
+		getReadyEvent().invoker().onConnected(this);
 	}
 
 	public static void init() {

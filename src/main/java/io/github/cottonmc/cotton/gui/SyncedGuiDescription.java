@@ -26,8 +26,13 @@ import net.minecraft.world.World;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.impl.DataSlotImpl;
 import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
+import io.github.cottonmc.cotton.gui.impl.mixin.ScreenHandlerAccessor;
+import io.github.cottonmc.cotton.gui.networking.DataSlot;
+import io.github.cottonmc.cotton.gui.networking.NetworkDirection;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
+import io.github.cottonmc.cotton.gui.networking.ScreenMessageKey;
 import io.github.cottonmc.cotton.gui.networking.ScreenNetworking;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
@@ -40,6 +45,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Vec2i;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -66,6 +72,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 
 	private final ScreenNetworkingImpl networking;
 	private final ScreenNetworkingImpl.DummyNetworking inactiveNetworking;
+	private final List<DataSlotImpl<?>> dataSlots = new ArrayList<>();
 
 	/**
 	 * Constructs a new synced GUI description without a block inventory or a property delegate.
@@ -493,6 +500,12 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 			super.onClosed(player);
 			if (blockInventory != null) blockInventory.onClose(player);
 		}
+
+		@Override
+		public void sendContentUpdates() {
+			super.sendContentUpdates();
+			sendDataSlotUpdates();
+		}
 	//}
 
 	@Override
@@ -613,5 +626,75 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	public final ScreenNetworking getNetworking(NetworkSide side) {
 		Objects.requireNonNull(side, "side");
 		return side == getNetworkSide() ? networking : inactiveNetworking;
+	}
+
+	/**
+	 * Registers a data slot.
+	 *
+	 * <p>This method must be called on both network sides in order for the data slot
+	 * to sync properly.
+	 *
+	 * <p>The initial value of a data slot will not be synced.
+	 *
+	 * <p>For S2C item stack and int data slots, you should usually use
+	 * {@linkplain Slot vanilla}/{@linkplain io.github.cottonmc.cotton.gui.widget.WItemSlot LibGui}
+	 * slots and {@linkplain PropertyDelegate property delegates}, respectively.
+	 *
+	 * @param key              the key of the sync message, cannot be null
+	 * @param initialValue     the initial value of the data slot
+	 * @param networkDirection the network direction to sync, cannot be null
+	 * @return the data slot
+	 * @param <T> the data slot content type
+	 * @since 13.1.0
+	 */
+	public <T> DataSlot<T> registerDataSlot(ScreenMessageKey<T> key, T initialValue, NetworkDirection networkDirection) {
+		Objects.requireNonNull(key, "key");
+		Objects.requireNonNull(networkDirection, "networkDirection");
+		var slot = new DataSlotImpl<>(this, key, initialValue, networkDirection);
+		getNetworking(networkDirection.to()).receive(key, slot::set);
+		dataSlots.add(slot);
+		return slot;
+	}
+
+	/**
+	 * Registers an S2C data slot.
+	 *
+	 * <p>This method must be called on both network sides in order for the data slot
+	 * to sync properly.
+	 *
+	 * <p>The initial value of a data slot will not be synced.
+	 *
+	 * <p>For item stack and int data slots, you should usually use
+	 * {@linkplain Slot vanilla}/{@linkplain io.github.cottonmc.cotton.gui.widget.WItemSlot LibGui}
+	 * slots and {@linkplain PropertyDelegate property delegates}, respectively.
+	 *
+	 * @param key          the key of the sync message, cannot be null
+	 * @param initialValue the initial value of the data slot
+	 * @return the data slot
+	 * @param <T> the data slot content type
+	 * @since 13.1.0
+	 */
+	public <T> DataSlot<T> registerDataSlot(ScreenMessageKey<T> key, T initialValue) {
+		return registerDataSlot(key, initialValue, NetworkDirection.SERVER_TO_CLIENT);
+	}
+
+	/**
+	 * Checks for and sends data slot content updates.
+	 *
+	 * <p>This method is generally called automatically.
+	 * If you need to manually sync data slots from the server to the client,
+	 * prefer {@link #sendContentUpdates()}.
+	 *
+	 * @since 13.1.0
+	 */
+	public void sendDataSlotUpdates() {
+		if (!((ScreenHandlerAccessor) this).libgui$getDisableSync() && networking.isReady()) {
+			NetworkSide side = getNetworkSide();
+			for (DataSlotImpl<?> dataSlot : dataSlots) {
+				if (side == dataSlot.getNetworkDirection().from()) {
+					dataSlot.checkAndSendUpdate();
+				}
+			}
+		}
 	}
 }

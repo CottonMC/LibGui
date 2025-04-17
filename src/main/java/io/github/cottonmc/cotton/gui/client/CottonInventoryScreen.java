@@ -336,6 +336,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 			if (root!=null) {
 				root.tick();
 			}
+
+			description.sendDataSlotUpdates();
 		}
 	}
 
@@ -348,7 +350,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	public void onDisplayed() {
 		if (description != null) {
 			ScreenNetworking networking = description.getNetworking(NetworkSide.CLIENT);
-			networking.getReadyEvent().invoker().onConnected(networking);
+			((ScreenNetworkingImpl) networking).markReady();
 			networking.send(ScreenNetworkingImpl.CLIENT_READY_MESSAGE_KEY, Unit.INSTANCE);
 		}
 	}

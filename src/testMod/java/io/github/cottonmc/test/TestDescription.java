@@ -7,12 +7,15 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextCodecs;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
+import io.github.cottonmc.cotton.gui.networking.DataSlot;
+import io.github.cottonmc.cotton.gui.networking.NetworkDirection;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
 import io.github.cottonmc.cotton.gui.networking.ScreenMessageKey;
 import io.github.cottonmc.cotton.gui.widget.WButton;
@@ -32,8 +35,26 @@ public class TestDescription extends SyncedGuiDescription {
 		LibGuiCommon.id("on_server_ready"),
 		BlockPos.CODEC
 	);
+	private static final ScreenMessageKey<Text> BUTTON_LABEL_DATA_SLOT = new ScreenMessageKey<>(
+		LibGuiCommon.id("button_label"),
+		TextCodecs.CODEC
+	);
+	private static final ScreenMessageKey<Integer> BUTTON_COLOR_DATA_SLOT = new ScreenMessageKey<>(
+		LibGuiCommon.id("button_color"),
+		Codec.INT
+	);
+
+	private static final int[] BUTTON_TEXT_COLORS = {
+		0xFF_FFFFFF,
+		0xFF_FF0000,
+		0xFF_00FF00,
+		0xFF_0000FF,
+		0xFF_222222,
+	};
 
 	private int messagesSent;
+	private DataSlot<Text> buttonLabel;
+	private DataSlot<Integer> buttonColor;
 
 	public TestDescription(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
 		super(type, syncId, playerInventory, getBlockInventory(context, GuiBlockEntity.INVENTORY_SIZE), null);
@@ -43,11 +64,12 @@ public class TestDescription extends SyncedGuiDescription {
 		WItemSlot slot = WItemSlot.of(blockInventory, 0, 4, 1);
 		root.add(slot, 0, 1);
 
-		WButton buttonA = new WButton(Text.literal("Send Message"));
+		WButton buttonA = new WButton();
 
 		buttonA.setOnClick(() -> {
 			getNetworking(NetworkSide.CLIENT).send(TEST_MESSAGE, Codec.INT, ++messagesSent);
 			getNetworking(NetworkSide.CLIENT).send(UNREGISTERED_ON_SERVER, Codec.unit(Unit.INSTANCE), Unit.INSTANCE);
+			buttonColor.set(BUTTON_TEXT_COLORS[messagesSent % BUTTON_TEXT_COLORS.length]);
 		});
 
 		root.add(buttonA, 0, 3, 4, 1);
@@ -75,6 +97,17 @@ public class TestDescription extends SyncedGuiDescription {
 		System.out.println(root.toString());
 
 		this.getRootPanel().validate(this);
+
+		buttonLabel = registerDataSlot(BUTTON_LABEL_DATA_SLOT, Text.empty());
+		// You can set values outside a ready event listener.
+		if (!getWorld().isClient) buttonLabel.set(Text.literal("Send Message"));
+		// The button will never be yellow! Initial values won't be synced.
+		buttonColor = registerDataSlot(BUTTON_COLOR_DATA_SLOT, 0xFF_FFFF00, NetworkDirection.CLIENT_TO_SERVER);
+
+		buttonLabel.getValueChangedEvent().register((dataSlot, value) -> buttonA.setLabel(value));
+		buttonColor.getValueChangedEvent().register((dataSlot, value) -> {
+			buttonB.setLabel(buttonB.getLabel().copy().withColor(value));
+		});
 
 		getNetworking(NetworkSide.SERVER).receive(TEST_MESSAGE, Codec.INT, value -> {
 			System.out.println("Received on the server " + value + " times!");
