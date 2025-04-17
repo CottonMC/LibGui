@@ -104,9 +104,9 @@ public class TestDescription extends SyncedGuiDescription {
 		// The button will never be yellow! Initial values won't be synced.
 		buttonColor = registerDataSlot(BUTTON_COLOR_DATA_SLOT, 0xFF_FFFF00, NetworkDirection.CLIENT_TO_SERVER);
 
-		buttonLabel.getValueChangedEvent().register((dataSlot, value) -> buttonA.setLabel(value));
-		buttonColor.getValueChangedEvent().register((dataSlot, value) -> {
-			buttonB.setLabel(buttonB.getLabel().copy().withColor(value));
+		buttonLabel.addChangeListener((dataSlot, from, to) -> buttonA.setLabel(to));
+		buttonColor.addChangeListener((dataSlot, from, to) -> {
+			buttonB.setLabel(buttonB.getLabel().copy().withColor(to));
 		});
 
 		getNetworking(NetworkSide.SERVER).receive(TEST_MESSAGE, Codec.INT, value -> {

@@ -493,7 +493,7 @@ public class WWidget {
 
 	/**
 	 * Returns whether the user is hovering over this widget.
-	 * The result is an <i>observable property</i> that can be modified and listened to.
+	 * The result is an <em>observable property</em> that can be modified and listened to.
 	 *
 	 * <p>This property takes into account {@link #isWithinBounds(int, int)} to check
 	 * if the cursor is within the bounds, as well as {@link #canHover()} to enable hovering at all.

@@ -1,7 +1,6 @@
 package io.github.cottonmc.cotton.gui.networking;
 
-import net.fabricmc.fabric.api.event.Event;
-
+import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -31,11 +30,12 @@ import org.jetbrains.annotations.ApiStatus;
  * }
  *
  * // You can listen to data slot updates on both sides:
- * myData.getValueChangedEvent().register((dataSlot, value) -> {
- * 	   System.out.println("updated data: " + value);
+ * myData.addChangeListener((dataSlot, from, to) -> {
+ *     System.out.println("updated data: " + value);
  * });
  * }
  *
+ * @properties
  * @param <T> the data slot content type
  * @see io.github.cottonmc.cotton.gui.SyncedGuiDescription#registerDataSlot(ScreenMessageKey, Object, NetworkDirection)
  * @since 13.1.0
@@ -43,23 +43,37 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.NonExtendable
 public interface DataSlot<T> {
 	/**
+	 * Returns the current value of the data slot.
+	 * The result is an <em>observable property</em> that can be modified and listened to.
+	 *
+	 * @return the {@code value} property
+	 */
+	ObservableProperty<T> valueProperty();
+
+	/**
 	 * {@return the current value of the data slot}
 	 */
-	T get();
+	default T get() {
+		return valueProperty().get();
+	}
 
 	/**
 	 * Sets the current value of the data slot.
-	 * If it's not equal to the previous value,
-	 * {@link #getValueChangedEvent()} will be triggered.
 	 *
 	 * @param value the new value
 	 */
-	void set(T value);
+	default void set(T value) {
+		valueProperty().set(value);
+	}
 
 	/**
-	 * {@return an event triggered when this data slot's value changes}
+	 * Adds a change listener to this data slot.
+	 *
+	 * @param listener the added listener
 	 */
-	Event<ChangeListener<T>> getValueChangedEvent();
+	default void addChangeListener(ChangeListener<T> listener) {
+		valueProperty().addListener((property, from, to) -> listener.onValueChanged(this, from, to));
+	}
 
 	/**
 	 * {@return the key of the message that syncs this data slot}
@@ -73,7 +87,7 @@ public interface DataSlot<T> {
 	NetworkDirection getNetworkDirection();
 
 	/**
-	 * A listener for {@link #getValueChangedEvent()}.
+	 * A listener for data slot value changes.
 	 *
 	 * @param <T> the data slot content type
 	 */
@@ -83,8 +97,9 @@ public interface DataSlot<T> {
 		 * Called when a data slot's value changes.
 		 *
 		 * @param dataSlot the data slot for which the event was triggered
-		 * @param value    the new value
+		 * @param from     the old value
+		 * @param to       the new value
 		 */
-		void onValueChanged(DataSlot<T> dataSlot, T value);
+		void onValueChanged(DataSlot<T> dataSlot, T from, T to);
 	}
 }
