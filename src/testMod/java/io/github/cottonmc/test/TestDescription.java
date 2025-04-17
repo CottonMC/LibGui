@@ -8,12 +8,13 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
-import io.github.cottonmc.cotton.gui.networking.ScreenNetworking;
+import io.github.cottonmc.cotton.gui.networking.ScreenMessageKey;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
@@ -27,6 +28,10 @@ public class TestDescription extends SyncedGuiDescription {
 	private static final Identifier TEST_MESSAGE = LibGuiCommon.id("test");
 	private static final Identifier TEST_REGISTRY_MESSAGE = LibGuiCommon.id("test_with_registry");
 	private static final Identifier UNREGISTERED_ON_SERVER = LibGuiCommon.id("unregistered_on_server");
+	private static final ScreenMessageKey<BlockPos> ON_SERVER_READY_MESSAGE = new ScreenMessageKey<>(
+		LibGuiCommon.id("on_server_ready"),
+		BlockPos.CODEC
+	);
 
 	private int messagesSent;
 
@@ -41,10 +46,8 @@ public class TestDescription extends SyncedGuiDescription {
 		WButton buttonA = new WButton(Text.literal("Send Message"));
 
 		buttonA.setOnClick(() -> {
-			ScreenNetworking.of(this, NetworkSide.CLIENT).send(TEST_MESSAGE, Codec.INT, ++messagesSent);
-			var biome = world.getBiome(playerInventory.player.getBlockPos());
-			ScreenNetworking.of(this, NetworkSide.CLIENT).send(TEST_REGISTRY_MESSAGE, Biome.REGISTRY_CODEC, biome);
-			ScreenNetworking.of(this, NetworkSide.CLIENT).send(UNREGISTERED_ON_SERVER, Codec.unit(Unit.INSTANCE), Unit.INSTANCE);
+			getNetworking(NetworkSide.CLIENT).send(TEST_MESSAGE, Codec.INT, ++messagesSent);
+			getNetworking(NetworkSide.CLIENT).send(UNREGISTERED_ON_SERVER, Codec.unit(Unit.INSTANCE), Unit.INSTANCE);
 		});
 
 		root.add(buttonA, 0, 3, 4, 1);
@@ -73,12 +76,28 @@ public class TestDescription extends SyncedGuiDescription {
 
 		this.getRootPanel().validate(this);
 
-		ScreenNetworking.of(this, NetworkSide.SERVER).receive(TEST_MESSAGE, Codec.INT, value -> {
+		getNetworking(NetworkSide.SERVER).receive(TEST_MESSAGE, Codec.INT, value -> {
 			System.out.println("Received on the server " + value + " times!");
 		});
 
-		ScreenNetworking.of(this, NetworkSide.SERVER).receive(TEST_REGISTRY_MESSAGE, Biome.REGISTRY_CODEC, value -> {
+		getNetworking(NetworkSide.SERVER).receive(TEST_REGISTRY_MESSAGE, Biome.REGISTRY_CODEC, value -> {
 			System.out.println("Received registry entry on the server: " + value);
+		});
+
+		getNetworking(NetworkSide.SERVER).getReadyEvent().register(networking -> {
+			System.out.println("Ready to receive and send on the server!");
+			var pos = playerInventory.player.getBlockPos();
+			networking.send(ON_SERVER_READY_MESSAGE, pos);
+		});
+
+		getNetworking(NetworkSide.CLIENT).receive(ON_SERVER_READY_MESSAGE, pos -> {
+			System.out.println("Server was ready to send at " + pos);
+		});
+
+		getNetworking(NetworkSide.CLIENT).getReadyEvent().register(networking -> {
+			System.out.println("Ready to receive and send on the client!");
+			var biome = world.getBiome(playerInventory.player.getBlockPos());
+			networking.send(TEST_REGISTRY_MESSAGE, Biome.REGISTRY_CODEC, biome);
 		});
 
 		try {
