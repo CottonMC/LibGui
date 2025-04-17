@@ -27,10 +27,13 @@ import java.util.Objects;
  *
  * <h2>Example</h2>
  * {@snippet :
- * private static final Identifier MESSAGE_ID = new Identifier("my_mod", "some_message");
+ * private static final ScreenMessageKey<Integer> MESSAGE_KEY = new ScreenMessageKey<>(
+ *     Identifier.of("my_mod", "some_message"),
+ *     Codec.INT
+ * );
  *
  * // Receiver
- * getNetworking(NetworkSide.SERVER).receive(MESSAGE_ID, Codec.INT, data -> {
+ * getNetworking(NetworkSide.SERVER).receive(MESSAGE_KEY, data -> {
  * 	   // Example data: a lucky number as an int
  *     System.out.println("Your lucky number is " + data + "!");
  * });
@@ -40,7 +43,7 @@ import java.util.Objects;
  * // We're sending from a button. The packet data is our lucky number, 123.
  * WButton button = ...;
  * button.setOnClick(() -> {
- *     ScreenNetworking.of(this, NetworkSide.CLIENT).send(MESSAGE_ID, Codec.INT, 123);
+ *     ScreenNetworking.of(this, NetworkSide.CLIENT).send(MESSAGE_KEY, 123);
  * });
  * }
  *
@@ -69,13 +72,30 @@ public interface ScreenNetworking {
 	 * <p>The decoder can depend on registry data and {@link net.minecraft.registry.RegistryOps} is available.
 	 *
 	 * @param message  the screen message ID
-	 * @param decoder  the message codec
+	 * @param decoder  the message decoder
 	 * @param receiver the message receiver
 	 * @param <D> the message data type
 	 * @throws IllegalStateException if the message has already been registered
 	 * @throws NullPointerException  if any parameter is null
 	 */
 	<D> void receive(Identifier message, Decoder<D> decoder, MessageReceiver<D> receiver);
+
+	/**
+	 * Registers a message receiver for the message.
+	 *
+	 * <p>The codec can depend on registry data and {@link net.minecraft.registry.RegistryOps} is available.
+	 *
+	 * @param message  the screen message key
+	 * @param receiver the message receiver
+	 * @param <D> the message data type
+	 * @throws IllegalStateException if the message has already been registered
+	 * @throws NullPointerException  if any parameter is null
+	 * @since 13.1.0
+	 */
+	default <D> void receive(ScreenMessageKey<D> message, MessageReceiver<D> receiver) {
+		Objects.requireNonNull(message);
+		receive(message.id(), message.codec(), receiver);
+	}
 
 	/**
 	 * Sends a screen message to the other side of the connection.
@@ -85,9 +105,26 @@ public interface ScreenNetworking {
 	 * @param message the screen message ID
 	 * @param encoder the message encoder
 	 * @param data    the message data
+	 * @param <D> the message data type
 	 * @throws NullPointerException if the message ID or the encoder is null
 	 */
 	<D> void send(Identifier message, Encoder<D> encoder, D data);
+
+	/**
+	 * Sends a screen message to the other side of the connection.
+	 *
+	 * <p>The codec can depend on registry data and {@link net.minecraft.registry.RegistryOps} is available.
+	 *
+	 * @param message the screen message key
+	 * @param data    the message data
+	 * @param <D> the message data type
+	 * @throws NullPointerException if the message key is null
+	 * @since 13.1.0
+	 */
+	default <D> void send(ScreenMessageKey<D> message, D data) {
+		Objects.requireNonNull(message, "message");
+		send(message.id(), message.codec(), data);
+	}
 
 	/**
 	 * An event that is triggered when the networking handlers

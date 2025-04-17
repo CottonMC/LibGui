@@ -1,7 +1,6 @@
 package io.github.cottonmc.cotton.gui.client;
 
 import com.mojang.datafixers.util.Unit;
-import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -350,7 +349,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		if (description != null) {
 			ScreenNetworking networking = description.getNetworking(NetworkSide.CLIENT);
 			networking.getReadyEvent().invoker().onConnected(networking);
-			networking.send(ScreenNetworkingImpl.CLIENT_READY_MESSAGE_ID, Codec.unit(Unit.INSTANCE), Unit.INSTANCE);
+			networking.send(ScreenNetworkingImpl.CLIENT_READY_MESSAGE_KEY, Unit.INSTANCE);
 		}
 	}
 }

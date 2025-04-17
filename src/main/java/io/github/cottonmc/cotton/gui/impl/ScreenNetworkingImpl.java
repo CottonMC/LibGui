@@ -25,6 +25,7 @@ import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
+import io.github.cottonmc.cotton.gui.networking.ScreenMessageKey;
 import io.github.cottonmc.cotton.gui.networking.ScreenNetworking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,10 @@ import java.util.concurrent.Executor;
 public class ScreenNetworkingImpl implements ScreenNetworking {
 	// Matches the one used in PacketCodecs.codec() etc
 	private static final long MAX_NBT_SIZE = 0x200000L;
-	public static final Identifier CLIENT_READY_MESSAGE_ID = LibGuiCommon.id("client_ready");
+	public static final ScreenMessageKey<Unit> CLIENT_READY_MESSAGE_KEY = new ScreenMessageKey<>(
+		LibGuiCommon.id("client_ready"),
+		Codec.unit(Unit.INSTANCE)
+	);
 
 	public record ScreenMessage(int syncId, Identifier message, NbtElement nbt) implements CustomPayload {
 		public static final Id<ScreenMessage> ID = new Id<>(LibGuiCommon.id("screen_message"));
@@ -71,9 +75,7 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		});
 
 		if (side == NetworkSide.SERVER) {
-			receive(CLIENT_READY_MESSAGE_ID, Codec.unit(Unit.INSTANCE), data -> {
-				readyEvent.invoker().onConnected(this);
-			});
+			receive(CLIENT_READY_MESSAGE_KEY, data -> readyEvent.invoker().onConnected(this));
 		}
 	}
 
