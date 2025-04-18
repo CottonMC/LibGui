@@ -1,8 +1,13 @@
 package io.github.cottonmc.cotton.gui.networking;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.Decoder;
 import com.mojang.serialization.Encoder;
 import net.fabricmc.fabric.api.event.Event;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.codec.PacketDecoder;
+import net.minecraft.network.codec.PacketEncoder;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
@@ -78,7 +83,12 @@ public interface ScreenNetworking {
 	 * @throws IllegalStateException if the message has already been registered
 	 * @throws NullPointerException  if any parameter is null
 	 */
-	<D> void receive(Identifier message, Decoder<D> decoder, MessageReceiver<D> receiver);
+	<D> void receive(Identifier message, PacketDecoder<? super RegistryByteBuf, D> decoder, MessageReceiver<D> receiver);
+
+	default <D> void receive(Identifier message, Decoder<D> decoder, MessageReceiver<D> receiver) {
+		Codec<D> codec = decoder instanceof Codec<D> c ? c : Codec.of(null, decoder);
+		receive(message, PacketCodecs.codec(codec), receiver);
+	}
 
 	/**
 	 * Registers a message receiver for the message.
@@ -108,7 +118,12 @@ public interface ScreenNetworking {
 	 * @param <D> the message data type
 	 * @throws NullPointerException if the message ID or the encoder is null
 	 */
-	<D> void send(Identifier message, Encoder<D> encoder, D data);
+	<D> void send(Identifier message, PacketEncoder<? super RegistryByteBuf, D> encoder, D data);
+
+	default <D> void send(Identifier message, Encoder<D> encoder, D data) {
+		Codec<D> codec = encoder instanceof Codec<D> c ? c : Codec.of(encoder, null);
+		send(message, PacketCodecs.codec(codec), data);
+	}
 
 	/**
 	 * Sends a screen message to the other side of the connection.

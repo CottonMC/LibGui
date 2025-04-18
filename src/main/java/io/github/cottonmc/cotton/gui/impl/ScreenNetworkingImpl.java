@@ -2,24 +2,18 @@ package io.github.cottonmc.cotton.gui.impl;
 
 import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.Decoder;
-import com.mojang.serialization.Encoder;
-import com.mojang.serialization.Lifecycle;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.NbtSizeTracker;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.codec.PacketDecoder;
+import net.minecraft.network.codec.PacketEncoder;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryOps;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
 
@@ -27,6 +21,7 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.networking.NetworkSide;
 import io.github.cottonmc.cotton.gui.networking.ScreenMessageKey;
 import io.github.cottonmc.cotton.gui.networking.ScreenNetworking;
+import io.netty.buffer.Unpooled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,19 +31,17 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 
 public class ScreenNetworkingImpl implements ScreenNetworking {
-	// Matches the one used in PacketCodecs.codec() etc
-	private static final long MAX_NBT_SIZE = 0x200000L;
 	public static final ScreenMessageKey<Unit> CLIENT_READY_MESSAGE_KEY = new ScreenMessageKey<>(
 		LibGuiCommon.id("client_ready"),
 		Codec.unit(Unit.INSTANCE)
 	);
 
-	public record ScreenMessage(int syncId, Identifier message, NbtElement nbt) implements CustomPayload {
+	public record ScreenMessage(int syncId, Identifier message, byte[] content) implements CustomPayload {
 		public static final Id<ScreenMessage> ID = new Id<>(LibGuiCommon.id("screen_message"));
 		public static final PacketCodec<RegistryByteBuf, ScreenMessage> CODEC = PacketCodec.tuple(
 			PacketCodecs.INTEGER, ScreenMessage::syncId,
 			Identifier.PACKET_CODEC, ScreenMessage::message,
-			PacketCodecs.nbt(() -> NbtSizeTracker.of(MAX_NBT_SIZE)), ScreenMessage::nbt,
+			PacketCodecs.BYTE_ARRAY, ScreenMessage::content,
 			ScreenMessage::new
 		);
 
@@ -80,12 +73,8 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		}
 	}
 
-	private static RegistryOps<NbtElement> getRegistryOps(DynamicRegistryManager registryManager) {
-		return registryManager.getOps(NbtOps.INSTANCE);
-	}
-
 	@Override
-	public <D> void receive(Identifier message, Decoder<D> decoder, MessageReceiver<D> receiver) {
+	public <D> void receive(Identifier message, PacketDecoder<? super RegistryByteBuf, D> decoder, MessageReceiver<D> receiver) {
 		Objects.requireNonNull(message, "message");
 		Objects.requireNonNull(decoder, "decoder");
 		Objects.requireNonNull(receiver, "receiver");
@@ -98,13 +87,21 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 	}
 
 	@Override
-	public <D> void send(Identifier message, Encoder<D> encoder, D data) {
+	public <D> void send(Identifier message, PacketEncoder<? super RegistryByteBuf, D> encoder, D data) {
 		Objects.requireNonNull(message, "message");
 		Objects.requireNonNull(encoder, "encoder");
 
-		var ops = getRegistryOps(description.getWorld().getRegistryManager());
-		NbtElement encoded = encoder.encodeStart(ops, data).getOrThrow();
-		ScreenMessage packet = new ScreenMessage(description.syncId, message, encoded);
+		byte[] content;
+		var buf = new RegistryByteBuf(PacketByteBufs.create(), description.getWorld().getRegistryManager());
+		try {
+			encoder.encode(buf, data);
+			content = new byte[buf.readableBytes()];
+			buf.getBytes(buf.readerIndex(), content);
+		} finally {
+			buf.release();
+		}
+
+		ScreenMessage packet = new ScreenMessage(description.syncId, message, content);
 		description.getPacketSender().sendPacket(packet);
 	}
 
@@ -151,27 +148,26 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 	}
 
 	private static <D> void processMessage(Executor executor, PlayerEntity player, ScreenMessage packet, ScreenHandler description, ReceiverData<D> receiverData) {
-		var ops = getRegistryOps(player.getRegistryManager());
-		var result = receiverData.decoder().parse(ops, packet.nbt());
+		var buf = new RegistryByteBuf(Unpooled.wrappedBuffer(packet.content()), player.getRegistryManager());
 
-		switch (result) {
-			case DataResult.Success(D data, Lifecycle lifecycle) -> executor.execute(() -> {
+		try {
+			D data = receiverData.decoder().decode(buf);
+
+			executor.execute(() -> {
 				try {
 					receiverData.receiver().onMessage(data);
 				} catch (Exception e) {
 					LOGGER.error("Error handling screen message {} for {}", packet.message(), description, e);
 				}
 			});
-
-			case DataResult.Error<D> error -> LOGGER.error(
-				"Could not parse screen message {}: {}",
-				packet.message(),
-				error.message()
-			);
+		} catch (Exception e) {
+			LOGGER.error("Could not parse screen message {} for {}", packet.message(), description, e);
+		} finally {
+			buf.release();
 		}
 	}
 
-	private record ReceiverData<D>(Decoder<D> decoder, MessageReceiver<D> receiver) {
+	private record ReceiverData<D>(PacketDecoder<? super RegistryByteBuf, D> decoder, MessageReceiver<D> receiver) {
 	}
 
 	public static final class DummyNetworking extends ScreenNetworkingImpl {
@@ -180,12 +176,12 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		}
 
 		@Override
-		public <D> void receive(Identifier message, Decoder<D> decoder, MessageReceiver<D> receiver) {
+		public <D> void receive(Identifier message, PacketDecoder<? super RegistryByteBuf, D> decoder, MessageReceiver<D> receiver) {
 			// NO-OP
 		}
 
 		@Override
-		public <D> void send(Identifier message, Encoder<D> encoder, D data) {
+		public <D> void send(Identifier message, PacketEncoder<? super RegistryByteBuf, D> encoder, D data) {
 			// NO-OP
 		}
 	}
