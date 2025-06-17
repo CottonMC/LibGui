@@ -5,7 +5,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenTexts;
@@ -27,7 +26,6 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 
 /**
  * A screen for a {@link SyncedGuiDescription}.
@@ -292,10 +290,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				GL11.glEnable(GL11.GL_SCISSOR_TEST);
-				Scissors.refreshScissors();
 				root.paint(context, x, y, mouseX-x, mouseY-y);
-				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				Scissors.checkStackIsEmpty();
 			}
 		}
@@ -304,8 +299,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
 		super.render(context, mouseX, mouseY, partialTicks);
-		DiffuseLighting.disableGuiDepthLighting(); //Needed because super.render leaves dirty state
-		
+
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {

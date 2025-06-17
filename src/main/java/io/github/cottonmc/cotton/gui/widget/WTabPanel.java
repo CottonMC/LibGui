@@ -405,7 +405,7 @@ public class WTabPanel extends WPanel {
 				if (shouldRenderInDarkMode()) {
 					color = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 				} else {
-					color = selected ? WLabel.DEFAULT_TEXT_COLOR : 0xEEEEEE;
+					color = selected ? WLabel.DEFAULT_TEXT_COLOR : 0xFF_EEEEEE;
 				}
 
 				ScreenDrawing.drawString(context, title.asOrderedText(), align, x + titleX, y + titleY, width, color);

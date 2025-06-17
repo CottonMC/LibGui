@@ -7,7 +7,6 @@ import net.minecraft.client.gui.DrawContext;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.Scissors;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
@@ -158,13 +157,15 @@ public class WScrollPanel extends WPanel {
 		Insets insets = getInsets();
 		for (WWidget child : children) {
 			if (child == widget) {
-				Scissors.push(context, x + insets.left(), y + insets.top(), width - insets.width(), height - insets.height());
+				int x1 = x + insets.left();
+				int y1 = y + insets.top();
+				context.enableScissor(x1, y1, x1 + width - insets.width(), y1 + height - insets.height());
 			}
 
 			child.paint(context, x + child.getX(), y + child.getY(), mouseX - child.getX(), mouseY - child.getY());
 
 			if (child == widget) {
-				Scissors.pop();
+				context.disableScissor();
 			}
 		}
 	}

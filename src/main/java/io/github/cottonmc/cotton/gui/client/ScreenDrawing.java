@@ -1,9 +1,8 @@
 package io.github.cottonmc.cotton.gui.client;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
@@ -12,7 +11,7 @@ import io.github.cottonmc.cotton.gui.impl.mixin.client.DrawContextAccessor;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
+import org.joml.Matrix3x2fStack;
 
 /**
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.
@@ -109,7 +108,7 @@ public class ScreenDrawing {
 			case GUI_SPRITE -> {
 				outer: if (texture.u1() == 0 && texture.u2() == 1 && texture.v1() == 0 && texture.v2() == 1) {
 					// If we're drawing the full texture, just let vanilla do it.
-					context.drawGuiTexture(RenderLayer::getGuiTextured, texture.image(), x, y, width, height, color);
+					context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture.image(), x, y, width, height, color);
 				} else {
 					// If we're only drawing a region, draw the full texture in a larger size and clip it
 					// to only show the requested region.
@@ -123,21 +122,20 @@ public class ScreenDrawing {
 					float xo = x - fullWidth * Math.min(texture.u1(), texture.u2());
 					float yo = y - fullHeight * Math.min(texture.v1(), texture.v2());
 
-					MatrixStack matrices = context.getMatrices();
-					matrices.push();
-					matrices.translate(xo, yo, 0);
+					Matrix3x2fStack matrices = context.getMatrices();
+					matrices.pushMatrix();
+					context.enableScissor(x, y, x + width, y + height);
+					matrices.translate(xo, yo);
 
 					// Note: scale instead of drawing a (fullWidth, fullHeight) rectangle so that edges of nine-slice
 					// rectangles etc. are drawn scaled too. This matches the behavior of standalone textures.
-					matrices.scale(fullWidth / width, fullHeight / height, 1);
+					matrices.scale(fullWidth / width, fullHeight / height);
 
-					// Clip to the wanted area on the screen...
-					try (var frame = Scissors.push(context, x, y, width, height)) {
-						// ...and draw the texture.
-						context.drawGuiTexture(RenderLayer::getGuiTextured, texture.image(), 0, 0, width, height, color);
-					}
+					// Draw the texture using vanilla code.
+					context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture.image(), 0, 0, width, height, color);
 
-					matrices.pop();
+					context.disableScissor();
+					matrices.popMatrix();
 				}
 			}
 		}
@@ -164,15 +162,11 @@ public class ScreenDrawing {
 		if (width <= 0) width = 1;
 		if (height <= 0) height = 1;
 
+		int x2 = x + width;
+		int y2 = y + height;
 		float a = (color >> 24 & 255) / 255.0F;
 		color = colorAtOpacity(color, a * opacity);
-		Matrix4f model = context.getMatrices().peek().getPositionMatrix();
-		var renderLayer = RenderLayer.getGuiTextured(texture);
-		var buffer = ((DrawContextAccessor) context).libgui$getVertexConsumers().getBuffer(renderLayer);
-		buffer.vertex(model, x,         y + height, 0).texture(u1, v2).color(color);
-		buffer.vertex(model, x + width, y + height, 0).texture(u2, v2).color(color);
-		buffer.vertex(model, x + width, y,          0).texture(u2, v1).color(color);
-		buffer.vertex(model, x,         y,          0).texture(u1, v1).color(color);
+		((DrawContextAccessor) context).libgui$callDrawTexturedQuad(RenderPipelines.GUI_TEXTURED, texture, x, x2, y, y2, u1, u2, v1, v2, color);
 	}
 
 	/**

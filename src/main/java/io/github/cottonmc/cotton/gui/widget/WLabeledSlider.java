@@ -2,12 +2,12 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.MathHelper;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
@@ -162,13 +162,13 @@ public class WLabeledSlider extends WAbstractSlider {
 		int rotMouseY = axis == Axis.HORIZONTAL ? mouseY : mouseX;
 
 		var matrices = context.getMatrices();
-		matrices.push();
-		matrices.translate(x, y, 0);
+		matrices.pushMatrix();
+		matrices.translate(x, y);
 		if (axis == Axis.VERTICAL) {
-			matrices.translate(0, height, 0);
-			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(270));
+			matrices.translate(0, height);
+			matrices.rotate(-MathHelper.HALF_PI);
 		}
-		context.drawGuiTexture(RenderLayer::getGuiTextured, SliderWidgetAccessor.libgui$getTexture(), 0, 0, aWidth, aHeight);
+		context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, SliderWidgetAccessor.libgui$getTexture(), 0, 0, aWidth, aHeight);
 
 		int thumbX = Math.round(coordToValueRatio * (value - min));
 		int thumbY = 0;
@@ -178,13 +178,13 @@ public class WLabeledSlider extends WAbstractSlider {
 
 		var thumbTextures = WidgetTextures.getLabeledSliderHandleTextures(shouldRenderInDarkMode());
 		var thumbTexture = thumbTextures.get(true, dragging || hovering);
-		context.drawGuiTexture(RenderLayer::getGuiTextured, thumbTexture, thumbX, thumbY, thumbWidth, thumbHeight);
+		context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, thumbTexture, thumbX, thumbY, thumbWidth, thumbHeight);
 
 		if (label != null) {
-			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFFFFA0 : 0xE0E0E0;
+			int color = isMouseInsideBounds(mouseX, mouseY) ? 0xFF_FFFFA0 : 0xFF_E0E0E0;
 			ScreenDrawing.drawStringWithShadow(context, label.asOrderedText(), labelAlignment, 2, aHeight / 2 - 4, aWidth - 4, color);
 		}
-		matrices.pop();
+		matrices.popMatrix();
 	}
 
 	@Environment(EnvType.CLIENT)

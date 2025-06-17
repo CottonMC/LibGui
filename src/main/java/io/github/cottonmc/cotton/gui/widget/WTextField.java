@@ -4,11 +4,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -37,9 +37,9 @@ public class WTextField extends WWidget {
 	private boolean editable = true;
 	private int tickCount = 0;
 
-	private int disabledColor = 0x707070;
-	private int enabledColor = 0xE0E0E0;
-	private int suggestionColor = 0x808080;
+	private int disabledColor = 0xFF_707070;
+	private int enabledColor = 0xFF_E0E0E0;
+	private int suggestionColor = 0xFF_808080;
 
 	private static final int CURSOR_COLOR = 0xFFD0D0D0;
 
@@ -180,7 +180,7 @@ public class WTextField extends WWidget {
 	@Environment(EnvType.CLIENT)
 	protected void renderBox(DrawContext context, int x, int y) {
 		var texture = TextFieldWidgetAccessor.libgui$getTextures().get(isEditable(), isFocused());
-		context.drawGuiTexture(RenderLayer::getGuiTextured, texture, x - 1, y - 1, width + 2, height + 2);
+		context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, x - 1, y - 1, width + 2, height + 2);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -242,7 +242,7 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	private void drawHighlight(DrawContext context, int x, int y, int width, int height) {
-		context.fill(RenderLayer.getGuiTextHighlight(), x, y, x + width, y + height, 0xFF_0000FF);
+		context.fill(RenderPipelines.GUI_TEXT_HIGHLIGHT, x, y, x + width, y + height, 0xFF_0000FF);
 	}
 
 	public WTextField setTextPredicate(Predicate<String> predicate_1) {

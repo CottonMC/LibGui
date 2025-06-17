@@ -362,7 +362,7 @@ public class WWidget {
 		if (builder.size() == 0) return;
 
 		var client = MinecraftClient.getInstance();
-		context.drawTooltip(client.textRenderer, builder.lines, HoveredTooltipPositioner.INSTANCE, tX + x, tY + y);
+		context.drawTooltip(client.textRenderer, builder.lines, HoveredTooltipPositioner.INSTANCE, tX + x, tY + y, false);
 	}
 
 	/**

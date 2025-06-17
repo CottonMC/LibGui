@@ -2,11 +2,10 @@ package io.github.cottonmc.cotton.gui.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.ScreenRect;
 
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayDeque;
 import java.util.stream.Collectors;
@@ -15,7 +14,9 @@ import java.util.stream.Collectors;
  * Contains a stack for GL scissors for restricting the drawn area of a widget.
  *
  * @since 2.0.0
+ * @deprecated Use scissor methods in {@link DrawContext} instead.
  */
+@Deprecated(forRemoval = true)
 @Environment(EnvType.CLIENT)
 public final class Scissors {
 	private static final ArrayDeque<Frame> STACK = new ArrayDeque<>();
@@ -26,34 +27,17 @@ public final class Scissors {
 	/**
 	 * Pushes a new scissor frame onto the stack and refreshes the scissored area.
 	 *
+	 * @param context the associated draw context
 	 * @param x the frame's X coordinate
 	 * @param y the frame's Y coordinate
 	 * @param width the frame's width in pixels
 	 * @param height the frame's height in pixels
 	 * @return the pushed frame
 	 */
-	public static Frame push(int x, int y, int width, int height) {
-		return push(null, x, y, width, height);
-	}
-
-	/**
-	 * Pushes a new scissor frame onto the stack and refreshes the scissored area.
-	 *
-	 * <p>If the draw context is not null, any buffered content in it will be drawn
-	 * when refreshing the scissor state.
-	 *
-	 * @param context the associated draw context, or null if not provided
-	 * @param x the frame's X coordinate
-	 * @param y the frame's Y coordinate
-	 * @param width the frame's width in pixels
-	 * @param height the frame's height in pixels
-	 * @return the pushed frame
-	 */
-	public static Frame push(@Nullable DrawContext context, int x, int y, int width, int height) {
+	public static Frame push(DrawContext context, int x, int y, int width, int height) {
 		Frame frame = new Frame(x, y, width, height, context);
 		STACK.push(frame);
-		if (context != null) context.draw();
-		refreshScissors();
+		context.scissorStack.push(new ScreenRect(x, y, width, height));
 
 		return frame;
 	}
@@ -68,47 +52,7 @@ public final class Scissors {
 			throw new IllegalStateException("No scissors on the stack!");
 		}
 
-		var frame = STACK.pop();
-		if (frame.context != null) frame.context.draw();
-		refreshScissors();
-	}
-
-	static void refreshScissors() {
-		MinecraftClient mc = MinecraftClient.getInstance();
-
-		if (STACK.isEmpty()) {
-			// Just use the full window framebuffer as a scissor
-			GL11.glScissor(0, 0, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight());
-			return;
-		}
-
-		int x = Integer.MIN_VALUE;
-		int y = Integer.MIN_VALUE;
-		int width = -1;
-		int height = -1;
-
-		for (Frame frame : STACK) {
-			if (x < frame.x) {
-				x = frame.x;
-			}
-			if (y < frame.y) {
-				y = frame.y;
-			}
-			if (width == -1 || x + width > frame.x + frame.width) {
-				width = frame.width - (x - frame.x);
-			}
-			if (height == -1 || y + height > frame.y + frame.height) {
-				height = frame.height - (y - frame.y);
-			}
-		}
-
-		int windowHeight = mc.getWindow().getFramebufferHeight();
-		double scale = mc.getWindow().getScaleFactor();
-		int scaledWidth = (int) (width * scale);
-		int scaledHeight = (int) (height * scale);
-
-		// Expression for Y coordinate adapted from vini2003's Spinnery (code snippet released under WTFPL)
-		GL11.glScissor((int) (x * scale), (int) (windowHeight - (y * scale) - scaledHeight), scaledWidth, scaledHeight);
+		STACK.pop().context.disableScissor();
 	}
 
 	/**

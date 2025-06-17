@@ -30,12 +30,12 @@ public class WDynamicLabel extends WWidget {
 	/**
 	 * The default text color for light mode labels.
 	 */
-	public static final int DEFAULT_TEXT_COLOR = 0x404040;
+	public static final int DEFAULT_TEXT_COLOR = WLabel.DEFAULT_TEXT_COLOR;
 
 	/**
 	 * The default text color for {@linkplain LibGui#isDarkMode() dark mode} labels.
 	 */
-	public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
+	public static final int DEFAULT_DARKMODE_TEXT_COLOR = WLabel.DEFAULT_DARKMODE_TEXT_COLOR;
 
 	/**
 	 * Constructs a new dynamic label.

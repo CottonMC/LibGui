@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(HandledScreen.class)
 abstract class HandledScreenMixin {
 	@Inject(
-			method = "render",
+			method = "renderMain",
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/gui/DrawContext;IIF)V",

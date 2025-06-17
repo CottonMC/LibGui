@@ -98,10 +98,10 @@ public final class NinePatchBackgroundPainter implements BackgroundPainter {
 	@Override
 	public void paintBackground(DrawContext context, int left, int top, WWidget panel) {
 		var matrices = context.getMatrices();
-		matrices.push();
-		matrices.translate(left - leftPadding, top - topPadding, 0);
+		matrices.pushMatrix();
+		matrices.translate(left - leftPadding, top - topPadding);
 		ninePatch.draw(NinePatchTextureRendererImpl.INSTANCE, context, panel.getWidth() + leftPadding + rightPadding, panel.getHeight() + topPadding + bottomPadding);
 
-		matrices.pop();
+		matrices.popMatrix();
 	}
 }

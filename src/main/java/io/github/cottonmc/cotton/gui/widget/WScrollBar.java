@@ -2,10 +2,10 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
@@ -56,7 +56,7 @@ public class WScrollBar extends WWidget {
 		boolean darkMode = shouldRenderInDarkMode();
 		var textures = WidgetTextures.getScrollBarTextures(darkMode);
 
-		context.drawGuiTexture(RenderLayer::getGuiTextured, textures.background(), x, y, getWidth(), getHeight());
+		context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.background(), x, y, getWidth(), getHeight());
 
 		Identifier thumbTexture = textures.thumb();
 
@@ -68,25 +68,25 @@ public class WScrollBar extends WWidget {
 			thumbTexture = textures.thumbHovered();
 		}
 
-		matrices.push();
+		matrices.pushMatrix();
 
 		if (axis == Axis.HORIZONTAL) {
-			matrices.translate(x + 1 + getHandlePosition(), y + 1, 0);
-			context.drawGuiTexture(RenderLayer::getGuiTextured, thumbTexture, 0, 0, getHandleSize(), getHeight() - 2);
+			matrices.translate(x + 1 + getHandlePosition(), y + 1);
+			context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, thumbTexture, 0, 0, getHandleSize(), getHeight() - 2);
 
 			if (isFocused()) {
-				context.drawGuiTexture(RenderLayer::getGuiTextured, FOCUS_TEXTURE, 0, 0, getHandleSize(), getHeight() - 2);
+				context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, FOCUS_TEXTURE, 0, 0, getHandleSize(), getHeight() - 2);
 			}
 		} else {
-			matrices.translate(x + 1, y + 1 + getHandlePosition(), 0);
-			context.drawGuiTexture(RenderLayer::getGuiTextured, thumbTexture, 0, 0, getWidth() - 2, getHandleSize());
+			matrices.translate(x + 1, y + 1 + getHandlePosition());
+			context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, thumbTexture, 0, 0, getWidth() - 2, getHandleSize());
 
 			if (isFocused()) {
-				context.drawGuiTexture(RenderLayer::getGuiTextured, FOCUS_TEXTURE, 0, 0, getWidth() - 2, getHandleSize());
+				context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, FOCUS_TEXTURE, 0, 0, getWidth() - 2, getHandleSize());
 			}
 		}
 
-		matrices.pop();
+		matrices.popMatrix();
 	}
 
 	@Override

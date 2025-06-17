@@ -18,7 +18,6 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 
 public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	private static final VisualLogger LOGGER = new VisualLogger(CottonInventoryScreen.class);
@@ -127,10 +126,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 		if (description!=null) {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
-				GL11.glEnable(GL11.GL_SCISSOR_TEST);
-				Scissors.refreshScissors();
 				root.paint(context, left, top, mouseX-left, mouseY-top);
-				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				Scissors.checkStackIsEmpty();
 			}
 

@@ -3,12 +3,12 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -90,19 +90,17 @@ public class WButton extends WWidget {
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		boolean hovered = isWithinBounds(mouseX, mouseY);
 		ButtonTextures textures = WidgetTextures.getButtonTextures(shouldRenderInDarkMode());
-		context.drawGuiTexture(RenderLayer::getGuiTextured, textures.get(enabled, hovered || isFocused()), x, y, getWidth(), getHeight());
+		context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(enabled, hovered || isFocused()), x, y, getWidth(), getHeight());
 
 		if (icon != null) {
 			icon.paint(context, x+ICON_SPACING, y+(getHeight()-iconSize)/2, iconSize);
 		}
 		
 		if (label!=null) {
-			int color = 0xE0E0E0;
+			int color = 0xFF_E0E0E0;
 			if (!enabled) {
-				color = 0xA0A0A0;
-			} /*else if (hovered) {
-				color = 0xFFFFA0;
-			}*/
+				color = 0xFF_A0A0A0;
+			}
 
 			int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING+iconSize+ICON_SPACING : 0;
 			ScreenDrawing.drawStringWithShadow(context, label.asOrderedText(), alignment, x + xOffset, y + ((getHeight() - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
