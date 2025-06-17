@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.screen.ScreenTexts;
@@ -14,6 +15,7 @@ import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
+import io.github.cottonmc.cotton.gui.client.WidgetHudElement;
 import io.github.cottonmc.cotton.gui.impl.modmenu.ConfigGui;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.test.LibGuiTest;
@@ -46,7 +48,8 @@ public class LibGuiTestClient implements ClientModInitializer {
 		);
 
 		CottonHud.add(new WHudTest(), 10, -20, 10, 10);
-		CottonHud.add(new WLabel(Text.literal("Test label")), 10, -30, 10, 10);
+		WidgetHudElement labelHudElement = new WidgetHudElement(new WLabel(Text.literal("Test label")), 10, -30, 10, 10);
+		HudElementRegistry.addLast(LibGuiTest.id("test_label"), labelHudElement);
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, commandRegistryAccess) -> dispatcher.register(
 				literal("libgui")

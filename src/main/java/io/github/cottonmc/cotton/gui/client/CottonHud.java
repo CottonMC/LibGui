@@ -3,11 +3,12 @@ package io.github.cottonmc.cotton.gui.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.Window;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.minecraft.util.Identifier;
 
+import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,29 +17,27 @@ import java.util.Set;
 
 /**
  * Manages widgets that are painted on the in-game HUD.
+ *
+ * @deprecated Use {@link HudElementRegistry} with {@link WidgetHudElement}.
  */
+@Deprecated(forRemoval = true)
 @Environment(EnvType.CLIENT)
 public final class CottonHud {
+	private static final Identifier LEGACY_ID = LibGuiCommon.id("legacy_widgets");
 	private static final Set<WWidget> widgets = new HashSet<>();
+	@ApiStatus.Internal
+	static final Set<WWidget> tickingWidgets = new HashSet<>();
 	private static final Map<WWidget, Positioner> positioners = new HashMap<>();
 
 	static {
-		HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
-			Window window = MinecraftClient.getInstance().getWindow();
-			int hudWidth = window.getScaledWidth();
-			int hudHeight = window.getScaledHeight();
+		HudElementRegistry.addLast(LEGACY_ID, (context, tickCounter) -> {
 			for (WWidget widget : widgets) {
-				Positioner positioner = positioners.get(widget);
-				if (positioner != null) {
-					positioner.reposition(widget, hudWidth, hudHeight);
-				}
-
-				widget.paint(drawContext, widget.getX(), widget.getY(), -1, -1);
+				WidgetHudElement.render(context, widget, positioners.get(widget));
 			}
 		});
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			for (WWidget widget : widgets) {
+			for (WWidget widget : tickingWidgets) {
 				widget.tick();
 			}
 		});
@@ -51,6 +50,7 @@ public final class CottonHud {
 	 */
 	public static void add(WWidget widget) {
 		widgets.add(widget);
+		tickingWidgets.add(widget);
 	}
 
 	/**
@@ -128,16 +128,7 @@ public final class CottonHud {
 	 * Positioners can be used to change the position of a widget based on the window dimensions.
 	 */
 	@FunctionalInterface
-	public interface Positioner {
-		/**
-		 * Repositions the widget according to the HUD dimensions.
-		 *
-		 * @param widget the widget
-		 * @param hudWidth the width of the HUD
-		 * @param hudHeight the height of the HUD
-		 */
-		void reposition(WWidget widget, int hudWidth, int hudHeight);
-
+	public interface Positioner extends WidgetHudElement.Positioner {
 		/**
 		 * Creates a new positioner that offsets widgets.
 		 *
