@@ -1,9 +1,12 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
@@ -165,36 +168,36 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(Click click, boolean doubled) {
+		super.mouseClicked(click, doubled);
 
-		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseY-top;
+		int containerX = (int) click.x() - left;
+		int containerY = (int) click.y() - top;
 		mouseInputHandler.checkFocus(containerX, containerY);
 		if (containerX<0 || containerY<0 || containerX>=width || containerY>=height) return true;
-		mouseInputHandler.onMouseDown(containerX, containerY, mouseButton);
+		mouseInputHandler.onMouseDown(containerX, containerY, click, doubled);
 
 		return true;
 	}
 
 	@Override
-	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		super.mouseReleased(mouseX, mouseY, mouseButton);
+	public boolean mouseReleased(Click click) {
+		super.mouseReleased(click);
 
-		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseY-top;
-		mouseInputHandler.onMouseUp(containerX, containerY, mouseButton);
+		int containerX = (int) click.x() - left;
+		int containerY = (int) click.y() - top;
+		mouseInputHandler.onMouseUp(containerX, containerY, click);
 
 		return true;
 	}
 
 	@Override
-	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+	public boolean mouseDragged(Click click, double offsetX, double offsetY) {
+		super.mouseDragged(click, offsetX, offsetY);
 
-		int containerX = (int)mouseX-left;
-		int containerY = (int)mouseY-top;
-		mouseInputHandler.onMouseDrag(containerX, containerY, mouseButton, deltaX, deltaY);
+		int containerX = (int) click.x() - left;
+		int containerY = (int) click.y() - top;
+		mouseInputHandler.onMouseDrag(containerX, containerY, click, offsetX, offsetY);
 
 		return true;
 	}
@@ -220,33 +223,33 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 	}
 
 	@Override
-	public boolean charTyped(char ch, int keyCode) {
+	public boolean charTyped(CharInput input) {
 		WWidget focus = description.getFocus();
-		if (focus != null && focus.onCharTyped(ch) == InputResult.PROCESSED) {
+		if (focus != null && focus.onCharTyped(input) == InputResult.PROCESSED) {
 			return true;
 		}
 
-		return super.charTyped(ch, keyCode);
+		return super.charTyped(input);
 	}
 
 	@Override
-	public boolean keyPressed(int ch, int keyCode, int modifiers) {
+	public boolean keyPressed(KeyInput input) {
 		WWidget focus = description.getFocus();
-		if (focus != null && focus.onKeyPressed(ch, keyCode, modifiers) == InputResult.PROCESSED) {
+		if (focus != null && focus.onKeyPressed(input) == InputResult.PROCESSED) {
 			return true;
 		}
 
-		return super.keyPressed(ch, keyCode, modifiers);
+		return super.keyPressed(input);
 	}
 
 	@Override
-	public boolean keyReleased(int ch, int keyCode, int modifiers) {
+	public boolean keyReleased(KeyInput input) {
 		WWidget focus = description.getFocus();
-		if (focus != null && focus.onKeyReleased(ch, keyCode, modifiers) == InputResult.PROCESSED) {
+		if (focus != null && focus.onKeyReleased(input) == InputResult.PROCESSED) {
 			return true;
 		}
 
-		return super.keyReleased(ch, keyCode, modifiers);
+		return super.keyReleased(input);
 	}
 
 	@Override

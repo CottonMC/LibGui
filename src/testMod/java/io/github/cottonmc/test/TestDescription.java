@@ -100,7 +100,7 @@ public class TestDescription extends SyncedGuiDescription {
 
 		buttonLabel = registerDataSlot(BUTTON_LABEL_DATA_SLOT, Text.empty());
 		// You can set values outside a ready event listener.
-		if (!getWorld().isClient) buttonLabel.set(Text.literal("Send Message"));
+		if (!getWorld().isClient()) buttonLabel.set(Text.literal("Send Message"));
 		// The button will never be yellow! Initial values won't be synced.
 		buttonColor = registerDataSlot(BUTTON_COLOR_DATA_SLOT, 0xFF_FFFF00, NetworkDirection.CLIENT_TO_SERVER);
 

@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.impl.client;
 
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.screen.Screen;
 
 import io.github.cottonmc.cotton.gui.widget.WWidget;
@@ -15,6 +16,7 @@ import java.util.function.Function;
 public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 	private final S screen;
 	private final ObservableProperty<@Nullable WWidget> hovered = ObservableProperty.<WWidget>of(null).build();
+	private boolean clickDoubled;
 
 	public MouseInputHandler(S screen) {
 		this.screen = screen;
@@ -24,14 +26,16 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 		});
 	}
 
-	public void onMouseDown(int containerX, int containerY, int mouseButton) {
+	public void onMouseDown(int containerX, int containerY, Click click, boolean doubled) {
+		this.clickDoubled = doubled;
+
 		if (screen.getLastResponder() == null) {
 			WWidget lastResponder = screen.getDescription().getRootPanel().hit(containerX, containerY);
 			screen.setLastResponder(lastResponder);
 			if (lastResponder != null) {
 				runTree(
 						lastResponder,
-						widget -> widget.onMouseDown(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(), mouseButton)
+						widget -> widget.onMouseDown(clickAt(click, containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY()), doubled)
 				);
 			}
 		} else {
@@ -39,7 +43,7 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 		}
 	}
 
-	public void onMouseUp(int containerX, int containerY, int mouseButton) {
+	public void onMouseUp(int containerX, int containerY, Click click) {
 		WWidget lastResponder = screen.getLastResponder();
 
 		if (lastResponder != null) {
@@ -48,30 +52,30 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 
 			runTree(
 					lastResponder,
-					widget -> widget.onMouseUp(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(), mouseButton)
+					widget -> widget.onMouseUp(clickAt(click, containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY()))
 			);
 
 			if (containerX >= 0 && containerY >= 0 && containerX < width && containerY < height) {
 				runTree(
 						lastResponder,
-						widget -> widget.onClick(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(), mouseButton)
+						widget -> widget.onClick(clickAt(click, containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY()), clickDoubled)
 				);
 			}
 		} else {
 			runTree(
 					screen.getDescription().getRootPanel().hit(containerX, containerY),
-					widget -> widget.onMouseUp(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(), mouseButton)
+					widget -> widget.onMouseUp(clickAt(click, containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY()))
 			);
 		}
 
 		screen.setLastResponder(null);
 	}
 
-	public void onMouseDrag(int containerX, int containerY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDrag(int containerX, int containerY, Click click, double offsetX, double offsetY) {
 		WWidget lastResponder = screen.getLastResponder();
 
 		if (lastResponder != null) {
-			lastResponder.onMouseDrag(containerX - lastResponder.getAbsoluteX(), containerY - lastResponder.getAbsoluteY(), mouseButton, deltaX, deltaY);
+			lastResponder.onMouseDrag(clickAt(click, containerX - lastResponder.getAbsoluteX(), containerY - lastResponder.getAbsoluteY()), offsetX, offsetY);
 		} else {
 			int width = screen.width;
 			int height = screen.height;
@@ -80,7 +84,7 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 
 			runTree(
 					screen.getDescription().getRootPanel().hit(containerX, containerY),
-					widget -> widget.onMouseDrag(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(), mouseButton, deltaX, deltaY)
+					widget -> widget.onMouseDrag(clickAt(click, containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY()), offsetX, offsetY)
 			);
 		}
 	}
@@ -148,5 +152,9 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
 				screen.getDescription().releaseFocus(focus);
 			}
 		}
+	}
+
+	public static Click clickAt(Click click, double x, double y) {
+		return new Click(x, y, click.buttonInfo());
 	}
 }

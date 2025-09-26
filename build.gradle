@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.10.+'
+	id 'fabric-loom' version '1.11.+'
 	id 'maven-publish'
 	id 'checkstyle'
 }
@@ -90,10 +90,10 @@ dependencies {
 	// Test mod dependencies
 	testModImplementation sourceSets.main.output
 	modTestModImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modTestModRuntimeOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
-		exclude group: 'net.fabricmc.fabric-api'
-		exclude group: 'net.fabricmc', module: 'fabric-loader'
-	}
+	// modTestModRuntimeOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
+	// 	exclude group: 'net.fabricmc.fabric-api'
+	// 	exclude group: 'net.fabricmc', module: 'fabric-loader'
+	// }
 }
 
 processResources {

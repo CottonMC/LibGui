@@ -3,9 +3,11 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
@@ -155,15 +157,15 @@ public class WScrollBar extends WWidget {
 	}
 
 	@Override
-	public InputResult onMouseDown(int x, int y, int button) {
+	public InputResult onMouseDown(Click click, boolean doubled) {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
 		requestFocus();
 
 		if (axis==Axis.HORIZONTAL) {
-			anchor = x;
+			anchor = (int) click.x();
 			anchorValue = value;
 		} else {
-			anchor = y;
+			anchor = (int) click.y();
 			anchorValue = value;
 		}
 		sliding = true;
@@ -172,14 +174,14 @@ public class WScrollBar extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
-		adjustSlider(x, y);
+	public InputResult onMouseDrag(Click click, double offsetX, double offsetY) {
+		adjustSlider((int) click.x(), (int) click.y());
 		return InputResult.PROCESSED;
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onMouseUp(int x, int y, int button) {
+	public InputResult onMouseUp(Click click) {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
 		anchor = -1;
 		anchorValue = -1;
@@ -188,17 +190,17 @@ public class WScrollBar extends WWidget {
 	}
 
 	@Override
-	public InputResult onKeyPressed(int ch, int key, int modifiers) {
+	public InputResult onKeyPressed(KeyInput input) {
 		WAbstractSlider.Direction direction = axis == Axis.HORIZONTAL
 				? WAbstractSlider.Direction.RIGHT
 				: WAbstractSlider.Direction.DOWN;
 
-		if (WAbstractSlider.isIncreasingKey(ch, direction)) {
+		if (WAbstractSlider.isIncreasingKey(input.key(), direction)) {
 			if (value < getMaxScrollValue()) {
 				value++;
 			}
 			return InputResult.PROCESSED;
-		} else if (WAbstractSlider.isDecreasingKey(ch, direction)) {
+		} else if (WAbstractSlider.isDecreasingKey(input.key(), direction)) {
 			if (value > 0) {
 				value--;
 			}

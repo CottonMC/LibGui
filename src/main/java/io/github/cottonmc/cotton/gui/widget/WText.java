@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
@@ -115,10 +116,10 @@ public class WText extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onClick(int x, int y, int button) {
-		if (button != 0) return InputResult.IGNORED; // only left clicks
+	public InputResult onClick(Click click, boolean doubled) {
+		if (click.button() != 0) return InputResult.IGNORED; // only left clicks
 
-		Style hoveredTextStyle = getTextStyleAt(x, y);
+		Style hoveredTextStyle = getTextStyleAt((int) click.x(), (int) click.y());
 		if (hoveredTextStyle != null) {
 			boolean processed = MinecraftClient.getInstance().currentScreen.handleTextClick(hoveredTextStyle);
 			return InputResult.of(processed);

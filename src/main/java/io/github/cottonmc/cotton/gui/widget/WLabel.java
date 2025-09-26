@@ -3,6 +3,7 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -78,8 +79,8 @@ public class WLabel extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onClick(int x, int y, int button) {
-		Style hoveredTextStyle = getTextStyleAt(x, y);
+	public InputResult onClick(Click click, boolean doubled) {
+		Style hoveredTextStyle = getTextStyleAt((int) click.x(), (int) click.y());
 		if (hoveredTextStyle != null) {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
 			if (screen != null) {

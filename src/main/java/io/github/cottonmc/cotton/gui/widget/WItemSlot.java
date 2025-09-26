@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -421,8 +422,8 @@ public class WItemSlot extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onKeyPressed(int ch, int key, int modifiers) {
-		if (isActivationKey(ch) && host instanceof ScreenHandler handler && focusedSlot >= 0) {
+	public InputResult onKeyPressed(KeyInput input) {
+		if (isActivationKey(input.key()) && host instanceof ScreenHandler handler && focusedSlot >= 0) {
 			MinecraftClient client = MinecraftClient.getInstance();
 
 			ValidatedSlot peer = peers.get(focusedSlot);

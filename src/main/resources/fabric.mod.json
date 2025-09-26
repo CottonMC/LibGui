@@ -26,12 +26,12 @@
 	"depends": {
 		"java": ">=21",
 		"fabricloader": ">=0.16.14",
-		"fabric-api-base": ">=0.4.63",
-		"fabric-lifecycle-events-v1": "^2.6.2",
-		"fabric-networking-api-v1": "^5.0.0",
-		"fabric-rendering-v1": "^12.3.0",
+		"fabric-api-base": "^1.0.0",
+		"fabric-lifecycle-events-v1": "^2.6.9",
+		"fabric-networking-api-v1": "^5.0.12",
+		"fabric-rendering-v1": "^16.0.1",
 		"fabric-resource-loader-v0": "*",
-		"minecraft": ">=1.21.6",
+		"minecraft": ">=1.21.9-rc.1",
 		"jankson": "^10.0.0",
 		"libninepatch": "^1.2.0"
 	},

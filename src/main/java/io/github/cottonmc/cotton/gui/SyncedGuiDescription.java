@@ -85,7 +85,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		super(type, syncId);
 		this.blockInventory = null;
 		this.playerInventory = playerInventory;
-		this.world = playerInventory.player.getWorld();
+		this.world = playerInventory.player.getEntityWorld();
 		this.propertyDelegate = null;//new ArrayPropertyDelegate(1);
 		this.networking = new ScreenNetworkingImpl(this, getNetworkSide());
 		this.inactiveNetworking = new ScreenNetworkingImpl.DummyNetworking();
@@ -104,7 +104,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 		super(type, syncId);
 		this.blockInventory = blockInventory;
 		this.playerInventory = playerInventory;
-		this.world = playerInventory.player.getWorld();
+		this.world = playerInventory.player.getEntityWorld();
 		this.propertyDelegate = propertyDelegate;
 		this.networking = new ScreenNetworkingImpl(this, getNetworkSide());
 		this.inactiveNetworking = new ScreenNetworkingImpl.DummyNetworking();
@@ -117,7 +117,7 @@ public class SyncedGuiDescription extends ScreenHandler implements GuiDescriptio
 	}
 	
 	public int getTitleColor() {
-		return (world.isClient && isDarkMode().orElse(LibGui.isDarkMode())) ? darkTitleColor : titleColor;
+		return (world.isClient() && isDarkMode().orElse(LibGui.isDarkMode())) ? darkTitleColor : titleColor;
 	}
 	
 	public SyncedGuiDescription setRootPanel(WPanel panel) {

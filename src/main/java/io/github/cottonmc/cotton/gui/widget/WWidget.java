@@ -3,9 +3,12 @@ package io.github.cottonmc.cotton.gui.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.LibGui;
@@ -158,54 +161,49 @@ public class WWidget {
 	/**
 	 * Notifies this widget that the mouse has been pressed while inside its bounds
 	 *
-	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
-	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
-	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+	 * @param click   the click data whose coordinates are in widget space ((0, 0) is the top-left point of this widget)
+	 * @param doubled {@code true} if this is a mouse down event of a double click, {@code false} otherwise
 	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public InputResult onMouseDown(int x, int y, int button) {
+	public InputResult onMouseDown(Click click, boolean doubled) {
 		return InputResult.IGNORED;
 	}
 
 	/**
 	 * Notifies this widget that the mouse has been moved while pressed and inside its bounds.
 	 *
-	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
-	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
-	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
-	 * @param deltaX The amount of dragging on the X axis
-	 * @param deltaY The amount of dragging on the Y axis
+	 * @param click   the click data whose coordinates are in widget space ((0, 0) is the top-left point of this widget)
+	 * @param offsetX the amount of dragging on the X axis
+	 * @param offsetY the amount of dragging on the Y axis
 	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 * @since 1.5.0
 	 */
 	@Environment(EnvType.CLIENT)
-	public InputResult onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
+	public InputResult onMouseDrag(Click click, double offsetX, double offsetY) {
 		return InputResult.IGNORED;
 	}
 
 	/**
 	 * Notifies this widget that the mouse has been released while inside its bounds
-	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
-	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
-	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+	 *
+	 * @param click the click data whose coordinates are in widget space ((0, 0) is the top-left point of this widget)
 	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public InputResult onMouseUp(int x, int y, int button) {
+	public InputResult onMouseUp(Click click) {
 		return InputResult.IGNORED;
 	}
 
 	/**
 	 * Notifies this widget that the mouse has been pressed and released, both while inside its bounds.
 	 *
-	 * @param x The X coordinate of the event, in widget-space (0 is the left edge of this widget)
-	 * @param y The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
-	 * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+	 * @param click   the click data whose coordinates are in widget space ((0, 0) is the top-left point of this widget)
+	 * @param doubled {@code true} if this is a double click, {@code false} otherwise
 	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public InputResult onClick(int x, int y, int button) {
+	public InputResult onClick(Click click, boolean doubled) {
 		return InputResult.IGNORED;
 	}
 
@@ -239,31 +237,31 @@ public class WWidget {
 	/**
 	 * Notifies this widget that a character has been typed. This method is subject to key repeat,
 	 * and may be called for characters that do not directly have a corresponding keyboard key.
-	 * @param ch the character typed
+	 * @param input the character typed
 	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public InputResult onCharTyped(char ch) {
+	public InputResult onCharTyped(CharInput input) {
 		return InputResult.IGNORED;
 	}
 
 	/**
 	 * Notifies this widget that a key has been pressed.
-	 * @param key the GLFW scancode of the key
+	 * @param input the key input
 	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public InputResult onKeyPressed(int ch, int key, int modifiers) {
+	public InputResult onKeyPressed(KeyInput input) {
 		return InputResult.IGNORED;
 	}
 
 	/**
 	 * Notifies this widget that a key has been released
-	 * @param key the GLFW scancode of the key
+	 * @param input the key input
 	 * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
 	 */
 	@Environment(EnvType.CLIENT)
-	public InputResult onKeyReleased(int ch, int key, int modifiers) {
+	public InputResult onKeyReleased(KeyInput input) {
 		return InputResult.IGNORED;
 	}
 

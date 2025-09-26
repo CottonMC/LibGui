@@ -5,10 +5,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -309,9 +311,9 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onClick(int x, int y, int button) {
+	public InputResult onClick(Click click, boolean doubled) {
 		requestFocus();
-		cursor = getCaretPosition(x - TEXT_PADDING_X);
+		cursor = getCaretPosition((int) click.x() - TEXT_PADDING_X);
 		scrollCursorIntoView();
 		return InputResult.PROCESSED;
 	}
@@ -337,9 +339,9 @@ public class WTextField extends WWidget {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onCharTyped(char ch) {
+	public InputResult onCharTyped(CharInput input) {
 		if (!isEditable()) return InputResult.IGNORED;
-		insertText(ch + "");
+		insertText(input.asString());
 		return InputResult.PROCESSED;
 	}
 
@@ -389,9 +391,9 @@ public class WTextField extends WWidget {
 	}
 
 	@Environment(EnvType.CLIENT)
-	private void delete(int modifiers, boolean backwards) {
+	private void delete(KeyInput input, boolean backwards) {
 		if (select == -1 || select == cursor) {
-			select = skipCharacters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, backwards ? -1 : 1);
+			select = skipCharacters(input.hasCtrl(), backwards ? -1 : 1);
 		}
 		deleteSelection();
 	}
@@ -416,50 +418,50 @@ public class WTextField extends WWidget {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void onDirectionalKey(int direction, int modifiers) {
-		if ((GLFW.GLFW_MOD_SHIFT & modifiers) != 0) {
+	public void onDirectionalKey(int direction, KeyInput input) {
+		if (input.hasShift()) {
 			if (select == -1 || select == cursor) select = cursor;
-			cursor = skipCharacters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, direction);
+			cursor = skipCharacters(input.hasCtrl(), direction);
 		} else {
 			if (select != -1) {
 				cursor = direction < 0 ? Math.min(cursor, select) : Math.max(cursor, select);
 				select = -1;
 			} else {
-				cursor = skipCharacters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, direction);
+				cursor = skipCharacters(input.hasCtrl(), direction);
 			}
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onKeyPressed(int ch, int key, int modifiers) {
+	public InputResult onKeyPressed(KeyInput input) {
 		if (!isEditable()) return InputResult.IGNORED;
 
-		if (Screen.isCopy(ch)) {
+		if (input.isCopy()) {
 			copySelection();
 			return InputResult.PROCESSED;
-		} else if (Screen.isPaste(ch)) {
+		} else if (input.isPaste()) {
 			paste();
 			return InputResult.PROCESSED;
-		} else if (Screen.isSelectAll(ch)) {
+		} else if (input.isSelectAll()) {
 			select = 0;
 			cursor = text.length();
 			return InputResult.PROCESSED;
 		}
 
-		switch (ch) {
-			case GLFW.GLFW_KEY_DELETE -> delete(modifiers, false);
-			case GLFW.GLFW_KEY_BACKSPACE -> delete(modifiers, true);
-			case GLFW.GLFW_KEY_LEFT -> onDirectionalKey(-1, modifiers);
-			case GLFW.GLFW_KEY_RIGHT -> onDirectionalKey(1, modifiers);
+		switch (input.key()) {
+			case GLFW.GLFW_KEY_DELETE -> delete(input, false);
+			case GLFW.GLFW_KEY_BACKSPACE -> delete(input, true);
+			case GLFW.GLFW_KEY_LEFT -> onDirectionalKey(-1, input);
+			case GLFW.GLFW_KEY_RIGHT -> onDirectionalKey(1, input);
 			case GLFW.GLFW_KEY_HOME, GLFW.GLFW_KEY_UP -> {
-				if ((GLFW.GLFW_MOD_SHIFT & modifiers) == 0) {
+				if (input.hasShift()) {
 					select = -1;
 				}
 				cursor = 0;
 			}
 			case GLFW.GLFW_KEY_END, GLFW.GLFW_KEY_DOWN -> {
-				if ((GLFW.GLFW_MOD_SHIFT & modifiers) == 0) {
+				if (input.hasShift()) {
 					select = -1;
 				}
 				cursor = text.length();

@@ -4,11 +4,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -109,24 +111,26 @@ public class WButton extends WWidget {
 	
 	@Environment(EnvType.CLIENT)
 	@Override
-	public InputResult onClick(int x, int y, int button) {
-		super.onClick(x, y, button);
-		
-		if (enabled && isWithinBounds(x, y)) {
-			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+	public InputResult onClick(Click click, boolean doubled) {
+		return onClick((int) click.x(), (int) click.y());
+	}
 
-			if (onClick!=null) onClick.run();
-			return InputResult.PROCESSED;
+	@Environment(EnvType.CLIENT)
+	@Override
+	public InputResult onKeyPressed(KeyInput input) {
+		if (isActivationKey(input.key())) {
+			return onClick(0, 0);
 		}
 
 		return InputResult.IGNORED;
 	}
 
 	@Environment(EnvType.CLIENT)
-	@Override
-	public InputResult onKeyPressed(int ch, int key, int modifiers) {
-		if (isActivationKey(ch)) {
-			onClick(0, 0, 0);
+	private InputResult onClick(int x, int y) {
+		if (enabled && isWithinBounds(x, y)) {
+			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
+			if (onClick!=null) onClick.run();
 			return InputResult.PROCESSED;
 		}
 
