@@ -130,7 +130,6 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				root.paint(context, left, top, mouseX-left, mouseY-top);
-				Scissors.checkStackIsEmpty();
 			}
 
 			if (getTitle() != null && description.isTitleVisible()) {

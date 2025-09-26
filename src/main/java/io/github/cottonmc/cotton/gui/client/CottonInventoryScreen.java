@@ -294,7 +294,6 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Handl
 			WPanel root = description.getRootPanel();
 			if (root!=null) {
 				root.paint(context, x, y, mouseX-x, mouseY-y);
-				Scissors.checkStackIsEmpty();
 			}
 		}
 	}
