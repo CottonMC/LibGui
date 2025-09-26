@@ -45,7 +45,7 @@ public class WWidget {
 
 	/**
 	 * The containing {@link GuiDescription} of this widget.
-	 * Can be null if this widget is a {@linkplain io.github.cottonmc.cotton.gui.client.CottonHud HUD} widget.
+	 * Can be null if this widget is a {@linkplain io.github.cottonmc.cotton.gui.client.WidgetHudElement HUD} widget.
 	 */
 	@Nullable
 	protected GuiDescription host;
