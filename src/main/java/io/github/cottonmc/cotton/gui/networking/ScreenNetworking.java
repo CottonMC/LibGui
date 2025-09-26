@@ -43,7 +43,7 @@ import java.util.Objects;
  * // We're sending from a button. The packet data is our lucky number, 123.
  * WButton button = ...;
  * button.setOnClick(() -> {
- *     ScreenNetworking.of(this, NetworkSide.CLIENT).send(MESSAGE_KEY, 123);
+ *     getNetworking(NetworkSide.CLIENT).send(MESSAGE_KEY, 123);
  * });
  * }
  *
