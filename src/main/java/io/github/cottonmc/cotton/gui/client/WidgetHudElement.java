@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.client;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -10,6 +11,9 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * A HUD element wrapping a {@link WWidget}.
  *
@@ -18,6 +22,17 @@ import org.jetbrains.annotations.Nullable;
  * @since 14.0.0
  */
 public record WidgetHudElement(WWidget widget, @Nullable Positioner positioner) implements HudElement {
+	@ApiStatus.Internal
+	static final Set<WWidget> tickingWidgets = new HashSet<>();
+
+	static {
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			for (WWidget widget : tickingWidgets) {
+				widget.tick();
+			}
+		});
+	}
+
 	/**
 	 * Constructs a new {@code WidgetHudElement} without a positioner.
 	 *
@@ -71,14 +86,14 @@ public record WidgetHudElement(WWidget widget, @Nullable Positioner positioner) 
 	 * Enables this HUD element's widget ticking.
 	 */
 	public void enableTicking() {
-		CottonHud.tickingWidgets.add(widget);
+		tickingWidgets.add(widget);
 	}
 
 	/**
 	 * Disables this HUD element's widget ticking.
 	 */
 	public void disableTicking() {
-		CottonHud.tickingWidgets.remove(widget);
+		tickingWidgets.remove(widget);
 	}
 
 	@Override

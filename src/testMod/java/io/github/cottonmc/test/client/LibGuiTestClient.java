@@ -12,7 +12,6 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
-import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.client.WidgetHudElement;
@@ -47,7 +46,9 @@ public class LibGuiTestClient implements ClientModInitializer {
 				CottonInventoryScreen::new
 		);
 
-		CottonHud.add(new WHudTest(), 10, -20, 10, 10);
+		WidgetHudElement testHudElement = new WidgetHudElement(new WHudTest(), 10, -20, 10, 10);
+		testHudElement.enableTicking();
+		HudElementRegistry.addLast(LibGuiTest.id("test"), testHudElement);
 		WidgetHudElement labelHudElement = new WidgetHudElement(new WLabel(Text.literal("Test label")), 10, -30, 10, 10);
 		HudElementRegistry.addLast(LibGuiTest.id("test_label"), labelHudElement);
 
