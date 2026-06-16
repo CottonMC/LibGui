@@ -1,6 +1,5 @@
 package io.github.cottonmc.test.client;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 
