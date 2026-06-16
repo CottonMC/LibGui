@@ -42,6 +42,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.data.Vec2i;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -61,12 +62,14 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 	 * @deprecated Use the method {@link #getLevel()} instead.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "18.0.0")
 	protected Level world;
 
 	/**
 	 * @deprecated Use the methods {@link #getContainerData()} and {@link #setContainerData(ContainerData)} instead.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "18.0.0")
 	protected @Nullable ContainerData propertyDelegate;
 	
 	protected WPanel rootPanel = new WGridPanel().setInsets(Insets.ROOT_PANEL);
@@ -598,6 +601,7 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 	 * @deprecated Replaced with {@link #getLevel()}.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "18.0.0")
 	public Level getWorld() {
 		return world;
 	}

@@ -9,6 +9,7 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Vec2i;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -55,6 +56,7 @@ public interface GuiDescription {
 	 * @deprecated Replaced with {@link #setContainerData(ContainerData)}.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "18.0.0")
 	default GuiDescription setPropertyDelegate(ContainerData delegate) {
 		return setContainerData(delegate);
 	}
@@ -91,6 +93,7 @@ public interface GuiDescription {
 	 * @deprecated Replaced with {@link #getContainerData()}.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "18.0.0")
 	default @Nullable ContainerData getPropertyDelegate() {
 		return getContainerData();
 	}
