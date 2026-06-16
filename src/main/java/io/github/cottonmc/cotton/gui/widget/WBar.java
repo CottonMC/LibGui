@@ -239,7 +239,7 @@ public class WBar extends WWidget {
 	 * Sets the current properties of this bar.
 	 *
 	 * <p>This method is meant for situations when a GUI description is unavailable (such as HUDs).
-	 * {@link GuiDescription#getPropertyDelegate()} should be preferred over this if available.
+	 * {@link GuiDescription#getContainerData()} should be preferred over this if available.
 	 *
 	 * @param properties the properties
 	 * @return this bar
