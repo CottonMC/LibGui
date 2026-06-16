@@ -12,9 +12,10 @@ import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WToggleButton;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
+import org.jspecify.annotations.Nullable;
 
 public class ConfigGui extends LightweightGuiDescription {
-	public ConfigGui(Screen previous) {
+	public ConfigGui(@Nullable Screen previous) {
 		WGridPanel root = new WGridPanel(20);
 		root.setInsets(Insets.ROOT_PANEL);
 		setRootPanel(root);
@@ -33,7 +34,7 @@ public class ConfigGui extends LightweightGuiDescription {
 		
 		WButton doneButton = new WButton(CommonComponents.GUI_DONE);
 		doneButton.setOnClick(()->{
-			Minecraft.getInstance().setScreen(previous);
+			Minecraft.getInstance().gui.setScreen(previous);
 		});
 		root.add(doneButton, 0, 3, 3, 1);
 		

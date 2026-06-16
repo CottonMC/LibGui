@@ -86,7 +86,7 @@ public class WLabel extends WWidget {
 		Style hoveredTextStyle = getTextStyleAt((int) click.x(), (int) click.y());
 		if (hoveredTextStyle != null) {
 			Minecraft client = Minecraft.getInstance();
-			Screen screen = client.screen;
+			Screen screen = client.gui.screen();
 			if (hoveredTextStyle.getClickEvent() != null) {
 				ScreenAccessor.libgui$handleClickEvent(hoveredTextStyle.getClickEvent(), client, screen);
 				return InputResult.of(true);

@@ -21,6 +21,7 @@
 			"io.github.cottonmc.test.client.LibGuiTestClient"
 		]
 	},
+	"mixins": ["mixins.libgui.test.json"],
 	"depends": {
 		"fabricloader": ">=0.4.0",
 		"libgui": "*",

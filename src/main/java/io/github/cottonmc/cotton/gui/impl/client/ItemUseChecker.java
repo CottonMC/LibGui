@@ -1,9 +1,9 @@
 package io.github.cottonmc.cotton.gui.impl.client;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.CrashReport;
 import net.minecraft.ReportedException;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,13 +33,13 @@ public final class ItemUseChecker {
 			StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
 	// List of banned item use methods.
-	private static final List<Tuple<String, MethodType>> ITEM_USE_METHODS = Util.make(new ArrayList<>(), result -> {
+	private static final List<Pair<String, MethodType>> ITEM_USE_METHODS = Util.make(new ArrayList<>(), result -> {
 		result.add(resolveItemMethod("use", InteractionResult.class, Level.class, Player.class, InteractionHand.class));
 		result.add(resolveItemMethod("useOn", InteractionResult.class, UseOnContext.class));
 		result.add(resolveItemMethod("interactLivingEntity", InteractionResult.class, ItemStack.class, Player.class, LivingEntity.class, InteractionHand.class));
 	});
 
-	private static Tuple<String, MethodType> resolveItemMethod(String name, Class<?> returnType, Class<?>... parameterTypes) {
+	private static Pair<String, MethodType> resolveItemMethod(String name, Class<?> returnType, Class<?>... parameterTypes) {
 		// Check that the method exists
 		try {
 			Item.class.getMethod(name, parameterTypes);
@@ -47,7 +47,7 @@ public final class ItemUseChecker {
 			throw new RuntimeException("Could not find Item method " + name, e);
 		}
 
-		return new Tuple<>(name, MethodType.methodType(returnType, parameterTypes));
+		return new Pair<>(name, MethodType.methodType(returnType, parameterTypes));
 	}
 
 	/**
@@ -63,15 +63,15 @@ public final class ItemUseChecker {
 
 		// The calling variant of Item.use[OnBlock|OnEntity].
 		// If null, nothing bad happened.
-		@Nullable Tuple<? extends Class<?>, String> useMethodCaller = STACK_WALKER.walk(s -> s
+		@Nullable Pair<? extends Class<?>, String> useMethodCaller = STACK_WALKER.walk(s -> s
 						.skip(3) // checkSetScreen, setScreen injection, setScreen
 						.flatMap(frame -> {
 							if (!Item.class.isAssignableFrom(frame.getDeclaringClass())) return Stream.empty();
 
 							return ITEM_USE_METHODS.stream()
-									.filter(method -> method.getA().equals(frame.getMethodName()) &&
-											method.getB().equals(frame.getMethodType()))
-									.map(method -> new Tuple<>(frame.getDeclaringClass(), method.getA()));
+									.filter(method -> method.getFirst().equals(frame.getMethodName()) &&
+											method.getSecond().equals(frame.getMethodType()))
+									.map(method -> new Pair<>(frame.getDeclaringClass(), method.getFirst()));
 						})
 						.findFirst())
 				.orElse(null);
@@ -91,8 +91,8 @@ public final class ItemUseChecker {
 			report.addCategory("Screen opening details")
 					.setDetail("Screen class", screen.getClass().getName())
 					.setDetail("GUI description", () -> cs.getDescription().getClass().getName())
-					.setDetail("Item class", () -> useMethodCaller.getA().getName())
-					.setDetail("Involved method", useMethodCaller.getB());
+					.setDetail("Item class", () -> useMethodCaller.getFirst().getName())
+					.setDetail("Involved method", useMethodCaller.getSecond());
 			throw new ReportedException(report);
 		}
 	}

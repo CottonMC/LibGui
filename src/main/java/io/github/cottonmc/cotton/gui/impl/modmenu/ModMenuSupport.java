@@ -12,7 +12,7 @@ public class ModMenuSupport implements ModMenuApi {
 		return screen -> new CottonClientScreen(Component.translatable("options.libgui.libgui_settings"), new ConfigGui(screen)) {
 			@Override
 			public void onClose() {
-				this.minecraft.setScreen(screen);
+				this.minecraft.gui.setScreen(screen);
 			}
 		};
 	}

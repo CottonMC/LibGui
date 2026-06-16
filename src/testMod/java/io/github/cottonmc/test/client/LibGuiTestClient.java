@@ -54,7 +54,7 @@ public class LibGuiTestClient implements ClientModInitializer {
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, commandRegistryAccess) -> dispatcher.register(
 				literal("libgui")
-						.then(literal("config").executes(openScreen(client -> new ConfigGui(client.screen))))
+						.then(literal("config").executes(openScreen(client -> new ConfigGui(client.gui.screen()))))
 						.then(literal("tab").executes(openScreen(client -> new TabTestGui())))
 						.then(literal("scrolling").executes(openScreen(client -> new ScrollingTestGui())))
 						.then(literal("scrollbar").executes(openScreen(client -> new ScrollBarTestGui())))
@@ -87,7 +87,7 @@ public class LibGuiTestClient implements ClientModInitializer {
 	private static Command<FabricClientCommandSource> openScreen(Component title, Function<Minecraft, LightweightGuiDescription> screenFactory) {
 		return context -> {
 			var client = context.getSource().getClient();
-			client.schedule(() -> client.setScreen(new CottonClientScreen(title, screenFactory.apply(client))));
+			client.schedule(() -> client.gui.setScreen(new CottonClientScreen(title, screenFactory.apply(client))));
 			return Command.SINGLE_SUCCESS;
 		};
 	}

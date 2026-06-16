@@ -2,6 +2,7 @@ package io.github.cottonmc.test.client;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
@@ -11,6 +12,7 @@ import io.github.cottonmc.cotton.gui.widget.WLabeledSlider;
 import io.github.cottonmc.cotton.gui.widget.WListPanel;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
+import io.github.cottonmc.test.mixin.TextColorAccessor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,14 +57,12 @@ public class ListTestGui extends LightweightGuiDescription {
 	public ListTestGui() {
 		WGridPanel root = (WGridPanel) rootPanel;
 
-		List<ChatFormatting> formattings = Arrays.stream(ChatFormatting.values())
-				.filter(ChatFormatting::isColor)
-				.toList();
+		List<TextColor> colors = List.copyOf(TextColorAccessor.getNamedColors().values());
 		Random random = new Random();
 		List<Component> data = Arrays.stream(LOREM)
 				.<Component>map(s -> {
-					ChatFormatting formatting = formattings.get(random.nextInt(formattings.size()));
-					return Component.literal(s).withStyle(formatting, ChatFormatting.BOLD);
+					TextColor color = colors.get(random.nextInt(colors.size()));
+					return Component.literal(s).withStyle(style -> style.withBold(true).withColor(color));
 				})
 				.toList();
 

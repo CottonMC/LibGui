@@ -16,7 +16,7 @@
 		"client.ActiveTextCollectorClickableStyleFinderAccessor",
 		"client.EditBoxAccessor",
 		"client.GuiGraphicsExtractorAccessor",
-		"client.MinecraftMixin",
+		"client.GuiMixin",
 		"client.ScreenAccessor"
 	],
 
