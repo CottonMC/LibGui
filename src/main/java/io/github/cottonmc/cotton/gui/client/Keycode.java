@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 /// These keycodes are returned by [net.minecraft.client.input.InputWithModifiers#shortcutKey()],
 /// but not by [`input()`][net.minecraft.client.input.InputWithModifiers#input()]!
 ///
-/// @see [SDL keycode documentation](https://wiki.libsdl.org/SDL3/SDL_Keycode)
+/// @see <a href="https://wiki.libsdl.org/SDL3/SDL_Keycode">SDL keycode documentation</a>
 /// @since 18.0.0
 @MagicConstant(intValues = {
 	InputConstants.KEYCODE_A,
