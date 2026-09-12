@@ -418,7 +418,7 @@ public class WTextField extends WWidget {
 	@Environment(EnvType.CLIENT)
 	private void delete(KeyEvent input, boolean backwards) {
 		if (select == -1 || select == cursor) {
-			select = skipCharacters(input.hasControlDown(), backwards ? -1 : 1);
+			select = skipCharacters(input.hasControlDownWithQuirk(), backwards ? -1 : 1);
 		}
 		deleteSelection();
 	}
@@ -446,13 +446,13 @@ public class WTextField extends WWidget {
 	public void onDirectionalKey(int direction, KeyEvent input) {
 		if (input.hasShiftDown()) {
 			if (select == -1 || select == cursor) select = cursor;
-			cursor = skipCharacters(input.hasControlDown(), direction);
+			cursor = skipCharacters(input.hasControlDownWithQuirk(), direction);
 		} else {
 			if (select != -1) {
 				cursor = direction < 0 ? Math.min(cursor, select) : Math.max(cursor, select);
 				select = -1;
 			} else {
-				cursor = skipCharacters(input.hasControlDown(), direction);
+				cursor = skipCharacters(input.hasControlDownWithQuirk(), direction);
 			}
 		}
 	}

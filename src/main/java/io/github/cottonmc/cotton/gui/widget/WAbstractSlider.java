@@ -330,7 +330,7 @@ public abstract class WAbstractSlider extends WWidget {
 				value++;
 				valueChanged = true;
 			}
-		} else if (input.hasControlDown()) {
+		} else if (input.hasControlDownWithQuirk()) {
 			if (isDecreasingKey(input.shortcutKey(), direction) && value != min) {
 				value = min;
 				valueChanged = true;
