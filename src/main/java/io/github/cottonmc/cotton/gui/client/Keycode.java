@@ -5,8 +5,10 @@ import com.mojang.blaze3d.platform.InputConstants;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /// Represents an [SDL keycode][org.lwjgl.sdl.SDLKeycode] using the vanilla fields in [InputConstants].
 ///
@@ -55,5 +57,6 @@ import java.lang.annotation.RetentionPolicy;
 })
 @Documented
 @Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE_USE)
 public @interface Keycode {
 }
