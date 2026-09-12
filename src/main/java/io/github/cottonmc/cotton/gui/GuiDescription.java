@@ -9,7 +9,6 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Vec2i;
-import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -50,17 +49,6 @@ public interface GuiDescription {
 	 */
 	GuiDescription setTitleColor(int lightColor, int darkColor);
 
-	/**
-	 * Sets the object which manages the integer properties used by WBars.
-	 *
-	 * @deprecated Replaced with {@link #setContainerData(ContainerData)}.
-	 */
-	@Deprecated(forRemoval = true)
-	@ApiStatus.ScheduledForRemoval(inVersion = "18.0.0")
-	default GuiDescription setPropertyDelegate(ContainerData delegate) {
-		return setContainerData(delegate);
-	}
-	
 	/** Typical users won't call this. This adds a Slot to Container/Controller-based guis, and does nothing on lightweight guis. */
 	public void addSlotPeer(ValidatedSlot slot);
 	
@@ -86,17 +74,6 @@ public interface GuiDescription {
 	 * @since 12.0.0
 	 */
 	public void setUseDefaultRootBackground(boolean useDefaultRootBackground);
-
-	/**
-	 * Gets the object which manages the integer properties used by WBars and such.
-	 *
-	 * @deprecated Replaced with {@link #getContainerData()}.
-	 */
-	@Deprecated(forRemoval = true)
-	@ApiStatus.ScheduledForRemoval(inVersion = "18.0.0")
-	default @Nullable ContainerData getPropertyDelegate() {
-		return getContainerData();
-	}
 
 	/**
 	 * Gets the object which manages the integer properties used by WBars and such.

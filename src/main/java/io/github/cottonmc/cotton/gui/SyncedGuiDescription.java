@@ -42,7 +42,6 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.data.Vec2i;
-import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -58,19 +57,8 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 	protected @Nullable Container blockInventory;
 	protected Inventory playerInventory;
 
-	/**
-	 * @deprecated Use the method {@link #getLevel()} instead.
-	 */
-	@Deprecated(forRemoval = true)
-	@ApiStatus.ScheduledForRemoval(inVersion = "18.0.0")
-	protected Level world;
-
-	/**
-	 * @deprecated Use the methods {@link #getContainerData()} and {@link #setContainerData(ContainerData)} instead.
-	 */
-	@Deprecated(forRemoval = true)
-	@ApiStatus.ScheduledForRemoval(inVersion = "18.0.0")
-	protected @Nullable ContainerData propertyDelegate;
+	private final Level level;
+	private @Nullable ContainerData containerData;
 	
 	protected WPanel rootPanel = new WGridPanel().setInsets(Insets.ROOT_PANEL);
 	protected int titleColor = WLabel.DEFAULT_TEXT_COLOR;
@@ -99,8 +87,8 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 		super(type, syncId);
 		this.blockInventory = null;
 		this.playerInventory = playerInventory;
-		this.world = playerInventory.player.level();
-		this.propertyDelegate = null;//new ArrayPropertyDelegate(1);
+		this.level = playerInventory.player.level();
+		this.containerData = null;
 		this.networking = new ScreenNetworkingImpl(this, getNetworkSide());
 		this.inactiveNetworking = new ScreenNetworkingImpl.DummyNetworking();
 	}
@@ -118,8 +106,8 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 		super(type, syncId);
 		this.blockInventory = blockInventory;
 		this.playerInventory = playerInventory;
-		this.world = playerInventory.player.level();
-		this.propertyDelegate = containerData;
+		this.level = playerInventory.player.level();
+		this.containerData = containerData;
 		this.networking = new ScreenNetworkingImpl(this, getNetworkSide());
 		this.inactiveNetworking = new ScreenNetworkingImpl.DummyNetworking();
 		if (containerData!=null && containerData.getCount()>0) this.addDataSlots(containerData);
@@ -131,7 +119,7 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 	}
 	
 	public int getTitleColor() {
-		return (world.isClientSide() && isDarkMode().orElse(LibGui.isDarkMode())) ? darkTitleColor : titleColor;
+		return (level.isClientSide() && isDarkMode().orElse(LibGui.isDarkMode())) ? darkTitleColor : titleColor;
 	}
 	
 	public SyncedGuiDescription setRootPanel(WPanel panel) {
@@ -348,12 +336,12 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 
 	@Override
 	public @Nullable ContainerData getContainerData() {
-		return propertyDelegate;
+		return containerData;
 	}
 	
 	@Override
 	public GuiDescription setContainerData(ContainerData data) {
-		this.propertyDelegate = data;
+		this.containerData = data;
 		return this;
 	}
 
@@ -596,22 +584,11 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 	}
 
 	/**
-	 * {@return the world of this GUI description's player}
-	 * @since 10.0.0
-	 * @deprecated Replaced with {@link #getLevel()}.
-	 */
-	@Deprecated(forRemoval = true)
-	@ApiStatus.ScheduledForRemoval(inVersion = "18.0.0")
-	public Level getWorld() {
-		return world;
-	}
-
-	/**
 	 * {@return the level of this GUI description's player}
 	 * @since 16.0.0
 	 */
 	public Level getLevel() {
-		return world;
+		return level;
 	}
 
 	/**
@@ -621,7 +598,7 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 	 * @since 3.3.0
 	 */
 	public final NetworkSide getNetworkSide() {
-		return world instanceof ServerLevel ? NetworkSide.SERVER : NetworkSide.CLIENT;
+		return level instanceof ServerLevel ? NetworkSide.SERVER : NetworkSide.CLIENT;
 	}
 
 	/**

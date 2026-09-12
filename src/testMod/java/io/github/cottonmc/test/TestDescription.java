@@ -101,7 +101,7 @@ public class TestDescription extends SyncedGuiDescription {
 
 		buttonLabel = registerDataSlot(BUTTON_LABEL_DATA_SLOT, Component.empty());
 		// You can set values outside a ready event listener.
-		if (!getWorld().isClientSide()) buttonLabel.set(Component.literal("Send Message"));
+		if (!getLevel().isClientSide()) buttonLabel.set(Component.literal("Send Message"));
 		// The button will never be yellow! Initial values won't be synced.
 		buttonColor = registerDataSlot(BUTTON_COLOR_DATA_SLOT, 0xFF_FFFF00, NetworkDirection.CLIENT_TO_SERVER);
 
@@ -130,7 +130,7 @@ public class TestDescription extends SyncedGuiDescription {
 
 		getNetworking(NetworkSide.CLIENT).getReadyEvent().register(networking -> {
 			System.out.println("Ready to receive and send on the client!");
-			var biome = world.getBiome(playerInventory.player.blockPosition());
+			var biome = getLevel().getBiome(playerInventory.player.blockPosition());
 			networking.send(TEST_REGISTRY_MESSAGE, Biome.CODEC, biome);
 		});
 

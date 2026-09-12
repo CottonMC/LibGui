@@ -223,7 +223,7 @@ public class WBar extends WWidget {
 	@Override
 	public void validate(GuiDescription host) {
 		super.validate(host);
-		if (properties == null || !manuallySetProperties) properties = host.getPropertyDelegate();
+		if (properties == null || !manuallySetProperties) properties = host.getContainerData();
 	}
 
 	/**

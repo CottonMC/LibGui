@@ -102,7 +102,7 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
 		Objects.requireNonNull(message, "message");
 		Objects.requireNonNull(encoder, "encoder");
 
-		var ops = getRegistryOps(description.getWorld().registryAccess());
+		var ops = getRegistryOps(description.getLevel().registryAccess());
 		Tag encoded = encoder.encodeStart(ops, data).getOrThrow();
 		ScreenMessage packet = new ScreenMessage(description.containerId, message, encoded);
 		description.getPacketSender().sendPacket(packet);
