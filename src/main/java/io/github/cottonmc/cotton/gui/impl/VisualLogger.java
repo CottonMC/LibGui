@@ -10,10 +10,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.ParameterizedMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
+import org.slf4j.helpers.MessageFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public final class VisualLogger {
 	private final Class<?> clazz;
 
 	public VisualLogger(Class<?> clazz) {
-		logger = LogManager.getLogger(clazz);
+		logger = LoggerFactory.getLogger(clazz);
 		this.clazz = clazz;
 	}
 
@@ -41,12 +41,12 @@ public final class VisualLogger {
 	}
 
 	private void log(String message, Object[] params, Level level, ChatFormatting formatting) {
-		logger.log(level, message, params);
+		logger.atLevel(level).log(message, params);
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 			var text = Component.literal(clazz.getSimpleName() + '/');
 			text.append(Component.literal(level.name()).withStyle(formatting));
-			text.append(Component.literal(": " + ParameterizedMessage.format(message, params)));
+			text.append(Component.literal(": " + MessageFormatter.arrayFormat(message, params).getMessage()));
 
 			WARNINGS.add(text);
 		}

@@ -10,8 +10,8 @@ import blue.endless.jankson.JsonObject;
 import io.github.cottonmc.cotton.gui.impl.Proxy;
 import io.github.cottonmc.cotton.gui.impl.ScreenNetworkingImpl;
 import io.github.cottonmc.jankson.JanksonFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -19,7 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class LibGuiClient implements ClientModInitializer {
-	public static final Logger logger = LogManager.getLogger();
+	private static final Logger LOGGER = LoggerFactory.getLogger(LibGuiClient.class);
 	public static volatile LibGuiConfig config;
 
 	public static final Jankson jankson = JanksonFactory.createJankson();
@@ -57,7 +57,7 @@ public class LibGuiClient implements ClientModInitializer {
 				}
 			}*/
 		} catch (Exception e) {
-			logger.error("[LibGui] Error loading config: {}", e.getMessage());
+			LOGGER.error("[LibGui] Error loading config: {}", e.getMessage());
 		}
 		return config;
 	}
@@ -70,7 +70,7 @@ public class LibGuiClient implements ClientModInitializer {
 			String result = json.toJson(true, true);
 			Files.write(file, result.getBytes(StandardCharsets.UTF_8));
 		} catch (Exception e) {
-			logger.error("[LibGui] Error saving config: {}", e.getMessage());
+			LOGGER.error("[LibGui] Error saving config: {}", e.getMessage());
 		}
 	}
 }
