@@ -353,7 +353,7 @@ public class WTabPanel extends WPanel {
 		@Environment(EnvType.CLIENT)
 		@Override
 		public InputResult onKeyPressed(KeyEvent input) {
-			if (isActivationKey(input.key())) {
+			if (input.isSelection()) {
 				onClick();
 				return InputResult.PROCESSED;
 			}

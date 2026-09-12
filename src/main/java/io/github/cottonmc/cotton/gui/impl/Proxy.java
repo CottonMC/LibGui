@@ -7,4 +7,7 @@ public class Proxy {
 
 	public void addPainters(WWidget widget) {
 	}
+
+	public void setTextInputFocused(boolean focused) {
+	}
 }

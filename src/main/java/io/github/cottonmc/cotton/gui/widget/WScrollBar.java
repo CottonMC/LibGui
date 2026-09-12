@@ -195,12 +195,12 @@ public class WScrollBar extends WWidget {
 				? WAbstractSlider.Direction.RIGHT
 				: WAbstractSlider.Direction.DOWN;
 
-		if (WAbstractSlider.isIncreasingKey(input.key(), direction)) {
+		if (WAbstractSlider.isIncreasingKey(input.shortcutKey(), direction)) {
 			if (value < getMaxScrollValue()) {
 				value++;
 			}
 			return InputResult.PROCESSED;
-		} else if (WAbstractSlider.isDecreasingKey(input.key(), direction)) {
+		} else if (WAbstractSlider.isDecreasingKey(input.shortcutKey(), direction)) {
 			if (value > 0) {
 				value--;
 			}

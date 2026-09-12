@@ -38,7 +38,6 @@ import org.jspecify.annotations.Nullable;
  * @param <T> the description type
  */
 public class CottonInventoryScreen<T extends SyncedGuiDescription> extends AbstractContainerScreen<T> implements CottonScreenImpl {
-	private static final VisualLogger LOGGER = new VisualLogger(CottonInventoryScreen.class);
 	protected final SyncedGuiDescription description;
 	protected @Nullable WWidget lastResponder = null;
 	private final MouseInputHandler<CottonInventoryScreen<T>> mouseInputHandler = new MouseInputHandler<>(this);

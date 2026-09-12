@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -17,11 +18,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+import io.github.cottonmc.cotton.gui.impl.Proxy;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.impl.mixin.client.EditBoxAccessor;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -319,6 +320,12 @@ public class WTextField extends WWidget {
 
 	@Override
 	public void onFocusGained() {
+		Proxy.proxy.setTextInputFocused(true);
+	}
+
+	@Override
+	public void onFocusLost() {
+		Proxy.proxy.setTextInputFocused(false);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -465,29 +472,41 @@ public class WTextField extends WWidget {
 			select = 0;
 			cursor = text.length();
 			return InputResult.PROCESSED;
+		} else if (input.isLeft()) {
+			onDirectionalKey(-1, input);
+		} else if (input.isRight()) {
+			onDirectionalKey(1, input);
+		} else if (input.isUp()) {
+			moveToStart(input);
+		} else if (input.isDown()) {
+			moveToEnd(input);
 		}
 
-		switch (input.key()) {
-			case GLFW.GLFW_KEY_DELETE -> delete(input, false);
-			case GLFW.GLFW_KEY_BACKSPACE -> delete(input, true);
-			case GLFW.GLFW_KEY_LEFT -> onDirectionalKey(-1, input);
-			case GLFW.GLFW_KEY_RIGHT -> onDirectionalKey(1, input);
-			case GLFW.GLFW_KEY_HOME, GLFW.GLFW_KEY_UP -> {
-				if (input.hasShiftDown()) {
-					select = -1;
-				}
-				cursor = 0;
-			}
-			case GLFW.GLFW_KEY_END, GLFW.GLFW_KEY_DOWN -> {
-				if (input.hasShiftDown()) {
-					select = -1;
-				}
-				cursor = text.length();
-			}
+		switch (input.shortcutKey()) {
+			case InputConstants.KEYCODE_DELETE -> delete(input, false);
+			case InputConstants.KEYCODE_BACKSPACE -> delete(input, true);
+			case InputConstants.KEYCODE_HOME -> moveToStart(input);
+			case InputConstants.KEYCODE_END -> moveToEnd(input);
 		}
 		scrollCursorIntoView();
 
 		return InputResult.PROCESSED;
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void moveToStart(KeyEvent input) {
+		if (input.hasShiftDown()) {
+			select = -1;
+		}
+		cursor = 0;
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void moveToEnd(KeyEvent input) {
+		if (input.hasShiftDown()) {
+			select = -1;
+		}
+		cursor = text.length();
 	}
 
 	@Environment(EnvType.CLIENT)

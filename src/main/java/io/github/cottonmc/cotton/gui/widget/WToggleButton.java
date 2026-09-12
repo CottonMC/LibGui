@@ -136,7 +136,7 @@ public class WToggleButton extends WWidget {
 
 	@Override
 	public InputResult onKeyPressed(KeyEvent input) {
-		if (isActivationKey(input.key())) {
+		if (input.isSelection()) {
 			onClick();
 			return InputResult.PROCESSED;
 		}

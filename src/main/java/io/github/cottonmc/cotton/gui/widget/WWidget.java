@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -17,8 +18,8 @@ import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
 import io.github.cottonmc.cotton.gui.widget.focus.FocusModel;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * The base class for all widgets.
@@ -582,13 +583,19 @@ public class WWidget {
 	 *
 	 * <p>The activation keys are Enter, keypad Enter, and Space.
 	 *
-	 * @param ch the key code
+	 * @param ch the SDL scancode of the key, e.g. {@link KeyEvent#input()}
 	 * @return whether the key is an activation key
 	 * @since 2.0.0
+	 * @deprecated Use {@link net.minecraft.client.input.InputWithModifiers#isSelection()} instead.
 	 */
 	@Environment(EnvType.CLIENT)
+	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "19.0.0")
 	public static boolean isActivationKey(int ch) {
-		return ch == GLFW.GLFW_KEY_ENTER || ch == GLFW.GLFW_KEY_KP_ENTER || ch == GLFW.GLFW_KEY_SPACE;
+		return switch (ch) {
+			case InputConstants.KEY_SPACE, InputConstants.KEY_RETURN, InputConstants.KEY_NUMPADENTER -> true;
+			default -> false;
+		};
 	}
 
 	/**

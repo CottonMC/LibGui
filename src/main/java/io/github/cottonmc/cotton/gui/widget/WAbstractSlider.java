@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -9,11 +10,11 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
+import io.github.cottonmc.cotton.gui.client.Keycode;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.function.IntConsumer;
 
@@ -322,18 +323,18 @@ public abstract class WAbstractSlider extends WWidget {
 	public InputResult onKeyPressed(KeyEvent input) {
 		boolean valueChanged = false;
 		if (input.modifiers() == 0) {
-			if (isDecreasingKey(input.key(), direction) && value > min) {
+			if (isDecreasingKey(input.shortcutKey(), direction) && value > min) {
 				value--;
 				valueChanged = true;
-			} else if (isIncreasingKey(input.key(), direction) && value < max) {
+			} else if (isIncreasingKey(input.shortcutKey(), direction) && value < max) {
 				value++;
 				valueChanged = true;
 			}
 		} else if (input.hasControlDown()) {
-			if (isDecreasingKey(input.key(), direction) && value != min) {
+			if (isDecreasingKey(input.shortcutKey(), direction) && value != min) {
 				value = min;
 				valueChanged = true;
-			} else if (isIncreasingKey(input.key(), direction) && value != max) {
+			} else if (isIncreasingKey(input.shortcutKey(), direction) && value != max) {
 				value = max;
 				valueChanged = true;
 			}
@@ -350,7 +351,7 @@ public abstract class WAbstractSlider extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public InputResult onKeyReleased(KeyEvent input) {
-		if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(input.key(), direction) || isIncreasingKey(input.key(), direction))) {
+		if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(input.shortcutKey(), direction) || isIncreasingKey(input.shortcutKey(), direction))) {
 			if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
 			pendingDraggingFinishedFromKeyboard = false;
 			return InputResult.PROCESSED;
@@ -379,29 +380,29 @@ public abstract class WAbstractSlider extends WWidget {
 	/**
 	 * Tests if the key should decrease sliders with the specified direction.
 	 *
-	 * @param ch        the key code
+	 * @param ch        the SDL keycode
 	 * @param direction the direction
 	 * @return true if the key should decrease sliders with the direction, false otherwise
 	 * @since 2.0.0
 	 */
-	public static boolean isDecreasingKey(int ch, Direction direction) {
+	public static boolean isDecreasingKey(@Keycode int ch, Direction direction) {
 		return direction.isInverted()
-				? (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP)
-				: (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN);
+				? (ch == InputConstants.KEYCODE_RIGHT || ch == InputConstants.KEYCODE_UP)
+				: (ch == InputConstants.KEYCODE_LEFT || ch == InputConstants.KEYCODE_DOWN);
 	}
 
 	/**
 	 * Tests if the key should increase sliders with the specified direction.
 	 *
-	 * @param ch        the key code
+	 * @param ch        the SDL keycode
 	 * @param direction the direction
 	 * @return true if the key should increase sliders with the direction, false otherwise
 	 * @since 2.0.0
 	 */
-	public static boolean isIncreasingKey(int ch, Direction direction) {
+	public static boolean isIncreasingKey(@Keycode int ch, Direction direction) {
 		return direction.isInverted()
-				? (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN)
-				: (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP);
+				? (ch == InputConstants.KEYCODE_LEFT || ch == InputConstants.KEYCODE_DOWN)
+				: (ch == InputConstants.KEYCODE_RIGHT || ch == InputConstants.KEYCODE_UP);
 	}
 
 	/**

@@ -121,7 +121,7 @@ public class WButton extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public InputResult onKeyPressed(KeyEvent input) {
-		if (isActivationKey(input.key())) {
+		if (input.isSelection()) {
 			return onClick(0, 0);
 		}
 

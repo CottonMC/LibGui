@@ -420,7 +420,7 @@ public class WItemSlot extends WWidget {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public InputResult onKeyPressed(KeyEvent input) {
-		if (isActivationKey(input.key()) && host instanceof AbstractContainerMenu handler && focusedSlot >= 0) {
+		if (input.isSelection() && host instanceof AbstractContainerMenu handler && focusedSlot >= 0) {
 			Minecraft client = Minecraft.getInstance();
 
 			ValidatedSlot peer = peers.get(focusedSlot);
